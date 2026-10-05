@@ -8,20 +8,19 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
+import { Phone, Mail, MessageCircle, MapPin } from "lucide-react";
+import StoreBadges from "@/components/StoreBadges";
 import {
-  Facebook,
-  Instagram,
-  Youtube,
-  Linkedin,
-  Twitter,
-  Send,
-  Phone,
-  Mail,
-  MessageCircle,
-  MapPin,
-  Play,
-  Apple,
-} from "lucide-react";
+  FacebookLogo,
+  InstagramLogo,
+  YouTubeLogo,
+  LinkedInLogo,
+  XLogo,
+  TelegramLogo,
+  WhatsAppLogo,
+  VerifiedBadge,
+} from "@/components/icons/BrandLogos";
+import { CONTACT, SOCIAL_LINKS } from "@/data/contact";
 import {
   COMPANY_LINKS,
   UPCOMING_CENTRES,
@@ -39,7 +38,7 @@ export default function Footer() {
         backgroundColor: "#F8FAFC",
         borderTop: "1px solid #E2E8F0",
         color: "#334155",
-        pt: { xs: 6, md: 8 },
+        pt: { xs: 4, md: 5 },
         pb: 4,
       }}
     >
@@ -71,83 +70,38 @@ export default function Footer() {
               We understand that every student has unique needs and abilities, that&#39;s why our curriculum is designed to adapt to your needs and help you grow!
             </Typography>
 
-            {/* App Badges */}
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.25, mb: 3, maxWidth: 180 }}>
-              <Box
-                component="a"
-                href="#download"
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1.25,
-                  p: "8px 14px",
-                  borderRadius: "8px",
-                  backgroundColor: "#000000",
-                  color: "#FFFFFF",
-                  textDecoration: "none",
-                  "&:hover": { backgroundColor: "#1E293B" },
-                }}
-              >
-                <Play size={18} fill="#FFFFFF" />
-                <Box>
-                  <Typography variant="caption" sx={{ fontSize: "0.62rem", display: "block", opacity: 0.8 }}>
-                    GET IT ON
-                  </Typography>
-                  <Typography variant="subtitle2" sx={{ fontSize: "0.78rem", fontWeight: 800 }}>
-                    Google Play
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Box
-                component="a"
-                href="#download"
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1.25,
-                  p: "8px 14px",
-                  borderRadius: "8px",
-                  backgroundColor: "#000000",
-                  color: "#FFFFFF",
-                  textDecoration: "none",
-                  "&:hover": { backgroundColor: "#1E293B" },
-                }}
-              >
-                <Apple size={20} />
-                <Box>
-                  <Typography variant="caption" sx={{ fontSize: "0.62rem", display: "block", opacity: 0.8 }}>
-                    Download on the
-                  </Typography>
-                  <Typography variant="subtitle2" sx={{ fontSize: "0.78rem", fontWeight: 800 }}>
-                    App Store
-                  </Typography>
-                </Box>
-              </Box>
+            {/* App store badges (side by side) */}
+            <Box sx={{ mb: 3 }}>
+              <StoreBadges size="sm" />
             </Box>
 
             {/* Social Links */}
             <Typography variant="subtitle2" sx={{ fontWeight: 800, color: "#1E293B", fontSize: "0.88rem", mb: 1.25 }}>
               Let&#39;s get social :
             </Typography>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Box sx={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 1 }}>
               {[
-                { icon: <Facebook size={18} />, color: "#1877F2", label: "Facebook" },
-                { icon: <Instagram size={18} />, color: "#E4405F", label: "Instagram" },
-                { icon: <Youtube size={18} />, color: "#CD201F", label: "YouTube" },
-                { icon: <Linkedin size={18} />, color: "#0A66C2", label: "LinkedIn" },
-                { icon: <Twitter size={18} />, color: "#1DA1F2", label: "Twitter" },
-                { icon: <Send size={18} />, color: "#0088CC", label: "Telegram" },
-              ].map((item, idx) => (
+                { icon: <FacebookLogo size={20} />, label: "Facebook", href: SOCIAL_LINKS.facebook },
+                { icon: <InstagramLogo size={20} />, label: "Instagram", href: SOCIAL_LINKS.instagram },
+                { icon: <YouTubeLogo size={20} />, label: "YouTube", href: SOCIAL_LINKS.youtube },
+                { icon: <LinkedInLogo size={20} />, label: "LinkedIn", href: SOCIAL_LINKS.linkedin },
+                { icon: <XLogo size={17} />, label: "X (Twitter)", href: SOCIAL_LINKS.x },
+                { icon: <TelegramLogo size={20} />, label: "Telegram", href: SOCIAL_LINKS.telegram },
+              ].map((item) => (
                 <IconButton
-                  key={idx}
-                  size="small"
+                  key={item.label}
+                  component="a"
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={item.label}
                   sx={{
+                    width: 38,
+                    height: 38,
                     backgroundColor: "#FFFFFF",
                     border: "1px solid #E2E8F0",
-                    color: item.color,
-                    "&:hover": { backgroundColor: "#F1F5F9" },
+                    transition: "all .2s ease",
+                    "&:hover": { backgroundColor: "#FFFFFF", transform: "translateY(-2px)", boxShadow: "0 4px 12px rgba(15,23,42,.12)" },
                   }}
                 >
                   {item.icon}
@@ -172,7 +126,7 @@ export default function Footer() {
                     color: "#64748B",
                     textDecoration: "none",
                     fontSize: "0.85rem",
-                    "&:hover": { color: "#8B1D24" },
+                    "&:hover": { color: "#FE0034" },
                   }}
                 >
                   {link.name}
@@ -200,10 +154,10 @@ export default function Footer() {
                     display: "flex",
                     alignItems: "center",
                     gap: 0.5,
-                    "&:hover": { color: "#8B1D24" },
+                    "&:hover": { color: "#FE0034" },
                   }}
                 >
-                  <MapPin size={13} color="#8B1D24" />
+                  <MapPin size={13} color="#FE0034" />
                   {centre.name}
                 </Typography>
               ))}
@@ -218,76 +172,81 @@ export default function Footer() {
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1.25 }}>
               <Typography
                 component="a"
-                href="mailto:support@viniias.com"
+                href={`mailto:${CONTACT.email}`}
                 variant="body2"
-                sx={{
-                  color: "#64748B",
-                  textDecoration: "none",
-                  fontSize: "0.85rem",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 0.75,
-                  "&:hover": { color: "#8B1D24" },
-                }}
+                sx={{ color: "#64748B", textDecoration: "none", fontSize: "0.85rem", display: "flex", alignItems: "center", gap: 0.75, "&:hover": { color: "#FE0034" } }}
               >
-                <Mail size={15} color="#8B1D24" />
-                Email us
+                <Mail size={15} color="#FE0034" />
+                {CONTACT.email}
               </Typography>
 
               <Typography
                 component="a"
                 href="#enquiry"
                 variant="body2"
-                sx={{
-                  color: "#64748B",
-                  textDecoration: "none",
-                  fontSize: "0.85rem",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 0.75,
-                  "&:hover": { color: "#8B1D24" },
-                }}
+                sx={{ color: "#64748B", textDecoration: "none", fontSize: "0.85rem", display: "flex", alignItems: "center", gap: 0.75, "&:hover": { color: "#FE0034" } }}
               >
-                <MessageCircle size={15} color="#8B1D24" />
+                <MessageCircle size={15} color="#FE0034" />
                 Talk to counsellor
               </Typography>
 
-              <Typography
-                component="a"
-                href="https://wa.me/918544078245"
-                target="_blank"
-                variant="body2"
-                sx={{
-                  color: "#64748B",
-                  textDecoration: "none",
-                  fontSize: "0.85rem",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 0.75,
-                  "&:hover": { color: "#16A34A" },
-                }}
-              >
-                <Phone size={15} color="#16A34A" />
-                WhatsApp Now
-              </Typography>
-
-              <Typography
-                component="a"
-                href="tel:+918544078245"
-                variant="body2"
-                sx={{
-                  color: "#8B1D24",
-                  fontWeight: 800,
-                  textDecoration: "none",
-                  fontSize: "0.9rem",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 0.75,
-                }}
-              >
-                <Phone size={15} color="#8B1D24" />
-                Call: 8544078245
-              </Typography>
+              {/* WhatsApp + Call — same number */}
+              {[
+                {
+                  key: "whatsapp",
+                  href: CONTACT.whatsappUrl,
+                  label: "WhatsApp",
+                  icon: <WhatsAppLogo size={16} color="#FFFFFF" />,
+                  iconBg: "#25D366",
+                  color: "#128C4A",
+                  external: true,
+                },
+                {
+                  key: "call",
+                  href: CONTACT.tel,
+                  label: "Call",
+                  icon: <Phone size={15} color="#FFFFFF" />,
+                  iconBg: "#FE0034",
+                  color: "#FE0034",
+                  external: false,
+                },
+              ].map((c) => (
+                <Box
+                  key={c.key}
+                  component="a"
+                  href={c.href}
+                  {...(c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  aria-label={`${c.label}: ${CONTACT.phoneDisplay}`}
+                  sx={{ display: "flex", alignItems: "center", gap: 1, textDecoration: "none", "&:hover .num": { textDecoration: "underline" } }}
+                >
+                  <Box
+                    sx={{
+                      width: 30,
+                      height: 30,
+                      flexShrink: 0,
+                      borderRadius: "50%",
+                      backgroundColor: c.iconBg,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {c.icon}
+                  </Box>
+                  <Box sx={{ lineHeight: 1.2 }}>
+                    <Box
+                      component="span"
+                      sx={{ display: "flex", alignItems: "center", gap: 0.5, fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.04em" }}
+                    >
+                      {c.label}
+                      {c.key === "whatsapp" && CONTACT.whatsappVerified && <VerifiedBadge size={13} />}
+                    </Box>
+                    <Box className="num" component="span" sx={{ display: "block", fontSize: "0.92rem", fontWeight: 800, color: c.color, whiteSpace: "nowrap" }}>
+                      {CONTACT.phoneDisplay}
+                    </Box>
+                  </Box>
+                </Box>
+              ))}
             </Box>
           </Box>
 
@@ -307,7 +266,7 @@ export default function Footer() {
                     color: "#64748B",
                     textDecoration: "none",
                     fontSize: "0.85rem",
-                    "&:hover": { color: "#8B1D24" },
+                    "&:hover": { color: "#FE0034" },
                   }}
                 >
                   {item.name}
@@ -332,7 +291,7 @@ export default function Footer() {
                     color: "#64748B",
                     textDecoration: "none",
                     fontSize: "0.85rem",
-                    "&:hover": { color: "#8B1D24" },
+                    "&:hover": { color: "#FE0034" },
                   }}
                 >
                   {prod.name}
@@ -394,7 +353,7 @@ export default function Footer() {
                         textDecoration: "none",
                         fontSize: "0.82rem",
                         lineHeight: 1.4,
-                        "&:hover": { color: "#8B1D24", textDecoration: "underline" },
+                        "&:hover": { color: "#FE0034", textDecoration: "underline" },
                       }}
                     >
                       {link.name}
@@ -439,8 +398,8 @@ export default function Footer() {
                   fontWeight: 600,
                   transition: "all 0.2s ease",
                   "&:hover": {
-                    borderColor: "#8B1D24",
-                    color: "#8B1D24",
+                    borderColor: "#FE0034",
+                    color: "#FE0034",
                     backgroundColor: "#FEF2F2",
                   },
                 }}
@@ -492,8 +451,8 @@ export default function Footer() {
             </Link>
           </Box>
 
-          <Typography variant="body2" sx={{ fontSize: "0.82rem", color: "#64748B" }}>
-            Copyright © {new Date().getFullYear()} Vini Educentre Pvt. LTD. All rights Reserved.
+          <Typography variant="body2" sx={{ fontSize: "0.82rem", color: "#64748B", textTransform: "uppercase" }}>
+            Copyright © Vini Educentre Pvt. LTD. | All rights Reserved.
           </Typography>
         </Box>
       </Container>

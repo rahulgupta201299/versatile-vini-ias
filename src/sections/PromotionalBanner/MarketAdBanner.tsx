@@ -5,7 +5,7 @@ import Image from "next/image";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 
-export interface MarketAdBannerProps {
+interface MarketAdBannerProps {
   imageUrl?: string;
   mobileImageUrl?: string;
   alt?: string;
@@ -23,7 +23,7 @@ export default function MarketAdBanner({
       id="market-ad"
       component="section"
       sx={{
-        py: { xs: 2.5, sm: 3, md: 4 },
+        py: { xs: 1.5, sm: 2, md: 2.5 },
         backgroundColor: "#FFFFFF",
       }}
     >

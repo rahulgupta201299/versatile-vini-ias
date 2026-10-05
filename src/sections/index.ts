@@ -9,5 +9,4 @@ export { default as MentorshipCallbackSection } from "./Mentorship/MentorshipCal
 export { default as ImpactStatsSection } from "./Impact/ImpactStatsSection";
 export { default as EnquirySection } from "./Enquiry/EnquirySection";
 export { default as AppDownloadSection } from "./AppDownload/AppDownloadSection";
-export { default as FoundersDeskSection } from "./FoundersDesk/FoundersDeskSection";
 export { default as Footer } from "./Footer/Footer";

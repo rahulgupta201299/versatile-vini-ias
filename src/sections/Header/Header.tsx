@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Box from "@mui/material/Box";
@@ -9,55 +9,113 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Drawer from "@mui/material/Drawer";
+import Collapse from "@mui/material/Collapse";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import {
   Menu as MenuIcon,
   X as CloseIcon,
   ChevronDown,
   ChevronRight,
-  User,
-  PhoneCall,
+  ChevronLeft,
+  Search,
+  ShoppingCart,
+  GraduationCap,
 } from "lucide-react";
-import { NAV_ITEMS, MEGA_MENU_CATEGORIES } from "@/data/navigation";
+import { NAV_ITEMS, MEGA_MENU_CATEGORIES, STORE_HREF } from "@/data/navigation";
 import { IconRenderer } from "@/components";
+import SearchDialog from "@/components/SearchDialog";
 
-export interface HeaderProps {
+/* Layout references: pw.live (menu, All Courses panel) and the header screenshots provided. */
+const RED = "#FE0034";
+const RED_DARK = "#CC002A";
+const YELLOW = "#FFE51F";
+const YELLOW_DARK = "#F2D500";
+const HEADER_H = { xs: 64, lg: 72 };
+
+interface HeaderProps {
   onOpenAuth: () => void;
 }
 
+const NAV_LINKS = NAV_ITEMS.filter((item) => !item.isMegaMenu);
+/** Desktop shows the first few links inline; the rest go under "More". */
+const INLINE_LINKS = 5;
+const PRIMARY_LINKS = NAV_LINKS.slice(0, INLINE_LINKS);
+const MORE_LINKS = NAV_LINKS.slice(INLINE_LINKS);
+const ALL_COURSES_LABEL = NAV_ITEMS.find((item) => item.isMegaMenu)?.label ?? "All Courses";
+
+const pillBase = {
+  borderRadius: "9999px",
+  textTransform: "none" as const,
+  fontWeight: 700,
+  boxShadow: "none",
+  whiteSpace: "nowrap" as const,
+  minWidth: 0,
+};
+
 export default function Header({ onOpenAuth }: HeaderProps) {
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerView, setDrawerView] = useState<"menu" | "courses">("menu");
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [moreAnchor, setMoreAnchor] = useState<HTMLElement | null>(null);
   const megaMenuRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
+  const coursesButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Close mega menu when clicking outside
+  // Close desktop mega menu on outside click / Escape
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        megaMenuRef.current &&
-        !megaMenuRef.current.contains(event.target as Node) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(event.target as Node)
-      ) {
-        setMegaMenuOpen(false);
-      }
-    }
-
-    if (megaMenuOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
+    if (!megaMenuOpen) return;
+    const onDown = (e: MouseEvent) => {
+      const t = e.target as Node;
+      if (!megaMenuRef.current?.contains(t) && !coursesButtonRef.current?.contains(t)) setMegaMenuOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMegaMenuOpen(false);
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
     };
   }, [megaMenuOpen]);
 
-  const selectedCategory =
-    MEGA_MENU_CATEGORIES[activeCategoryIndex] || MEGA_MENU_CATEGORIES[0];
+  // Ctrl/⌘ + K opens search
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setMegaMenuOpen(false);
+        setSearchOpen(true);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
+
+  /** "All Courses" pill: dropdown on desktop, pw-style full panel on smaller screens. */
+  const onCoursesClick = () => {
+    if (window.matchMedia("(min-width: 1200px)").matches) {
+      setMegaMenuOpen((prev) => !prev);
+    } else {
+      setDrawerView("courses");
+      setDrawerOpen(true);
+    }
+  };
+
+  const openMenu = () => {
+    setDrawerView("menu");
+    setDrawerOpen(true);
+  };
+  const closeDrawer = () => {
+    setDrawerOpen(false);
+    setExpandedCategory(null);
+  };
+
+  const selectedCategory = MEGA_MENU_CATEGORIES[activeCategoryIndex] || MEGA_MENU_CATEGORIES[0];
 
   return (
     <>
-      {/* Main Top Navigation Bar (Identical to reference screenshots media_1791051086131.png & media_1791051109002.png) */}
       <Box
         component="header"
         sx={{
@@ -66,201 +124,200 @@ export default function Header({ onOpenAuth }: HeaderProps) {
           zIndex: 1200,
           backgroundColor: "#FFFFFF",
           borderBottom: "1px solid #E5E7EB",
-          boxShadow: megaMenuOpen
-            ? "none"
-            : "0 1px 3px rgba(0,0,0,0.05)",
+          boxShadow: megaMenuOpen ? "none" : "0 1px 3px rgba(0,0,0,0.05)",
         }}
       >
         <Container>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              height: 70,
-              gap: 2,
-            }}
-          >
-            {/* Left: Brand Logo + "All Courses" Button */}
-            <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 1.5, sm: 2.5 }, flexShrink: 0 }}>
-              {/* Brand Logo */}
-              <Box
-                component={Link}
-                href="/"
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  textDecoration: "none",
-                }}
-              >
-                <Box
-                  sx={{
-                    position: "relative",
-                    width: { xs: 110, sm: 130 },
-                    height: 42,
-                  }}
-                >
-                  <Image
-                    src="/images/logo.png"
-                    alt="Vini IAS"
-                    fill
-                    style={{ objectFit: "contain" }}
-                    priority
-                  />
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: HEADER_H, gap: { xs: 1, sm: 2 } }}>
+            {/* Left: logo + All Courses pill */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 1, sm: 2 }, flexShrink: 0 }}>
+              <Box component={Link} href="/" aria-label="Vini IAS home" sx={{ display: "flex", flexShrink: 0 }}>
+                <Box sx={{ position: "relative", width: { xs: 78, sm: 110, lg: 120 }, height: { xs: 34, sm: 42 } }}>
+                  <Image src="/images/logo.png" alt="Vini IAS" fill sizes="120px" style={{ objectFit: "contain", objectPosition: "left" }} priority />
                 </Box>
               </Box>
 
-              {/* "All Courses" Button with Blue Outline & Chevron (Exact match to screenshot) */}
               <Button
-                ref={buttonRef}
-                onClick={() => setMegaMenuOpen((prev) => !prev)}
+                ref={coursesButtonRef}
+                onClick={onCoursesClick}
+                aria-haspopup="true"
+                aria-expanded={megaMenuOpen}
                 endIcon={
                   <ChevronDown
-                    size={17}
-                    style={{
-                      transform: megaMenuOpen ? "rotate(180deg)" : "rotate(0deg)",
-                      transition: "transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
-                      strokeWidth: 2.5,
-                      marginLeft: 2,
-                    }}
+                    size={16}
+                    style={{ transform: megaMenuOpen ? "rotate(180deg)" : "none", transition: "transform .25s ease" }}
                   />
                 }
                 sx={{
-                  border: "1.5px solid #3B82F6", // Blue outline matching screenshot
-                  color: "#2563EB",
-                  backgroundColor: megaMenuOpen ? "#EFF6FF" : "#FFFFFF",
-                  borderRadius: "8px",
+                  ...pillBase,
+                  flexShrink: 0,
                   fontWeight: 600,
-                  fontSize: "0.92rem",
-                  textTransform: "none",
-                  px: { xs: 1.5, sm: 2.2 },
-                  py: 0.8,
-                  boxShadow: "none",
-                  whiteSpace: "nowrap",
-                  transition: "all 0.2s ease",
-                  "&:hover": {
-                    borderColor: "#1D4ED8",
-                    backgroundColor: "#EFF6FF",
-                    color: "#1D4ED8",
-                    boxShadow: "none",
-                  },
+                  color: "#374151",
+                  border: "1.5px solid #E5E7EB",
+                  backgroundColor: megaMenuOpen ? "#FFF0F3" : "#FFFFFF",
+                  fontSize: { xs: "0.82rem", sm: "0.95rem" },
+                  px: { xs: 1.5, sm: 2.25 },
+                  height: { xs: 38, sm: 44 },
+                  "& .MuiButton-endIcon": { ml: 0.5 },
+                  "&:hover": { borderColor: RED, color: RED, backgroundColor: "#FFF0F3" },
                 }}
               >
-                All Courses
+                {ALL_COURSES_LABEL}
               </Button>
             </Box>
 
-            {/* Middle: Horizontal Nav Links (Matching screenshot format) */}
-            <Box
-              sx={{
-                display: { xs: "none", lg: "flex" },
-                alignItems: "center",
-                gap: { lg: 2.2, xl: 3 },
-                flexWrap: "nowrap",
-              }}
-            >
-              {NAV_ITEMS.filter((item) => !item.isMegaMenu).map((item) => (
+            {/* Middle: nav links (desktop) */}
+            <Box component="nav" aria-label="Main" sx={{ display: { xs: "none", lg: "flex" }, alignItems: "center", gap: { lg: 2, xl: 2.75 } }}>
+              {PRIMARY_LINKS.map((item) => (
                 <Box
                   key={item.id}
                   component={Link}
                   href={item.href}
                   sx={{
-                    color: "#1E293B",
+                    color: "#374151",
                     fontWeight: 600,
                     fontSize: "0.93rem",
                     textDecoration: "none",
                     whiteSpace: "nowrap",
                     py: 1,
-                    transition: "color 0.15s ease",
-                    "&:hover": {
-                      color: "#2563EB",
-                    },
+                    transition: "color .15s ease",
+                    "&:hover": { color: RED },
                   }}
                 >
                   {item.label}
                 </Box>
               ))}
+              {MORE_LINKS.length > 0 && (
+                <>
+                  <Box
+                    component="button"
+                    type="button"
+                    aria-haspopup="menu"
+                    aria-expanded={Boolean(moreAnchor)}
+                    onClick={(e: React.MouseEvent<HTMLElement>) => setMoreAnchor(e.currentTarget)}
+                    sx={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 0.4,
+                      border: "none",
+                      background: "none",
+                      cursor: "pointer",
+                      fontFamily: "inherit",
+                      color: moreAnchor ? RED : "#374151",
+                      fontWeight: 600,
+                      fontSize: "0.93rem",
+                      p: 0,
+                      "&:hover": { color: RED },
+                    }}
+                  >
+                    More
+                    <ChevronDown size={16} style={{ transform: moreAnchor ? "rotate(180deg)" : "none", transition: "transform .2s ease" }} />
+                  </Box>
+                  <Menu
+                    anchorEl={moreAnchor}
+                    open={Boolean(moreAnchor)}
+                    onClose={() => setMoreAnchor(null)}
+                    anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                    transformOrigin={{ vertical: "top", horizontal: "left" }}
+                    slotProps={{ paper: { sx: { mt: 1.5, borderRadius: "12px", minWidth: 200, boxShadow: "0 12px 32px rgba(15,23,42,.14)" } } }}
+                  >
+                    {MORE_LINKS.map((item) => (
+                      <MenuItem
+                        key={item.id}
+                        component={Link}
+                        href={item.href}
+                        onClick={() => setMoreAnchor(null)}
+                        sx={{ fontWeight: 600, fontSize: "0.93rem", color: "#374151", py: 1.25, "&:hover": { color: RED, backgroundColor: "#FFF5F7" } }}
+                      >
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </>
+              )}
             </Box>
 
-            {/* Right: Dark "Login/Register" Button (Matching screenshot, search removed) */}
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, flexShrink: 0 }}>
+            {/* Right: search, Store (yellow), Login (red, desktop) / hamburger (mobile) */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 0.75, sm: 1.25 }, flexShrink: 0 }}>
+              <IconButton
+                onClick={() => setSearchOpen(true)}
+                aria-label="Search"
+                sx={{ width: { xs: 38, sm: 44 }, height: { xs: 38, sm: 44 }, backgroundColor: "#F5F5F5", color: "#4B5563", "&:hover": { backgroundColor: "#ECECEC" } }}
+              >
+                <Search size={20} />
+              </IconButton>
+
               <Button
-                variant="contained"
-                onClick={onOpenAuth}
+                component={Link}
+                href={STORE_HREF}
+                startIcon={<ShoppingCart size={18} />}
+                aria-label="Store"
                 sx={{
-                  backgroundColor: "#1F242D", // Dark charcoal from screenshot
-                  color: "#FFFFFF",
-                  fontWeight: 700,
-                  fontSize: "0.9rem",
-                  px: { xs: 2, sm: 2.75 },
-                  py: 1.05,
-                  borderRadius: "8px",
-                  boxShadow: "none",
-                  textTransform: "none",
-                  whiteSpace: "nowrap",
-                  transition: "all 0.2s ease",
-                  "&:hover": {
-                    backgroundColor: "#0F172A",
-                    boxShadow: "0 4px 12px rgba(15, 23, 42, 0.2)",
-                  },
+                  ...pillBase,
+                  height: { xs: 38, sm: 44 },
+                  px: { xs: 1.25, sm: 2.25 },
+                  fontSize: "0.95rem",
+                  color: "#000000",
+                  backgroundColor: YELLOW,
+                  border: `1.5px solid ${YELLOW_DARK}`,
+                  "& .MuiButton-startIcon": { mr: { xs: 0, sm: 0.75 }, ml: 0 },
+                  "&:hover": { backgroundColor: YELLOW_DARK },
                 }}
               >
-                Login/Register
+                <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
+                  Store
+                </Box>
               </Button>
 
-              {/* Mobile Menu Hamburger */}
-              <IconButton
-                onClick={() => setMobileOpen(true)}
+              <Button
+                onClick={onOpenAuth}
+                startIcon={<GraduationCap size={19} />}
                 sx={{
-                  display: { xs: "flex", lg: "none" },
-                  color: "#1E293B",
-                  ml: 0.5,
+                  ...pillBase,
+                  display: { xs: "none", lg: "inline-flex" },
+                  height: 44,
+                  px: 2.5,
+                  fontSize: "0.95rem",
+                  color: "#FFFFFF",
+                  backgroundColor: RED,
+                  "&:hover": { backgroundColor: RED_DARK, boxShadow: "0 4px 12px rgba(254,0,52,.25)" },
                 }}
-                aria-label="Open mobile menu"
               >
-                <MenuIcon size={24} />
+                Login
+              </Button>
+
+              <IconButton
+                onClick={openMenu}
+                aria-label="Open menu"
+                sx={{ display: { xs: "inline-flex", lg: "none" }, width: { xs: 38, sm: 44 }, height: { xs: 38, sm: 44 }, backgroundColor: "#F5F5F5", color: "#1F2937" }}
+              >
+                <MenuIcon size={22} />
               </IconButton>
             </Box>
           </Box>
         </Container>
 
-        {/* Mega Menu Dropdown (Exact replicate of media_1791051086131.png & media_1791051109002.png) */}
+        {/* Desktop mega menu */}
         {megaMenuOpen && (
           <Box
             ref={megaMenuRef}
             sx={{
+              display: { xs: "none", lg: "block" },
               position: "absolute",
               top: "100%",
               left: 0,
               right: 0,
               backgroundColor: "#FFFFFF",
               borderBottom: "1px solid #E5E7EB",
-              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.22)",
+              boxShadow: "0 25px 50px -12px rgba(0,0,0,0.22)",
               zIndex: 1300,
-              animation: "fadeInDown 0.18s ease-out",
-              "@keyframes fadeInDown": {
-                "0%": { opacity: 0, transform: "translateY(-6px)" },
-                "100%": { opacity: 1, transform: "translateY(0)" },
-              },
+              animation: "fadeInDown .18s ease-out",
+              "@keyframes fadeInDown": { from: { opacity: 0, transform: "translateY(-6px)" }, to: { opacity: 1, transform: "none" } },
             }}
           >
             <Container sx={{ p: 0 }}>
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: { xs: "1fr", md: "310px 1fr" },
-                  minHeight: 440,
-                }}
-              >
-                {/* Left Categories Rail */}
-                <Box
-                  sx={{
-                    borderRight: "1px solid #F1F5F9",
-                    py: 1.5,
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
+              <Box sx={{ display: "grid", gridTemplateColumns: "310px 1fr", minHeight: 440 }}>
+                <Box sx={{ borderRight: "1px solid #F1F5F9", py: 1.5 }}>
                   {MEGA_MENU_CATEGORIES.map((cat, idx) => {
                     const isSelected = activeCategoryIndex === idx;
                     return (
@@ -272,71 +329,27 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                           py: 1.6,
                           px: 3,
                           cursor: "pointer",
-                          backgroundColor: isSelected ? "#F8F9FA" : "transparent",
+                          backgroundColor: isSelected ? "#FFF5F7" : "transparent",
+                          borderLeft: `3px solid ${isSelected ? RED : "transparent"}`,
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "space-between",
-                          transition: "background 0.15s ease",
-                          "&:hover": {
-                            backgroundColor: "#F8F9FA",
-                          },
+                          "&:hover": { backgroundColor: "#FFF5F7" },
                         }}
                       >
                         <Box sx={{ pr: 1 }}>
-                          <Typography
-                            variant="subtitle2"
-                            sx={{
-                              fontWeight: isSelected ? 700 : 600,
-                              color: isSelected ? "#0F172A" : "#334155",
-                              fontSize: "0.96rem",
-                              lineHeight: 1.25,
-                            }}
-                          >
+                          <Typography sx={{ fontWeight: isSelected ? 700 : 600, color: isSelected ? "#0F172A" : "#334155", fontSize: "0.96rem", lineHeight: 1.25 }}>
                             {cat.title}
                           </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              color: "#64748B",
-                              display: "block",
-                              fontSize: "0.78rem",
-                              mt: 0.35,
-                              lineHeight: 1.35,
-                            }}
-                          >
-                            {cat.subtitle}
-                          </Typography>
+                          <Typography sx={{ color: "#64748B", fontSize: "0.78rem", mt: 0.35, lineHeight: 1.35 }}>{cat.subtitle}</Typography>
                         </Box>
-
-                        {/* Chevron right on active category matching Screenshot media_1791051109002.png */}
-                        {isSelected && (
-                          <ChevronRight size={17} color="#475569" style={{ flexShrink: 0 }} />
-                        )}
+                        {isSelected && <ChevronRight size={17} color={RED} style={{ flexShrink: 0 }} />}
                       </Box>
                     );
                   })}
                 </Box>
-
-                {/* Right Area: 3-Column Grid of White Cards (Matching both screenshots) */}
-                <Box
-                  sx={{
-                    p: { xs: 2.5, md: 3.5 },
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "flex-start",
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: "grid",
-                      gridTemplateColumns: {
-                        xs: "1fr",
-                        sm: "repeat(2, 1fr)",
-                        lg: "repeat(3, 1fr)",
-                      },
-                      gap: 2,
-                    }}
-                  >
+                <Box sx={{ p: 3.5 }}>
+                  <Box sx={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 2 }}>
                     {selectedCategory.courses.map((course) => (
                       <Box
                         key={course.id}
@@ -349,54 +362,29 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                           gap: 2,
                           p: "14px 18px",
                           borderRadius: "12px",
-                          backgroundColor: "#FFFFFF",
                           border: "1px solid #E5E7EB",
                           textDecoration: "none",
                           color: "inherit",
-                          boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
-                          transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                          cursor: "pointer",
                           minHeight: 62,
-                          "&:hover": {
-                            borderColor: "#3B82F6",
-                            transform: "translateY(-2px)",
-                            boxShadow: "0 8px 18px rgba(37, 99, 235, 0.1)",
-                          },
+                          transition: "all .2s ease",
+                          "&:hover": { borderColor: RED, transform: "translateY(-2px)", boxShadow: "0 8px 18px rgba(254,0,52,.10)" },
                         }}
                       >
-                        {/* Colorful Icon Container (Matching the colorful icons in screenshots) */}
                         <Box
                           sx={{
                             width: 38,
                             height: 38,
                             borderRadius: "10px",
-                            backgroundColor: course.iconBg || "#EFF6FF",
-                            color: course.iconColor || "#2563EB",
+                            backgroundColor: course.iconBg || "#FFF0F3",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
                             flexShrink: 0,
                           }}
                         >
-                          <IconRenderer
-                            name={course.icon}
-                            size={21}
-                            color={course.iconColor || "#2563EB"}
-                          />
+                          <IconRenderer name={course.icon} size={21} color={course.iconColor || RED} />
                         </Box>
-
-                        {/* Title in bold black text */}
-                        <Typography
-                          variant="subtitle1"
-                          sx={{
-                            fontWeight: 700,
-                            color: "#1E293B",
-                            fontSize: "0.96rem",
-                            lineHeight: 1.25,
-                          }}
-                        >
-                          {course.title}
-                        </Typography>
+                        <Typography sx={{ fontWeight: 700, color: "#1E293B", fontSize: "0.96rem", lineHeight: 1.25 }}>{course.title}</Typography>
                       </Box>
                     ))}
                   </Box>
@@ -407,115 +395,177 @@ export default function Header({ onOpenAuth }: HeaderProps) {
         )}
       </Box>
 
-      {/* Dimmed Backdrop when Mega Menu is open */}
+      {/* Backdrop for desktop mega menu */}
       {megaMenuOpen && (
         <Box
           onClick={() => setMegaMenuOpen(false)}
           sx={{
+            display: { xs: "none", lg: "block" },
             position: "fixed",
-            top: 70,
+            top: 72,
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: "rgba(15, 23, 42, 0.45)",
+            backgroundColor: "rgba(15,23,42,.45)",
             backdropFilter: "blur(2px)",
             zIndex: 1150,
           }}
         />
       )}
 
-      {/* Mobile Navigation Drawer */}
+      {/* Left slide menu (tablet / mobile) */}
       <Drawer
-        anchor="right"
-        open={mobileOpen}
-        onClose={() => setMobileOpen(false)}
-        PaperProps={{
-          sx: { width: "320px", maxWidth: "85vw", p: 2.5 },
-        }}
+        anchor="left"
+        open={drawerOpen}
+        onClose={closeDrawer}
+        PaperProps={{ sx: { width: { xs: "100%", sm: 420 }, display: "flex", flexDirection: "column" } }}
       >
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
-          <Box sx={{ position: "relative", width: 120, height: 38 }}>
-            <Image src="/images/logo.png" alt="Vini IAS" fill style={{ objectFit: "contain" }} />
-          </Box>
-          <IconButton onClick={() => setMobileOpen(false)}>
-            <CloseIcon size={22} />
-          </IconButton>
-        </Box>
-
-        <Button
-          fullWidth
-          variant="contained"
-          onClick={() => {
-            setMobileOpen(false);
-            onOpenAuth();
-          }}
-          startIcon={<User size={18} />}
-          sx={{
-            backgroundColor: "#1F242D",
-            color: "#FFFFFF",
-            fontWeight: 700,
-            mb: 3,
-            py: 1.2,
-            borderRadius: "8px",
-            textTransform: "none",
-          }}
-        >
-          Login/Register
-        </Button>
-
-        <Typography variant="caption" sx={{ fontWeight: 800, color: "#94A3B8", textTransform: "uppercase" }}>
-          Navigation
-        </Typography>
-
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5, mt: 1, mb: 3 }}>
-          {NAV_ITEMS.map((item) => (
-            <Box
-              key={item.id}
-              component={Link}
-              href={item.href}
-              onClick={() => setMobileOpen(false)}
-              sx={{
-                py: 1.2,
-                px: 1.5,
-                borderRadius: "8px",
-                textDecoration: "none",
-                color: "#1E293B",
-                fontWeight: 600,
-                fontSize: "0.95rem",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                "&:hover": { backgroundColor: "#F8FAFC", color: "#2563EB" },
-              }}
-            >
-              <span>{item.label}</span>
+        {drawerView === "menu" ? (
+          <>
+            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", px: 2.5, height: 72, borderBottom: "1px solid #EEF0F3", flexShrink: 0 }}>
+              <Box sx={{ position: "relative", width: 110, height: 40 }}>
+                <Image src="/images/logo.png" alt="Vini IAS" fill sizes="110px" style={{ objectFit: "contain", objectPosition: "left" }} />
+              </Box>
+              <IconButton onClick={closeDrawer} aria-label="Close menu">
+                <CloseIcon size={24} />
+              </IconButton>
             </Box>
-          ))}
-        </Box>
 
-        <Box sx={{ mt: "auto", pt: 2, borderTop: "1px solid #E2E8F0" }}>
-          <Typography variant="body2" sx={{ color: "#64748B", fontSize: "0.85rem", mb: 1 }}>
-            Admission Helpline
-          </Typography>
-          <Button
-            component="a"
-            href="tel:+918544078245"
-            fullWidth
-            variant="outlined"
-            startIcon={<PhoneCall size={16} />}
-            sx={{
-              borderColor: "#3B82F6",
-              color: "#2563EB",
-              fontWeight: 700,
-              py: 1,
-              borderRadius: "8px",
-              textTransform: "none",
-            }}
-          >
-            Call +91 8544 078245
-          </Button>
-        </Box>
+            <Box component="nav" aria-label="Mobile" sx={{ flex: 1, overflowY: "auto" }}>
+              <DrawerRow onClick={() => setDrawerView("courses")} label={ALL_COURSES_LABEL} chevron />
+              {NAV_LINKS.map((item) => (
+                <DrawerRow key={item.id} href={item.href} label={item.label} onClick={closeDrawer} />
+              ))}
+              <DrawerRow href={STORE_HREF} label="Store" onClick={closeDrawer} />
+            </Box>
+
+            <Box sx={{ p: 2.5, flexShrink: 0 }}>
+              <Button
+                fullWidth
+                onClick={() => {
+                  closeDrawer();
+                  onOpenAuth();
+                }}
+                sx={{ ...pillBase, borderRadius: "10px", height: 52, fontSize: "1rem", color: "#FFFFFF", backgroundColor: RED, "&:hover": { backgroundColor: RED_DARK } }}
+              >
+                Login/Register
+              </Button>
+            </Box>
+          </>
+        ) : (
+          <>
+            {/* pw.live-style "All Courses" panel */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, px: 1.5, height: 72, borderBottom: "1px solid #EEF0F3", flexShrink: 0 }}>
+              <IconButton onClick={() => setDrawerView("menu")} aria-label="Back to menu">
+                <ChevronLeft size={24} />
+              </IconButton>
+              <Typography sx={{ flex: 1, fontWeight: 700, fontSize: "1.2rem", color: "#111827" }}>{ALL_COURSES_LABEL}</Typography>
+              <IconButton onClick={closeDrawer} aria-label="Close menu">
+                <CloseIcon size={24} />
+              </IconButton>
+            </Box>
+
+            <Box sx={{ flex: 1, overflowY: "auto" }}>
+              {MEGA_MENU_CATEGORIES.map((cat) => {
+                const open = expandedCategory === cat.id;
+                return (
+                  <Box key={cat.id} sx={{ borderBottom: "1px solid #EEF0F3" }}>
+                    <Box
+                      component="button"
+                      type="button"
+                      onClick={() => setExpandedCategory(open ? null : cat.id)}
+                      aria-expanded={open}
+                      sx={{
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 2,
+                        textAlign: "left",
+                        px: 2.5,
+                        py: 2,
+                        border: "none",
+                        background: open ? "#FFF5F7" : "#FFFFFF",
+                        cursor: "pointer",
+                        fontFamily: "inherit",
+                      }}
+                    >
+                      <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Typography sx={{ fontWeight: 700, fontSize: "1.02rem", color: "#111827", mb: 0.4 }}>{cat.title}</Typography>
+                        <Typography sx={{ fontSize: "0.86rem", color: "#6B7280", lineHeight: 1.45 }}>
+                          {cat.courses.map((c) => c.title).join(", ")}
+                        </Typography>
+                      </Box>
+                      <ChevronDown size={22} color="#374151" style={{ flexShrink: 0, transform: open ? "rotate(180deg)" : "none", transition: "transform .2s ease" }} />
+                    </Box>
+                    <Collapse in={open} timeout={220} unmountOnExit>
+                      <Box sx={{ px: 2.5, pb: 2, display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, gap: 1 }}>
+                        {cat.courses.map((course) => (
+                          <Box
+                            key={course.id}
+                            component={Link}
+                            href={course.href}
+                            onClick={closeDrawer}
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 1.25,
+                              p: "10px 12px",
+                              borderRadius: "10px",
+                              border: "1px solid #E5E7EB",
+                              textDecoration: "none",
+                              color: "#1E293B",
+                              fontWeight: 600,
+                              fontSize: "0.9rem",
+                              "&:hover": { borderColor: RED, color: RED },
+                            }}
+                          >
+                            <IconRenderer name={course.icon} size={18} color={course.iconColor || RED} />
+                            {course.title}
+                          </Box>
+                        ))}
+                      </Box>
+                    </Collapse>
+                  </Box>
+                );
+              })}
+            </Box>
+          </>
+        )}
       </Drawer>
+
+      <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
+  );
+}
+
+/** One full-width row in the slide menu (pw.live style). */
+function DrawerRow({ label, href, onClick, chevron = false }: { label: string; href?: string; onClick?: () => void; chevron?: boolean }) {
+  return (
+    <Box
+      {...(href ? { component: Link, href } : { component: "button", type: "button" })}
+      onClick={onClick}
+      sx={{
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        px: 2.5,
+        py: 2.25,
+        border: "none",
+        borderBottom: "1px solid #EEF0F3",
+        background: "#FFFFFF",
+        textDecoration: "none",
+        textAlign: "left",
+        fontFamily: "inherit",
+        fontSize: "1.05rem",
+        fontWeight: 600,
+        color: "#111827",
+        cursor: "pointer",
+        "&:hover": { backgroundColor: "#FFF5F7", color: RED },
+      }}
+    >
+      {label}
+      {chevron && <ChevronRight size={22} />}
+    </Box>
   );
 }

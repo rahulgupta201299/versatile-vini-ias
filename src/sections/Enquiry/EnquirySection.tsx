@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -8,10 +8,22 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import FormHelperText from "@mui/material/FormHelperText";
 import Checkbox from "@mui/material/Checkbox";
-import Alert from "@mui/material/Alert";
 import Card from "@mui/material/Card";
 import { PhoneCall, CheckCircle2, Clock } from "lucide-react";
+import CounsellorIllustration from "@/components/illustrations/CounsellorIllustration";
+import { WhatsAppLogo, VerifiedBadge } from "@/components/icons/BrandLogos";
+import { CONTACT } from "@/data/contact";
+import {
+  useFormValidation,
+  validateName,
+  validateMobile,
+  validateRequiredSelect,
+  validateConsent,
+  sanitizeName,
+  sanitizeMobile,
+} from "@/utils/validation";
 
 const COURSE_OPTIONS = [
   "Sankalp UPSC CSE 2026/27 GS Foundation",
@@ -24,29 +36,23 @@ const COURSE_OPTIONS = [
 ];
 
 export default function EnquirySection() {
-  const [name, setName] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [course, setCourse] = useState(COURSE_OPTIONS[0]);
-  const [agree, setAgree] = useState(true);
-  const [error, setError] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
   const [submitted, setSubmitted] = useState(false);
+  const form = useFormValidation(
+    { name: "", mobile: "", course: "", agree: true },
+    {
+      name: (v) => validateName(v),
+      mobile: (v) => validateMobile(v),
+      course: validateRequiredSelect("your target exam / course"),
+      agree: (v) => validateConsent(v),
+    },
+    { name: sanitizeName, mobile: sanitizeMobile }
+  );
+  const { values } = form;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) {
-      setError("Please provide your name");
-      return;
-    }
-    const cleanMobile = mobile.replace(/\D/g, "");
-    if (cleanMobile.length !== 10) {
-      setError("Please provide a valid 10-digit mobile number");
-      return;
-    }
-    if (!agree) {
-      setError("Please agree to the Terms & Conditions to proceed");
-      return;
-    }
-    setError("");
+    if (!form.validateAll(formRef.current)) return;
     setSubmitted(true);
   };
 
@@ -54,7 +60,7 @@ export default function EnquirySection() {
     <Box
       id="enquiry"
       sx={{
-        py: { xs: 6, md: 8 },
+        py: { xs: 3.5, md: 5 },
         backgroundColor: "#F8FAFC",
         borderTop: "1px solid #E2E8F0",
       }}
@@ -70,6 +76,8 @@ export default function EnquirySection() {
         >
           {/* Left Description (From PDF Page 3) */}
           <Box>
+            <CounsellorIllustration width={{ xs: 150, md: 200 }} />
+            <Box sx={{ mb: 2 }} />
             <Typography
               variant="h3"
               sx={{
@@ -97,51 +105,94 @@ export default function EnquirySection() {
               Let us know any query regarding your UPSC or State PCS preparation and we&#39;ll guide you in the right direction.
             </Typography>
 
-            {/* Direct Phone Call Card from PDF Page 3 */}
+            {/* Call + WhatsApp (same number) */}
             <Box
-              component="a"
-              href="tel:+918544078245"
               sx={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 2,
-                p: { xs: 2, sm: 2.5 },
-                borderRadius: "16px",
-                backgroundColor: "#FFFFFF",
-                border: "2px solid #8B1D24",
-                boxShadow: "0 8px 20px rgba(139, 29, 36, 0.08)",
-                textDecoration: "none",
-                color: "inherit",
+                display: "grid",
+                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                gap: { xs: 1.25, sm: 2 },
                 mb: 4,
-                transition: "all 0.2s ease",
-                "&:hover": {
-                  transform: "translateY(-3px)",
-                  boxShadow: "0 12px 28px rgba(139, 29, 36, 0.15)",
-                },
+                maxWidth: 560,
               }}
             >
-              <Box
-                sx={{
-                  width: 52,
-                  height: 52,
-                  borderRadius: "50%",
-                  backgroundColor: "#FEF2F2",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "#8B1D24",
-                }}
-              >
-                <PhoneCall size={26} />
-              </Box>
-              <Box>
-                <Typography variant="caption" sx={{ color: "#64748B", fontWeight: 700, textTransform: "uppercase" }}>
-                  Direct Helpline
-                </Typography>
-                <Typography variant="h5" sx={{ fontWeight: 900, color: "#8B1D24", letterSpacing: "0.02em" }}>
-                  +91 8544 078245
-                </Typography>
-              </Box>
+              {[
+                {
+                  key: "call",
+                  href: CONTACT.tel,
+                  label: "Call us",
+                  color: "#FE0034",
+                  bg: "#FFF0F3",
+                  icon: <PhoneCall size={22} color="#FFFFFF" />,
+                  iconBg: "#FE0034",
+                  external: false,
+                },
+                {
+                  key: "whatsapp",
+                  href: CONTACT.whatsappUrl,
+                  label: "WhatsApp",
+                  color: "#128C4A",
+                  bg: "#EAFBF1",
+                  icon: <WhatsAppLogo size={22} color="#FFFFFF" />,
+                  iconBg: "#25D366",
+                  external: true,
+                },
+              ].map((c) => (
+                <Box
+                  key={c.key}
+                  component="a"
+                  href={c.href}
+                  {...(c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  aria-label={`${c.label}: ${CONTACT.phoneDisplay}`}
+                  sx={{
+                    display: "flex",
+                    flexDirection: { xs: "column", sm: "row" },
+                    alignItems: { xs: "flex-start", sm: "center" },
+                    gap: { xs: 1, sm: 1.5 },
+                    p: { xs: 1.5, sm: 2 },
+                    borderRadius: "14px",
+                    backgroundColor: "#FFFFFF",
+                    border: `1.5px solid ${c.color}`,
+                    boxShadow: "0 6px 18px rgba(15, 23, 42, 0.06)",
+                    textDecoration: "none",
+                    color: "inherit",
+                    minWidth: 0,
+                    transition: "all 0.2s ease",
+                    "&:hover": { transform: "translateY(-3px)", backgroundColor: c.bg },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: { xs: 38, sm: 46 },
+                      height: { xs: 38, sm: 46 },
+                      flexShrink: 0,
+                      borderRadius: "50%",
+                      backgroundColor: c.iconBg,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {c.icon}
+                  </Box>
+                  <Box sx={{ minWidth: 0 }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                      <Typography
+                        component="span"
+                        sx={{ fontSize: { xs: "0.7rem", sm: "0.78rem" }, color: "#64748B", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em" }}
+                      >
+                        {c.label}
+                      </Typography>
+                      {c.key === "whatsapp" && CONTACT.whatsappVerified && <VerifiedBadge size={15} />}
+                    </Box>
+                    <Typography
+                      component="span"
+                      sx={{ display: "block", fontSize: { xs: "0.9rem", sm: "1.1rem" }, fontWeight: 800, color: c.color, whiteSpace: "nowrap" }}
+                    >
+                      {CONTACT.phoneDisplay}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
             </Box>
 
             {/* Trust points */}
@@ -185,37 +236,33 @@ export default function EnquirySection() {
                   Enquiry Submitted Successfully!
                 </Typography>
                 <Typography variant="body2" sx={{ color: "#475569", mb: 3 }}>
-                  We have registered your query for <strong>{course}</strong>. Our counsellor will call you shortly on <strong>+91 {mobile}</strong>.
+                  We have registered your query for <strong>{values.course}</strong>. Our counsellor will call you shortly on <strong>+91 {values.mobile}</strong>.
                 </Typography>
                 <Button
                   variant="outlined"
                   onClick={() => {
                     setSubmitted(false);
-                    setName("");
-                    setMobile("");
+                    form.reset();
                   }}
-                  sx={{ borderColor: "#8B1D24", color: "#8B1D24", fontWeight: 700 }}
+                  sx={{ borderColor: "#FE0034", color: "#FE0034", fontWeight: 700 }}
                 >
                   Send Another Enquiry
                 </Button>
               </Box>
             ) : (
-              <Box component="form" onSubmit={handleSubmit} noValidate>
-                {error && (
-                  <Alert severity="error" sx={{ mb: 2, borderRadius: "10px" }}>
-                    {error}
-                  </Alert>
-                )}
+              <Box component="form" ref={formRef} onSubmit={handleSubmit} noValidate>
 
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 2.25 }}>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                   <Box>
                     <Typography variant="caption" sx={{ fontWeight: 700, color: "#334155", mb: 0.5, display: "block" }}>
                       Full Name *
                     </Typography>
                     <TextField
                       placeholder="e.g. Rahul Kumar"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      {...form.fieldProps("name")}
+                      required
+                      autoComplete="name"
+                      inputProps={{ maxLength: 50, "aria-label": "Full name" }}
                       fullWidth
                       variant="outlined"
                       size="medium"
@@ -229,8 +276,11 @@ export default function EnquirySection() {
                     </Typography>
                     <TextField
                       placeholder="10-digit mobile number"
-                      value={mobile}
-                      onChange={(e) => setMobile(e.target.value)}
+                      {...form.fieldProps("mobile")}
+                      required
+                      type="tel"
+                      autoComplete="tel-national"
+                      inputProps={{ inputMode: "numeric", "aria-label": "Mobile number" }}
                       fullWidth
                       variant="outlined"
                       size="medium"
@@ -244,8 +294,15 @@ export default function EnquirySection() {
                     </Typography>
                     <TextField
                       select
-                      value={course}
-                      onChange={(e) => setCourse(e.target.value)}
+                      {...form.fieldProps("course")}
+                      required
+                      SelectProps={{
+                        displayEmpty: true,
+                        onClose: () => form.markTouched("course"),
+                        renderValue: (v) =>
+                          (v as string) || <span style={{ color: "#94A3B8" }}>Select your exam / course</span>,
+                      }}
+                      inputProps={{ "aria-label": "Target exam or course" }}
                       fullWidth
                       variant="outlined"
                       size="medium"
@@ -259,12 +316,17 @@ export default function EnquirySection() {
                     </TextField>
                   </Box>
 
+                  <Box>
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={agree}
-                        onChange={(e) => setAgree(e.target.checked)}
-                        sx={{ color: "#8B1D24", "&.Mui-checked": { color: "#8B1D24" } }}
+                        checked={values.agree}
+                        onChange={(e) => {
+                          form.setValue("agree", e.target.checked);
+                          form.markTouched("agree");
+                        }}
+                        inputProps={{ "aria-invalid": Boolean(form.visibleError("agree")) }}
+                        sx={{ color: "#FE0034", "&.Mui-checked": { color: "#FE0034" } }}
                       />
                     }
                     label={
@@ -273,6 +335,12 @@ export default function EnquirySection() {
                       </Typography>
                     }
                   />
+                  {form.visibleError("agree") && (
+                    <FormHelperText error sx={{ mt: -0.5, ml: 0 }}>
+                      {form.visibleError("agree")}
+                    </FormHelperText>
+                  )}
+                  </Box>
 
                   {/* "Call Me Back" Button from PDF Page 3 */}
                   <Button
@@ -281,15 +349,15 @@ export default function EnquirySection() {
                     size="large"
                     fullWidth
                     sx={{
-                      background: "linear-gradient(135deg, #8B1D24 0%, #A8323A 100%)",
+                      background: "linear-gradient(135deg, #FE0034 0%, #FF3358 100%)",
                       color: "#FFFFFF",
                       fontWeight: 800,
                       fontSize: "1rem",
                       py: 1.4,
                       borderRadius: "12px",
-                      boxShadow: "0 6px 18px rgba(139, 29, 36, 0.25)",
+                      boxShadow: "0 6px 18px rgba(254, 0, 52, 0.25)",
                       "&:hover": {
-                        background: "linear-gradient(135deg, #70161C 0%, #8B1D24 100%)",
+                        background: "linear-gradient(135deg, #CC002A 0%, #FE0034 100%)",
                       },
                     }}
                   >

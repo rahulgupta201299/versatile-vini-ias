@@ -4,7 +4,7 @@ import ThemeRegistry from "@/theme/ThemeRegistry";
 import { AppLayout } from "@/components";
 
 export const viewport: Viewport = {
-  themeColor: "#8B1D24",
+  themeColor: "#FE0034",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,

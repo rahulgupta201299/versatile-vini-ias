@@ -346,7 +346,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
         title: "LAW / CLAT",
         href: "#courses",
         icon: "Scale",
-        iconColor: "#8B1D24",
+        iconColor: "#FE0034",
         iconBg: "#FEF2F2",
       },
       {
@@ -447,3 +447,9 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
     ],
   },
 ];
+
+/** Quick picks shown in the search dialog before the user types. */
+export const SEARCH_TRENDING = ["UPSC CSE", "BPSC", "State PSC", "SSC", "CSAT", "Ethics & Essay"];
+
+/** Store link used by the header "Store" button and the mobile menu. */
+export const STORE_HREF = "#market-ad";

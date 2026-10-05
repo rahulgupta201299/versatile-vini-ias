@@ -9,7 +9,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { HERO_BANNERS } from "@/data/heroBanners";
 import { HeroBanner } from "@/types";
 
-export interface HeroSliderProps {
+interface HeroSliderProps {
   banners?: HeroBanner[];
 }
 
@@ -34,22 +34,23 @@ export default function HeroSlider({ banners = HERO_BANNERS }: HeroSliderProps) 
   return (
     <Box
       sx={{
-        pt: { xs: 2, sm: 3, md: 3.5 },
-        pb: { xs: 2, sm: 2.5, md: 3 },
+        pt: { xs: 1.5, md: 2 },
+        pb: { xs: 1, md: 1.5 },
         backgroundColor: "#FFFFFF",
       }}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <Container>
+      <Container sx={{ px: { xs: 2, sm: 3 } }}>
+        <Box sx={{ position: "relative" }}>
         {/* Main Sliding Banner Card Container */}
         <Box
           sx={{
             position: "relative",
-            borderRadius: { xs: "18px", md: "26px" },
+            borderRadius: { xs: "12px", sm: "16px", md: "22px" },
             overflow: "hidden",
-            boxShadow: "0 16px 40px rgba(0, 0, 0, 0.12)",
-            backgroundColor: "#70161C", // Fallback brand dark background
+            boxShadow: { xs: "0 6px 16px rgba(0, 0, 0, 0.10)", md: "0 12px 32px rgba(0, 0, 0, 0.12)" },
+            backgroundColor: "#CC002A", // Fallback brand dark background
           }}
         >
           {/* Sliding Track for Server-Provided Banner Images */}
@@ -72,7 +73,9 @@ export default function HeroSlider({ banners = HERO_BANNERS }: HeroSliderProps) 
                   position: "relative",
                   display: "block",
                   textDecoration: "none",
-                  height: { xs: 200, sm: 300, md: 380, lg: 410 },
+                  // Fixed aspect ratio (~3:1) so the banner scales with width
+                  // instead of being cropped at fixed heights on small screens
+                  aspectRatio: { xs: "2.9 / 1", md: "3.2 / 1" },
                   cursor: "pointer",
                 }}
               >
@@ -80,6 +83,7 @@ export default function HeroSlider({ banners = HERO_BANNERS }: HeroSliderProps) 
                   src={banner.imageUrl}
                   alt={banner.alt || banner.title}
                   fill
+                  sizes="(max-width: 600px) 100vw, (max-width: 1200px) 95vw, 1200px"
                   style={{
                     objectFit: "cover",
                     objectPosition: "center",
@@ -100,6 +104,7 @@ export default function HeroSlider({ banners = HERO_BANNERS }: HeroSliderProps) 
               aria-label="Previous banner"
               sx={{
                 position: "absolute",
+                display: { xs: "none", md: "inline-flex" },
                 top: "50%",
                 left: { xs: 8, sm: 16 },
                 transform: "translateY(-50%)",
@@ -130,6 +135,7 @@ export default function HeroSlider({ banners = HERO_BANNERS }: HeroSliderProps) 
               aria-label="Next banner"
               sx={{
                 position: "absolute",
+                display: { xs: "none", md: "inline-flex" },
                 top: "50%",
                 right: { xs: 8, sm: 16 },
                 transform: "translateY(-50%)",
@@ -150,14 +156,19 @@ export default function HeroSlider({ banners = HERO_BANNERS }: HeroSliderProps) 
             </IconButton>
           )}
 
+        </Box>
+
           {/* Bottom Pill/Dash Slide Indicators matching screenshot */}
           {banners.length > 1 && (
             <Box
               sx={{
-                position: "absolute",
-                bottom: { xs: 12, sm: 16, md: 20 },
-                left: "50%",
-                transform: "translateX(-50%)",
+                // Below the banner on mobile/tablet, overlaid on desktop
+                position: { xs: "static", md: "absolute" },
+                bottom: { md: 20 },
+                left: { md: "50%" },
+                transform: { md: "translateX(-50%)" },
+                justifyContent: "center",
+                mt: { xs: 1.25, md: 0 },
                 display: "flex",
                 alignItems: "center",
                 gap: 1,
@@ -177,14 +188,16 @@ export default function HeroSlider({ banners = HERO_BANNERS }: HeroSliderProps) 
                     tabIndex={0}
                     aria-label={`Go to banner ${idx + 1}`}
                     sx={{
-                      width: isActive ? 34 : 22,
-                      height: 5,
+                      width: { xs: isActive ? 28 : 18, md: isActive ? 34 : 22 },
+                      height: { xs: 4, md: 5 },
                       borderRadius: "9999px",
-                      backgroundColor: isActive ? "#111827" : "rgba(255, 255, 255, 0.65)",
+                      backgroundColor: isActive
+                        ? "#111827"
+                        : { xs: "#D1D5DB", md: "rgba(255, 255, 255, 0.65)" },
                       cursor: "pointer",
                       transition: "all 0.3s ease",
                       "&:hover": {
-                        backgroundColor: isActive ? "#000000" : "#FFFFFF",
+                        backgroundColor: isActive ? "#000000" : { xs: "#9CA3AF", md: "#FFFFFF" },
                       },
                     }}
                   />

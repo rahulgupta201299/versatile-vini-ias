@@ -4,185 +4,237 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import Card from "@mui/material/Card";
-import { Video, Eye, HelpCircle, Users, Globe2 } from "lucide-react";
+import { keyframes } from "@mui/system";
+import { Radio, MessageCircleQuestion, PenLine } from "lucide-react";
+import {
+  IMPACT_STATS,
+  IMPACT_FEATURES,
+  IMPACT_AVATARS,
+  IMPACT_LOGO_POSITION,
+} from "@/data/impact";
+import { ImpactFeatureChip } from "@/types";
 
-const IMPACT_METRICS = [
-  {
-    value: "10+ Lakh",
-    label: "Hours of Live Learning",
-    description: "Interactive classroom & doubt sessions conducted",
-    icon: <Video size={28} color="#2563EB" />,
-    bg: "#EFF6FF",
-  },
-  {
-    value: "10+ Lakh",
-    label: "Monthly Active Views",
-    description: "Across live classes, editorials & YouTube lectures",
-    icon: <Eye size={28} color="#16A34A" />,
-    bg: "#F0FDF4",
-  },
-  {
-    value: "10,000+",
-    label: "Doubts Solved Live",
-    description: "Personal 1-on-1 audio & visual doubt clearances",
-    icon: <HelpCircle size={28} color="#9333EA" />,
-    bg: "#FAF5FF",
-  },
-  {
-    value: "5+ Crore",
-    label: "Learning Minutes Delivered",
-    description: "Reaching students in remote villages across India",
-    icon: <Users size={28} color="#EA580C" />,
-    bg: "#FFF7ED",
-  },
-];
+/* Layout reference: vedantu.com "Impact. At scale" — map artwork 704 × 440 */
+const MAP_W = 704;
+const MAP_H = 440;
+const TEXT = "#0F172A";
+const ACCENT = "#FE0034";
 
-export default function ImpactStatsSection() {
+const float = keyframes`
+  0%, 100% { transform: translate(-50%, -50%); }
+  50% { transform: translate(-50%, calc(-50% - 6px)); }
+`;
+const pulse = keyframes`
+  0% { transform: translate(-50%, -50%) scale(1); opacity: .35; }
+  100% { transform: translate(-50%, -50%) scale(1.3); opacity: 0; }
+`;
+
+const CHIP_ICONS: Record<ImpactFeatureChip["icon"], React.ReactNode> = {
+  live: <Radio size={16} color={ACCENT} />,
+  doubt: <MessageCircleQuestion size={16} color="#7C3AED" />,
+  writing: <PenLine size={16} color="#EA580C" />,
+};
+
+/** Position an element by its centre at x% / y% of the map. */
+const at = (x: number, y: number) => ({
+  position: "absolute" as const,
+  left: `${x}%`,
+  top: `${y}%`,
+  transform: "translate(-50%, -50%)",
+});
+
+/** Hand-drawn style chart illustration (bars + pie). */
+function ChartIllustration() {
+  return (
+    <Box
+      component="svg"
+      viewBox="0 0 104 120"
+      aria-hidden
+      sx={{ width: { xs: 72, md: 104 }, height: "auto", display: "block", mb: 2 }}
+    >
+      <path d="M6 112h56" stroke="#0F172A" strokeWidth="3" strokeLinecap="round" />
+      <path d="M6 108v8M62 108v8" stroke="#0F172A" strokeWidth="2.5" strokeLinecap="round" />
+      <rect x="10" y="90" width="8" height="20" rx="1.5" fill="#7C3AED" stroke="#0F172A" strokeWidth="2" />
+      <rect x="24" y="68" width="14" height="42" rx="2" fill="#FFE51F" stroke="#0F172A" strokeWidth="2" />
+      <rect x="44" y="94" width="10" height="16" rx="1.5" fill={ACCENT} stroke="#0F172A" strokeWidth="2" />
+      <circle cx="72" cy="58" r="24" fill="#FFFFFF" stroke="#0F172A" strokeWidth="2.5" />
+      <path d="M72 58V34a24 24 0 0 1 17 41z" fill="#34D399" stroke="#0F172A" strokeWidth="2.5" strokeLinejoin="round" />
+      <path d="M52 50l14-12M50 58l18-16M52 66l16-14" stroke="#0F172A" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M70 20c12 2 22 10 26 22" fill="none" stroke="#0F172A" strokeWidth="2.5" strokeLinecap="round" />
+      <circle cx="68" cy="20" r="4" fill="#FFE51F" stroke="#0F172A" strokeWidth="2" />
+    </Box>
+  );
+}
+
+function FeatureChip({ chip, delay }: { chip: ImpactFeatureChip; delay: number }) {
+  const [before, after] = chip.text.split(chip.highlight);
   return (
     <Box
       sx={{
-        py: { xs: 6, md: 8 },
+        ...at(chip.x, chip.y),
+        zIndex: 2,
+        display: "inline-flex",
+        alignItems: "center",
+        gap: { xs: 0.5, sm: 0.75 },
+        px: { xs: 1, sm: 1.5 },
+        py: { xs: 0.5, sm: 0.9 },
         backgroundColor: "#FFFFFF",
-        position: "relative",
+        borderRadius: "9999px",
+        boxShadow: "0 4px 16px rgba(15, 23, 42, 0.10)",
+        border: "1px solid #F1F2F8",
+        whiteSpace: "nowrap",
+        fontSize: { xs: "0.62rem", sm: "0.8rem", md: "0.9rem" },
+        color: TEXT,
+        animation: `${float} 4s ease-in-out ${delay}s infinite`,
+        "@media (prefers-reduced-motion: reduce)": { animation: "none" },
+        "& svg": { width: { xs: 12, sm: 16 }, height: { xs: 12, sm: 16 } },
       }}
     >
+      {CHIP_ICONS[chip.icon]}
+      <span>
+        {before}
+        <b>{chip.highlight}</b>
+        {after}
+      </span>
+    </Box>
+  );
+}
+
+function ImpactMap() {
+  return (
+    <Box
+      role="img"
+      aria-label="Students learning with Vini IAS across the globe"
+      sx={{
+        position: "relative",
+        width: "100%",
+        maxWidth: MAP_W,
+        mx: "auto",
+        aspectRatio: `${MAP_W} / ${MAP_H}`,
+        backgroundImage: "url(/images/impact/world-dots.svg)",
+        backgroundSize: "contain",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+      }}
+    >
+      {IMPACT_AVATARS.map((a) => (
+        <Box
+          key={`${a.x}-${a.y}`}
+          component="img"
+          src={a.src}
+          alt={a.alt}
+          loading="lazy"
+          sx={{
+            ...at(a.x, a.y),
+            width: `${(a.size / MAP_W) * 100}%`,
+            aspectRatio: "1",
+            objectFit: "cover",
+            borderRadius: "50%",
+            border: "3px solid #FFFFFF",
+            boxShadow: "0 4px 14px rgba(15, 23, 42, 0.12)",
+          }}
+        />
+      ))}
+
+      {IMPACT_FEATURES.map((chip, i) => (
+        <FeatureChip key={chip.text} chip={chip} delay={i * 0.8} />
+      ))}
+
+      {/* Our logo replaces the reference "V" badge */}
+      <Box sx={{ ...at(IMPACT_LOGO_POSITION.x, IMPACT_LOGO_POSITION.y), width: "17%", zIndex: 3 }}>
+        <Box
+          aria-hidden
+          sx={{
+            ...at(50, 50),
+            width: "100%",
+            height: "100%",
+            borderRadius: "16px",
+            backgroundColor: ACCENT,
+            animation: `${pulse} 2.4s ease-out infinite`,
+            "@media (prefers-reduced-motion: reduce)": { animation: "none", opacity: 0 },
+          }}
+        />
+        <Box
+          sx={{
+            position: "relative",
+            backgroundColor: "#FFFFFF",
+            border: `2px solid ${ACCENT}`,
+            borderRadius: { xs: "10px", sm: "16px" },
+            boxShadow: "0 8px 22px rgba(254, 0, 52, 0.25)",
+            p: { xs: "4px", sm: "8px" },
+            lineHeight: 0,
+          }}
+        >
+          <Box component="img" src="/images/logo.png" alt="Vini IAS" sx={{ width: "100%", height: "auto" }} />
+        </Box>
+      </Box>
+    </Box>
+  );
+}
+
+export default function ImpactStatsSection() {
+  return (
+    <Box component="section" id="impact" sx={{ py: { xs: 4, md: 6 }, backgroundColor: "#FFFFFF" }}>
       <Container>
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: { xs: "1fr", lg: "1fr 1.6fr" },
-            gap: { xs: 4, lg: 6 },
+            gridTemplateColumns: { xs: "1fr", md: "minmax(0, 0.75fr) minmax(0, 1fr)" },
+            gap: { xs: 3, md: 4 },
             alignItems: "center",
           }}
         >
-          {/* Left Narrative */}
+          {/* Left: heading + stats */}
           <Box>
-            <Box
-              sx={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 0.6,
-                backgroundColor: "#FEF2F2",
-                color: "#991B1B",
-                px: 1.6,
-                py: 0.5,
-                borderRadius: "9999px",
-                fontWeight: 800,
-                fontSize: "0.78rem",
-                mb: 1.5,
-              }}
-            >
-              <Globe2 size={15} />
-              <span>NATIONWIDE FOOTPRINT</span>
-            </Box>
-
+            <ChartIllustration />
             <Typography
-              variant="h3"
-              sx={{
-                fontWeight: 900,
-                fontSize: { xs: "1.8rem", sm: "2.3rem", md: "2.8rem" },
-                color: "#1E293B",
-                lineHeight: 1.15,
-                letterSpacing: "-0.015em",
-                mb: 2,
-              }}
+              component="h2"
+              sx={{ fontSize: { xs: "1.6rem", md: "2rem" }, fontWeight: 600, lineHeight: 1.25, color: TEXT, mb: 1.5 }}
             >
-              Impact At Scale
-            </Typography>
-
-            <Typography
-              variant="h5"
-              sx={{
-                fontWeight: 700,
-                fontSize: { xs: "1.1rem", sm: "1.3rem" },
-                color: "#8B1D24",
-                lineHeight: 1.35,
-                mb: 2,
-              }}
-            >
-              Making Quality Civil Service Education Affordable &amp; Accessible Across the Nation
-            </Typography>
-
-            <Typography
-              variant="body1"
-              sx={{
-                color: "#64748B",
-                lineHeight: 1.65,
-                fontSize: "0.95rem",
-              }}
-            >
-              We believe geographical boundaries should never limit an aspirant&#39;s dreams. Through modern technology, top-tier academic faculties, and structured bilingual pedagogical frameworks, Vini IAS is democratizing civil service preparation for every corner of India.
-            </Typography>
-          </Box>
-
-          {/* Right Metrics Grid */}
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-              gap: 2.5,
-            }}
-          >
-            {IMPACT_METRICS.map((metric, idx) => (
-              <Card
-                key={idx}
-                sx={{
-                  p: 3,
-                  borderRadius: "20px",
-                  border: "1px solid #E2E8F0",
-                  backgroundColor: "#FFFFFF",
-                  boxShadow: "0 4px 16px rgba(0,0,0,0.04)",
-                  transition: "all 0.25s ease",
-                  "&:hover": {
-                    transform: "translateY(-4px)",
-                    boxShadow: "0 12px 24px rgba(0,0,0,0.08)",
-                  },
-                }}
-              >
+              Impact. At{" "}
+              <Box component="span" sx={{ position: "relative", color: ACCENT, display: "inline-block" }}>
+                scale
                 <Box
-                  sx={{
-                    width: 52,
-                    height: 52,
-                    borderRadius: "14px",
-                    backgroundColor: metric.bg,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    mb: 2,
-                  }}
+                  component="svg"
+                  viewBox="0 0 120 14"
+                  preserveAspectRatio="none"
+                  aria-hidden
+                  sx={{ position: "absolute", left: 0, bottom: -8, width: "100%", height: 12 }}
                 >
-                  {metric.icon}
+                  <path d="M2 9C30 4 70 2 118 4" stroke="#FFE51F" strokeWidth="5" strokeLinecap="round" fill="none" />
+                  <path d="M10 12C40 9 75 8 110 9" stroke="#FFE51F" strokeWidth="3" strokeLinecap="round" fill="none" />
                 </Box>
-                <Typography
-                  variant="h3"
-                  sx={{
-                    fontWeight: 900,
-                    fontSize: { xs: "1.85rem", sm: "2.1rem" },
-                    color: "#1E293B",
-                    lineHeight: 1.1,
-                    mb: 0.5,
-                  }}
-                >
-                  {metric.value}
-                </Typography>
-                <Typography
-                  variant="subtitle1"
-                  sx={{
-                    fontWeight: 800,
-                    color: "#8B1D24",
-                    fontSize: "0.95rem",
-                    mb: 0.5,
-                  }}
-                >
-                  {metric.label}
-                </Typography>
-                <Typography variant="body2" sx={{ color: "#64748B", fontSize: "0.82rem", lineHeight: 1.4 }}>
-                  {metric.description}
-                </Typography>
-              </Card>
-            ))}
+              </Box>
+            </Typography>
+            <Typography sx={{ fontSize: { xs: "0.85rem", md: "0.9rem" }, color: TEXT, lineHeight: 1.6 }}>
+              Making education affordable and accessible across the globe
+            </Typography>
+
+            <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", columnGap: 3 }}>
+              {IMPACT_STATS.map((stat) => (
+                <Box key={`${stat.value}-${stat.label}`} sx={{ py: { xs: 2.5, md: "34px" } }}>
+                  <Typography
+                    component="p"
+                    sx={{ fontSize: { xs: "1.6rem", md: "2rem" }, fontWeight: 600, lineHeight: { xs: "32px", md: "40px" }, color: TEXT }}
+                  >
+                    {stat.value}
+                    {stat.unit && (
+                      <>
+                        <br />
+                        {stat.unit}
+                      </>
+                    )}
+                  </Typography>
+                  <Typography sx={{ fontSize: { xs: "0.82rem", md: "0.875rem" }, fontWeight: 500, color: TEXT, mt: 0.5 }}>
+                    {stat.label}
+                  </Typography>
+                </Box>
+              ))}
+            </Box>
           </Box>
+
+          {/* Right: map with floating elements */}
+          <ImpactMap />
         </Box>
       </Container>
     </Box>

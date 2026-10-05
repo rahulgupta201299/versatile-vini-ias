@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import Box from "@mui/material/Box";
@@ -10,41 +10,43 @@ import TextField from "@mui/material/TextField";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import IconButton from "@mui/material/IconButton";
-import Alert from "@mui/material/Alert";
 import { X, CheckCircle2 } from "lucide-react";
+import {
+  useFormValidation,
+  validateName,
+  validateMobile,
+  sanitizeName,
+  sanitizeMobile,
+} from "@/utils/validation";
 
-export interface AuthModalProps {
+interface AuthModalProps {
   open: boolean;
   onClose: () => void;
 }
 
 export default function AuthModal({ open, onClose }: AuthModalProps) {
   const [tab, setTab] = useState(0); // 0 = Login, 1 = Register
-  const [mobile, setMobile] = useState("");
-  const [name, setName] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
+  const form = useFormValidation(
+    { name: "", mobile: "" },
+    {
+      // Name is only required on the Register tab
+      name: (v) => (tab === 1 ? validateName(v) : ""),
+      mobile: (v) => validateMobile(v),
+    },
+    { name: sanitizeName, mobile: sanitizeMobile }
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (tab === 1 && !name.trim()) {
-      setError("Please enter your name");
-      return;
-    }
-    const cleanMobile = mobile.replace(/\D/g, "");
-    if (cleanMobile.length !== 10) {
-      setError("Please enter a valid 10-digit mobile number");
-      return;
-    }
-    setError("");
+    if (!form.validateAll(formRef.current)) return;
     setSubmitted(true);
   };
 
   const handleReset = () => {
     setSubmitted(false);
-    setMobile("");
-    setName("");
-    setError("");
+    form.reset();
     onClose();
   };
 
@@ -75,7 +77,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
           value={tab}
           onChange={(_, newVal) => {
             setTab(newVal);
-            setError("");
+            form.reset({ ...form.values, name: "" });
           }}
           sx={{ mb: 3, borderBottom: "1px solid #E2E8F0" }}
         >
@@ -90,34 +92,31 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
               OTP Sent Successfully!
             </Typography>
             <Typography variant="body2" sx={{ color: "#64748B", mb: 3 }}>
-              A 6-digit verification code has been dispatched to <strong>+91 {mobile}</strong>.
+              A 6-digit verification code has been dispatched to <strong>+91 {form.values.mobile}</strong>.
             </Typography>
             <Button
               variant="contained"
               fullWidth
               onClick={handleReset}
-              sx={{ backgroundColor: "#8B1D24", py: 1.2, fontWeight: 700 }}
+              sx={{ backgroundColor: "#FE0034", py: 1.2, fontWeight: 700 }}
             >
               Continue to Student Dashboard
             </Button>
           </Box>
         ) : (
-          <Box component="form" onSubmit={handleSubmit} noValidate>
-            {error && (
-              <Alert severity="error" sx={{ mb: 2, borderRadius: "10px" }}>
-                {error}
-              </Alert>
-            )}
+          <Box component="form" ref={formRef} onSubmit={handleSubmit} noValidate>
 
             {tab === 1 && (
-              <Box sx={{ mb: 2 }}>
+              <Box sx={{ mb: 1 }}>
                 <Typography variant="caption" sx={{ fontWeight: 700, color: "#334155", mb: 0.5, display: "block" }}>
-                  Your Full Name
+                  Your Full Name *
                 </Typography>
                 <TextField
                   placeholder="Enter your name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  {...form.fieldProps("name")}
+                  required
+                  autoComplete="name"
+                  inputProps={{ maxLength: 50, "aria-label": "Full name" }}
                   fullWidth
                   variant="outlined"
                   InputProps={{ sx: { borderRadius: "10px" } }}
@@ -125,19 +124,22 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
               </Box>
             )}
 
-            <Box sx={{ mb: 3 }}>
+            <Box sx={{ mb: 2 }}>
               <Typography variant="caption" sx={{ fontWeight: 700, color: "#334155", mb: 0.5, display: "block" }}>
-                Mobile Number
+                Mobile Number *
               </Typography>
               <TextField
                 placeholder="10-digit mobile number"
-                value={mobile}
-                onChange={(e) => setMobile(e.target.value)}
+                {...form.fieldProps("mobile")}
+                required
+                type="tel"
+                autoComplete="tel-national"
+                inputProps={{ inputMode: "numeric", "aria-label": "Mobile number" }}
                 fullWidth
                 variant="outlined"
                 InputProps={{
                   startAdornment: (
-                    <Box sx={{ fontWeight: 800, color: "#8B1D24", mr: 1, fontSize: "0.95rem" }}>
+                    <Box sx={{ fontWeight: 800, color: "#FE0034", mr: 1, fontSize: "0.95rem" }}>
                       +91
                     </Box>
                   ),
@@ -152,12 +154,12 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
               fullWidth
               size="large"
               sx={{
-                background: "linear-gradient(135deg, #8B1D24 0%, #A8323A 100%)",
+                background: "linear-gradient(135deg, #FE0034 0%, #FF3358 100%)",
                 color: "#FFFFFF",
                 fontWeight: 800,
                 py: 1.3,
                 borderRadius: "10px",
-                boxShadow: "0 4px 14px rgba(139, 29, 36, 0.25)",
+                boxShadow: "0 4px 14px rgba(254, 0, 52, 0.25)",
               }}
             >
               {tab === 0 ? "Get Login OTP" : "Register with OTP"}

@@ -13,7 +13,7 @@ export default function FreeResourcesSection() {
       id="resources"
       component="section"
       sx={{
-        py: { xs: 3, sm: 4, md: 4.5 },
+        py: { xs: 2, sm: 2.5, md: 3 },
         backgroundColor: "#FFFFFF",
       }}
     >

@@ -27,15 +27,6 @@ export const QUICK_LINKS = [
   { name: "Legal Documents", href: "#legal" },
 ];
 
-export const OUR_COURSES = [
-  { name: "UPSC Online Coaching", href: "#courses" },
-  { name: "UPSC Offline Coaching (ORN)", href: "#courses" },
-  { name: "BPSC Online Coaching", href: "#courses" },
-  { name: "UPPSC Online Coaching", href: "#courses" },
-  { name: "JPSC Online Coaching", href: "#courses" },
-  { name: "RAS Online Coaching", href: "#courses" },
-];
-
 export const OUR_PRODUCTS = [
   { name: "VINI IAS", href: "#" },
   { name: "Vini Kiddos", href: "#" },

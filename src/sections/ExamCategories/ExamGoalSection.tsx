@@ -6,36 +6,96 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import { ChevronLeft, ChevronRight, GraduationCap } from "lucide-react";
-import { EXAM_CATEGORIES, ExamGoalCategory } from "@/data/exams";
+import Collapse from "@mui/material/Collapse";
+import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, GraduationCap } from "lucide-react";
+import { EXAM_CATEGORIES } from "@/data/exams";
+import { ExamGoalCategory, SubCategory } from "@/types";
 
-// View More count labels matching the official portal screenshots
-const VIEW_MORE_LABELS: Record<string, string> = {
-  "State PSC": "View 38 More",
-  "UPSC": "View 2 More",
-  "SSC": "View 20 More",
-  "Railways": "View 8 More",
-  "Teaching": "View 42 More",
-  "Defence": "View 12 More",
-  "Banking": "View 16 More",
-  "Engineering": "View 24 More",
-  "Medical": "View 18 More",
-  "Management": "View 14 More",
-  "Police": "View 22 More",
-  "Science": "View 15 More",
-  "PSU Recruitment": "View 10 More",
-  "Law": "View 8 More",
-  "Arts": "View 10 More",
-  "Insurance": "View 6 More",
-  "Board": "View All",
-  "Study Abroad": "View All",
-  "Scholarship": "View All",
-  "Nursing": "View All",
-};
+// Brand theme colours
+const BRAND_RED = "#FE0034";
+const BRAND_RED_DARK = "#CC002A";
+const BRAND_YELLOW = "#FFE51F";
+const BRAND_YELLOW_DARK = "#F2D500";
+
+// Number of exams shown before "View More" (2 rows × 4 columns on desktop)
+const INITIAL_VISIBLE = 8;
+
+function ExamCard({ sub }: { sub: SubCategory }) {
+  return (
+    <Box
+      component="a"
+      href={sub.href || "#courses"}
+      sx={{
+        p: { xs: 1.25, sm: 1.75 },
+        borderRadius: "10px",
+        border: "1px solid #E5E7EB",
+        backgroundColor: "#FFFFFF",
+        display: "flex",
+        alignItems: "center",
+        gap: { xs: 1.25, sm: 2 },
+        textDecoration: "none",
+        minHeight: { xs: 60, sm: 68 },
+        height: "100%",
+        transition: "all 0.22s ease",
+        cursor: "pointer",
+        "&:hover": {
+          borderColor: BRAND_RED,
+          boxShadow: "0 4px 14px rgba(254, 0, 52, 0.10)",
+          transform: "translateY(-2px)",
+        },
+      }}
+    >
+      {sub.logo ? (
+        <Box
+          component="img"
+          src={sub.logo}
+          alt={`${sub.name} logo`}
+          loading="lazy"
+          sx={{ width: { xs: 32, sm: 40 }, height: { xs: 32, sm: 40 }, objectFit: "contain", flexShrink: 0 }}
+        />
+      ) : (
+        <Box
+          sx={{
+            width: 40,
+            height: 40,
+            borderRadius: "8px",
+            backgroundColor: "#FFF0F3",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: BRAND_RED,
+            flexShrink: 0,
+          }}
+        >
+          <GraduationCap size={22} />
+        </Box>
+      )}
+      <Typography
+        sx={{
+          fontWeight: 700,
+          fontSize: { xs: "0.82rem", sm: "0.95rem" },
+          color: "#1E293B",
+          lineHeight: 1.25,
+        }}
+      >
+        {sub.name}
+      </Typography>
+    </Box>
+  );
+}
+
+const gridSx = {
+  display: "grid",
+  gridTemplateColumns: { xs: "repeat(2, 1fr)", md: "repeat(4, 1fr)" },
+  gap: { xs: 1.25, sm: 2 },
+} as const;
 
 export default function ExamGoalSection() {
-  const [activeCategoryName, setActiveCategoryName] = useState<string>("State PSC");
+  const [activeCategoryName, setActiveCategoryName] = useState<string>(
+    EXAM_CATEGORIES[0].category
+  );
   const [showAll, setShowAll] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -72,20 +132,30 @@ export default function ExamGoalSection() {
     }
   };
 
-  const viewMoreText =
-    VIEW_MORE_LABELS[activeCategory.category] || "View All";
+  const visibleExams = activeCategory.subcategories.slice(0, INITIAL_VISIBLE);
+  const extraExams = activeCategory.subcategories.slice(INITIAL_VISIBLE);
+
+  const toggleShowAll = () => {
+    if (showAll && sectionRef.current) {
+      // When collapsing, bring the section heading back into view
+      const top = sectionRef.current.getBoundingClientRect().top;
+      if (top < 0) sectionRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    setShowAll((prev) => !prev);
+  };
 
   return (
     <Box
       id="goals"
       component="section"
+      ref={sectionRef}
       sx={{
-        py: { xs: 3.5, sm: 4.5, md: 5 },
+        py: { xs: 2.5, sm: 3, md: 3.5 },
         backgroundColor: "#FFFFFF",
       }}
     >
       <Container>
-        {/* Section Heading matching screenshot 'Choose your exam' */}
+        {/* Section Heading */}
         <Typography
           variant="h4"
           sx={{
@@ -96,7 +166,7 @@ export default function ExamGoalSection() {
             mb: { xs: 2.5, sm: 3 },
           }}
         >
-          Choose your exam
+          Select Your Goal
         </Typography>
 
         {/* Categories Tab Pills with Responsive Scroll Controls */}
@@ -167,16 +237,16 @@ export default function ExamGoalSection() {
                     fontSize: { xs: "0.85rem", sm: "0.92rem" },
                     fontWeight: isSelected ? 700 : 500,
                     whiteSpace: "nowrap",
-                    backgroundColor: isSelected ? "#2563EB" : "#F1F5F9",
+                    backgroundColor: isSelected ? BRAND_RED : "#F1F5F9",
                     color: isSelected ? "#FFFFFF" : "#334155",
                     border: "none",
                     cursor: "pointer",
                     transition: "all 0.2s ease",
                     boxShadow: isSelected
-                      ? "0 4px 14px rgba(37, 99, 235, 0.28)"
+                      ? "0 4px 14px rgba(254, 0, 52, 0.28)"
                       : "none",
                     "&:hover": {
-                      backgroundColor: isSelected ? "#1D4ED8" : "#E2E8F0",
+                      backgroundColor: isSelected ? BRAND_RED_DARK : "#E2E8F0",
                       color: isSelected ? "#FFFFFF" : "#0F172A",
                     },
                   }}
@@ -213,112 +283,51 @@ export default function ExamGoalSection() {
           )}
         </Box>
 
-        {/* 4-Column × 2-Row Sub-Exams Grid */}
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: {
-              xs: "1fr",
-              sm: "repeat(2, 1fr)",
-              md: "repeat(4, 1fr)",
-            },
-            gap: { xs: 1.5, sm: 2 },
-            mb: 3.5,
-          }}
-        >
-          {activeCategory.subcategories.map((sub, idx) => (
-            <Box
-              key={`${activeCategory.category}-${sub.name}-${idx}`}
-              component="a"
-              href="#courses"
-              sx={{
-                p: { xs: 1.5, sm: 1.75 },
-                borderRadius: "10px",
-                border: "1px solid #E5E7EB",
-                backgroundColor: "#FFFFFF",
-                display: "flex",
-                alignItems: "center",
-                gap: 2,
-                textDecoration: "none",
-                minHeight: 68,
-                transition: "all 0.22s ease",
-                cursor: "pointer",
-                "&:hover": {
-                  borderColor: "#CBD5E1",
-                  boxShadow: "0 4px 14px rgba(0, 0, 0, 0.06)",
-                  transform: "translateY(-2px)",
-                },
-              }}
-            >
-              {sub.logo ? (
-                <Box
-                  component="img"
-                  src={sub.logo}
-                  alt={sub.name}
-                  sx={{
-                    width: 38,
-                    height: 38,
-                    objectFit: "contain",
-                    flexShrink: 0,
-                  }}
-                />
-              ) : (
-                <Box
-                  sx={{
-                    width: 38,
-                    height: 38,
-                    borderRadius: "8px",
-                    backgroundColor: "#EFF6FF",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "#2563EB",
-                    flexShrink: 0,
-                  }}
-                >
-                  <GraduationCap size={22} />
-                </Box>
-              )}
-
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  fontWeight: 700,
-                  fontSize: { xs: "0.9rem", sm: "0.95rem" },
-                  color: "#1E293B",
-                  lineHeight: 1.25,
-                }}
-              >
-                {sub.name}
-              </Typography>
-            </Box>
+        {/* Exams grid: first rows always visible, the rest expand/collapse */}
+        <Box sx={gridSx}>
+          {visibleExams.map((sub, idx) => (
+            <ExamCard key={`${activeCategory.category}-${sub.name}-${idx}`} sub={sub} />
           ))}
         </Box>
 
-        {/* Yellow Action Button matching reference screenshots (e.g. 'View 38 More', 'View 20 More', 'View All') */}
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 1 }}>
-          <Button
-            variant="contained"
-            onClick={() => setShowAll(!showAll)}
-            sx={{
-              backgroundColor: "#FACC15",
-              color: "#1E293B",
-              fontWeight: 700,
-              fontSize: "0.88rem",
-              px: 3,
-              py: 0.85,
-              borderRadius: "8px",
-              boxShadow: "none",
-              textTransform: "none",
-              "&:hover": {
-                backgroundColor: "#EAB308",
-                boxShadow: "0 2px 8px rgba(234, 179, 8, 0.3)",
-              },
-            }}
-          >
-            {showAll ? "Show Less" : viewMoreText}
-          </Button>
-        </Box>
+        {extraExams.length > 0 && (
+          <Collapse in={showAll} timeout={350} unmountOnExit>
+            <Box sx={{ ...gridSx, mt: { xs: 1.25, sm: 2 } }}>
+              {extraExams.map((sub, idx) => (
+                <ExamCard key={`${activeCategory.category}-extra-${sub.name}-${idx}`} sub={sub} />
+              ))}
+            </Box>
+          </Collapse>
+        )}
+
+        {/* View More / View Less toggle */}
+        {extraExams.length > 0 && (
+          <Box sx={{ display: "flex", justifyContent: "center", mt: { xs: 2.5, sm: 3 } }}>
+            <Button
+              variant="contained"
+              onClick={toggleShowAll}
+              aria-expanded={showAll}
+              endIcon={showAll ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+              sx={{
+                background: BRAND_YELLOW,
+                color: "#000000",
+                fontWeight: 700,
+                fontSize: "0.9rem",
+                px: 3,
+                py: 0.9,
+                borderRadius: "8px",
+                boxShadow: "none",
+                textTransform: "none",
+                "&:hover": {
+                  background: BRAND_YELLOW_DARK,
+                  boxShadow: "0 2px 8px rgba(242, 213, 0, 0.35)",
+                },
+              }}
+            >
+              {showAll ? "View Less" : `View ${extraExams.length} More`}
+            </Button>
+          </Box>
+        )}
       </Container>
     </Box>
   );

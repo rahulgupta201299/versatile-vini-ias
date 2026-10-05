@@ -9,7 +9,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SMALL_PROMO_BANNERS } from "@/data/promoBanners";
 import { HeroBanner } from "@/types";
 
-export interface SmallPromoBannerProps {
+interface SmallPromoBannerProps {
   banners?: HeroBanner[];
 }
 
@@ -40,7 +40,7 @@ export default function SmallPromoBanner({
       id="promo-slider"
       component="section"
       sx={{
-        py: { xs: 2.5, sm: 3, md: 3.5 },
+        py: { xs: 1.5, sm: 2, md: 2.5 },
         backgroundColor: "#FFFFFF",
       }}
       onMouseEnter={() => setIsPaused(true)}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -8,27 +8,27 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Chip from "@mui/material/Chip";
 import InputAdornment from "@mui/material/InputAdornment";
-import Alert from "@mui/material/Alert";
 import { User, CheckCircle2, Sparkles } from "lucide-react";
+import {
+  useFormValidation,
+  validateName,
+  validateMobile,
+  sanitizeName,
+  sanitizeMobile,
+} from "@/utils/validation";
 
 export default function MentorshipCallbackSection() {
-  const [name, setName] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [error, setError] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
   const [submitted, setSubmitted] = useState(false);
+  const form = useFormValidation(
+    { name: "", mobile: "" },
+    { name: (v) => validateName(v), mobile: (v) => validateMobile(v) },
+    { name: sanitizeName, mobile: sanitizeMobile }
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) {
-      setError("Please enter your name");
-      return;
-    }
-    const cleanMobile = mobile.replace(/\D/g, "");
-    if (cleanMobile.length !== 10) {
-      setError("Please enter a valid 10-digit mobile number");
-      return;
-    }
-    setError("");
+    if (!form.validateAll(formRef.current)) return;
     setSubmitted(true);
   };
 
@@ -36,7 +36,7 @@ export default function MentorshipCallbackSection() {
     <Box
       id="mentorship"
       sx={{
-        py: { xs: 5, md: 7 },
+        py: { xs: 3, md: 4 },
         backgroundColor: "#FFFFFF",
       }}
     >
@@ -112,16 +112,15 @@ export default function MentorshipCallbackSection() {
                   Callback Request Confirmed!
                 </Typography>
                 <Typography variant="body2" sx={{ color: "#334155" }}>
-                  Thank you, <strong>{name}</strong>. Our senior UPSC mentor will contact you at{" "}
-                  <strong>+91 {mobile}</strong> within 15 minutes.
+                  Thank you, <strong>{form.values.name}</strong>. Our senior UPSC mentor will contact you at{" "}
+                  <strong>+91 {form.values.mobile}</strong> within 15 minutes.
                 </Typography>
                 <Button
                   variant="outlined"
                   size="small"
                   onClick={() => {
                     setSubmitted(false);
-                    setName("");
-                    setMobile("");
+                    form.reset();
                   }}
                   sx={{ mt: 2, borderColor: "#16A34A", color: "#16A34A", fontWeight: 700 }}
                 >
@@ -129,25 +128,22 @@ export default function MentorshipCallbackSection() {
                 </Button>
               </Box>
             ) : (
-              <Box component="form" onSubmit={handleSubmit} noValidate>
-                {error && (
-                  <Alert severity="error" sx={{ mb: 2, borderRadius: "10px" }}>
-                    {error}
-                  </Alert>
-                )}
+              <Box component="form" ref={formRef} onSubmit={handleSubmit} noValidate>
 
                 <Box
                   sx={{
                     display: "grid",
                     gridTemplateColumns: { xs: "1fr", sm: "1fr 1.2fr" },
                     gap: 1.5,
-                    mb: 2,
+                    mb: 1,
                   }}
                 >
                   <TextField
                     placeholder="Your Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    {...form.fieldProps("name")}
+                    required
+                    autoComplete="name"
+                    inputProps={{ maxLength: 50, "aria-label": "Your name" }}
                     variant="outlined"
                     fullWidth
                     InputProps={{
@@ -167,8 +163,11 @@ export default function MentorshipCallbackSection() {
 
                   <TextField
                     placeholder="Your mobile number"
-                    value={mobile}
-                    onChange={(e) => setMobile(e.target.value)}
+                    {...form.fieldProps("mobile")}
+                    required
+                    type="tel"
+                    autoComplete="tel-national"
+                    inputProps={{ inputMode: "numeric", "aria-label": "Mobile number" }}
                     variant="outlined"
                     fullWidth
                     InputProps={{
@@ -194,17 +193,17 @@ export default function MentorshipCallbackSection() {
                   variant="contained"
                   size="large"
                   sx={{
-                    backgroundColor: "#F59E0B", // Bright amber matching Screenshot 18.04.50
-                    color: "#0F172A",
+                    background: "#FFE51F", // Brand yellow (overrides theme's red gradient)
+                    color: "#000000",
                     fontWeight: 900,
                     fontSize: "1.05rem",
                     px: 4,
                     py: 1.4,
                     borderRadius: "12px",
-                    boxShadow: "0 6px 18px rgba(245, 158, 11, 0.4)",
+                    boxShadow: "0 6px 18px rgba(242, 213, 0, 0.4)",
                     textTransform: "none",
                     "&:hover": {
-                      backgroundColor: "#D97706",
+                      background: "#F2D500",
                     },
                   }}
                 >

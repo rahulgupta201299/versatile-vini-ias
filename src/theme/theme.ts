@@ -4,16 +4,16 @@ let theme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#8B1D24", // Vini IAS Crimson Maroon
-      light: "#A8323A",
-      dark: "#621116",
+      main: "#FE0034", // Brand Red — RGB 254, 0, 52
+      light: "#FF3358",
+      dark: "#CC002A",
       contrastText: "#FFFFFF",
     },
     secondary: {
-      main: "#D97706", // Amber / Gold highlight
-      light: "#F59E0B",
-      dark: "#B45309",
-      contrastText: "#FFFFFF",
+      main: "#FFE51F", // Brand Yellow — RGB 255, 229, 31
+      light: "#FFEC5C",
+      dark: "#F2D500",
+      contrastText: "#000000",
     },
     success: {
       main: "#10B981",
@@ -116,13 +116,13 @@ let theme = createTheme({
           boxShadow: "none",
           padding: "8px 18px",
           "&:hover": {
-            boxShadow: "0 4px 12px rgba(139, 29, 36, 0.15)",
+            boxShadow: "0 4px 12px rgba(254, 0, 52, 0.15)",
           },
         },
         containedPrimary: {
-          background: "linear-gradient(135deg, #8B1D24 0%, #A8323A 100%)",
+          background: "linear-gradient(135deg, #FE0034 0%, #FF3358 100%)",
           "&:hover": {
-            background: "linear-gradient(135deg, #70161C 0%, #8B1D24 100%)",
+            background: "linear-gradient(135deg, #CC002A 0%, #FE0034 100%)",
           },
         },
       },
