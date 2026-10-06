@@ -1,9 +1,29 @@
+export interface NavLink {
+  label: string;
+  href: string;
+}
+
 export interface NavItem {
   id: string;
   label: string;
   href: string;
   badge?: string;
   isMegaMenu?: boolean;
+  /** Dropdown items (desktop dropdown + mobile menu accordion). */
+  children?: NavLink[];
+}
+
+/** One tile in the mobile menu's 2-column sections. */
+export interface MenuTile {
+  label: string;
+  href: string;
+  icon: string; // IconRenderer name
+}
+
+export interface MenuSection {
+  id: string;
+  title: string;
+  items: MenuTile[];
 }
 
 export interface MegaMenuCategory {

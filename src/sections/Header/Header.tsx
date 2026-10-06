@@ -25,13 +25,16 @@ import {
 import { NAV_ITEMS, MEGA_MENU_CATEGORIES, STORE_HREF } from "@/data/navigation";
 import { IconRenderer } from "@/components";
 import SearchDialog from "@/components/SearchDialog";
+import MobileMenu from "./MobileMenu";
 
 /* Layout references: pw.live (menu, All Courses panel) and the header screenshots provided. */
 const RED = "#FE0034";
 const RED_DARK = "#CC002A";
-const YELLOW = "#FFE51F";
-const YELLOW_DARK = "#F2D500";
+const RED_TINT = "#FFF0F3"; // light red (Store button)
+const RED_TINT_BORDER = "#FFCCD6";
 const HEADER_H = { xs: 64, lg: 72 };
+/** Logo height — the All Exams pill and the header buttons match it. */
+const LOGO_H = { xs: 36, sm: 42 };
 
 interface HeaderProps {
   onOpenAuth: () => void;
@@ -42,7 +45,7 @@ const NAV_LINKS = NAV_ITEMS.filter((item) => !item.isMegaMenu);
 const INLINE_LINKS = 5;
 const PRIMARY_LINKS = NAV_LINKS.slice(0, INLINE_LINKS);
 const MORE_LINKS = NAV_LINKS.slice(INLINE_LINKS);
-const ALL_COURSES_LABEL = NAV_ITEMS.find((item) => item.isMegaMenu)?.label ?? "All Courses";
+const ALL_COURSES_LABEL = NAV_ITEMS.find((item) => item.isMegaMenu)?.label ?? "All Exams";
 
 const pillBase = {
   borderRadius: "9999px",
@@ -119,8 +122,11 @@ export default function Header({ onOpenAuth }: HeaderProps) {
       <Box
         component="header"
         sx={{
-          position: "sticky",
+          // Fixed menu bar — always visible while scrolling
+          position: "fixed",
           top: 0,
+          left: 0,
+          right: 0,
           zIndex: 1200,
           backgroundColor: "#FFFFFF",
           borderBottom: "1px solid #E5E7EB",
@@ -132,7 +138,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
             {/* Left: logo + All Courses pill */}
             <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 1, sm: 2 }, flexShrink: 0 }}>
               <Box component={Link} href="/" aria-label="Vini IAS home" sx={{ display: "flex", flexShrink: 0 }}>
-                <Box sx={{ position: "relative", width: { xs: 78, sm: 110, lg: 120 }, height: { xs: 34, sm: 42 } }}>
+                <Box sx={{ position: "relative", width: { xs: 88, sm: 102 }, height: LOGO_H }}>
                   <Image src="/images/logo.png" alt="Vini IAS" fill sizes="120px" style={{ objectFit: "contain", objectPosition: "left" }} priority />
                 </Box>
               </Box>
@@ -156,8 +162,8 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                   border: "1.5px solid #E5E7EB",
                   backgroundColor: megaMenuOpen ? "#FFF0F3" : "#FFFFFF",
                   fontSize: { xs: "0.82rem", sm: "0.95rem" },
-                  px: { xs: 1.5, sm: 2.25 },
-                  height: { xs: 38, sm: 44 },
+                  px: { xs: 1.25, sm: 2.25 },
+                  height: LOGO_H,
                   "& .MuiButton-endIcon": { ml: 0.5 },
                   "&:hover": { borderColor: RED, color: RED, backgroundColor: "#FFF0F3" },
                 }}
@@ -169,23 +175,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
             {/* Middle: nav links (desktop) */}
             <Box component="nav" aria-label="Main" sx={{ display: { xs: "none", lg: "flex" }, alignItems: "center", gap: { lg: 2, xl: 2.75 } }}>
               {PRIMARY_LINKS.map((item) => (
-                <Box
-                  key={item.id}
-                  component={Link}
-                  href={item.href}
-                  sx={{
-                    color: "#374151",
-                    fontWeight: 600,
-                    fontSize: "0.93rem",
-                    textDecoration: "none",
-                    whiteSpace: "nowrap",
-                    py: 1,
-                    transition: "color .15s ease",
-                    "&:hover": { color: RED },
-                  }}
-                >
-                  {item.label}
-                </Box>
+                <NavLinkWithDropdown key={item.id} item={item} />
               ))}
               {MORE_LINKS.length > 0 && (
                 <>
@@ -219,19 +209,38 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                     onClose={() => setMoreAnchor(null)}
                     anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
                     transformOrigin={{ vertical: "top", horizontal: "left" }}
-                    slotProps={{ paper: { sx: { mt: 1.5, borderRadius: "12px", minWidth: 200, boxShadow: "0 12px 32px rgba(15,23,42,.14)" } } }}
+                    slotProps={{ paper: { sx: { mt: 1.5, borderRadius: "12px", minWidth: 240, maxHeight: "70vh", boxShadow: "0 12px 32px rgba(15,23,42,.14)" } } }}
                   >
-                    {MORE_LINKS.map((item) => (
-                      <MenuItem
-                        key={item.id}
-                        component={Link}
-                        href={item.href}
-                        onClick={() => setMoreAnchor(null)}
-                        sx={{ fontWeight: 600, fontSize: "0.93rem", color: "#374151", py: 1.25, "&:hover": { color: RED, backgroundColor: "#FFF5F7" } }}
-                      >
-                        {item.label}
-                      </MenuItem>
-                    ))}
+                    {MORE_LINKS.map((item) =>
+                      item.children?.length ? (
+                        <Box key={item.id} sx={{ px: 2, pt: 1.25, pb: 0.5, "&:not(:first-of-type)": { borderTop: "1px solid #F1F5F9", mt: 0.5 } }}>
+                          <Typography sx={{ fontSize: "0.72rem", fontWeight: 800, letterSpacing: "0.06em", color: "#9CA3AF", textTransform: "uppercase", mb: 0.5 }}>
+                            {item.label}
+                          </Typography>
+                          {item.children.map((child) => (
+                            <Box
+                              key={child.label}
+                              component={Link}
+                              href={child.href}
+                              onClick={() => setMoreAnchor(null)}
+                              sx={{ display: "block", py: 0.6, color: "#374151", fontSize: "0.9rem", fontWeight: 500, textDecoration: "none", "&:hover": { color: RED } }}
+                            >
+                              {child.label}
+                            </Box>
+                          ))}
+                        </Box>
+                      ) : (
+                        <MenuItem
+                          key={item.id}
+                          component={Link}
+                          href={item.href}
+                          onClick={() => setMoreAnchor(null)}
+                          sx={{ fontWeight: 600, fontSize: "0.93rem", color: "#374151", py: 1.25, "&:hover": { color: RED, backgroundColor: "#FFF5F7" } }}
+                        >
+                          {item.label}
+                        </MenuItem>
+                      )
+                    )}
                   </Menu>
                 </>
               )}
@@ -242,7 +251,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
               <IconButton
                 onClick={() => setSearchOpen(true)}
                 aria-label="Search"
-                sx={{ width: { xs: 38, sm: 44 }, height: { xs: 38, sm: 44 }, backgroundColor: "#F5F5F5", color: "#4B5563", "&:hover": { backgroundColor: "#ECECEC" } }}
+                sx={{ width: LOGO_H, height: LOGO_H, backgroundColor: "#F5F5F5", color: "#4B5563", "&:hover": { backgroundColor: "#ECECEC" } }}
               >
                 <Search size={20} />
               </IconButton>
@@ -254,14 +263,16 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                 aria-label="Store"
                 sx={{
                   ...pillBase,
-                  height: { xs: 38, sm: 44 },
-                  px: { xs: 1.25, sm: 2.25 },
+                  height: LOGO_H,
+                  px: { xs: 1.1, sm: 2.25 },
                   fontSize: "0.95rem",
-                  color: "#000000",
-                  backgroundColor: YELLOW,
-                  border: `1.5px solid ${YELLOW_DARK}`,
+                  color: RED,
+                  backgroundColor: RED_TINT,
+                  border: `1.5px solid ${RED_TINT_BORDER}`,
                   "& .MuiButton-startIcon": { mr: { xs: 0, sm: 0.75 }, ml: 0 },
-                  "&:hover": { backgroundColor: YELLOW_DARK },
+                  "&:hover": { backgroundColor: "#FFE0E6", borderColor: "#FFB3C2" },
+                  // very small phones: Store stays available in the slide menu
+                  "@media (max-width: 359px)": { display: "none" },
                 }}
               >
                 <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
@@ -275,7 +286,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                 sx={{
                   ...pillBase,
                   display: { xs: "none", lg: "inline-flex" },
-                  height: 44,
+                  height: LOGO_H,
                   px: 2.5,
                   fontSize: "0.95rem",
                   color: "#FFFFFF",
@@ -289,7 +300,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
               <IconButton
                 onClick={openMenu}
                 aria-label="Open menu"
-                sx={{ display: { xs: "inline-flex", lg: "none" }, width: { xs: 38, sm: 44 }, height: { xs: 38, sm: 44 }, backgroundColor: "#F5F5F5", color: "#1F2937" }}
+                sx={{ display: { xs: "inline-flex", lg: "none" }, width: LOGO_H, height: LOGO_H, backgroundColor: "#F5F5F5", color: "#1F2937" }}
               >
                 <MenuIcon size={22} />
               </IconButton>
@@ -395,6 +406,9 @@ export default function Header({ onOpenAuth }: HeaderProps) {
         )}
       </Box>
 
+      {/* Spacer so page content starts below the fixed header */}
+      <Box aria-hidden sx={{ height: HEADER_H, flexShrink: 0 }} />
+
       {/* Backdrop for desktop mega menu */}
       {megaMenuOpen && (
         <Box
@@ -421,37 +435,15 @@ export default function Header({ onOpenAuth }: HeaderProps) {
         PaperProps={{ sx: { width: { xs: "100%", sm: 420 }, display: "flex", flexDirection: "column" } }}
       >
         {drawerView === "menu" ? (
-          <>
-            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", px: 2.5, height: 72, borderBottom: "1px solid #EEF0F3", flexShrink: 0 }}>
-              <Box sx={{ position: "relative", width: 110, height: 40 }}>
-                <Image src="/images/logo.png" alt="Vini IAS" fill sizes="110px" style={{ objectFit: "contain", objectPosition: "left" }} />
-              </Box>
-              <IconButton onClick={closeDrawer} aria-label="Close menu">
-                <CloseIcon size={24} />
-              </IconButton>
-            </Box>
-
-            <Box component="nav" aria-label="Mobile" sx={{ flex: 1, overflowY: "auto" }}>
-              <DrawerRow onClick={() => setDrawerView("courses")} label={ALL_COURSES_LABEL} chevron />
-              {NAV_LINKS.map((item) => (
-                <DrawerRow key={item.id} href={item.href} label={item.label} onClick={closeDrawer} />
-              ))}
-              <DrawerRow href={STORE_HREF} label="Store" onClick={closeDrawer} />
-            </Box>
-
-            <Box sx={{ p: 2.5, flexShrink: 0 }}>
-              <Button
-                fullWidth
-                onClick={() => {
-                  closeDrawer();
-                  onOpenAuth();
-                }}
-                sx={{ ...pillBase, borderRadius: "10px", height: 52, fontSize: "1rem", color: "#FFFFFF", backgroundColor: RED, "&:hover": { backgroundColor: RED_DARK } }}
-              >
-                Login/Register
-              </Button>
-            </Box>
-          </>
+          <MobileMenu
+            onClose={closeDrawer}
+            onOpenAuth={onOpenAuth}
+            onOpenSearch={() => {
+              closeDrawer();
+              setSearchOpen(true);
+            }}
+            onOpenExams={() => setDrawerView("courses")}
+          />
         ) : (
           <>
             {/* pw.live-style "All Courses" panel */}
@@ -538,34 +530,82 @@ export default function Header({ onOpenAuth }: HeaderProps) {
   );
 }
 
-/** One full-width row in the slide menu (pw.live style). */
-function DrawerRow({ label, href, onClick, chevron = false }: { label: string; href?: string; onClick?: () => void; chevron?: boolean }) {
+/** Desktop nav link; items with children show a dropdown on hover / keyboard focus. */
+function NavLinkWithDropdown({ item }: { item: (typeof NAV_ITEMS)[number] }) {
+  const hasChildren = Boolean(item.children?.length);
   return (
     <Box
-      {...(href ? { component: Link, href } : { component: "button", type: "button" })}
-      onClick={onClick}
       sx={{
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        px: 2.5,
-        py: 2.25,
-        border: "none",
-        borderBottom: "1px solid #EEF0F3",
-        background: "#FFFFFF",
-        textDecoration: "none",
-        textAlign: "left",
-        fontFamily: "inherit",
-        fontSize: "1.05rem",
-        fontWeight: 600,
-        color: "#111827",
-        cursor: "pointer",
-        "&:hover": { backgroundColor: "#FFF5F7", color: RED },
+        position: "relative",
+        "&:hover > .nav-dd, &:focus-within > .nav-dd": { opacity: 1, visibility: "visible", transform: "translate(-50%, 0)" },
+        "&:hover > a, &:focus-within > a": { color: RED },
       }}
     >
-      {label}
-      {chevron && <ChevronRight size={22} />}
+      <Box
+        component={Link}
+        href={item.href}
+        aria-haspopup={hasChildren ? "true" : undefined}
+        sx={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 0.4,
+          color: "#374151",
+          fontWeight: 600,
+          fontSize: "0.93rem",
+          textDecoration: "none",
+          whiteSpace: "nowrap",
+          py: 2.5,
+          transition: "color .15s ease",
+        }}
+      >
+        {item.label}
+        {hasChildren && <ChevronDown size={15} />}
+      </Box>
+      {hasChildren && (
+        <Box
+          className="nav-dd"
+          role="menu"
+          sx={{
+            position: "absolute",
+            top: "100%",
+            left: "50%",
+            transform: "translate(-50%, 6px)",
+            minWidth: 240,
+            p: 1,
+            backgroundColor: "#FFFFFF",
+            borderRadius: "12px",
+            border: "1px solid #F1F5F9",
+            boxShadow: "0 16px 36px rgba(15,23,42,.14)",
+            opacity: 0,
+            visibility: "hidden",
+            transition: "opacity .15s ease, transform .15s ease, visibility .15s",
+            zIndex: 1300,
+          }}
+        >
+          {item.children!.map((child) => (
+            <Box
+              key={child.label}
+              component={Link}
+              href={child.href}
+              role="menuitem"
+              sx={{
+                display: "block",
+                px: 1.5,
+                py: 1,
+                borderRadius: "8px",
+                color: "#374151",
+                fontSize: "0.9rem",
+                fontWeight: 500,
+                textDecoration: "none",
+                whiteSpace: "nowrap",
+                "&:hover, &:focus-visible": { backgroundColor: "#FFF5F7", color: RED },
+              }}
+            >
+              {child.label}
+            </Box>
+          ))}
+        </Box>
+      )}
     </Box>
   );
 }

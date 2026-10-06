@@ -61,15 +61,15 @@ export default function AppDownloadSection() {
               right: { md: 40 },
               bottom: 0,
               alignSelf: { xs: "center", md: "auto" },
-              width: { xs: 250, sm: 290, md: 312 },
-              aspectRatio: "1122 / 1402",
+              width: { xs: 260, sm: 300, md: 340 },
+              aspectRatio: "1204 / 1306",
             }}
           >
             <Image
-              src="/images/app/vini-ias-app-student-mockup.png"
-              alt="Student showing the Vini IAS learning app on a phone"
+              src="/images/app/vini-ias-app-home-screen-student.png"
+              alt="Vini IAS learning app home screen on a phone, next to a student"
               fill
-              sizes="(max-width: 600px) 250px, (max-width: 900px) 290px, 312px"
+              sizes="(max-width: 600px) 260px, (max-width: 900px) 300px, 340px"
               style={{ objectFit: "contain", objectPosition: "bottom" }}
             />
           </Box>

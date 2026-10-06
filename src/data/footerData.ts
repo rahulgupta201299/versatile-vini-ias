@@ -38,6 +38,9 @@ export const OUR_PRODUCTS = [
 ];
 
 export const OUR_BRANDS = [
+  { name: "Toppr Classes", href: "#" },
+  { name: "Vini Kiddos", href: "#" },
+  { name: "Vini AI", href: "#" },
   { name: "TalkTrail", href: "#" },
   { name: "Junior Kaksha", href: "#" },
   { name: "Vini Law", href: "#" },
@@ -46,6 +49,8 @@ export const OUR_BRANDS = [
   { name: "Razorto", href: "#" },
   { name: "Razorto CRM", href: "#" },
   { name: "TicketBaaz", href: "#" },
+  { name: "Binora", href: "#" },
+  { name: "Vini News Network", href: "#" },
   { name: "View All Brands", href: "#brands" },
 ];
 

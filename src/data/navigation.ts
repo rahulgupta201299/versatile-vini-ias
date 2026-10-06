@@ -1,15 +1,148 @@
-import { NavItem, MegaMenuCategory } from "@/types";
+import { NavItem, MegaMenuCategory, MenuSection } from "@/types";
+
+const c = (label: string, href = "#courses") => ({ label, href });
 
 export const NAV_ITEMS: NavItem[] = [
-  { id: "all-courses", label: "All Courses", href: "#courses", isMegaMenu: true },
-  { id: "gs-foundation", label: "GS Foundation", href: "#courses" },
-  { id: "mentorship", label: "Mentorship", href: "#mentorship" },
-  { id: "csat", label: "CSAT", href: "#courses" },
-  { id: "optional", label: "Optional", href: "#courses" },
-  { id: "gs-mains", label: "GS Mains", href: "#courses" },
-  { id: "ethics-essay", label: "Ethics & Essay", href: "#courses" },
-  { id: "upsc-plan-b", label: "UPSC Plan B", href: "#courses" },
+  { id: "all-exams", label: "All Exams", href: "#goals", isMegaMenu: true },
+  {
+    id: "gs-foundation",
+    label: "GS Foundation",
+    href: "#courses",
+    children: [
+      c("Beginner's Kit For UPSC"),
+      c("NCERT Foundation Batch"),
+      c("Foundation Batch 2027/29"),
+      c("Test Series (FLT)"),
+      c("Recorded Batch (₹4,999)"),
+    ],
+  },
+  {
+    id: "mentorship",
+    label: "Mentorship",
+    href: "#mentorship",
+    children: [c("1:1 Mentorship 2028/29", "#mentorship"), c("Free Mentorship Program", "#mentorship"), c("Test Series (FLT)")],
+  },
+  {
+    id: "csat",
+    label: "CSAT",
+    href: "#courses",
+    children: [c("Foundation Batch"), c("CSAT PYQs with Solution"), c("CSAT Recorded Batch (₹1,999)"), c("Test Series (FLT)")],
+  },
+  {
+    id: "optional",
+    label: "Optional",
+    href: "#courses",
+    children: [
+      c("Hindi Literature"),
+      c("History"),
+      c("Geography"),
+      c("PSIR"),
+      c("Sociology"),
+      c("Anthropology"),
+      c("Public Administration"),
+      c("Philosophy"),
+    ],
+  },
+  {
+    id: "gs-mains",
+    label: "GS Mains",
+    href: "#courses",
+    children: [
+      c("Mains Mentorship", "#mentorship"),
+      c("Mains Foundation"),
+      c("Answer Writing"),
+      c("Free Mains Mentorship", "#mentorship"),
+      c("Test Series (FLT)"),
+    ],
+  },
+  {
+    id: "ethics-essay",
+    label: "Ethics & Essay",
+    href: "#courses",
+    children: [
+      c("Ethics Foundation Batch"),
+      c("Essay Foundation Batch"),
+      c("Ethics Answer Writing"),
+      c("Test Series (FLT)"),
+      c("Free Mentorship", "#mentorship"),
+    ],
+  },
+  {
+    id: "upsc-plan-b",
+    label: "UPSC Plan B",
+    href: "#courses",
+    children: [c("RBI Grade B Course"), c("NABARD Grade A"), c("EPFO APFC"), c("EPFO EO/AO"), c("Free Mentorship", "#mentorship")],
+  },
+  {
+    id: "offline-centre",
+    label: "Offline Centre",
+    href: "#enquiry",
+    children: ["Noida", "Old Rajinder Nagar", "Delhi", "Patna", "Gaya Ji", "Darbhanga", "Bhagalpur"].map((city) => c(city, "#enquiry")),
+  },
   { id: "test-series", label: "Test Series", href: "#resources" },
+];
+
+/** Mobile slide-menu sections (2-column tiles), in display order. */
+export const MOBILE_MENU_SECTIONS: MenuSection[] = [
+  {
+    id: "free-resources",
+    title: "Free Resources",
+    items: [
+      { label: "GS Foundation", href: "#courses", icon: "Landmark" },
+      { label: "GS Mains", href: "#courses", icon: "PenLine" },
+      { label: "Mentorship", href: "#mentorship", icon: "Users" },
+      { label: "Ethics", href: "#courses", icon: "Scale" },
+      { label: "CSAT", href: "#courses", icon: "Calculator" },
+      { label: "Essay", href: "#courses", icon: "FileText" },
+      { label: "Optional", href: "#courses", icon: "BookOpen" },
+      { label: "UPSC Plan B", href: "#courses", icon: "CalendarCheck" },
+    ],
+  },
+  {
+    id: "study-material",
+    title: "Study Material",
+    items: [
+      { label: "Prelims", href: "#resources", icon: "FileText" },
+      { label: "प्रारंभिक परीक्षा", href: "#resources", icon: "FileText" },
+      { label: "Mains", href: "#resources", icon: "Folder" },
+      { label: "मुख्य परीक्षा", href: "#resources", icon: "Folder" },
+      { label: "Current Affairs", href: "#resources", icon: "Newspaper" },
+      { label: "करेंट अफेयर्स", href: "#resources", icon: "Newspaper" },
+      { label: "Vini Specials", href: "#resources", icon: "Sparkles" },
+      { label: "विनी स्पेशल्स", href: "#resources", icon: "Sparkles" },
+      { label: "Free Downloads", href: "#resources", icon: "Download" },
+      { label: "डाउनलोड्स", href: "#resources", icon: "Download" },
+      { label: "Ethics", href: "#resources", icon: "Scale" },
+      { label: "वीडियो सेक्शन", href: "#resources", icon: "PlaySquare" },
+      { label: "Videos", href: "#resources", icon: "PlaySquare" },
+      { label: "सिविल सेवा परीक्षा", href: "#resources", icon: "Landmark" },
+    ],
+  },
+  {
+    id: "featured",
+    title: "Featured",
+    items: [
+      { label: "News", href: "#resources", icon: "Newspaper" },
+      { label: "Trend Magazine", href: "#resources", icon: "TrendingUp" },
+      { label: "Books", href: "#resources", icon: "Book" },
+      { label: "Toppers Copies", href: "#resources", icon: "FileCheck" },
+      { label: "Test Series", href: "#resources", icon: "ClipboardCheck" },
+      { label: "Vini Publication", href: "#resources", icon: "BookMarked" },
+      { label: "Blogs Articles", href: "#resources", icon: "Lightbulb" },
+    ],
+  },
+];
+
+/** Accordion items in the last section of the mobile menu. */
+export const MOBILE_MENU_DROPDOWN_IDS = [
+  "offline-centre",
+  "gs-foundation",
+  "mentorship",
+  "csat",
+  "optional",
+  "gs-mains",
+  "ethics-essay",
+  "upsc-plan-b",
 ];
 
 export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [

@@ -48,17 +48,17 @@ export default function Footer() {
           sx={{
             display: "grid",
             gridTemplateColumns: {
-              xs: "1fr",
-              sm: "repeat(2, 1fr)",
-              md: "repeat(3, 1fr)",
+              xs: "repeat(2, minmax(0, 1fr))",
+              md: "repeat(3, minmax(0, 1fr))",
               lg: "2fr 1fr 1fr 1fr 1fr 1fr",
             },
-            gap: 4,
+            columnGap: { xs: 2, sm: 4 },
+            rowGap: { xs: 3.5, sm: 4 },
             mb: 6,
           }}
         >
           {/* Brand Col */}
-          <Box sx={{ gridColumn: { xs: "span 1", sm: "span 2", md: "span 1", lg: "span 1" } }}>
+          <Box sx={{ gridColumn: { xs: "span 2", md: "span 1" } }}>
             <Box sx={{ position: "relative", width: 140, height: 46, mb: 2 }}>
               <Image src="/images/logo.png" alt="Vini IAS" fill style={{ objectFit: "contain" }} />
             </Box>
@@ -174,9 +174,9 @@ export default function Footer() {
                 component="a"
                 href={`mailto:${CONTACT.email}`}
                 variant="body2"
-                sx={{ color: "#64748B", textDecoration: "none", fontSize: "0.85rem", display: "flex", alignItems: "center", gap: 0.75, "&:hover": { color: "#FE0034" } }}
+                sx={{ color: "#64748B", textDecoration: "none", fontSize: { xs: "0.8rem", sm: "0.85rem" }, display: "flex", alignItems: "center", gap: 0.75, overflowWrap: "anywhere", "&:hover": { color: "#FE0034" } }}
               >
-                <Mail size={15} color="#FE0034" />
+                <Mail size={15} color="#FE0034" style={{ flexShrink: 0 }} />
                 {CONTACT.email}
               </Typography>
 
@@ -221,8 +221,8 @@ export default function Footer() {
                 >
                   <Box
                     sx={{
-                      width: 30,
-                      height: 30,
+                      width: { xs: 26, sm: 30 },
+                      height: { xs: 26, sm: 30 },
                       flexShrink: 0,
                       borderRadius: "50%",
                       backgroundColor: c.iconBg,
@@ -241,7 +241,7 @@ export default function Footer() {
                       {c.label}
                       {c.key === "whatsapp" && CONTACT.whatsappVerified && <VerifiedBadge size={13} />}
                     </Box>
-                    <Box className="num" component="span" sx={{ display: "block", fontSize: "0.92rem", fontWeight: 800, color: c.color, whiteSpace: "nowrap" }}>
+                    <Box className="num" component="span" sx={{ display: "block", fontSize: { xs: "0.78rem", sm: "0.92rem" }, fontWeight: 800, color: c.color, whiteSpace: "nowrap" }}>
                       {CONTACT.phoneDisplay}
                     </Box>
                   </Box>
@@ -321,11 +321,11 @@ export default function Footer() {
             sx={{
               display: "grid",
               gridTemplateColumns: {
-                xs: "1fr",
-                sm: "repeat(2, 1fr)",
-                md: "repeat(4, 1fr)",
+                xs: "repeat(2, minmax(0, 1fr))",
+                md: "repeat(4, minmax(0, 1fr))",
               },
-              gap: 4,
+              columnGap: { xs: 2, sm: 4 },
+              rowGap: { xs: 3.5, sm: 4 },
             }}
           >
             {FREE_LEARNING_RESOURCES.map((col, idx) => (

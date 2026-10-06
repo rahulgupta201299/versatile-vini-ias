@@ -11,7 +11,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormHelperText from "@mui/material/FormHelperText";
 import Checkbox from "@mui/material/Checkbox";
 import Card from "@mui/material/Card";
-import { PhoneCall, CheckCircle2, Clock } from "lucide-react";
+import { PhoneCall, CheckCircle2, Clock, ChevronRight } from "lucide-react";
 import CounsellorIllustration from "@/components/illustrations/CounsellorIllustration";
 import { WhatsAppLogo, VerifiedBadge } from "@/components/icons/BrandLogos";
 import { CONTACT } from "@/data/contact";
@@ -105,7 +105,7 @@ export default function EnquirySection() {
               Let us know any query regarding your UPSC or State PCS preparation and we&#39;ll guide you in the right direction.
             </Typography>
 
-            {/* Call + WhatsApp (same number) */}
+            {/* Call + WhatsApp actions (number is used by the links, not displayed) */}
             <Box
               sx={{
                 display: "grid",
@@ -119,21 +119,25 @@ export default function EnquirySection() {
                 {
                   key: "call",
                   href: CONTACT.tel,
-                  label: "Call us",
-                  color: "#FE0034",
-                  bg: "#FFF0F3",
-                  icon: <PhoneCall size={22} color="#FFFFFF" />,
-                  iconBg: "#FE0034",
+                  title: "Call Us",
+                  subtitle: "Talk to a counsellor",
+                  ariaLabel: "Call a Vini IAS counsellor",
+                  accent: "#FE0034",
+                  tint: "#FFF0F3",
+                  border: "#FFD1DA",
+                  icon: <PhoneCall size={22} color="#FE0034" strokeWidth={2.2} />,
                   external: false,
                 },
                 {
                   key: "whatsapp",
                   href: CONTACT.whatsappUrl,
-                  label: "WhatsApp",
-                  color: "#128C4A",
-                  bg: "#EAFBF1",
-                  icon: <WhatsAppLogo size={22} color="#FFFFFF" />,
-                  iconBg: "#25D366",
+                  title: "WhatsApp",
+                  subtitle: "Chat with us instantly",
+                  ariaLabel: "Chat with Vini IAS on WhatsApp",
+                  accent: "#128C4A",
+                  tint: "#EAFBF1",
+                  border: "#BDEFD2",
+                  icon: <WhatsAppLogo size={24} color="#25D366" />,
                   external: true,
                 },
               ].map((c) => (
@@ -142,31 +146,36 @@ export default function EnquirySection() {
                   component="a"
                   href={c.href}
                   {...(c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  aria-label={`${c.label}: ${CONTACT.phoneDisplay}`}
+                  aria-label={c.ariaLabel}
                   sx={{
                     display: "flex",
-                    flexDirection: { xs: "column", sm: "row" },
-                    alignItems: { xs: "flex-start", sm: "center" },
-                    gap: { xs: 1, sm: 1.5 },
-                    p: { xs: 1.5, sm: 2 },
+                    alignItems: "center",
+                    gap: { xs: 1.25, sm: 1.5 },
+                    p: { xs: 1.5, sm: 1.75 },
                     borderRadius: "14px",
                     backgroundColor: "#FFFFFF",
-                    border: `1.5px solid ${c.color}`,
-                    boxShadow: "0 6px 18px rgba(15, 23, 42, 0.06)",
+                    border: `1px solid ${c.border}`,
+                    boxShadow: "0 2px 10px rgba(15, 23, 42, 0.05)",
                     textDecoration: "none",
                     color: "inherit",
                     minWidth: 0,
-                    transition: "all 0.2s ease",
-                    "&:hover": { transform: "translateY(-3px)", backgroundColor: c.bg },
+                    transition: "transform .2s ease, box-shadow .2s ease, background-color .2s ease",
+                    "& .arrow": { transition: "transform .2s ease" },
+                    "&:hover": {
+                      transform: "translateY(-2px)",
+                      backgroundColor: c.tint,
+                      boxShadow: "0 10px 24px rgba(15, 23, 42, 0.08)",
+                      "& .arrow": { transform: "translateX(3px)" },
+                    },
                   }}
                 >
                   <Box
                     sx={{
-                      width: { xs: 38, sm: 46 },
-                      height: { xs: 38, sm: 46 },
+                      width: { xs: 40, sm: 46 },
+                      height: { xs: 40, sm: 46 },
                       flexShrink: 0,
-                      borderRadius: "50%",
-                      backgroundColor: c.iconBg,
+                      borderRadius: "12px",
+                      backgroundColor: c.tint,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -174,22 +183,22 @@ export default function EnquirySection() {
                   >
                     {c.icon}
                   </Box>
-                  <Box sx={{ minWidth: 0 }}>
+                  <Box sx={{ minWidth: 0, flex: 1 }}>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                      <Typography
-                        component="span"
-                        sx={{ fontSize: { xs: "0.7rem", sm: "0.78rem" }, color: "#64748B", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em" }}
-                      >
-                        {c.label}
+                      <Typography component="span" sx={{ fontSize: { xs: "0.92rem", sm: "1rem" }, fontWeight: 700, color: "#0F172A" }}>
+                        {c.title}
                       </Typography>
                       {c.key === "whatsapp" && CONTACT.whatsappVerified && <VerifiedBadge size={15} />}
                     </Box>
                     <Typography
                       component="span"
-                      sx={{ display: "block", fontSize: { xs: "0.9rem", sm: "1.1rem" }, fontWeight: 800, color: c.color, whiteSpace: "nowrap" }}
+                      sx={{ display: "block", fontSize: { xs: "0.74rem", sm: "0.8rem" }, color: "#64748B", lineHeight: 1.35, whiteSpace: { xs: "normal", sm: "nowrap" }, overflow: "hidden", textOverflow: "ellipsis" }}
                     >
-                      {CONTACT.phoneDisplay}
+                      {c.subtitle}
                     </Typography>
+                  </Box>
+                  <Box className="arrow" sx={{ display: { xs: "none", sm: "flex" }, color: c.accent, flexShrink: 0 }}>
+                    <ChevronRight size={20} />
                   </Box>
                 </Box>
               ))}

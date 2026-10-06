@@ -6,9 +6,8 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Chip from "@mui/material/Chip";
 import InputAdornment from "@mui/material/InputAdornment";
-import { User, CheckCircle2, Sparkles } from "lucide-react";
+import { User, CheckCircle2 } from "lucide-react";
 import {
   useFormValidation,
   validateName,
@@ -16,6 +15,13 @@ import {
   sanitizeName,
   sanitizeMobile,
 } from "@/utils/validation";
+
+const FIELD_SX = {
+  backgroundColor: "#FFFFFF",
+  borderRadius: "10px",
+  fontSize: "0.92rem",
+  height: { xs: 44, md: 48 },
+};
 
 export default function MentorshipCallbackSection() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -36,242 +42,158 @@ export default function MentorshipCallbackSection() {
     <Box
       id="mentorship"
       sx={{
-        py: { xs: 3, md: 4 },
+        py: { xs: 2.5, md: 3.5 },
         backgroundColor: "#FFFFFF",
       }}
     >
       <Container>
         <Box
           sx={{
-            borderRadius: { xs: "20px", md: "24px" },
-            backgroundColor: "#EBF5FF", // Matching light blue background in Screenshot 18.04.50
-            border: "1.5px solid #BFDBFE",
-            p: { xs: 3, sm: 4, md: 5 },
+            borderRadius: { xs: "16px", md: "20px" },
+            backgroundColor: "#EBF5FF",
+            border: "1px solid #BFDBFE",
+            p: { xs: 2.5, sm: 3, md: 4 },
             display: "grid",
-            gridTemplateColumns: { xs: "1fr", lg: "1.2fr 0.8fr" },
+            gridTemplateColumns: { xs: "1fr", md: "minmax(0, 0.9fr) minmax(0, 1.1fr)" },
             alignItems: "center",
-            gap: { xs: 3, lg: 5 },
-            boxShadow: "0 10px 30px rgba(37, 99, 235, 0.08)",
+            gap: { xs: 2, md: 4 },
           }}
         >
-          {/* Left Form Area (Matching Screenshot 18.04.50) */}
+          {/* Heading */}
           <Box>
             <Typography
-              variant="h3"
+              component="h2"
               sx={{
-                fontWeight: 900,
-                fontSize: { xs: "1.75rem", sm: "2.3rem", md: "2.75rem" },
-                color: "#1E3A8A", // Deep royal blue
-                letterSpacing: "-0.015em",
-                lineHeight: 1.15,
-                mb: 1,
+                fontWeight: 800,
+                fontSize: { xs: "1.35rem", sm: "1.6rem", md: "1.85rem" },
+                color: "#1E3A8A",
+                letterSpacing: "-0.01em",
+                lineHeight: 1.25,
+                mb: 0.75,
               }}
             >
               Crack UPSC with our Expert Guidance
             </Typography>
-
-            <Typography
-              variant="h5"
-              sx={{
-                fontWeight: 700,
-                fontSize: { xs: "1.1rem", sm: "1.35rem" },
-                color: "#2563EB",
-                mb: 1.5,
-              }}
-            >
+            <Typography sx={{ fontWeight: 600, fontSize: { xs: "0.92rem", md: "1rem" }, color: "#2563EB" }}>
               Get a Callback by our UPSC Expert!
             </Typography>
+          </Box>
 
-            <Typography
-              variant="body2"
-              sx={{
-                color: "#64748B",
-                fontSize: "0.88rem",
-                mb: 3,
-              }}
-            >
-              By continuing, you agree to the{" "}
-              <Box component="span" sx={{ textDecoration: "underline", color: "#2563EB", cursor: "pointer" }}>
-                terms and conditions
-              </Box>
-              .
-            </Typography>
-
+          {/* Form */}
+          <Box>
             {submitted ? (
               <Box
                 sx={{
-                  p: 3,
-                  borderRadius: "16px",
+                  p: 2.5,
+                  borderRadius: "12px",
                   backgroundColor: "#FFFFFF",
-                  border: "2px solid #86EFAC",
-                  textAlign: "center",
+                  border: "1.5px solid #86EFAC",
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: 1.5,
                 }}
               >
-                <CheckCircle2 size={44} color="#16A34A" style={{ margin: "0 auto 12px auto" }} />
-                <Typography variant="h6" sx={{ fontWeight: 800, color: "#166534", mb: 0.5 }}>
-                  Callback Request Confirmed!
-                </Typography>
-                <Typography variant="body2" sx={{ color: "#334155" }}>
-                  Thank you, <strong>{form.values.name}</strong>. Our senior UPSC mentor will contact you at{" "}
-                  <strong>+91 {form.values.mobile}</strong> within 15 minutes.
-                </Typography>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  onClick={() => {
-                    setSubmitted(false);
-                    form.reset();
-                  }}
-                  sx={{ mt: 2, borderColor: "#16A34A", color: "#16A34A", fontWeight: 700 }}
-                >
-                  Submit Another Request
-                </Button>
+                <CheckCircle2 size={28} color="#16A34A" style={{ flexShrink: 0 }} />
+                <Box>
+                  <Typography sx={{ fontWeight: 700, color: "#166534", fontSize: "0.98rem", mb: 0.25 }}>
+                    Callback request confirmed!
+                  </Typography>
+                  <Typography sx={{ color: "#334155", fontSize: "0.86rem" }}>
+                    Thank you, <strong>{form.values.name}</strong>. Our UPSC mentor will call you at{" "}
+                    <strong>+91 {form.values.mobile}</strong> shortly.
+                  </Typography>
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      setSubmitted(false);
+                      form.reset();
+                    }}
+                    sx={{ mt: 0.75, p: 0, minWidth: 0, color: "#16A34A", fontWeight: 700, textTransform: "none" }}
+                  >
+                    Submit another request
+                  </Button>
+                </Box>
               </Box>
             ) : (
               <Box component="form" ref={formRef} onSubmit={handleSubmit} noValidate>
-
                 <Box
                   sx={{
                     display: "grid",
-                    gridTemplateColumns: { xs: "1fr", sm: "1fr 1.2fr" },
-                    gap: 1.5,
-                    mb: 1,
+                    gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", lg: "1fr 1fr auto" },
+                    gap: { xs: 1.25, sm: 1.5 },
+                    alignItems: "start",
                   }}
                 >
                   <TextField
-                    placeholder="Your Name"
+                    placeholder="Your name"
                     {...form.fieldProps("name")}
+                    helperText={form.visibleError("name") || undefined}
                     required
                     autoComplete="name"
                     inputProps={{ maxLength: 50, "aria-label": "Your name" }}
-                    variant="outlined"
                     fullWidth
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <User size={18} color="#64748B" />
+                          <User size={17} color="#64748B" />
                         </InputAdornment>
                       ),
-                      sx: {
-                        backgroundColor: "#FFFFFF",
-                        borderRadius: "12px",
-                        fontSize: "0.95rem",
-                        fontWeight: 600,
-                      },
+                      sx: FIELD_SX,
                     }}
                   />
 
                   <TextField
-                    placeholder="Your mobile number"
+                    placeholder="Mobile number"
                     {...form.fieldProps("mobile")}
+                    helperText={form.visibleError("mobile") || undefined}
                     required
                     type="tel"
                     autoComplete="tel-national"
                     inputProps={{ inputMode: "numeric", "aria-label": "Mobile number" }}
-                    variant="outlined"
                     fullWidth
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <Box sx={{ fontWeight: 800, color: "#1E3A8A", fontSize: "0.95rem", mr: 0.5 }}>
+                          <Box component="span" sx={{ fontWeight: 700, color: "#1E3A8A", fontSize: "0.92rem" }}>
                             +91
                           </Box>
                         </InputAdornment>
                       ),
-                      sx: {
-                        backgroundColor: "#FFFFFF",
-                        borderRadius: "12px",
-                        fontSize: "0.95rem",
-                        fontWeight: 600,
-                      },
+                      sx: FIELD_SX,
                     }}
                   />
+
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{
+                      gridColumn: { xs: "auto", sm: "1 / -1", lg: "auto" },
+                      height: { xs: 44, md: 48 },
+                      px: 3,
+                      background: "#FFE51F",
+                      color: "#000000",
+                      fontWeight: 700,
+                      fontSize: { xs: "0.95rem", md: "1rem" },
+                      borderRadius: "10px",
+                      boxShadow: "none",
+                      textTransform: "none",
+                      whiteSpace: "nowrap",
+                      "&:hover": { background: "#F2D500", boxShadow: "0 4px 12px rgba(242, 213, 0, 0.35)" },
+                    }}
+                  >
+                    Get Free Mentorship
+                  </Button>
                 </Box>
 
-                <Button
-                  type="submit"
-                  variant="contained"
-                  size="large"
-                  sx={{
-                    background: "#FFE51F", // Brand yellow (overrides theme's red gradient)
-                    color: "#000000",
-                    fontWeight: 900,
-                    fontSize: "1.05rem",
-                    px: 4,
-                    py: 1.4,
-                    borderRadius: "12px",
-                    boxShadow: "0 6px 18px rgba(242, 213, 0, 0.4)",
-                    textTransform: "none",
-                    "&:hover": {
-                      background: "#F2D500",
-                    },
-                  }}
-                >
-                  Get Free Mentorship
-                </Button>
+                <Typography sx={{ color: "#64748B", fontSize: "0.75rem", mt: 1.25 }}>
+                  By continuing, you agree to the{" "}
+                  <Box component="a" href="#" sx={{ color: "#2563EB", textDecoration: "underline" }}>
+                    terms and conditions
+                  </Box>
+                  .
+                </Typography>
               </Box>
             )}
-          </Box>
-
-          {/* Right Illustration Area (Matching Screenshot 18.04.50) */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Box
-              sx={{
-                width: "100%",
-                maxWidth: 420,
-                borderRadius: "20px",
-                overflow: "hidden",
-                backgroundColor: "#FEF3C7",
-                border: "2px solid #FDE68A",
-                p: 3,
-                boxShadow: "0 10px 25px rgba(0,0,0,0.06)",
-                textAlign: "center",
-              }}
-            >
-              {/* Graphic icon grouping */}
-              <Box
-                sx={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: 90,
-                  height: 90,
-                  borderRadius: "50%",
-                  backgroundColor: "#FFFFFF",
-                  boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
-                  mb: 2,
-                  color: "#D97706",
-                }}
-              >
-                <Sparkles size={46} />
-              </Box>
-
-              <Typography variant="h6" sx={{ fontWeight: 800, color: "#78350F", mb: 0.5 }}>
-                1-on-1 Personalized Mentoring
-              </Typography>
-              <Typography variant="body2" sx={{ color: "#92400E", mb: 2, lineHeight: 1.45 }}>
-                Discuss syllabus planning, strategy, booklist selection, and optional subject dilemma directly with serving civil servants.
-              </Typography>
-
-              <Box sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
-                <Chip
-                  label="100% Free Consultation"
-                  size="small"
-                  sx={{ backgroundColor: "#FFFFFF", color: "#166534", fontWeight: 800 }}
-                />
-                <Chip
-                  label="Zero Obligation"
-                  size="small"
-                  sx={{ backgroundColor: "#FFFFFF", color: "#1E40AF", fontWeight: 800 }}
-                />
-              </Box>
-            </Box>
           </Box>
         </Box>
       </Container>

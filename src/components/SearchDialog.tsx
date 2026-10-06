@@ -21,6 +21,7 @@ interface SearchItem {
 function buildIndex(): SearchItem[] {
   const items: SearchItem[] = [
     ...NAV_ITEMS.filter((n) => !n.isMegaMenu).map((n) => ({ label: n.label, group: "Menu", href: n.href })),
+    ...NAV_ITEMS.flatMap((n) => (n.children ?? []).map((ch) => ({ label: ch.label, group: n.label, href: ch.href }))),
     ...MEGA_MENU_CATEGORIES.flatMap((c) => c.courses.map((co) => ({ label: co.title, group: c.title, href: co.href }))),
     ...EXAM_CATEGORIES.flatMap((c) => c.subcategories.map((s) => ({ label: s.name, group: c.category, href: s.href || "#goals" }))),
   ];

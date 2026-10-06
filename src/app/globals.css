@@ -4,10 +4,16 @@
   margin: 0;
 }
 
+html {
+  /* keep anchor targets (#courses, #enquiry…) clear of the fixed header */
+  scroll-padding-top: 80px;
+}
+
 html,
 body {
   max-width: 100vw;
-  overflow-x: hidden;
+  /* "clip" (not "hidden") so the page never becomes its own scroll container */
+  overflow-x: clip;
   background-color: #FFFFFF;
   color: #0F172A;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
