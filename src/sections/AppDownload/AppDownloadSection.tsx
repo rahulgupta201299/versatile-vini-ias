@@ -66,7 +66,7 @@ export default function AppDownloadSection() {
             }}
           >
             <Image
-              src="/images/app/vini-ias-app-mockup-student.png"
+              src="/images/app/vini-ias-app-mockup-student-v2.png"
               alt="Vini IAS learning app home screen on a phone, next to a student"
               fill
               sizes="(max-width: 600px) 260px, (max-width: 900px) 300px, 340px"

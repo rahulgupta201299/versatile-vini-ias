@@ -96,10 +96,10 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
             gap: 0.5,
             height: 32,
             px: 1.25,
-            border: "none",
+            border: `1.5px solid ${RED}`,
             borderRadius: "9999px",
-            backgroundColor: RED,
-            color: "#FFFFFF",
+            backgroundColor: "#FFFFFF",
+            color: RED,
             fontSize: "0.8rem",
             fontWeight: 700,
             fontFamily: "inherit",
@@ -143,10 +143,12 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
         </Box>
 
         {/* Get the app */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, p: 1.5, mb: 2, borderRadius: "12px", backgroundColor: "#FFF0F3" }}>
-          <Smartphone size={26} color={RED} style={{ flexShrink: 0 }} />
-          <Typography sx={{ flex: 1, minWidth: 0, fontWeight: 600, color: INK, fontSize: "0.88rem", lineHeight: 1.3 }}>
-            Get App for Better Experience
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1, px: 1.25, py: 1, mb: 2, borderRadius: "10px", backgroundColor: "#FFF0F3" }}>
+          <Smartphone size={20} color={RED} style={{ flexShrink: 0 }} />
+          <Typography sx={{ flex: 1, minWidth: 0, fontWeight: 600, color: INK, fontSize: "0.76rem", lineHeight: 1.3 }}>
+            Get App for
+            <br />
+            Better Experience
           </Typography>
           <Box
             component="a"
@@ -154,12 +156,12 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
             onClick={onClose}
             sx={{
               flexShrink: 0,
-              px: 1.75,
-              py: 0.9,
+              px: 1.25,
+              py: 0.5,
               borderRadius: "9999px",
               backgroundColor: RED,
               color: "#FFFFFF",
-              fontSize: "0.8rem",
+              fontSize: "0.7rem",
               fontWeight: 700,
               textDecoration: "none",
               whiteSpace: "nowrap",
