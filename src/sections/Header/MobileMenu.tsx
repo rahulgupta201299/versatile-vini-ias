@@ -6,7 +6,6 @@ import Link from "next/link";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import Collapse from "@mui/material/Collapse";
 import {
   X as CloseIcon,
   ChevronRight,
@@ -14,12 +13,12 @@ import {
   Plus,
   Search,
   Smartphone,
-  UserRound,
+  GraduationCap,
   ShoppingCart,
   Download,
 } from "lucide-react";
 import { IconRenderer } from "@/components";
-import { MOBILE_MENU_SECTIONS, MOBILE_MENU_DROPDOWN_IDS, NAV_ITEMS, STORE_HREF } from "@/data/navigation";
+import { MOBILE_MENU_SECTIONS, NAV_ITEMS, STORE_HREF } from "@/data/navigation";
 import { APP_STORE_LINKS } from "@/data/app";
 
 const RED = "#FE0034";
@@ -28,9 +27,7 @@ const MUTED = "#6B7280";
 const LINE = "#EEF0F3";
 
 const ALL_EXAMS_LABEL = NAV_ITEMS.find((n) => n.isMegaMenu)?.label ?? "All Exams";
-const DROPDOWNS = MOBILE_MENU_DROPDOWN_IDS.map((id) => NAV_ITEMS.find((n) => n.id === id)).filter(
-  (n): n is NonNullable<typeof n> => Boolean(n?.children?.length)
-);
+const childrenOf = (id?: string) => (id ? NAV_ITEMS.find((n) => n.id === id)?.children ?? [] : []);
 
 /** Store link for the visitor's phone (falls back to the app section). */
 function appInstallHref() {
@@ -55,14 +52,14 @@ interface MobileMenuProps {
 }
 
 export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenExams }: MobileMenuProps) {
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [openTile, setOpenTile] = useState<string | null>(null);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
       {/* Top bar: logo · Vini Store · Login · close */}
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1, px: 2, height: 64, borderBottom: `1px solid ${LINE}`, flexShrink: 0 }}>
-        <Box sx={{ position: "relative", width: 92, height: 36, mr: "auto" }}>
-          <Image src="/images/logo.png" alt="Vini IAS" fill sizes="92px" style={{ objectFit: "contain", objectPosition: "left" }} />
+      <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, px: 1.5, height: 60, "@media (max-width: 359px)": { gap: 0.5, px: 1.25, "& a svg, & button:not([aria-label]) svg": { display: "none" } }, borderBottom: `1px solid ${LINE}`, flexShrink: 0 }}>
+        <Box sx={{ position: "relative", width: 76, height: 32, mr: "auto", flexShrink: 0, "@media (max-width: 359px)": { width: 62 } }}>
+          <Image src="/images/logo.png" alt="Vini IAS" fill sizes="76px" style={{ objectFit: "contain", objectPosition: "left" }} />
         </Box>
         <Box
           component={Link}
@@ -84,15 +81,8 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
             whiteSpace: "nowrap",
           }}
         >
-          <ShoppingCart size={14} /> Vini Store
+          <ShoppingCart size={14} /> Store
         </Box>
-        <IconButton onClick={onClose} aria-label="Close menu" sx={{ color: INK }}>
-          <CloseIcon size={22} />
-        </IconButton>
-      </Box>
-
-      <Box sx={{ flex: 1, overflowY: "auto", px: 2, pt: 2, pb: 3 }}>
-        {/* Login / Sign up card */}
         <Box
           component="button"
           type="button"
@@ -101,30 +91,30 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
             onOpenAuth();
           }}
           sx={{
-            width: "100%",
-            display: "flex",
+            display: "inline-flex",
             alignItems: "center",
-            gap: 1.5,
-            p: 1.5,
-            mb: 1.5,
+            gap: 0.5,
+            height: 32,
+            px: 1.25,
             border: "none",
-            borderRadius: "12px",
-            backgroundColor: "#F3F4F8",
-            textAlign: "left",
-            cursor: "pointer",
+            borderRadius: "9999px",
+            backgroundColor: RED,
+            color: "#FFFFFF",
+            fontSize: "0.8rem",
+            fontWeight: 700,
             fontFamily: "inherit",
+            cursor: "pointer",
+            whiteSpace: "nowrap",
           }}
         >
-          <Box sx={{ width: 40, height: 40, borderRadius: "50%", backgroundColor: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-            <UserRound size={20} color={INK} />
-          </Box>
-          <Box sx={{ flex: 1, minWidth: 0 }}>
-            <Typography sx={{ fontWeight: 700, color: INK, fontSize: "0.98rem" }}>Login / Sign Up</Typography>
-            <Typography sx={{ color: MUTED, fontSize: "0.8rem" }}>Get personalized learning experience</Typography>
-          </Box>
-          <ChevronRight size={18} color={MUTED} />
+          <GraduationCap size={14} /> Login
         </Box>
+        <IconButton onClick={onClose} aria-label="Close menu" sx={{ color: INK, p: 0.75 }}>
+          <CloseIcon size={22} />
+        </IconButton>
+      </Box>
 
+      <Box sx={{ flex: 1, overflowY: "auto", px: 2, pt: 2, pb: 3 }}>
         {/* Search */}
         <Box
           component="button"
@@ -213,7 +203,7 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
               sx={{
                 display: "grid",
                 gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                columnGap: 2,
+                columnGap: 1.5,
                 // vertical divider between the two columns
                 backgroundImage: `linear-gradient(${LINE}, ${LINE})`,
                 backgroundSize: "1px 100%",
@@ -221,95 +211,103 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
                 backgroundRepeat: "no-repeat",
               }}
             >
-              {section.items.map((item) => (
-                <Box
-                  key={`${section.id}-${item.label}`}
-                  component={Link}
-                  href={item.href}
-                  onClick={onClose}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1.25,
-                    py: 1.1,
-                    minWidth: 0,
-                    textDecoration: "none",
-                    color: INK,
-                    "&:hover": { color: RED },
-                  }}
-                >
-                  <IconRenderer name={item.icon} size={19} color="#374151" />
-                  <Typography component="span" sx={{ flex: 1, minWidth: 0, fontSize: "0.88rem", lineHeight: 1.3 }}>
-                    {item.label}
-                  </Typography>
-                  <ChevronRight size={15} color="#9CA3AF" style={{ flexShrink: 0 }} />
-                </Box>
-              ))}
+              {section.items.map((item, i) => {
+                const kids = childrenOf(item.dropdownId);
+                const key = `${section.id}-${item.label}`;
+                const isOpen = openTile === key;
+                const rowEnd = Math.min(i - (i % 2) + 1, section.items.length - 1);
+                const openInRow = section.items
+                  .slice(i - (i % 2), rowEnd + 1)
+                  .map((it) => `${section.id}-${it.label}`)
+                  .find((k) => k === openTile);
+                const openItem = openInRow ? section.items.find((it) => `${section.id}-${it.label}` === openInRow) : undefined;
+                const tileSx = {
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  py: 1,
+                  minWidth: 0,
+                  width: "100%",
+                  border: "none",
+                  background: "none",
+                  textAlign: "left" as const,
+                  fontFamily: "inherit",
+                  cursor: "pointer",
+                  textDecoration: "none",
+                  color: isOpen ? RED : INK,
+                  "&:hover": { color: RED },
+                };
+                const content = (
+                  <>
+                    <IconRenderer name={item.icon} size={17} color={isOpen ? RED : "#374151"} />
+                    <Typography component="span" sx={{ flex: 1, minWidth: 0, fontSize: "0.84rem", lineHeight: 1.3, fontWeight: isOpen ? 600 : 400 }}>
+                      {item.label}
+                    </Typography>
+                    {kids.length ? (
+                      <ChevronDown size={15} color={isOpen ? RED : "#9CA3AF"} style={{ flexShrink: 0, transform: isOpen ? "rotate(180deg)" : "none", transition: "transform .2s ease" }} />
+                    ) : (
+                      <ChevronRight size={15} color="#9CA3AF" style={{ flexShrink: 0 }} />
+                    )}
+                  </>
+                );
+                return (
+                  <React.Fragment key={key}>
+                    {kids.length ? (
+                      <Box component="button" type="button" aria-expanded={isOpen} onClick={() => setOpenTile(isOpen ? null : key)} sx={tileSx}>
+                        {content}
+                      </Box>
+                    ) : (
+                      <Box component={Link} href={item.href} onClick={onClose} sx={tileSx}>
+                        {content}
+                      </Box>
+                    )}
+                    {/* Dropdown details open full-width right under the tile's row */}
+                    {i === rowEnd && openItem && (
+                      <Box
+                        sx={{
+                          gridColumn: "1 / -1",
+                          mb: 1,
+                          p: 1.25,
+                          borderRadius: "10px",
+                          backgroundColor: "#FFF5F7",
+                          border: "1px solid #FFE0E6",
+                          position: "relative",
+                          zIndex: 1,
+                        }}
+                      >
+                        <Box component="ul" sx={{ listStyle: "none", m: 0, p: 0, display: "grid", gap: 0.25 }}>
+                          {childrenOf(openItem.dropdownId).map((child) => (
+                            <Box component="li" key={child.label}>
+                              <Box
+                                component={Link}
+                                href={child.href}
+                                onClick={onClose}
+                                sx={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 1,
+                                  py: 0.75,
+                                  color: "#374151",
+                                  fontSize: "0.85rem",
+                                  textDecoration: "none",
+                                  "&::before": { content: '""', width: 5, height: 5, borderRadius: "50%", backgroundColor: RED, flexShrink: 0 },
+                                  "&:hover": { color: RED },
+                                }}
+                              >
+                                {child.label}
+                              </Box>
+                            </Box>
+                          ))}
+                        </Box>
+                      </Box>
+                    )}
+                  </React.Fragment>
+                );
+              })}
             </Box>
           </Box>
         ))}
 
-        {/* Last section: dropdowns */}
-        <Box sx={{ pt: 1.5 }}>
-          <SectionTitle>Courses &amp; Centres</SectionTitle>
-          {DROPDOWNS.map((item) => {
-            const open = openDropdown === item.id;
-            return (
-              <Box key={item.id} sx={{ borderBottom: `1px solid ${LINE}` }}>
-                <Box
-                  component="button"
-                  type="button"
-                  aria-expanded={open}
-                  onClick={() => setOpenDropdown(open ? null : item.id)}
-                  sx={{
-                    width: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    py: 1.4,
-                    border: "none",
-                    background: "none",
-                    cursor: "pointer",
-                    fontFamily: "inherit",
-                    fontSize: "0.95rem",
-                    fontWeight: 600,
-                    color: open ? RED : INK,
-                    textAlign: "left",
-                  }}
-                >
-                  {item.label}
-                  <ChevronDown size={18} style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform .2s ease" }} />
-                </Box>
-                <Collapse in={open} timeout={200} unmountOnExit>
-                  <Box component="ul" sx={{ listStyle: "none", m: 0, p: 0, pb: 1.25, pl: 0.5 }}>
-                    {item.children!.map((child) => (
-                      <Box component="li" key={child.label}>
-                        <Box
-                          component={Link}
-                          href={child.href}
-                          onClick={onClose}
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 1.25,
-                            py: 0.85,
-                            color: "#4B5563",
-                            fontSize: "0.88rem",
-                            textDecoration: "none",
-                            "&::before": { content: '""', width: 6, height: 6, borderRadius: "50%", backgroundColor: RED, flexShrink: 0 },
-                            "&:hover": { color: RED },
-                          }}
-                        >
-                          {child.label}
-                        </Box>
-                      </Box>
-                    ))}
-                  </Box>
-                </Collapse>
-              </Box>
-            );
-          })}
-        </Box>
       </Box>
 
       {/* Yellow "Download app" bar */}
@@ -322,18 +320,18 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          gap: 1,
-          height: 52,
+          gap: 0.75,
+          height: 40,
           backgroundColor: "#FFE51F",
           color: "#000000",
           fontWeight: 700,
-          fontSize: "0.95rem",
+          fontSize: "0.8rem",
           textDecoration: "none",
           "&:hover": { backgroundColor: "#F2D500" },
         }}
       >
-        <Download size={18} /> Download VINI IAS App
-        <ChevronRight size={18} />
+        <Download size={15} /> Download VINI IAS App
+        <ChevronRight size={15} />
       </Box>
     </Box>
   );

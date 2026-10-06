@@ -18,6 +18,8 @@ export interface MenuTile {
   label: string;
   href: string;
   icon: string; // IconRenderer name
+  /** NAV_ITEMS id whose children open inline under this tile. */
+  dropdownId?: string;
 }
 
 export interface MenuSection {

@@ -88,14 +88,14 @@ export const MOBILE_MENU_SECTIONS: MenuSection[] = [
     id: "free-resources",
     title: "Free Resources",
     items: [
-      { label: "GS Foundation", href: "#courses", icon: "Landmark" },
-      { label: "GS Mains", href: "#courses", icon: "PenLine" },
-      { label: "Mentorship", href: "#mentorship", icon: "Users" },
-      { label: "Ethics", href: "#courses", icon: "Scale" },
-      { label: "CSAT", href: "#courses", icon: "Calculator" },
-      { label: "Essay", href: "#courses", icon: "FileText" },
-      { label: "Optional", href: "#courses", icon: "BookOpen" },
-      { label: "UPSC Plan B", href: "#courses", icon: "CalendarCheck" },
+      { label: "GS Foundation", href: "#courses", icon: "Landmark", dropdownId: "gs-foundation" },
+      { label: "GS Mains", href: "#courses", icon: "PenLine", dropdownId: "gs-mains" },
+      { label: "Mentorship", href: "#mentorship", icon: "Users", dropdownId: "mentorship" },
+      { label: "Ethics", href: "#courses", icon: "Scale", dropdownId: "ethics-essay" },
+      { label: "CSAT", href: "#courses", icon: "Calculator", dropdownId: "csat" },
+      { label: "Essay", href: "#courses", icon: "FileText", dropdownId: "ethics-essay" },
+      { label: "Optional", href: "#courses", icon: "BookOpen", dropdownId: "optional" },
+      { label: "UPSC Plan B", href: "#courses", icon: "CalendarCheck", dropdownId: "upsc-plan-b" },
     ],
   },
   {
@@ -123,27 +123,18 @@ export const MOBILE_MENU_SECTIONS: MenuSection[] = [
     title: "Featured",
     items: [
       { label: "News", href: "#resources", icon: "Newspaper" },
-      { label: "Trend Magazine", href: "#resources", icon: "TrendingUp" },
+      { label: "Trend", href: "#resources", icon: "TrendingUp" },
       { label: "Books", href: "#resources", icon: "Book" },
-      { label: "Toppers Copies", href: "#resources", icon: "FileCheck" },
+      { label: "Magazine", href: "#resources", icon: "BookOpen" },
       { label: "Test Series", href: "#resources", icon: "ClipboardCheck" },
-      { label: "Vini Publication", href: "#resources", icon: "BookMarked" },
+      { label: "Toppers Copies", href: "#resources", icon: "FileCheck" },
       { label: "Blogs Articles", href: "#resources", icon: "Lightbulb" },
+      { label: "Vini Publication", href: "#resources", icon: "BookMarked" },
+      { label: "Offline Centre", href: "#enquiry", icon: "MapPin", dropdownId: "offline-centre" },
     ],
   },
 ];
 
-/** Accordion items in the last section of the mobile menu. */
-export const MOBILE_MENU_DROPDOWN_IDS = [
-  "offline-centre",
-  "gs-foundation",
-  "mentorship",
-  "csat",
-  "optional",
-  "gs-mains",
-  "ethics-essay",
-  "upsc-plan-b",
-];
 
 export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
   {

@@ -432,7 +432,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
         anchor="left"
         open={drawerOpen}
         onClose={closeDrawer}
-        PaperProps={{ sx: { width: { xs: "100%", sm: 420 }, display: "flex", flexDirection: "column" } }}
+        PaperProps={{ sx: { width: { xs: "86%", sm: 400 }, maxWidth: 400, display: "flex", flexDirection: "column" } }}
       >
         {drawerView === "menu" ? (
           <MobileMenu
