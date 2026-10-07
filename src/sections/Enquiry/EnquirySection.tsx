@@ -25,6 +25,7 @@ import {
   sanitizeMobile,
 } from "@/utils/validation";
 
+import { COLORS } from "@/theme/colors";
 const COURSE_OPTIONS = [
   "Sankalp UPSC CSE 2026/27 GS Foundation",
   "Aarambh 71st BPSC Prelims + Mains",
@@ -61,8 +62,8 @@ export default function EnquirySection() {
       id="enquiry"
       sx={{
         py: { xs: 3.5, md: 5 },
-        backgroundColor: "#F8FAFC",
-        borderTop: "1px solid #E2E8F0",
+        backgroundColor: COLORS.surface,
+        borderTop: `1px solid ${COLORS.border}`,
       }}
     >
       <Container>
@@ -83,7 +84,7 @@ export default function EnquirySection() {
               sx={{
                 fontWeight: 900,
                 fontSize: { xs: "2rem", sm: "2.6rem", md: "3.2rem" },
-                color: "#1E293B",
+                color: COLORS.heading,
                 letterSpacing: "-0.02em",
                 lineHeight: 1.15,
                 mb: 1.5,
@@ -96,7 +97,7 @@ export default function EnquirySection() {
               variant="h5"
               sx={{
                 fontWeight: 600,
-                color: "#64748B",
+                color: COLORS.muted,
                 fontSize: { xs: "1.05rem", sm: "1.25rem" },
                 lineHeight: 1.5,
                 mb: 3,
@@ -122,10 +123,10 @@ export default function EnquirySection() {
                   title: "Call Us",
                   subtitle: "Talk to a counsellor",
                   ariaLabel: "Call a Vini IAS counsellor",
-                  accent: "#FE0034",
-                  tint: "#FFF0F3",
+                  accent: COLORS.red,
+                  tint: COLORS.redTint,
                   border: "#FFD1DA",
-                  icon: <PhoneCall size={22} color="#FE0034" strokeWidth={2.2} />,
+                  icon: <PhoneCall size={22} color={COLORS.red} strokeWidth={2.2} />,
                   external: false,
                 },
                 {
@@ -185,13 +186,13 @@ export default function EnquirySection() {
                   </Box>
                   <Box sx={{ minWidth: 0, flex: 1 }}>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                      <Typography component="span" sx={{ fontSize: { xs: "0.92rem", sm: "1rem" }, fontWeight: 700, color: "#0F172A" }}>
+                      <Typography component="span" sx={{ fontSize: { xs: "0.92rem", sm: "1rem" }, fontWeight: 700, color: COLORS.ink }}>
                         {c.title}
                       </Typography>
                     </Box>
                     <Typography
                       component="span"
-                      sx={{ display: "block", fontSize: { xs: "0.74rem", sm: "0.8rem" }, color: "#64748B", lineHeight: 1.35, whiteSpace: { xs: "normal", sm: "nowrap" }, overflow: "hidden", textOverflow: "ellipsis" }}
+                      sx={{ display: "block", fontSize: { xs: "0.74rem", sm: "0.8rem" }, color: COLORS.muted, lineHeight: 1.35, whiteSpace: { xs: "normal", sm: "nowrap" }, overflow: "hidden", textOverflow: "ellipsis" }}
                     >
                       {c.subtitle}
                     </Typography>
@@ -205,13 +206,13 @@ export default function EnquirySection() {
 
             {/* Trust points */}
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, color: "#334155" }}>
-                <CheckCircle2 size={18} color="#16A34A" />
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, color: COLORS.body }}>
+                <CheckCircle2 size={18} color={COLORS.success} />
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
                   Personal counselling by faculty members who have cleared UPSC/PCS Mains
                 </Typography>
               </Box>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, color: "#334155" }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, color: COLORS.body }}>
                 <Clock size={18} color="#2563EB" />
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
                   Immediate response guaranteed between 9:00 AM – 8:00 PM (Mon-Sat)
@@ -225,25 +226,25 @@ export default function EnquirySection() {
             sx={{
               p: { xs: 3, sm: 4 },
               borderRadius: "24px",
-              border: "1px solid #E2E8F0",
+              border: `1px solid ${COLORS.border}`,
               boxShadow: "0 12px 32px rgba(0,0,0,0.06)",
               backgroundColor: "#FFFFFF",
             }}
           >
-            <Typography variant="h5" sx={{ fontWeight: 800, color: "#1E293B", mb: 0.5 }}>
+            <Typography variant="h5" sx={{ fontWeight: 800, color: COLORS.heading, mb: 0.5 }}>
               Request a Guided Call
             </Typography>
-            <Typography variant="body2" sx={{ color: "#64748B", mb: 3 }}>
+            <Typography variant="body2" sx={{ color: COLORS.muted, mb: 3 }}>
               Fill in your details below and our academic mentor will call you back.
             </Typography>
 
             {submitted ? (
               <Box sx={{ textAlign: "center", py: 3 }}>
-                <CheckCircle2 size={50} color="#16A34A" style={{ margin: "0 auto 12px auto" }} />
+                <CheckCircle2 size={50} color={COLORS.success} style={{ margin: "0 auto 12px auto" }} />
                 <Typography variant="h6" sx={{ fontWeight: 800, color: "#166534", mb: 1 }}>
                   Enquiry Submitted Successfully!
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#475569", mb: 3 }}>
+                <Typography variant="body2" sx={{ color: COLORS.textSecondary, mb: 3 }}>
                   We have registered your query for <strong>{values.course}</strong>. Our counsellor will call you shortly on <strong>+91 {values.mobile}</strong>.
                 </Typography>
                 <Button
@@ -252,7 +253,7 @@ export default function EnquirySection() {
                     setSubmitted(false);
                     form.reset();
                   }}
-                  sx={{ borderColor: "#FE0034", color: "#FE0034", fontWeight: 700 }}
+                  sx={{ borderColor: COLORS.red, color: COLORS.red, fontWeight: 700 }}
                 >
                   Send Another Enquiry
                 </Button>
@@ -262,7 +263,7 @@ export default function EnquirySection() {
 
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                   <Box>
-                    <Typography variant="caption" sx={{ fontWeight: 700, color: "#334155", mb: 0.5, display: "block" }}>
+                    <Typography variant="caption" sx={{ fontWeight: 700, color: COLORS.body, mb: 0.5, display: "block" }}>
                       Full Name *
                     </Typography>
                     <TextField
@@ -279,7 +280,7 @@ export default function EnquirySection() {
                   </Box>
 
                   <Box>
-                    <Typography variant="caption" sx={{ fontWeight: 700, color: "#334155", mb: 0.5, display: "block" }}>
+                    <Typography variant="caption" sx={{ fontWeight: 700, color: COLORS.body, mb: 0.5, display: "block" }}>
                       Mobile Number (+91) *
                     </Typography>
                     <TextField
@@ -297,7 +298,7 @@ export default function EnquirySection() {
                   </Box>
 
                   <Box>
-                    <Typography variant="caption" sx={{ fontWeight: 700, color: "#334155", mb: 0.5, display: "block" }}>
+                    <Typography variant="caption" sx={{ fontWeight: 700, color: COLORS.body, mb: 0.5, display: "block" }}>
                       Target Exam / Course *
                     </Typography>
                     <TextField
@@ -308,7 +309,7 @@ export default function EnquirySection() {
                         displayEmpty: true,
                         onClose: () => form.markTouched("course"),
                         renderValue: (v) =>
-                          (v as string) || <span style={{ color: "#94A3B8" }}>Select your exam / course</span>,
+                          (v as string) || <span style={{ color: COLORS.disabled }}>Select your exam / course</span>,
                       }}
                       inputProps={{ "aria-label": "Target exam or course" }}
                       fullWidth
@@ -334,11 +335,11 @@ export default function EnquirySection() {
                           form.markTouched("agree");
                         }}
                         inputProps={{ "aria-invalid": Boolean(form.visibleError("agree")) }}
-                        sx={{ color: "#FE0034", "&.Mui-checked": { color: "#FE0034" } }}
+                        sx={{ color: COLORS.red, "&.Mui-checked": { color: COLORS.red } }}
                       />
                     }
                     label={
-                      <Typography variant="caption" sx={{ color: "#64748B", fontSize: "0.8rem" }}>
+                      <Typography variant="caption" sx={{ color: COLORS.muted, fontSize: "0.8rem" }}>
                         By continuing, you agree to the Terms &amp; Conditions and Privacy Policy.
                       </Typography>
                     }
@@ -357,7 +358,7 @@ export default function EnquirySection() {
                     size="large"
                     fullWidth
                     sx={{
-                      background: "linear-gradient(135deg, #FE0034 0%, #FF3358 100%)",
+                      background: `linear-gradient(135deg, ${COLORS.red} 0%, ${COLORS.redLight} 100%)`,
                       color: "#FFFFFF",
                       fontWeight: 800,
                       fontSize: "1rem",
@@ -365,7 +366,7 @@ export default function EnquirySection() {
                       borderRadius: "12px",
                       boxShadow: "0 6px 18px rgba(254, 0, 52, 0.25)",
                       "&:hover": {
-                        background: "linear-gradient(135deg, #CC002A 0%, #FE0034 100%)",
+                        background: `linear-gradient(135deg, ${COLORS.redDark} 0%, ${COLORS.red} 100%)`,
                       },
                     }}
                   >

@@ -14,11 +14,12 @@ import {
 } from "@/data/impact";
 import { ImpactFeatureChip } from "@/types";
 
+import { COLORS } from "@/theme/colors";
 /* Layout reference: vedantu.com "Impact. At scale" — map artwork 704 × 440 */
 const MAP_W = 704;
 const MAP_H = 440;
-const TEXT = "#0F172A";
-const ACCENT = "#FE0034";
+const TEXT = COLORS.ink;
+const ACCENT = COLORS.red;
 
 const float = keyframes`
   0%, 100% { transform: translate(-50%, -50%); }
@@ -52,16 +53,16 @@ function ChartIllustration() {
       aria-hidden
       sx={{ width: { xs: 72, md: 104 }, height: "auto", display: "block", mb: 2 }}
     >
-      <path d="M6 112h56" stroke="#0F172A" strokeWidth="3" strokeLinecap="round" />
-      <path d="M6 108v8M62 108v8" stroke="#0F172A" strokeWidth="2.5" strokeLinecap="round" />
-      <rect x="10" y="90" width="8" height="20" rx="1.5" fill="#7C3AED" stroke="#0F172A" strokeWidth="2" />
-      <rect x="24" y="68" width="14" height="42" rx="2" fill="#FFE51F" stroke="#0F172A" strokeWidth="2" />
-      <rect x="44" y="94" width="10" height="16" rx="1.5" fill={ACCENT} stroke="#0F172A" strokeWidth="2" />
-      <circle cx="72" cy="58" r="24" fill="#FFFFFF" stroke="#0F172A" strokeWidth="2.5" />
-      <path d="M72 58V34a24 24 0 0 1 17 41z" fill="#34D399" stroke="#0F172A" strokeWidth="2.5" strokeLinejoin="round" />
-      <path d="M52 50l14-12M50 58l18-16M52 66l16-14" stroke="#0F172A" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M70 20c12 2 22 10 26 22" fill="none" stroke="#0F172A" strokeWidth="2.5" strokeLinecap="round" />
-      <circle cx="68" cy="20" r="4" fill="#FFE51F" stroke="#0F172A" strokeWidth="2" />
+      <path d="M6 112h56" stroke={COLORS.ink} strokeWidth="3" strokeLinecap="round" />
+      <path d="M6 108v8M62 108v8" stroke={COLORS.ink} strokeWidth="2.5" strokeLinecap="round" />
+      <rect x="10" y="90" width="8" height="20" rx="1.5" fill="#7C3AED" stroke={COLORS.ink} strokeWidth="2" />
+      <rect x="24" y="68" width="14" height="42" rx="2" fill={COLORS.yellow} stroke={COLORS.ink} strokeWidth="2" />
+      <rect x="44" y="94" width="10" height="16" rx="1.5" fill={ACCENT} stroke={COLORS.ink} strokeWidth="2" />
+      <circle cx="72" cy="58" r="24" fill="#FFFFFF" stroke={COLORS.ink} strokeWidth="2.5" />
+      <path d="M72 58V34a24 24 0 0 1 17 41z" fill="#34D399" stroke={COLORS.ink} strokeWidth="2.5" strokeLinejoin="round" />
+      <path d="M52 50l14-12M50 58l18-16M52 66l16-14" stroke={COLORS.ink} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M70 20c12 2 22 10 26 22" fill="none" stroke={COLORS.ink} strokeWidth="2.5" strokeLinecap="round" />
+      <circle cx="68" cy="20" r="4" fill={COLORS.yellow} stroke={COLORS.ink} strokeWidth="2" />
     </Box>
   );
 }
@@ -201,8 +202,8 @@ export default function ImpactStatsSection() {
                   aria-hidden
                   sx={{ position: "absolute", left: 0, bottom: -8, width: "100%", height: 12 }}
                 >
-                  <path d="M2 9C30 4 70 2 118 4" stroke="#FFE51F" strokeWidth="5" strokeLinecap="round" fill="none" />
-                  <path d="M10 12C40 9 75 8 110 9" stroke="#FFE51F" strokeWidth="3" strokeLinecap="round" fill="none" />
+                  <path d="M2 9C30 4 70 2 118 4" stroke={COLORS.yellow} strokeWidth="5" strokeLinecap="round" fill="none" />
+                  <path d="M10 12C40 9 75 8 110 9" stroke={COLORS.yellow} strokeWidth="3" strokeLinecap="round" fill="none" />
                 </Box>
               </Box>
             </Typography>

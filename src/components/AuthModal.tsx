@@ -19,6 +19,7 @@ import {
   sanitizeMobile,
 } from "@/utils/validation";
 
+import { COLORS } from "@/theme/colors";
 interface AuthModalProps {
   open: boolean;
   onClose: () => void;
@@ -65,7 +66,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
     >
       <DialogContent sx={{ p: 3 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
-          <Typography variant="h5" sx={{ fontWeight: 800, color: "#1E293B" }}>
+          <Typography variant="h5" sx={{ fontWeight: 800, color: COLORS.heading }}>
             {tab === 0 ? "Welcome Back" : "Create Aspirant Account"}
           </Typography>
           <IconButton size="small" onClick={handleReset}>
@@ -79,7 +80,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
             setTab(newVal);
             form.reset({ ...form.values, name: "" });
           }}
-          sx={{ mb: 3, borderBottom: "1px solid #E2E8F0" }}
+          sx={{ mb: 3, borderBottom: `1px solid ${COLORS.border}` }}
         >
           <Tab label="Login" sx={{ fontWeight: 700, textTransform: "none", fontSize: "0.95rem" }} />
           <Tab label="Register" sx={{ fontWeight: 700, textTransform: "none", fontSize: "0.95rem" }} />
@@ -87,18 +88,18 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
 
         {submitted ? (
           <Box sx={{ textAlign: "center", py: 2 }}>
-            <CheckCircle2 size={46} color="#16A34A" style={{ margin: "0 auto 12px auto" }} />
+            <CheckCircle2 size={46} color={COLORS.success} style={{ margin: "0 auto 12px auto" }} />
             <Typography variant="h6" sx={{ fontWeight: 800, color: "#166534", mb: 1 }}>
               OTP Sent Successfully!
             </Typography>
-            <Typography variant="body2" sx={{ color: "#64748B", mb: 3 }}>
+            <Typography variant="body2" sx={{ color: COLORS.muted, mb: 3 }}>
               A 6-digit verification code has been dispatched to <strong>+91 {form.values.mobile}</strong>.
             </Typography>
             <Button
               variant="contained"
               fullWidth
               onClick={handleReset}
-              sx={{ backgroundColor: "#FE0034", py: 1.2, fontWeight: 700 }}
+              sx={{ backgroundColor: COLORS.red, py: 1.2, fontWeight: 700 }}
             >
               Continue to Student Dashboard
             </Button>
@@ -108,7 +109,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
 
             {tab === 1 && (
               <Box sx={{ mb: 1 }}>
-                <Typography variant="caption" sx={{ fontWeight: 700, color: "#334155", mb: 0.5, display: "block" }}>
+                <Typography variant="caption" sx={{ fontWeight: 700, color: COLORS.body, mb: 0.5, display: "block" }}>
                   Your Full Name *
                 </Typography>
                 <TextField
@@ -125,7 +126,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
             )}
 
             <Box sx={{ mb: 2 }}>
-              <Typography variant="caption" sx={{ fontWeight: 700, color: "#334155", mb: 0.5, display: "block" }}>
+              <Typography variant="caption" sx={{ fontWeight: 700, color: COLORS.body, mb: 0.5, display: "block" }}>
                 Mobile Number *
               </Typography>
               <TextField
@@ -139,7 +140,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
                 variant="outlined"
                 InputProps={{
                   startAdornment: (
-                    <Box sx={{ fontWeight: 800, color: "#FE0034", mr: 1, fontSize: "0.95rem" }}>
+                    <Box sx={{ fontWeight: 800, color: COLORS.red, mr: 1, fontSize: "0.95rem" }}>
                       +91
                     </Box>
                   ),
@@ -154,7 +155,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
               fullWidth
               size="large"
               sx={{
-                background: "linear-gradient(135deg, #FE0034 0%, #FF3358 100%)",
+                background: `linear-gradient(135deg, ${COLORS.red} 0%, ${COLORS.redLight} 100%)`,
                 color: "#FFFFFF",
                 fontWeight: 800,
                 py: 1.3,
@@ -165,7 +166,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
               {tab === 0 ? "Get Login OTP" : "Register with OTP"}
             </Button>
 
-            <Typography variant="caption" sx={{ display: "block", textAlign: "center", color: "#94A3B8", mt: 2 }}>
+            <Typography variant="caption" sx={{ display: "block", textAlign: "center", color: COLORS.disabled, mt: 2 }}>
               By logging in, you agree to our Terms of Service and Privacy Policy.
             </Typography>
           </Box>

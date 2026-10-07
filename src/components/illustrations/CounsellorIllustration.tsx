@@ -1,6 +1,7 @@
 import React from "react";
 import Box from "@mui/material/Box";
 
+import { COLORS } from "@/theme/colors";
 /** Counsellor on a call (headset) in front of a browser window — original line illustration. */
 export default function CounsellorIllustration({ width = 200 }: { width?: number | object }) {
   return (
@@ -16,16 +17,16 @@ export default function CounsellorIllustration({ width = 200 }: { width?: number
       {/* browser window */}
       <rect x="40" y="46" width="124" height="80" rx="6" fill="#FFFFFF" stroke="#C7CBEA" strokeWidth="1.5" />
       <path d="M40 58h124" stroke="#C7CBEA" strokeWidth="1.5" />
-      <circle cx="146" cy="52" r="1.8" fill="#FE0034" />
-      <circle cx="152" cy="52" r="1.8" fill="#FE0034" />
-      <circle cx="158" cy="52" r="1.8" fill="#FE0034" />
+      <circle cx="146" cy="52" r="1.8" fill={COLORS.red} />
+      <circle cx="152" cy="52" r="1.8" fill={COLORS.red} />
+      <circle cx="158" cy="52" r="1.8" fill={COLORS.red} />
       <path d="M48 112l12-14 10 8 14-18" stroke="#C7CBEA" strokeWidth="1.5" fill="none" strokeLinecap="round" />
       <rect x="132" y="68" width="24" height="30" rx="2" fill="#FFF7D6" stroke="#E8D57A" strokeWidth="1.2" />
       <path d="M136 75h16M136 81h16M136 87h10" stroke="#E8D57A" strokeWidth="1.2" />
       {/* body */}
-      <path d="M70 126c0-24 12-36 30-36s30 12 30 36z" fill="#FE0034" />
+      <path d="M70 126c0-24 12-36 30-36s30 12 30 36z" fill={COLORS.red} />
       <path d="M94 92l6 34 6-34" fill="#FFFFFF" />
-      <path d="M88 96c-4 10-4 20-2 30M112 96c4 10 4 20 2 30" stroke="#CC002A" strokeWidth="1.5" fill="none" />
+      <path d="M88 96c-4 10-4 20-2 30M112 96c4 10 4 20 2 30" stroke={COLORS.redDark} strokeWidth="1.5" fill="none" />
       {/* neck + head */}
       <rect x="95" y="80" width="10" height="12" rx="3" fill="#F2C9A5" />
       <ellipse cx="100" cy="68" rx="14" ry="15" fill="#F2C9A5" />

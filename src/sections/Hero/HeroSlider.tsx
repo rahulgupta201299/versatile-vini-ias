@@ -9,6 +9,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { HERO_BANNERS } from "@/data/heroBanners";
 import { HeroBanner } from "@/types";
 
+import { COLORS } from "@/theme/colors";
 interface HeroSliderProps {
   banners?: HeroBanner[];
 }
@@ -50,7 +51,7 @@ export default function HeroSlider({ banners = HERO_BANNERS }: HeroSliderProps) 
             borderRadius: { xs: "12px", sm: "16px", md: "22px" },
             overflow: "hidden",
             boxShadow: { xs: "0 6px 16px rgba(0, 0, 0, 0.10)", md: "0 12px 32px rgba(0, 0, 0, 0.12)" },
-            backgroundColor: "#CC002A", // Fallback brand dark background
+            backgroundColor: COLORS.redDark, // Fallback brand dark background
           }}
         >
           {/* Sliding Track for Server-Provided Banner Images */}

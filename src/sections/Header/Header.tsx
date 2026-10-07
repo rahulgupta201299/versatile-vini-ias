@@ -26,12 +26,14 @@ import { NAV_ITEMS, MEGA_MENU_CATEGORIES, STORE_HREF } from "@/data/navigation";
 import { IconRenderer } from "@/components";
 import SearchDialog from "@/components/SearchDialog";
 import MobileMenu from "./MobileMenu";
+import { coursePath } from "@/utils/slug";
 
+import { COLORS } from "@/theme/colors";
 /* Layout references: pw.live (menu, All Courses panel) and the header screenshots provided. */
-const RED = "#FE0034";
-const RED_DARK = "#CC002A";
-const RED_TINT = "#FFF0F3"; // light red (Store button)
-const RED_TINT_BORDER = "#FFCCD6";
+const RED = COLORS.red;
+const RED_DARK = COLORS.redDark;
+const RED_TINT = COLORS.redTint; // light red (Store button)
+const RED_TINT_BORDER = COLORS.redBorder;
 const HEADER_H = { xs: 64, lg: 72 };
 /** Logo height — the All Exams pill and the header buttons match it. */
 const LOGO_H = { xs: 36, sm: 42 };
@@ -129,7 +131,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
           right: 0,
           zIndex: 1200,
           backgroundColor: "#FFFFFF",
-          borderBottom: "1px solid #E5E7EB",
+          borderBottom: `1px solid ${COLORS.borderLight}`,
           boxShadow: megaMenuOpen ? "none" : "0 1px 3px rgba(0,0,0,0.05)",
         }}
       >
@@ -159,13 +161,13 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                   flexShrink: 0,
                   fontWeight: 600,
                   color: "#374151",
-                  border: "1.5px solid #E5E7EB",
-                  backgroundColor: megaMenuOpen ? "#FFF0F3" : "#FFFFFF",
+                  border: `1.5px solid ${COLORS.borderLight}`,
+                  backgroundColor: megaMenuOpen ? COLORS.redTint : "#FFFFFF",
                   fontSize: { xs: "0.82rem", sm: "0.95rem" },
                   px: { xs: 1.25, sm: 2.25 },
                   height: LOGO_H,
                   "& .MuiButton-endIcon": { ml: 0.5 },
-                  "&:hover": { borderColor: RED, color: RED, backgroundColor: "#FFF0F3" },
+                  "&:hover": { borderColor: RED, color: RED, backgroundColor: COLORS.redTint },
                 }}
               >
                 {ALL_COURSES_LABEL}
@@ -235,7 +237,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                           component={Link}
                           href={item.href}
                           onClick={() => setMoreAnchor(null)}
-                          sx={{ fontWeight: 600, fontSize: "0.93rem", color: "#374151", py: 1.25, "&:hover": { color: RED, backgroundColor: "#FFF5F7" } }}
+                          sx={{ fontWeight: 600, fontSize: "0.93rem", color: "#374151", py: 1.25, "&:hover": { color: RED, backgroundColor: COLORS.redTintSoft } }}
                         >
                           {item.label}
                         </MenuItem>
@@ -270,7 +272,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                   backgroundColor: RED_TINT,
                   border: `1.5px solid ${RED_TINT_BORDER}`,
                   "& .MuiButton-startIcon": { mr: { xs: 0, sm: 0.75 }, ml: 0 },
-                  "&:hover": { backgroundColor: "#FFE0E6", borderColor: "#FFB3C2" },
+                  "&:hover": { backgroundColor: COLORS.redTintHover, borderColor: "#FFB3C2" },
                   // very small phones: Store stays available in the slide menu
                   "@media (max-width: 359px)": { display: "none" },
                 }}
@@ -319,7 +321,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
               left: 0,
               right: 0,
               backgroundColor: "#FFFFFF",
-              borderBottom: "1px solid #E5E7EB",
+              borderBottom: `1px solid ${COLORS.borderLight}`,
               boxShadow: "0 25px 50px -12px rgba(0,0,0,0.22)",
               zIndex: 1300,
               animation: "fadeInDown .18s ease-out",
@@ -340,19 +342,19 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                           py: 1.6,
                           px: 3,
                           cursor: "pointer",
-                          backgroundColor: isSelected ? "#FFF5F7" : "transparent",
+                          backgroundColor: isSelected ? COLORS.redTintSoft : "transparent",
                           borderLeft: `3px solid ${isSelected ? RED : "transparent"}`,
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "space-between",
-                          "&:hover": { backgroundColor: "#FFF5F7" },
+                          "&:hover": { backgroundColor: COLORS.redTintSoft },
                         }}
                       >
                         <Box sx={{ pr: 1 }}>
-                          <Typography sx={{ fontWeight: isSelected ? 700 : 600, color: isSelected ? "#0F172A" : "#334155", fontSize: "0.96rem", lineHeight: 1.25 }}>
+                          <Typography sx={{ fontWeight: isSelected ? 700 : 600, color: isSelected ? COLORS.ink : COLORS.body, fontSize: "0.96rem", lineHeight: 1.25 }}>
                             {cat.title}
                           </Typography>
-                          <Typography sx={{ color: "#64748B", fontSize: "0.78rem", mt: 0.35, lineHeight: 1.35 }}>{cat.subtitle}</Typography>
+                          <Typography sx={{ color: COLORS.muted, fontSize: "0.78rem", mt: 0.35, lineHeight: 1.35 }}>{cat.subtitle}</Typography>
                         </Box>
                         {isSelected && <ChevronRight size={17} color={RED} style={{ flexShrink: 0 }} />}
                       </Box>
@@ -365,7 +367,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                       <Box
                         key={course.id}
                         component={Link}
-                        href={course.href}
+                        href={coursePath(course.title)}
                         onClick={() => setMegaMenuOpen(false)}
                         sx={{
                           display: "flex",
@@ -373,7 +375,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                           gap: 2,
                           p: "14px 18px",
                           borderRadius: "12px",
-                          border: "1px solid #E5E7EB",
+                          border: `1px solid ${COLORS.borderLight}`,
                           textDecoration: "none",
                           color: "inherit",
                           minHeight: 62,
@@ -386,7 +388,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                             width: 38,
                             height: 38,
                             borderRadius: "10px",
-                            backgroundColor: course.iconBg || "#FFF0F3",
+                            backgroundColor: course.iconBg || COLORS.redTint,
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
@@ -395,7 +397,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                         >
                           <IconRenderer name={course.icon} size={21} color={course.iconColor || RED} />
                         </Box>
-                        <Typography sx={{ fontWeight: 700, color: "#1E293B", fontSize: "0.96rem", lineHeight: 1.25 }}>{course.title}</Typography>
+                        <Typography sx={{ fontWeight: 700, color: COLORS.heading, fontSize: "0.96rem", lineHeight: 1.25 }}>{course.title}</Typography>
                       </Box>
                     ))}
                   </Box>
@@ -476,7 +478,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                         px: 2.5,
                         py: 2,
                         border: "none",
-                        background: open ? "#FFF5F7" : "#FFFFFF",
+                        background: open ? COLORS.redTintSoft : "#FFFFFF",
                         cursor: "pointer",
                         fontFamily: "inherit",
                       }}
@@ -495,7 +497,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                           <Box
                             key={course.id}
                             component={Link}
-                            href={course.href}
+                            href={coursePath(course.title)}
                             onClick={closeDrawer}
                             sx={{
                               display: "flex",
@@ -503,9 +505,9 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                               gap: 1.25,
                               p: "10px 12px",
                               borderRadius: "10px",
-                              border: "1px solid #E5E7EB",
+                              border: `1px solid ${COLORS.borderLight}`,
                               textDecoration: "none",
-                              color: "#1E293B",
+                              color: COLORS.heading,
                               fontWeight: 600,
                               fontSize: "0.9rem",
                               "&:hover": { borderColor: RED, color: RED },
@@ -598,7 +600,7 @@ function NavLinkWithDropdown({ item }: { item: (typeof NAV_ITEMS)[number] }) {
                 fontWeight: 500,
                 textDecoration: "none",
                 whiteSpace: "nowrap",
-                "&:hover, &:focus-visible": { backgroundColor: "#FFF5F7", color: RED },
+                "&:hover, &:focus-visible": { backgroundColor: COLORS.redTintSoft, color: RED },
               }}
             >
               {child.label}

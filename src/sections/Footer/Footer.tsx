@@ -29,14 +29,15 @@ import {
   FREE_LEARNING_RESOURCES,
 } from "@/data/footerData";
 
+import { COLORS } from "@/theme/colors";
 export default function Footer() {
   return (
     <Box
       component="footer"
       sx={{
-        backgroundColor: "#F8FAFC",
-        borderTop: "1px solid #E2E8F0",
-        color: "#334155",
+        backgroundColor: COLORS.surface,
+        borderTop: `1px solid ${COLORS.border}`,
+        color: COLORS.body,
         pt: { xs: 4, md: 5 },
         pb: 4,
       }}
@@ -64,7 +65,7 @@ export default function Footer() {
 
             <Typography
               variant="body2"
-              sx={{ color: "#64748B", fontSize: "0.85rem", lineHeight: 1.6, mb: 3, maxWidth: 300 }}
+              sx={{ color: COLORS.muted, fontSize: "0.85rem", lineHeight: 1.6, mb: 3, maxWidth: 300 }}
             >
               We understand that every student has unique needs and abilities, that&#39;s why our curriculum is designed to adapt to your needs and help you grow!
             </Typography>
@@ -75,7 +76,7 @@ export default function Footer() {
             </Box>
 
             {/* Social Links */}
-            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: "#1E293B", fontSize: "0.88rem", mb: 1.25 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: COLORS.heading, fontSize: "0.88rem", mb: 1.25 }}>
               Let&#39;s get social :
             </Typography>
             <Box sx={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 1 }}>
@@ -98,7 +99,7 @@ export default function Footer() {
                     width: 38,
                     height: 38,
                     backgroundColor: "#FFFFFF",
-                    border: "1px solid #E2E8F0",
+                    border: `1px solid ${COLORS.border}`,
                     transition: "all .2s ease",
                     "&:hover": { backgroundColor: "#FFFFFF", transform: "translateY(-2px)", boxShadow: "0 4px 12px rgba(15,23,42,.12)" },
                   }}
@@ -111,7 +112,7 @@ export default function Footer() {
 
           {/* Col 2: Company */}
           <Box>
-            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: "#1E293B", fontSize: "0.95rem", mb: 2 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: COLORS.heading, fontSize: "0.95rem", mb: 2 }}>
               Company
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -122,10 +123,10 @@ export default function Footer() {
                   href={link.href}
                   variant="body2"
                   sx={{
-                    color: "#64748B",
+                    color: COLORS.muted,
                     textDecoration: "none",
                     fontSize: "0.85rem",
-                    "&:hover": { color: "#FE0034" },
+                    "&:hover": { color: COLORS.red },
                   }}
                 >
                   {link.name}
@@ -136,7 +137,7 @@ export default function Footer() {
 
           {/* Col 3: Upcoming Centres */}
           <Box>
-            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: "#1E293B", fontSize: "0.95rem", mb: 2 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: COLORS.heading, fontSize: "0.95rem", mb: 2 }}>
               Upcoming Centres
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -147,16 +148,16 @@ export default function Footer() {
                   href={centre.href}
                   variant="body2"
                   sx={{
-                    color: "#64748B",
+                    color: COLORS.muted,
                     textDecoration: "none",
                     fontSize: "0.85rem",
                     display: "flex",
                     alignItems: "center",
                     gap: 0.5,
-                    "&:hover": { color: "#FE0034" },
+                    "&:hover": { color: COLORS.red },
                   }}
                 >
-                  <MapPin size={13} color="#FE0034" />
+                  <MapPin size={13} color={COLORS.red} />
                   {centre.name}
                 </Typography>
               ))}
@@ -165,7 +166,7 @@ export default function Footer() {
 
           {/* Col 4: Connect With Us */}
           <Box>
-            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: "#1E293B", fontSize: "0.95rem", mb: 2 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: COLORS.heading, fontSize: "0.95rem", mb: 2 }}>
               Connect with us
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1.25 }}>
@@ -173,19 +174,19 @@ export default function Footer() {
                 component="a"
                 href={`mailto:${CONTACT.email}`}
                 variant="body2"
-                sx={{ color: "#64748B", textDecoration: "none", fontSize: { xs: "0.8rem", sm: "0.85rem" }, display: "flex", alignItems: "center", gap: 0.75, overflowWrap: "anywhere", "&:hover": { color: "#FE0034" } }}
+                sx={{ color: COLORS.muted, textDecoration: "none", fontSize: { xs: "0.8rem", sm: "0.85rem" }, display: "flex", alignItems: "center", gap: 0.75, overflowWrap: "anywhere", "&:hover": { color: COLORS.red } }}
               >
-                <Mail size={15} color="#FE0034" style={{ flexShrink: 0 }} />
+                <Mail size={15} color={COLORS.red} style={{ flexShrink: 0 }} />
                 {CONTACT.email}
               </Typography>
 
               <Typography
                 component="a"
-                href="#enquiry"
+                href="/#enquiry"
                 variant="body2"
-                sx={{ color: "#64748B", textDecoration: "none", fontSize: "0.85rem", display: "flex", alignItems: "center", gap: 0.75, "&:hover": { color: "#FE0034" } }}
+                sx={{ color: COLORS.muted, textDecoration: "none", fontSize: "0.85rem", display: "flex", alignItems: "center", gap: 0.75, "&:hover": { color: COLORS.red } }}
               >
-                <MessageCircle size={15} color="#FE0034" />
+                <MessageCircle size={15} color={COLORS.red} />
                 Talk to counsellor
               </Typography>
 
@@ -205,8 +206,8 @@ export default function Footer() {
                   href: CONTACT.tel,
                   label: "Call",
                   icon: <Phone size={15} color="#FFFFFF" />,
-                  iconBg: "#FE0034",
-                  color: "#FE0034",
+                  iconBg: COLORS.red,
+                  color: COLORS.red,
                   external: false,
                 },
               ].map((c) => (
@@ -235,7 +236,7 @@ export default function Footer() {
                   <Box sx={{ lineHeight: 1.2 }}>
                     <Box
                       component="span"
-                      sx={{ display: "flex", alignItems: "center", gap: 0.5, fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.04em" }}
+                      sx={{ display: "flex", alignItems: "center", gap: 0.5, fontSize: "0.7rem", fontWeight: 700, color: COLORS.muted, textTransform: "uppercase", letterSpacing: "0.04em" }}
                     >
                       {c.label}
                     </Box>
@@ -250,7 +251,7 @@ export default function Footer() {
 
           {/* Col 5: Quick Links & Our Courses */}
           <Box>
-            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: "#1E293B", fontSize: "0.95rem", mb: 2 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: COLORS.heading, fontSize: "0.95rem", mb: 2 }}>
               Quick Links
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -261,10 +262,10 @@ export default function Footer() {
                   href={item.href}
                   variant="body2"
                   sx={{
-                    color: "#64748B",
+                    color: COLORS.muted,
                     textDecoration: "none",
                     fontSize: "0.85rem",
-                    "&:hover": { color: "#FE0034" },
+                    "&:hover": { color: COLORS.red },
                   }}
                 >
                   {item.name}
@@ -275,7 +276,7 @@ export default function Footer() {
 
           {/* Col 6: Our Products */}
           <Box>
-            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: "#1E293B", fontSize: "0.95rem", mb: 2 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: COLORS.heading, fontSize: "0.95rem", mb: 2 }}>
               Our Products
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -286,10 +287,10 @@ export default function Footer() {
                   href={prod.href}
                   variant="body2"
                   sx={{
-                    color: "#64748B",
+                    color: COLORS.muted,
                     textDecoration: "none",
                     fontSize: "0.85rem",
-                    "&:hover": { color: "#FE0034" },
+                    "&:hover": { color: COLORS.red },
                   }}
                 >
                   {prod.name}
@@ -299,7 +300,7 @@ export default function Footer() {
           </Box>
         </Box>
 
-        <Divider sx={{ my: 4, borderColor: "#E2E8F0" }} />
+        <Divider sx={{ my: 4, borderColor: COLORS.border }} />
 
         {/* TIER 2: Free Learning Resources (PDF Pages 4 & 5 & Screenshot 18.06.55) */}
         <Box sx={{ mb: 6 }}>
@@ -308,7 +309,7 @@ export default function Footer() {
             sx={{
               fontWeight: 900,
               fontSize: { xs: "1.3rem", sm: "1.5rem" },
-              color: "#1E293B",
+              color: COLORS.heading,
               mb: 3,
             }}
           >
@@ -332,7 +333,7 @@ export default function Footer() {
                   variant="subtitle2"
                   sx={{
                     fontWeight: 800,
-                    color: "#1E293B",
+                    color: COLORS.heading,
                     fontSize: "0.92rem",
                     mb: 1.5,
                   }}
@@ -347,11 +348,11 @@ export default function Footer() {
                       href={link.href}
                       variant="body2"
                       sx={{
-                        color: "#64748B",
+                        color: COLORS.muted,
                         textDecoration: "none",
                         fontSize: "0.82rem",
                         lineHeight: 1.4,
-                        "&:hover": { color: "#FE0034", textDecoration: "underline" },
+                        "&:hover": { color: COLORS.red, textDecoration: "underline" },
                       }}
                     >
                       {link.name}
@@ -363,7 +364,7 @@ export default function Footer() {
           </Box>
         </Box>
 
-        <Divider sx={{ my: 4, borderColor: "#E2E8F0" }} />
+        <Divider sx={{ my: 4, borderColor: COLORS.border }} />
 
         {/* TIER 3: Our Brands (PDF Page 6) */}
         <Box sx={{ mb: 5 }}>
@@ -371,7 +372,7 @@ export default function Footer() {
             variant="subtitle2"
             sx={{
               fontWeight: 800,
-              color: "#1E293B",
+              color: COLORS.heading,
               fontSize: "0.92rem",
               mb: 1.5,
             }}
@@ -389,15 +390,15 @@ export default function Footer() {
                   py: 0.6,
                   borderRadius: "8px",
                   backgroundColor: "#FFFFFF",
-                  border: "1px solid #E2E8F0",
-                  color: "#334155",
+                  border: `1px solid ${COLORS.border}`,
+                  color: COLORS.body,
                   textDecoration: "none",
                   fontSize: "0.82rem",
                   fontWeight: 600,
                   transition: "all 0.2s ease",
                   "&:hover": {
-                    borderColor: "#FE0034",
-                    color: "#FE0034",
+                    borderColor: COLORS.red,
+                    color: COLORS.red,
                     backgroundColor: "#FEF2F2",
                   },
                 }}
@@ -409,18 +410,18 @@ export default function Footer() {
         </Box>
 
         {/* TIER 4: Know about VINI IAS & We Stand Out (PDF Page 6 & Screenshot 18.07.01 SEO block) */}
-        <Box sx={{ mb: 5, p: { xs: 2.5, md: 3.5 }, borderRadius: "16px", backgroundColor: "#FFFFFF", border: "1px solid #E2E8F0" }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 900, color: "#1E293B", mb: 1 }}>
+        <Box sx={{ mb: 5, p: { xs: 2.5, md: 3.5 }, borderRadius: "16px", backgroundColor: "#FFFFFF", border: `1px solid ${COLORS.border}` }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 900, color: COLORS.heading, mb: 1 }}>
             Know about VINI IAS
           </Typography>
-          <Typography variant="body2" sx={{ color: "#64748B", fontSize: "0.82rem", lineHeight: 1.6, mb: 2 }}>
+          <Typography variant="body2" sx={{ color: COLORS.muted, fontSize: "0.82rem", lineHeight: 1.6, mb: 2 }}>
             VINI IAS is an Indian EdTech platform that provides accessible &amp; comprehensive learning experiences to aspirants preparing for UPSC Civil Services, BPSC, State PCS, and other competitive examinations. We provide extensive study materials, NCERT solutions, previous year question papers, and daily answer writing guidance to empower thousands of students across the country.
           </Typography>
 
-          <Typography variant="subtitle1" sx={{ fontWeight: 900, color: "#1E293B", mb: 1 }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 900, color: COLORS.heading, mb: 1 }}>
             We Stand Out Because
           </Typography>
-          <Typography variant="body2" sx={{ color: "#64748B", fontSize: "0.82rem", lineHeight: 1.6 }}>
+          <Typography variant="body2" sx={{ color: COLORS.muted, fontSize: "0.82rem", lineHeight: 1.6 }}>
             We provide students with intensive courses led by qualified &amp; experienced faculties and serving civil servant mentors. Vini IAS strives to make civil service preparation comprehensive, affordable, and accessible to students of all sections of society, transforming humble dreams into top ranks.
           </Typography>
         </Box>
@@ -434,9 +435,9 @@ export default function Footer() {
             alignItems: "center",
             gap: 2,
             pt: 3,
-            borderTop: "1px solid #E2E8F0",
+            borderTop: `1px solid ${COLORS.border}`,
             fontSize: "0.82rem",
-            color: "#64748B",
+            color: COLORS.muted,
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
@@ -449,7 +450,7 @@ export default function Footer() {
             </Link>
           </Box>
 
-          <Typography variant="body2" sx={{ fontSize: "0.82rem", color: "#64748B", textTransform: "uppercase" }}>
+          <Typography variant="body2" sx={{ fontSize: "0.82rem", color: COLORS.muted, textTransform: "uppercase" }}>
             Copyright © Vini Educentre Pvt. LTD. | All rights Reserved.
           </Typography>
         </Box>

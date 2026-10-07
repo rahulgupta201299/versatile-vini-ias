@@ -3,8 +3,9 @@ import "./globals.css";
 import ThemeRegistry from "@/theme/ThemeRegistry";
 import { AppLayout } from "@/components";
 
+import { COLORS } from "@/theme/colors";
 export const viewport: Viewport = {
-  themeColor: "#FE0034",
+  themeColor: COLORS.red,
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,

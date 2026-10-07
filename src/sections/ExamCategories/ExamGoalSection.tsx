@@ -9,13 +9,15 @@ import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, GraduationCap } from "lucide-react";
 import { EXAM_CATEGORIES } from "@/data/exams";
+import { coursePath } from "@/utils/slug";
 import { ExamGoalCategory, SubCategory } from "@/types";
 
+import { COLORS } from "@/theme/colors";
 // Brand theme colours
-const BRAND_RED = "#FE0034";
-const BRAND_RED_DARK = "#CC002A";
-const BRAND_YELLOW = "#FFE51F";
-const BRAND_YELLOW_DARK = "#F2D500";
+const BRAND_RED = COLORS.red;
+const BRAND_RED_DARK = COLORS.redDark;
+const BRAND_YELLOW = COLORS.yellow;
+const BRAND_YELLOW_DARK = COLORS.yellowDark;
 
 // Number of exams shown before "View More" (2 rows × 4 columns on desktop)
 const INITIAL_VISIBLE = 8;
@@ -24,11 +26,11 @@ function ExamCard({ sub }: { sub: SubCategory }) {
   return (
     <Box
       component="a"
-      href={sub.href || "#courses"}
+      href={sub.href || coursePath(sub.name)}
       sx={{
         p: { xs: 1.25, sm: 1.75 },
         borderRadius: "10px",
-        border: "1px solid #E5E7EB",
+        border: `1px solid ${COLORS.borderLight}`,
         backgroundColor: "#FFFFFF",
         display: "flex",
         alignItems: "center",
@@ -59,7 +61,7 @@ function ExamCard({ sub }: { sub: SubCategory }) {
             width: 40,
             height: 40,
             borderRadius: "8px",
-            backgroundColor: "#FFF0F3",
+            backgroundColor: COLORS.redTint,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -74,7 +76,7 @@ function ExamCard({ sub }: { sub: SubCategory }) {
         sx={{
           fontWeight: 700,
           fontSize: { xs: "0.82rem", sm: "0.95rem" },
-          color: "#1E293B",
+          color: COLORS.heading,
           lineHeight: 1.25,
         }}
       >
@@ -161,7 +163,7 @@ export default function ExamGoalSection() {
           sx={{
             fontWeight: 800,
             fontSize: { xs: "1.45rem", sm: "1.75rem", md: "2rem" },
-            color: "#0F172A",
+            color: COLORS.ink,
             letterSpacing: "-0.02em",
             mb: { xs: 2.5, sm: 3 },
           }}
@@ -187,15 +189,15 @@ export default function ExamGoalSection() {
                 position: "absolute",
                 left: 0,
                 backgroundColor: "#FFFFFF",
-                border: "1px solid #E2E8F0",
+                border: `1px solid ${COLORS.border}`,
                 boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
                 width: 36,
                 height: 36,
-                color: "#475569",
+                color: COLORS.textSecondary,
                 zIndex: 3,
                 "&:hover": {
-                  backgroundColor: "#F8FAFC",
-                  color: "#0F172A",
+                  backgroundColor: COLORS.surface,
+                  color: COLORS.ink,
                 },
               }}
             >
@@ -238,7 +240,7 @@ export default function ExamGoalSection() {
                     fontWeight: isSelected ? 700 : 500,
                     whiteSpace: "nowrap",
                     backgroundColor: isSelected ? BRAND_RED : "#F1F5F9",
-                    color: isSelected ? "#FFFFFF" : "#334155",
+                    color: isSelected ? "#FFFFFF" : COLORS.body,
                     border: "none",
                     cursor: "pointer",
                     transition: "all 0.2s ease",
@@ -246,8 +248,8 @@ export default function ExamGoalSection() {
                       ? "0 4px 14px rgba(254, 0, 52, 0.28)"
                       : "none",
                     "&:hover": {
-                      backgroundColor: isSelected ? BRAND_RED_DARK : "#E2E8F0",
-                      color: isSelected ? "#FFFFFF" : "#0F172A",
+                      backgroundColor: isSelected ? BRAND_RED_DARK : COLORS.border,
+                      color: isSelected ? "#FFFFFF" : COLORS.ink,
                     },
                   }}
                 >
@@ -266,15 +268,15 @@ export default function ExamGoalSection() {
                 position: "absolute",
                 right: 0,
                 backgroundColor: "#FFFFFF",
-                border: "1px solid #E2E8F0",
+                border: `1px solid ${COLORS.border}`,
                 boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
                 width: 36,
                 height: 36,
-                color: "#475569",
+                color: COLORS.textSecondary,
                 zIndex: 3,
                 "&:hover": {
-                  backgroundColor: "#F8FAFC",
-                  color: "#0F172A",
+                  backgroundColor: COLORS.surface,
+                  color: COLORS.ink,
                 },
               }}
             >

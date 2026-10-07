@@ -1,5 +1,6 @@
 import { ResourceItem } from "@/types";
 
+import { COLORS } from "@/theme/colors";
 export const FREE_RESOURCES: ResourceItem[] = [
   {
     id: "current-affairs",
@@ -9,7 +10,7 @@ export const FREE_RESOURCES: ResourceItem[] = [
     bgColor: "#E0F2FE", // Soft Cyan / Blue circle
     iconColor: "#0284C7",
     borderColor: "#BAE6FD",
-    href: "#resources",
+    href: "/#resources",
   },
   {
     id: "blogs",
@@ -29,7 +30,7 @@ export const FREE_RESOURCES: ResourceItem[] = [
     bgColor: "#F3E8FF", // Soft Purple circle
     iconColor: "#9333EA",
     borderColor: "#E9D5FF",
-    href: "#resources",
+    href: "/#resources",
   },
   {
     id: "notes",
@@ -39,7 +40,7 @@ export const FREE_RESOURCES: ResourceItem[] = [
     bgColor: "#CCFBF1", // Soft Mint circle
     iconColor: "#0D9488",
     borderColor: "#99F6E4",
-    href: "#resources",
+    href: "/#resources",
   },
   {
     id: "test-series",
@@ -49,7 +50,7 @@ export const FREE_RESOURCES: ResourceItem[] = [
     bgColor: "#FFE4E6", // Soft Rose circle
     iconColor: "#E11D48",
     borderColor: "#FECDD3",
-    href: "#courses",
+    href: "/#courses",
   },
   {
     id: "free-batches",
@@ -59,7 +60,7 @@ export const FREE_RESOURCES: ResourceItem[] = [
     bgColor: "#E0F2FE", // Soft Sky circle
     iconColor: "#0284C7",
     borderColor: "#BAE6FD",
-    href: "#courses",
+    href: "/#courses",
   },
   {
     id: "topper-copy",
@@ -69,7 +70,7 @@ export const FREE_RESOURCES: ResourceItem[] = [
     bgColor: "#FEF3C7", // Soft Gold / Amber circle
     iconColor: "#D97706",
     borderColor: "#FDE68A",
-    href: "#rankers",
+    href: "/#rankers",
   },
   {
     id: "ncert-books",
@@ -79,7 +80,7 @@ export const FREE_RESOURCES: ResourceItem[] = [
     bgColor: "#E0E7FF", // Soft Indigo circle
     iconColor: "#4F46E5",
     borderColor: "#C7D2FE",
-    href: "#resources",
+    href: "/#resources",
   },
   {
     id: "our-selections",
@@ -87,9 +88,9 @@ export const FREE_RESOURCES: ResourceItem[] = [
     subtitle: "1000+ Achievers Hall of Fame",
     icon: "Users",
     bgColor: "#DCFCE7", // Soft Green circle
-    iconColor: "#16A34A",
+    iconColor: COLORS.success,
     borderColor: "#BBF7D0",
-    href: "#rankers",
+    href: "/#rankers",
   },
   {
     id: "paid-batches",
@@ -99,6 +100,6 @@ export const FREE_RESOURCES: ResourceItem[] = [
     bgColor: "#FCE7F3", // Soft Pink / Rose circle
     iconColor: "#E11D48",
     borderColor: "#FBCFE8",
-    href: "#courses",
+    href: "/#courses",
   },
 ];

@@ -11,6 +11,7 @@ import { RESULT_BANNER_TABS } from "@/data/resultBanners";
 import { ResultBannerTab } from "@/types";
 import { IconRenderer, ResultBannerSlider } from "@/components";
 
+import { COLORS } from "@/theme/colors";
 interface TopRankersSectionProps {
   /** Result banner tabs from the server (UPSC / State PCS / Other Exams). */
   tabs?: ResultBannerTab[];
@@ -153,7 +154,7 @@ export default function TopRankersSection({ tabs = RESULT_BANNER_TABS }: TopRank
                     mb: 1.25,
                   }}
                 >
-                  <IconRenderer name={stat.icon ?? "Trophy"} size={26} color={idx % 2 === 0 ? "#FE0034" : "#D97706"} />
+                  <IconRenderer name={stat.icon ?? "Trophy"} size={26} color={idx % 2 === 0 ? COLORS.red : "#D97706"} />
                 </Box>
                 <Typography
                   variant="h3"
@@ -219,8 +220,8 @@ export default function TopRankersSection({ tabs = RESULT_BANNER_TABS }: TopRank
                     height: 36,
                     px: 2.5,
                     borderRadius: "9999px",
-                    border: `1px solid ${selected ? "#FE0034" : "#EFEFEF"}`,
-                    backgroundColor: selected ? "#FE0034" : "#FFFFFF",
+                    border: `1px solid ${selected ? COLORS.red : "#EFEFEF"}`,
+                    backgroundColor: selected ? COLORS.red : "#FFFFFF",
                     color: selected ? "#FFFFFF" : "#3D3D3D",
                     fontSize: "0.9rem",
                     fontWeight: selected ? 700 : 500,
@@ -228,7 +229,7 @@ export default function TopRankersSection({ tabs = RESULT_BANNER_TABS }: TopRank
                     cursor: "pointer",
                     whiteSpace: "nowrap",
                     transition: "all 0.2s ease",
-                    "&:hover": { borderColor: "#FE0034", color: selected ? "#FFFFFF" : "#FE0034" },
+                    "&:hover": { borderColor: COLORS.red, color: selected ? "#FFFFFF" : COLORS.red },
                   }}
                 >
                   {tab.label}

@@ -8,8 +8,10 @@ import Typography from "@mui/material/Typography";
 import { Search, TrendingUp, CornerDownLeft, ArrowRight } from "lucide-react";
 import { MEGA_MENU_CATEGORIES, NAV_ITEMS, SEARCH_TRENDING } from "@/data/navigation";
 import { EXAM_CATEGORIES } from "@/data/exams";
+import { coursePath } from "@/utils/slug";
 
-const ACCENT = "#FE0034";
+import { COLORS } from "@/theme/colors";
+const ACCENT = COLORS.red;
 
 interface SearchItem {
   label: string;
@@ -22,8 +24,8 @@ function buildIndex(): SearchItem[] {
   const items: SearchItem[] = [
     ...NAV_ITEMS.filter((n) => !n.isMegaMenu).map((n) => ({ label: n.label, group: "Menu", href: n.href })),
     ...NAV_ITEMS.flatMap((n) => (n.children ?? []).map((ch) => ({ label: ch.label, group: n.label, href: ch.href }))),
-    ...MEGA_MENU_CATEGORIES.flatMap((c) => c.courses.map((co) => ({ label: co.title, group: c.title, href: co.href }))),
-    ...EXAM_CATEGORIES.flatMap((c) => c.subcategories.map((s) => ({ label: s.name, group: c.category, href: s.href || "#goals" }))),
+    ...MEGA_MENU_CATEGORIES.flatMap((c) => c.courses.map((co) => ({ label: co.title, group: c.title, href: coursePath(co.title) }))),
+    ...EXAM_CATEGORIES.flatMap((c) => c.subcategories.map((s) => ({ label: s.name, group: c.category, href: s.href || coursePath(s.name) }))),
   ];
   const seen = new Set<string>();
   return items.filter((i) => {
@@ -40,8 +42,8 @@ const Kbd = ({ children }: { children: React.ReactNode }) => (
     sx={{
       fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
       fontSize: "0.72rem",
-      color: "#64748B",
-      border: "1px solid #E2E8F0",
+      color: COLORS.muted,
+      border: `1px solid ${COLORS.border}`,
       borderRadius: "6px",
       px: 0.75,
       py: 0.25,
@@ -79,8 +81,7 @@ export default function SearchDialog({ open, onClose }: SearchDialogProps) {
   const go = (href: string) => {
     onClose();
     setQuery("");
-    if (href.startsWith("#")) window.location.hash = href;
-    else window.location.href = href;
+    window.location.href = href;
   };
 
   const onKeyDown = (e: React.KeyboardEvent) => {
@@ -131,7 +132,7 @@ export default function SearchDialog({ open, onClose }: SearchDialogProps) {
           onKeyDown={onKeyDown}
           placeholder="Search courses, tests, exams..."
           inputProps={{ "aria-label": "Search courses, tests, exams" }}
-          sx={{ flex: 1, fontSize: { xs: "1rem", sm: "1.2rem" }, "& input::placeholder": { color: "#94A3B8", opacity: 1 } }}
+          sx={{ flex: 1, fontSize: { xs: "1rem", sm: "1.2rem" }, "& input::placeholder": { color: COLORS.disabled, opacity: 1 } }}
         />
         <Box sx={{ display: { xs: "none", sm: "block" } }}>
           <Kbd>{isMac ? "⌘K" : "Ctrl+K"}</Kbd>
@@ -142,7 +143,7 @@ export default function SearchDialog({ open, onClose }: SearchDialogProps) {
       <Box sx={{ px: { xs: 2, sm: 3 }, py: 2.5, maxHeight: "55vh", overflowY: "auto" }}>
         {!query.trim() && (
           <>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, color: "#94A3B8", mb: 1.5 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, color: COLORS.disabled, mb: 1.5 }}>
               <TrendingUp size={16} />
               <Typography sx={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.08em" }}>TRENDING</Typography>
             </Box>
@@ -164,11 +165,11 @@ export default function SearchDialog({ open, onClose }: SearchDialogProps) {
                     fontSize: "0.92rem",
                     fontWeight: 600,
                     color: ACCENT,
-                    backgroundColor: "#FFF0F3",
+                    backgroundColor: COLORS.redTint,
                     borderRadius: "9999px",
                     px: 2,
                     py: 0.9,
-                    "&:hover": { backgroundColor: "#FFE0E6" },
+                    "&:hover": { backgroundColor: COLORS.redTintHover },
                   }}
                 >
                   {t}
@@ -179,7 +180,7 @@ export default function SearchDialog({ open, onClose }: SearchDialogProps) {
         )}
 
         {query.trim() && results.length === 0 && (
-          <Typography sx={{ color: "#64748B", fontSize: "0.92rem", py: 1 }}>
+          <Typography sx={{ color: COLORS.muted, fontSize: "0.92rem", py: 1 }}>
             No results for “{query.trim()}”. Try a different exam or course name.
           </Typography>
         )}
@@ -203,14 +204,14 @@ export default function SearchDialog({ open, onClose }: SearchDialogProps) {
                   py: 1.1,
                   borderRadius: "10px",
                   cursor: "pointer",
-                  backgroundColor: i === active ? "#FFF0F3" : "transparent",
+                  backgroundColor: i === active ? COLORS.redTint : "transparent",
                 }}
               >
                 <Box sx={{ minWidth: 0 }}>
-                  <Typography sx={{ fontWeight: 600, color: "#0F172A", fontSize: "0.95rem" }} noWrap>
+                  <Typography sx={{ fontWeight: 600, color: COLORS.ink, fontSize: "0.95rem" }} noWrap>
                     {r.label}
                   </Typography>
-                  <Typography sx={{ color: "#94A3B8", fontSize: "0.78rem" }} noWrap>
+                  <Typography sx={{ color: COLORS.disabled, fontSize: "0.78rem" }} noWrap>
                     {r.group}
                   </Typography>
                 </Box>
@@ -222,7 +223,7 @@ export default function SearchDialog({ open, onClose }: SearchDialogProps) {
       </Box>
 
       {/* Hints */}
-      <Box sx={{ display: { xs: "none", sm: "flex" }, alignItems: "center", gap: 2.5, px: 3, py: 1.5, borderTop: "1px solid #F1F5F9", color: "#64748B", fontSize: "0.8rem" }}>
+      <Box sx={{ display: { xs: "none", sm: "flex" }, alignItems: "center", gap: 2.5, px: 3, py: 1.5, borderTop: "1px solid #F1F5F9", color: COLORS.muted, fontSize: "0.8rem" }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
           <Kbd>
             <CornerDownLeft size={11} />

@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import { FREE_RESOURCES } from "@/data/resources";
 import { IconRenderer } from "@/components";
 
+import { COLORS } from "@/theme/colors";
 export default function FreeResourcesSection() {
   return (
     <Box
@@ -27,7 +28,7 @@ export default function FreeResourcesSection() {
               fontSize: { xs: "1.45rem", sm: "1.75rem", md: "2.1rem" },
               letterSpacing: "-0.02em",
               lineHeight: 1.2,
-              color: "#0F172A",
+              color: COLORS.ink,
             }}
           >
             Browse Our{" "}
@@ -39,7 +40,7 @@ export default function FreeResourcesSection() {
           <Typography
             variant="body2"
             sx={{
-              color: "#64748B",
+              color: COLORS.muted,
               fontSize: { xs: "0.85rem", sm: "0.95rem" },
               fontWeight: 500,
               mt: 0.5,
@@ -69,7 +70,7 @@ export default function FreeResourcesSection() {
               href={item.href}
               sx={{
                 backgroundColor: "#FFFFFF",
-                border: "1px solid #E5E7EB",
+                border: `1px solid ${COLORS.borderLight}`,
                 borderRadius: { xs: "12px", sm: "14px", md: "16px" },
                 p: { xs: 1, sm: 1.25, md: 1.5 },
                 minHeight: { xs: 90, sm: 100, md: 115 },
@@ -121,7 +122,7 @@ export default function FreeResourcesSection() {
                 sx={{
                   fontWeight: 700,
                   fontSize: { xs: "0.68rem", sm: "0.76rem", md: "0.82rem" },
-                  color: "#1E293B",
+                  color: COLORS.heading,
                   lineHeight: 1.2,
                   display: "-webkit-box",
                   WebkitLineClamp: 2,

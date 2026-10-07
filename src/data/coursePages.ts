@@ -1,0 +1,169 @@
+/**
+ * Course / exam landing pages (route: /<slug>, e.g. /upsc-cse-2026-27, /bpsc, /gs-foundation).
+ *
+ * Every course or exam name used in the menus, the mega menu and "Choose your exam" gets a page.
+ * Content below is generated from the name + category so every page is complete out of the box —
+ * add an entry to COURSE_PAGE_OVERRIDES to give a page its own banners, videos, batches, FAQs etc.
+ */
+import { CourseBatch, CoursePageData, CourseVideo } from "@/types";
+import { EXAM_CATEGORIES } from "./exams";
+import { MEGA_MENU_CATEGORIES, NAV_ITEMS } from "./navigation";
+import { HERO_BANNERS } from "./heroBanners";
+import { SOCIAL_LINKS } from "./contact";
+import { slugify } from "@/utils/slug";
+
+interface CourseEntry {
+  slug: string;
+  name: string;
+  category: string;
+}
+
+/* ---------- Registry: every linkable course / exam name ---------- */
+const REGISTRY = new Map<string, CourseEntry>();
+const add = (name: string, category: string) => {
+  const slug = slugify(name);
+  if (slug && !REGISTRY.has(slug)) REGISTRY.set(slug, { slug, name, category });
+};
+
+NAV_ITEMS.forEach((item) => {
+  if (item.isMegaMenu || item.id === "offline-centre") return;
+  add(item.label, "UPSC");
+  item.children?.forEach((child) => add(child.label, item.label));
+});
+MEGA_MENU_CATEGORIES.forEach((cat) => cat.courses.forEach((course) => add(course.title, cat.title)));
+EXAM_CATEGORIES.forEach((cat) => cat.subcategories.forEach((sub) => add(sub.name, cat.category)));
+
+/** Slugs pre-rendered at build time (menu courses). Other exam pages render on first visit. */
+export const PRERENDERED_COURSE_SLUGS = [
+  ...NAV_ITEMS.filter((n) => !n.isMegaMenu && n.id !== "offline-centre").flatMap((n) => [
+    slugify(n.label),
+    ...(n.children ?? []).map((c) => slugify(c.label)),
+  ]),
+  ...MEGA_MENU_CATEGORIES.flatMap((c) => c.courses.map((co) => slugify(co.title))),
+].filter((s, i, arr) => arr.indexOf(s) === i);
+
+export const ALL_COURSE_SLUGS = [...REGISTRY.keys()];
+
+/** Display name for a course / exam route segment, e.g. "gate" → "GATE" (undefined if unknown). */
+export const getCourseName = (slug: string) => REGISTRY.get(slug)?.name;
+
+/* ---------- Per-page overrides (optional) ---------- */
+export const COURSE_PAGE_OVERRIDES: Record<string, Partial<CoursePageData>> = {
+  // "upsc-cse-2026-27": { tagline: "...", videos: [{ title: "...", youtubeId: "VIDEO_ID", ... }] },
+};
+
+/** True when a page's banners are set locally in COURSE_PAGE_OVERRIDES (they win over the server). */
+export const COURSE_PAGE_HAS_OWN_BANNERS = (slug: string) => Boolean(COURSE_PAGE_OVERRIDES[slug]?.banners?.length);
+
+/* ---------- Helpers ---------- */
+const UPSC_GROUPS = new Set([
+  "UPSC",
+  "Only IAS",
+  "GS Foundation",
+  "Mentorship",
+  "CSAT",
+  "Optional",
+  "GS Mains",
+  "Ethics & Essay",
+  "UPSC Plan B",
+  "Test Series",
+]);
+
+function resultTabFor(entry: CourseEntry) {
+  const text = `${entry.category} ${entry.name}`;
+  if (/PSC|PCS/i.test(text) && !/^UPSC/i.test(entry.name)) return "state-pcs";
+  if (UPSC_GROUPS.has(entry.category) || /UPSC|IAS/i.test(entry.name)) return "upsc";
+  return "other-exams";
+}
+
+const youtubeSearch = (q: string) =>
+  `https://www.youtube.com/results?search_query=${encodeURIComponent(`Vini IAS ${q}`)}`;
+
+function defaultVideos(name: string): CourseVideo[] {
+  return [
+    { title: `${name}: Complete Strategy & Syllabus Breakdown`, educator: "Vini IAS Faculty", duration: "1:12:40", href: youtubeSearch(`${name} strategy`) },
+    { title: `How to Start ${name} Preparation from Zero`, educator: "Vini IAS Mentors", duration: "48:15", href: youtubeSearch(`${name} preparation`) },
+    { title: `Daily Current Affairs for ${name}`, educator: "Vini IAS Current Affairs Team", duration: "35:20", href: youtubeSearch("daily current affairs") },
+  ];
+}
+
+function defaultBatches(name: string): CourseBatch[] {
+  return [
+    {
+      id: "foundation",
+      title: `${name} Foundation Batch 2027/28`,
+      thumbnail: "/images/banners/banner-upsc-foundation-2027-28.webp",
+      language: "Hindi & English",
+      mode: "Live + Recorded",
+      startDate: "Starts 15 Nov",
+      price: 49999,
+      mrp: 79999,
+      tag: "Bestseller",
+    },
+    {
+      id: "recorded",
+      title: `${name} Recorded Batch`,
+      thumbnail: "/images/banners/banner-sankalp.jpg",
+      language: "Hindi",
+      mode: "Recorded",
+      startDate: "Start anytime",
+      price: 4999,
+      mrp: 9999,
+    },
+    {
+      id: "test-series",
+      title: `${name} Test Series (FLT)`,
+      thumbnail: "/images/banners/promo-prelims-testseries.jpg",
+      language: "Hindi & English",
+      mode: "Online Tests",
+      startDate: "Starts 1 Dec",
+      price: 1999,
+      mrp: 3999,
+      tag: "New",
+    },
+  ];
+}
+
+export function getCoursePageData(slug: string): CoursePageData | null {
+  const entry = REGISTRY.get(slug);
+  if (!entry) return null;
+  const { name, category } = entry;
+
+  const sameGroup = [...REGISTRY.values()].filter((e) => e.category === category).map((e) => e.name);
+  const examOptions = [name, ...sameGroup.filter((n) => n !== name)].slice(0, 12);
+
+  const base: CoursePageData = {
+    slug,
+    name,
+    category,
+    tagline: `Live classes, free lectures, test series & mentorship for ${name} — in Hindi & English medium.`,
+    banners: HERO_BANNERS,
+    videos: defaultVideos(name),
+    batches: defaultBatches(name),
+    highlights: [
+      { label: "Medium", value: "Hindi & English" },
+      { label: "Mode", value: "Online & Offline" },
+      { label: "Classes", value: "Live + Recorded" },
+      { label: "Support", value: "Daily doubt clearing" },
+    ],
+    about: [
+      `${name} is one of the most sought-after ${category} examinations in India. At Vini IAS, our ${name} programme brings together live classes by experienced faculty, structured study material, regular tests and personal mentorship so that you can prepare with clarity and confidence.`,
+      `This guide covers everything you need to know — the exam pattern, syllabus, eligibility, important dates and a step-by-step preparation strategy. Start with the free classes on this page, attempt the scholarship test, and talk to our counsellors to pick the batch that fits your goals.`,
+      `Our students get daily practice through PYQs and test series, Hindi & English study material, current affairs updates and one-to-one doubt clearing — the same system that has helped our toppers secure top ranks.`,
+    ],
+    faqs: [
+      { q: `What is the ${name} exam?`, a: `${name} is a competitive examination under ${category}. Selection usually involves multiple stages, and preparation needs a clear strategy, quality study material and regular practice.` },
+      { q: `How should I start preparing for ${name}?`, a: `Begin with the syllabus and previous year questions, build your basics with NCERTs and standard books, follow a daily timetable and take regular tests. Our free classes and counsellors can help you plan your first 90 days.` },
+      { q: `Is the Vini IAS ${name} course available in Hindi medium?`, a: `Yes. Classes, notes and tests are available in both Hindi and English medium.` },
+      { q: `Are there free classes for ${name}?`, a: `Yes. Watch free classes on this page and on the Vini IAS YouTube channel, and explore free resources like PYQs, current affairs and playlists.` },
+      { q: "How does the scholarship test work?", a: "It is a free online test with 20 quick questions in just 20 minutes. Based on your score you can win a scholarship of up to 80% of the full batch price." },
+      { q: "Can I talk to a counsellor before enrolling?", a: "Yes. Fill in the free counselling form on this page or call us, and a counsellor will guide you on the right batch for you." },
+    ],
+    resultTabId: resultTabFor(entry),
+    examOptions,
+  };
+
+  return { ...base, ...COURSE_PAGE_OVERRIDES[slug] };
+}
+
+export const COURSE_CHANNEL_URL = SOCIAL_LINKS.youtube;

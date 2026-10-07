@@ -7,6 +7,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ResultBanner } from "@/types";
 
+import { COLORS } from "@/theme/colors";
 /*
  * Sizes copied from pw.live "Academic Excellence : Results":
  *  - web   (> 768px): 3821 × 1324 art, rendered max 1120 × 388
@@ -160,7 +161,7 @@ export default function ResultBannerSlider({ banners: allBanners, eager = false 
                 border: "none",
                 borderRadius: "9999px",
                 cursor: "pointer",
-                backgroundColor: i === index ? "#FE0034" : "#D9DCE1",
+                backgroundColor: i === index ? COLORS.red : "#D9DCE1",
                 transition: "all 0.3s ease",
               }}
             />

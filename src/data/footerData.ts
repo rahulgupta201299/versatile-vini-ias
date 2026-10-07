@@ -2,7 +2,7 @@ import { FooterResourceColumn } from "@/types";
 
 export const COMPANY_LINKS = [
   { name: "About Us", href: "#about" },
-  { name: "Contact Us", href: "#enquiry" },
+  { name: "Contact Us", href: "/#enquiry" },
   { name: "Careers", href: "#careers" },
   { name: "Updates", href: "#updates" },
   { name: "Blogs & Editorials", href: "#blogs" },
@@ -31,7 +31,7 @@ export const OUR_PRODUCTS = [
   { name: "VINI IAS", href: "#" },
   { name: "Vini Kiddos", href: "#" },
   { name: "Vini Law", href: "#" },
-  { name: "Vini Store", href: "#market-ad" },
+  { name: "Vini Store", href: "/#market-ad" },
   { name: "Vini AI Tutor", href: "#" },
   { name: "Junior Kaksha", href: "#" },
   { name: "View All Products", href: "#products" },
@@ -51,7 +51,7 @@ export const OUR_BRANDS = [
   { name: "TicketBaaz", href: "#" },
   { name: "Binora", href: "#" },
   { name: "Vini News Network", href: "#" },
-  { name: "View All Brands", href: "#brands" },
+  { name: "View All Brands", href: "/#brands" },
 ];
 
 export const FREE_LEARNING_RESOURCES: FooterResourceColumn[] = [

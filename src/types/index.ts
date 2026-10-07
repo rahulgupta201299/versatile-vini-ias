@@ -137,3 +137,49 @@ export interface ImpactAvatar extends ImpactMapItem {
   size: number; // px at desktop size (scaled down on small screens)
   alt: string;
 }
+
+/* ---------------- Course / exam landing pages ---------------- */
+export interface CourseVideo {
+  title: string;
+  educator: string;
+  duration: string;
+  /** YouTube video id — when set, the card plays the video inline. */
+  youtubeId?: string;
+  /** Fallback link when there is no youtubeId (opens YouTube). */
+  href: string;
+}
+
+export interface CourseBatch {
+  id: string;
+  title: string;
+  thumbnail: string;
+  language: string;
+  mode: string;
+  startDate: string;
+  price: number;
+  mrp: number;
+  tag?: string;
+}
+
+export interface CourseFaq {
+  q: string;
+  a: string;
+}
+
+export interface CoursePageData {
+  slug: string;
+  name: string;
+  /** Parent group shown in the breadcrumb, e.g. "UPSC", "State PSC". */
+  category: string;
+  tagline: string;
+  banners: HeroBanner[];
+  videos: CourseVideo[];
+  batches: CourseBatch[];
+  highlights: { label: string; value: string }[];
+  about: string[];
+  faqs: CourseFaq[];
+  /** Results tab shown in the Toppers section (see data/resultBanners.ts). */
+  resultTabId: string;
+  /** Options for the "Exam" dropdown in the counselling form. */
+  examOptions: string[];
+}

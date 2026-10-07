@@ -16,6 +16,7 @@ import {
   sanitizeMobile,
 } from "@/utils/validation";
 
+import { COLORS } from "@/theme/colors";
 const FIELD_SX = {
   backgroundColor: "#FFFFFF",
   borderRadius: "10px",
@@ -93,12 +94,12 @@ export default function MentorshipCallbackSection() {
                   gap: 1.5,
                 }}
               >
-                <CheckCircle2 size={28} color="#16A34A" style={{ flexShrink: 0 }} />
+                <CheckCircle2 size={28} color={COLORS.success} style={{ flexShrink: 0 }} />
                 <Box>
                   <Typography sx={{ fontWeight: 700, color: "#166534", fontSize: "0.98rem", mb: 0.25 }}>
                     Callback request confirmed!
                   </Typography>
-                  <Typography sx={{ color: "#334155", fontSize: "0.86rem" }}>
+                  <Typography sx={{ color: COLORS.body, fontSize: "0.86rem" }}>
                     Thank you, <strong>{form.values.name}</strong>. Our UPSC mentor will call you at{" "}
                     <strong>+91 {form.values.mobile}</strong> shortly.
                   </Typography>
@@ -108,7 +109,7 @@ export default function MentorshipCallbackSection() {
                       setSubmitted(false);
                       form.reset();
                     }}
-                    sx={{ mt: 0.75, p: 0, minWidth: 0, color: "#16A34A", fontWeight: 700, textTransform: "none" }}
+                    sx={{ mt: 0.75, p: 0, minWidth: 0, color: COLORS.success, fontWeight: 700, textTransform: "none" }}
                   >
                     Submit another request
                   </Button>
@@ -135,7 +136,7 @@ export default function MentorshipCallbackSection() {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <User size={17} color="#64748B" />
+                          <User size={17} color={COLORS.muted} />
                         </InputAdornment>
                       ),
                       sx: FIELD_SX,
@@ -170,7 +171,7 @@ export default function MentorshipCallbackSection() {
                       gridColumn: { xs: "auto", sm: "1 / -1", lg: "auto" },
                       height: { xs: 44, md: 48 },
                       px: 3,
-                      background: "#FFE51F",
+                      background: COLORS.yellow,
                       color: "#000000",
                       fontWeight: 700,
                       fontSize: { xs: "0.95rem", md: "1rem" },
@@ -178,14 +179,14 @@ export default function MentorshipCallbackSection() {
                       boxShadow: "none",
                       textTransform: "none",
                       whiteSpace: "nowrap",
-                      "&:hover": { background: "#F2D500", boxShadow: "0 4px 12px rgba(242, 213, 0, 0.35)" },
+                      "&:hover": { background: COLORS.yellowDark, boxShadow: "0 4px 12px rgba(242, 213, 0, 0.35)" },
                     }}
                   >
                     Get Free Mentorship
                   </Button>
                 </Box>
 
-                <Typography sx={{ color: "#64748B", fontSize: "0.75rem", mt: 1.25 }}>
+                <Typography sx={{ color: COLORS.muted, fontSize: "0.75rem", mt: 1.25 }}>
                   By continuing, you agree to the{" "}
                   <Box component="a" href="#" sx={{ color: "#2563EB", textDecoration: "underline" }}>
                     terms and conditions

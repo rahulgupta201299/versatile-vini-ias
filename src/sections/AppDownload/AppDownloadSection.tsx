@@ -7,6 +7,7 @@ import { CheckCircle2 } from "lucide-react";
 import { APP_POINTS } from "@/data/app";
 import StoreBadges from "@/components/StoreBadges";
 
+import { COLORS } from "@/theme/colors";
 /*
  * Layout reference: pw.live "Join 15 Million students on the app today!" banner
  *  - card 1120 × 320, soft vertical gradient, content padding 40 / 48
@@ -14,9 +15,9 @@ import StoreBadges from "@/components/StoreBadges";
  *  - artwork anchored bottom-right (ours pops slightly out of the top of the card)
  */
 const TEXT = "#1B2124";
-const ACCENT = "#FE0034";
+const ACCENT = COLORS.red;
 
-export default function AppDownloadSection() {
+export default function AppDownloadSection({ title = "Study smarter with the Vini IAS app today!" }: { title?: string }) {
   return (
     <Box component="section" id="download" sx={{ pt: { xs: 4, md: 9 }, pb: { xs: 4, md: 5 }, backgroundColor: "#FFFFFF" }}>
       <Container>
@@ -39,7 +40,7 @@ export default function AppDownloadSection() {
               Learn From Anywhere
             </Typography>
             <Typography component="h2" sx={{ fontSize: { xs: "1.5rem", md: "2rem" }, fontWeight: 700, lineHeight: 1.3, color: TEXT, mb: 2.5 }}>
-              Study smarter with the Vini IAS app today!
+              {title}
             </Typography>
 
             <Box component="ul" sx={{ listStyle: "none", p: 0, m: 0, mb: { xs: 3, md: 4 }, display: "grid", gap: 1.25 }}>

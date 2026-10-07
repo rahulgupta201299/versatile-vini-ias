@@ -1,13 +1,16 @@
 import { NavItem, MegaMenuCategory, MenuSection } from "@/types";
+import { coursePath } from "@/utils/slug";
 
-const c = (label: string, href = "#courses") => ({ label, href });
+import { COLORS } from "@/theme/colors";
+/** Dropdown item — links to its course page unless an href is given. */
+const c = (label: string, href = coursePath(label)) => ({ label, href });
 
 export const NAV_ITEMS: NavItem[] = [
-  { id: "all-exams", label: "All Exams", href: "#goals", isMegaMenu: true },
+  { id: "all-exams", label: "All Exams", href: "/#goals", isMegaMenu: true },
   {
     id: "gs-foundation",
     label: "GS Foundation",
-    href: "#courses",
+    href: coursePath("GS Foundation"),
     children: [
       c("Beginner's Kit For UPSC"),
       c("NCERT Foundation Batch"),
@@ -19,19 +22,19 @@ export const NAV_ITEMS: NavItem[] = [
   {
     id: "mentorship",
     label: "Mentorship",
-    href: "#mentorship",
-    children: [c("1:1 Mentorship 2028/29", "#mentorship"), c("Free Mentorship Program", "#mentorship"), c("Test Series (FLT)")],
+    href: coursePath("Mentorship"),
+    children: [c("1:1 Mentorship 2028/29"), c("Free Mentorship Program"), c("Test Series (FLT)")],
   },
   {
     id: "csat",
     label: "CSAT",
-    href: "#courses",
+    href: coursePath("CSAT"),
     children: [c("Foundation Batch"), c("CSAT PYQs with Solution"), c("CSAT Recorded Batch (₹1,999)"), c("Test Series (FLT)")],
   },
   {
     id: "optional",
     label: "Optional",
-    href: "#courses",
+    href: coursePath("Optional"),
     children: [
       c("Hindi Literature"),
       c("History"),
@@ -46,40 +49,40 @@ export const NAV_ITEMS: NavItem[] = [
   {
     id: "gs-mains",
     label: "GS Mains",
-    href: "#courses",
+    href: coursePath("GS Mains"),
     children: [
-      c("Mains Mentorship", "#mentorship"),
+      c("Mains Mentorship"),
       c("Mains Foundation"),
       c("Answer Writing"),
-      c("Free Mains Mentorship", "#mentorship"),
+      c("Free Mains Mentorship"),
       c("Test Series (FLT)"),
     ],
   },
   {
     id: "ethics-essay",
     label: "Ethics & Essay",
-    href: "#courses",
+    href: coursePath("Ethics & Essay"),
     children: [
       c("Ethics Foundation Batch"),
       c("Essay Foundation Batch"),
       c("Ethics Answer Writing"),
       c("Test Series (FLT)"),
-      c("Free Mentorship", "#mentorship"),
+      c("Free Mentorship"),
     ],
   },
   {
     id: "upsc-plan-b",
     label: "UPSC Plan B",
-    href: "#courses",
-    children: [c("RBI Grade B Course"), c("NABARD Grade A"), c("EPFO APFC"), c("EPFO EO/AO"), c("Free Mentorship", "#mentorship")],
+    href: coursePath("UPSC Plan B"),
+    children: [c("RBI Grade B Course"), c("NABARD Grade A"), c("EPFO APFC"), c("EPFO EO/AO"), c("Free Mentorship")],
   },
   {
     id: "offline-centre",
     label: "Offline Centre",
-    href: "#enquiry",
-    children: ["Noida", "Old Rajinder Nagar", "Delhi", "Patna", "Gaya Ji", "Darbhanga", "Bhagalpur"].map((city) => c(city, "#enquiry")),
+    href: "/#enquiry",
+    children: ["Noida", "Old Rajinder Nagar", "Delhi", "Patna", "Gaya Ji", "Darbhanga", "Bhagalpur"].map((city) => c(city, "/#enquiry")),
   },
-  { id: "test-series", label: "Test Series", href: "#resources" },
+  { id: "test-series", label: "Test Series", href: coursePath("Test Series") },
 ];
 
 /** Mobile slide-menu sections (2-column tiles), in display order. */
@@ -88,49 +91,49 @@ export const MOBILE_MENU_SECTIONS: MenuSection[] = [
     id: "free-resources",
     title: "Free Resources",
     items: [
-      { label: "GS Foundation", href: "#courses", icon: "Landmark", dropdownId: "gs-foundation" },
-      { label: "GS Mains", href: "#courses", icon: "PenLine", dropdownId: "gs-mains" },
-      { label: "Mentorship", href: "#mentorship", icon: "Users", dropdownId: "mentorship" },
-      { label: "Ethics", href: "#courses", icon: "Scale", dropdownId: "ethics-essay" },
-      { label: "CSAT", href: "#courses", icon: "Calculator", dropdownId: "csat" },
-      { label: "Essay", href: "#courses", icon: "FileText", dropdownId: "ethics-essay" },
-      { label: "Optional", href: "#courses", icon: "BookOpen", dropdownId: "optional" },
-      { label: "UPSC Plan B", href: "#courses", icon: "CalendarCheck", dropdownId: "upsc-plan-b" },
+      { label: "GS Foundation", href: "/#courses", icon: "Landmark", dropdownId: "gs-foundation" },
+      { label: "GS Mains", href: "/#courses", icon: "PenLine", dropdownId: "gs-mains" },
+      { label: "Mentorship", href: "/#mentorship", icon: "Users", dropdownId: "mentorship" },
+      { label: "Ethics", href: "/#courses", icon: "Scale", dropdownId: "ethics-essay" },
+      { label: "CSAT", href: "/#courses", icon: "Calculator", dropdownId: "csat" },
+      { label: "Essay", href: "/#courses", icon: "FileText", dropdownId: "ethics-essay" },
+      { label: "Optional", href: "/#courses", icon: "BookOpen", dropdownId: "optional" },
+      { label: "UPSC Plan B", href: "/#courses", icon: "CalendarCheck", dropdownId: "upsc-plan-b" },
     ],
   },
   {
     id: "study-material",
     title: "Study Material",
     items: [
-      { label: "Prelims", href: "#resources", icon: "FileText" },
-      { label: "प्रारंभिक परीक्षा", href: "#resources", icon: "FileText" },
-      { label: "Mains", href: "#resources", icon: "Folder" },
-      { label: "मुख्य परीक्षा", href: "#resources", icon: "Folder" },
-      { label: "Current Affairs", href: "#resources", icon: "Newspaper" },
-      { label: "करेंट अफेयर्स", href: "#resources", icon: "Newspaper" },
-      { label: "Vini Specials", href: "#resources", icon: "Sparkles" },
-      { label: "विनी स्पेशल्स", href: "#resources", icon: "Sparkles" },
-      { label: "Free Downloads", href: "#resources", icon: "Download" },
-      { label: "डाउनलोड्स", href: "#resources", icon: "Download" },
-      { label: "Ethics", href: "#resources", icon: "Scale" },
-      { label: "वीडियो सेक्शन", href: "#resources", icon: "PlaySquare" },
-      { label: "Videos", href: "#resources", icon: "PlaySquare" },
-      { label: "सिविल सेवा परीक्षा", href: "#resources", icon: "Landmark" },
+      { label: "Prelims", href: "/#resources", icon: "FileText" },
+      { label: "प्रारंभिक परीक्षा", href: "/#resources", icon: "FileText" },
+      { label: "Mains", href: "/#resources", icon: "Folder" },
+      { label: "मुख्य परीक्षा", href: "/#resources", icon: "Folder" },
+      { label: "Current Affairs", href: "/#resources", icon: "Newspaper" },
+      { label: "करेंट अफेयर्स", href: "/#resources", icon: "Newspaper" },
+      { label: "Vini Specials", href: "/#resources", icon: "Sparkles" },
+      { label: "विनी स्पेशल्स", href: "/#resources", icon: "Sparkles" },
+      { label: "Free Downloads", href: "/#resources", icon: "Download" },
+      { label: "डाउनलोड्स", href: "/#resources", icon: "Download" },
+      { label: "Ethics", href: "/#resources", icon: "Scale" },
+      { label: "वीडियो सेक्शन", href: "/#resources", icon: "PlaySquare" },
+      { label: "Videos", href: "/#resources", icon: "PlaySquare" },
+      { label: "सिविल सेवा परीक्षा", href: "/#resources", icon: "Landmark" },
     ],
   },
   {
     id: "featured",
     title: "Featured",
     items: [
-      { label: "News", href: "#resources", icon: "Newspaper" },
-      { label: "Trend", href: "#resources", icon: "TrendingUp" },
-      { label: "Books", href: "#resources", icon: "Book" },
-      { label: "Magazine", href: "#resources", icon: "BookOpen" },
-      { label: "Test Series", href: "#resources", icon: "ClipboardCheck" },
-      { label: "Toppers Copies", href: "#resources", icon: "FileCheck" },
-      { label: "Blogs Articles", href: "#resources", icon: "Lightbulb" },
-      { label: "Vini Publication", href: "#resources", icon: "BookMarked" },
-      { label: "Offline Centre", href: "#enquiry", icon: "MapPin", dropdownId: "offline-centre" },
+      { label: "News", href: "/#resources", icon: "Newspaper" },
+      { label: "Trend", href: "/#resources", icon: "TrendingUp" },
+      { label: "Books", href: "/#resources", icon: "Book" },
+      { label: "Magazine", href: "/#resources", icon: "BookOpen" },
+      { label: "Test Series", href: "/#resources", icon: "ClipboardCheck" },
+      { label: "Toppers Copies", href: "/#resources", icon: "FileCheck" },
+      { label: "Blogs Articles", href: "/#resources", icon: "Lightbulb" },
+      { label: "Vini Publication", href: "/#resources", icon: "BookMarked" },
+      { label: "Offline Centre", href: "/#enquiry", icon: "MapPin", dropdownId: "offline-centre" },
     ],
   },
 ];
@@ -145,7 +148,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "iit-jee",
         title: "IIT JEE",
-        href: "#courses",
+        href: "/#courses",
         icon: "Atom",
         iconColor: "#2563EB",
         iconBg: "#EFF6FF",
@@ -153,7 +156,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "neet",
         title: "NEET",
-        href: "#courses",
+        href: "/#courses",
         icon: "Stethoscope",
         iconColor: "#DC2626",
         iconBg: "#FEF2F2",
@@ -161,7 +164,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "ese",
         title: "ESE",
-        href: "#courses",
+        href: "/#courses",
         icon: "HardHat",
         iconColor: "#D97706",
         iconBg: "#FFFBEB",
@@ -169,7 +172,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "gate",
         title: "GATE",
-        href: "#courses",
+        href: "/#courses",
         icon: "Lightbulb",
         iconColor: "#EAB308",
         iconBg: "#FEFCE8",
@@ -177,7 +180,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "ae-je",
         title: "AE/JE",
-        href: "#courses",
+        href: "/#courses",
         icon: "Code",
         iconColor: "#0891B2",
         iconBg: "#ECFEFF",
@@ -185,7 +188,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "olympiad",
         title: "Olympiad",
-        href: "#courses",
+        href: "/#courses",
         icon: "Trophy",
         iconColor: "#EA580C",
         iconBg: "#FFF7ED",
@@ -200,7 +203,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "upsc-cse",
         title: "UPSC CSE 2026/27",
-        href: "#courses",
+        href: "/#courses",
         icon: "Landmark",
         iconColor: "#2563EB",
         iconBg: "#EFF6FF",
@@ -208,7 +211,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "bpsc-71",
         title: "71st BPSC Foundation",
-        href: "#courses",
+        href: "/#courses",
         icon: "Trophy",
         iconColor: "#EA580C",
         iconBg: "#FFF7ED",
@@ -216,15 +219,15 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "uppsc-pcs",
         title: "UPPSC PCS Special",
-        href: "#courses",
+        href: "/#courses",
         icon: "Award",
-        iconColor: "#16A34A",
+        iconColor: COLORS.success,
         iconBg: "#F0FDF4",
       },
       {
         id: "jpsc-civil",
         title: "JPSC Combined Batch",
-        href: "#courses",
+        href: "/#courses",
         icon: "Compass",
         iconColor: "#0891B2",
         iconBg: "#ECFEFF",
@@ -232,7 +235,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "ras-exam",
         title: "RAS Rajasthan Target",
-        href: "#courses",
+        href: "/#courses",
         icon: "Shield",
         iconColor: "#7C3AED",
         iconBg: "#F5F3FF",
@@ -240,7 +243,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "mppsc-service",
         title: "MPPSC State Service",
-        href: "#courses",
+        href: "/#courses",
         icon: "BookOpen",
         iconColor: "#DB2777",
         iconBg: "#FDF2F8",
@@ -255,7 +258,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "k5-coaching",
         title: "K5 Elementary Online",
-        href: "#courses",
+        href: "/#courses",
         icon: "Smile",
         iconColor: "#EC4899",
         iconBg: "#FDF2F8",
@@ -263,7 +266,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "class-6-8",
         title: "Foundation Class 6-8",
-        href: "#courses",
+        href: "/#courses",
         icon: "BookOpen",
         iconColor: "#2563EB",
         iconBg: "#EFF6FF",
@@ -271,15 +274,15 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "class-9-10",
         title: "Class 9th & 10th",
-        href: "#courses",
+        href: "/#courses",
         icon: "FileText",
-        iconColor: "#16A34A",
+        iconColor: COLORS.success,
         iconBg: "#F0FDF4",
       },
       {
         id: "class-11-12",
         title: "Class 11th & 12th",
-        href: "#courses",
+        href: "/#courses",
         icon: "GraduationCap",
         iconColor: "#7C3AED",
         iconBg: "#F5F3FF",
@@ -287,7 +290,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "ntse-olympiad",
         title: "NTSE & Olympiad",
-        href: "#courses",
+        href: "/#courses",
         icon: "Trophy",
         iconColor: "#EAB308",
         iconBg: "#FEFCE8",
@@ -295,7 +298,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "junior-kaksha",
         title: "Junior Kaksha",
-        href: "#courses",
+        href: "/#courses",
         icon: "Sparkles",
         iconColor: "#EA580C",
         iconBg: "#FFF7ED",
@@ -310,7 +313,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "cbse-science",
         title: "CBSE Science",
-        href: "#courses",
+        href: "/#courses",
         icon: "Atom",
         iconColor: "#2563EB",
         iconBg: "#EFF6FF",
@@ -318,7 +321,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "cbse-commerce",
         title: "CBSE Commerce",
-        href: "#courses",
+        href: "/#courses",
         icon: "Calculator",
         iconColor: "#059669",
         iconBg: "#ECFDF5",
@@ -326,7 +329,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "cbse-arts",
         title: "CBSE Arts / Humanities",
-        href: "#courses",
+        href: "/#courses",
         icon: "Palette",
         iconColor: "#DB2777",
         iconBg: "#FDF2F8",
@@ -334,7 +337,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "icse-board",
         title: "ICSE Board Class 10",
-        href: "#courses",
+        href: "/#courses",
         icon: "BookMarked",
         iconColor: "#7C3AED",
         iconBg: "#F5F3FF",
@@ -342,7 +345,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "bihar-board",
         title: "Bihar Board 10th & 12th",
-        href: "#courses",
+        href: "/#courses",
         icon: "Landmark",
         iconColor: "#EA580C",
         iconBg: "#FFF7ED",
@@ -350,9 +353,9 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "up-board",
         title: "UP Board Hindi & Eng",
-        href: "#courses",
+        href: "/#courses",
         icon: "Award",
-        iconColor: "#16A34A",
+        iconColor: COLORS.success,
         iconBg: "#F0FDF4",
       },
     ],
@@ -365,7 +368,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "judiciary",
         title: "Judiciary",
-        href: "#courses",
+        href: "/#courses",
         icon: "Scale",
         iconColor: "#B45309",
         iconBg: "#FEF3C7",
@@ -373,7 +376,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "ssc",
         title: "SSC",
-        href: "#courses",
+        href: "/#courses",
         icon: "Landmark",
         iconColor: "#0891B2",
         iconBg: "#ECFEFF",
@@ -381,7 +384,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "defence",
         title: "Defence",
-        href: "#courses",
+        href: "/#courses",
         icon: "Shield",
         iconColor: "#2563EB",
         iconBg: "#EFF6FF",
@@ -389,7 +392,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "teaching",
         title: "Teaching",
-        href: "#courses",
+        href: "/#courses",
         icon: "School",
         iconColor: "#DC2626",
         iconBg: "#FEF2F2",
@@ -397,15 +400,15 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "jaiib-caiib",
         title: "JAIIB & CAIIB",
-        href: "#courses",
+        href: "/#courses",
         icon: "FileSpreadsheet",
-        iconColor: "#16A34A",
+        iconColor: COLORS.success,
         iconBg: "#F0FDF4",
       },
       {
         id: "bihar-exams",
         title: "BIHAR EXAMS VINI",
-        href: "#courses",
+        href: "/#courses",
         icon: "FileCheck",
         iconColor: "#EA580C",
         iconBg: "#FFF7ED",
@@ -413,7 +416,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "up-exams",
         title: "UP Exams",
-        href: "#courses",
+        href: "/#courses",
         icon: "ClipboardCheck",
         iconColor: "#EAB308",
         iconBg: "#FEFCE8",
@@ -421,7 +424,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "railway",
         title: "Railway",
-        href: "#courses",
+        href: "/#courses",
         icon: "TrainTrack",
         iconColor: "#0284C7",
         iconBg: "#F0F9FF",
@@ -429,7 +432,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "nursing-exams",
         title: "Nursing Exams",
-        href: "#courses",
+        href: "/#courses",
         icon: "HeartPulse",
         iconColor: "#E11D48",
         iconBg: "#FFF1F2",
@@ -437,7 +440,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "banking",
         title: "Banking",
-        href: "#courses",
+        href: "/#courses",
         icon: "Building2",
         iconColor: "#6366F1",
         iconBg: "#EEF2FF",
@@ -445,7 +448,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "wb-exams",
         title: "WB Exams",
-        href: "#courses",
+        href: "/#courses",
         icon: "Map",
         iconColor: "#10B981",
         iconBg: "#ECFDF5",
@@ -453,7 +456,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "punjab-exams",
         title: "Punjab Exams",
-        href: "#courses",
+        href: "/#courses",
         icon: "MapPin",
         iconColor: "#10B981",
         iconBg: "#ECFDF5",
@@ -468,15 +471,15 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "clat-law",
         title: "LAW / CLAT",
-        href: "#courses",
+        href: "/#courses",
         icon: "Scale",
-        iconColor: "#FE0034",
+        iconColor: COLORS.red,
         iconBg: "#FEF2F2",
       },
       {
         id: "cuet-ug",
         title: "CUET UG",
-        href: "#courses",
+        href: "/#courses",
         icon: "BookMarked",
         iconColor: "#2563EB",
         iconBg: "#EFF6FF",
@@ -484,15 +487,15 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "ipmat-iim",
         title: "IPMAT",
-        href: "#courses",
+        href: "/#courses",
         icon: "TrendingUp",
-        iconColor: "#16A34A",
+        iconColor: COLORS.success,
         iconBg: "#F0FDF4",
       },
       {
         id: "iit-jam",
         title: "IIT JAM",
-        href: "#courses",
+        href: "/#courses",
         icon: "Atom",
         iconColor: "#7C3AED",
         iconBg: "#F5F3FF",
@@ -500,7 +503,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "mba-entrance",
         title: "MBA / CAT",
-        href: "#courses",
+        href: "/#courses",
         icon: "Briefcase",
         iconColor: "#D97706",
         iconBg: "#FFFBEB",
@@ -508,7 +511,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "ugc-net",
         title: "UGC NET",
-        href: "#courses",
+        href: "/#courses",
         icon: "GraduationCap",
         iconColor: "#0891B2",
         iconBg: "#ECFEFF",
@@ -523,7 +526,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "ca-course",
         title: "CA Foundation",
-        href: "#courses",
+        href: "/#courses",
         icon: "Calculator",
         iconColor: "#2563EB",
         iconBg: "#EFF6FF",
@@ -531,15 +534,15 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "cs-course",
         title: "CS Executive",
-        href: "#courses",
+        href: "/#courses",
         icon: "Briefcase",
-        iconColor: "#16A34A",
+        iconColor: COLORS.success,
         iconBg: "#F0FDF4",
       },
       {
         id: "cma-course",
         title: "CMA Foundation",
-        href: "#courses",
+        href: "/#courses",
         icon: "Award",
         iconColor: "#D97706",
         iconBg: "#FFFBEB",
@@ -547,7 +550,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "acca-course",
         title: "ACCA Course",
-        href: "#courses",
+        href: "/#courses",
         icon: "TrendingUp",
         iconColor: "#7C3AED",
         iconBg: "#F5F3FF",
@@ -555,7 +558,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "cfa-course",
         title: "CFA Program",
-        href: "#courses",
+        href: "/#courses",
         icon: "Globe",
         iconColor: "#0891B2",
         iconBg: "#ECFEFF",
@@ -563,7 +566,7 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       {
         id: "taxation-gst",
         title: "Taxation & GST",
-        href: "#courses",
+        href: "/#courses",
         icon: "FileCheck",
         iconColor: "#EA580C",
         iconBg: "#FFF7ED",
@@ -576,4 +579,4 @@ export const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
 export const SEARCH_TRENDING = ["UPSC CSE", "BPSC", "State PSC", "SSC", "CSAT", "Ethics & Essay"];
 
 /** Store link used by the header "Store" button and the mobile menu. */
-export const STORE_HREF = "#market-ad";
+export const STORE_HREF = "/#market-ad";

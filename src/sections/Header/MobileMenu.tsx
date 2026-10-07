@@ -21,7 +21,8 @@ import { IconRenderer } from "@/components";
 import { MOBILE_MENU_SECTIONS, NAV_ITEMS, STORE_HREF } from "@/data/navigation";
 import { APP_STORE_LINKS } from "@/data/app";
 
-const RED = "#FE0034";
+import { COLORS } from "@/theme/colors";
+const RED = COLORS.red;
 const INK = "#1F2937";
 const MUTED = "#6B7280";
 const LINE = "#EEF0F3";
@@ -31,11 +32,11 @@ const childrenOf = (id?: string) => (id ? NAV_ITEMS.find((n) => n.id === id)?.ch
 
 /** Store link for the visitor's phone (falls back to the app section). */
 function appInstallHref() {
-  if (typeof navigator === "undefined") return "#download";
+  if (typeof navigator === "undefined") return "/#download";
   const ua = navigator.userAgent;
   if (/android/i.test(ua) && APP_STORE_LINKS.googlePlay !== "#") return APP_STORE_LINKS.googlePlay;
   if (/iphone|ipad|ipod/i.test(ua) && APP_STORE_LINKS.appStore !== "#") return APP_STORE_LINKS.appStore;
-  return "#download";
+  return "/#download";
 }
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
@@ -72,8 +73,8 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
             height: 32,
             px: 1.25,
             borderRadius: "9999px",
-            backgroundColor: "#FFF0F3",
-            border: "1px solid #FFCCD6",
+            backgroundColor: COLORS.redTint,
+            border: `1px solid ${COLORS.redBorder}`,
             color: RED,
             fontSize: "0.8rem",
             fontWeight: 700,
@@ -96,9 +97,9 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
             gap: 0.5,
             height: 32,
             px: 1.25,
-            border: "1px solid #FFCCD6",
+            border: `1px solid ${COLORS.redBorder}`,
             borderRadius: "9999px",
-            backgroundColor: "#FFF0F3",
+            backgroundColor: COLORS.redTint,
             color: RED,
             fontSize: "0.8rem",
             fontWeight: 700,
@@ -128,7 +129,7 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
             height: 44,
             px: 1.5,
             mb: 1.5,
-            border: "1px solid #E5E7EB",
+            border: `1px solid ${COLORS.borderLight}`,
             borderRadius: "10px",
             backgroundColor: "#FFFFFF",
             color: "#9CA3AF",
@@ -143,7 +144,7 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
         </Box>
 
         {/* Get the app */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1, px: 1.25, py: 1, mb: 2, borderRadius: "10px", backgroundColor: "#FFF0F3" }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1, px: 1.25, py: 1, mb: 2, borderRadius: "10px", backgroundColor: COLORS.redTint }}>
           <Smartphone size={20} color={RED} style={{ flexShrink: 0 }} />
           <Typography sx={{ flex: 1, minWidth: 0, fontWeight: 600, color: INK, fontSize: "0.76rem", lineHeight: 1.3 }}>
             Get App for
@@ -271,8 +272,8 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
                           mb: 1,
                           p: 1.25,
                           borderRadius: "10px",
-                          backgroundColor: "#FFF5F7",
-                          border: "1px solid #FFE0E6",
+                          backgroundColor: COLORS.redTintSoft,
+                          border: `1px solid ${COLORS.redTintHover}`,
                           position: "relative",
                           zIndex: 1,
                         }}
@@ -324,12 +325,12 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
           justifyContent: "center",
           gap: 0.75,
           height: 40,
-          backgroundColor: "#FFE51F",
+          backgroundColor: COLORS.yellow,
           color: "#000000",
           fontWeight: 700,
           fontSize: "0.8rem",
           textDecoration: "none",
-          "&:hover": { backgroundColor: "#F2D500" },
+          "&:hover": { backgroundColor: COLORS.yellowDark },
         }}
       >
         <Download size={15} /> Download VINI IAS App

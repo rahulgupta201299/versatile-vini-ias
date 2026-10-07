@@ -11,13 +11,14 @@ import {
   AppDownloadSection,
 } from "@/sections";
 import { getResultBanners } from "@/services/resultBanners";
+import { getHeroBanners } from "@/services/heroBanners";
 
 export default async function HomePage() {
-  const resultBannerTabs = await getResultBanners();
+  const [heroBanners, resultBannerTabs] = await Promise.all([getHeroBanners(), getResultBanners()]);
 
   return (
     <>
-      <HeroSlider />
+      <HeroSlider banners={heroBanners} />
       <FreeResourcesSection />
       <MarketAdBanner />
       <ExamGoalSection />

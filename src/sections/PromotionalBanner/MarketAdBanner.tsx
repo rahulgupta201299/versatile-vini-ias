@@ -5,6 +5,7 @@ import Image from "next/image";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 
+import { COLORS } from "@/theme/colors";
 interface MarketAdBannerProps {
   imageUrl?: string;
   mobileImageUrl?: string;
@@ -16,7 +17,7 @@ export default function MarketAdBanner({
   imageUrl = "/images/banners/market-ad-banner.jpg",
   mobileImageUrl,
   alt = "Special Promotional Offer - Gandhi Jayanti Up to 25% Off on UPSC Courses",
-  href = "#courses",
+  href = "/#courses",
 }: MarketAdBannerProps) {
   return (
     <Box
@@ -39,7 +40,7 @@ export default function MarketAdBanner({
             borderRadius: { xs: "12px", sm: "16px", md: "20px" },
             overflow: "hidden",
             boxShadow: "0 6px 20px rgba(0, 0, 0, 0.08)",
-            border: "1px solid #E5E7EB",
+            border: `1px solid ${COLORS.borderLight}`,
             cursor: "pointer",
             transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
             "&:hover": {

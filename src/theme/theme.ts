@@ -1,18 +1,19 @@
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 
+import { COLORS } from "@/theme/colors";
 let theme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#FE0034", // Brand Red — RGB 254, 0, 52
-      light: "#FF3358",
-      dark: "#CC002A",
+      main: COLORS.red, // Brand Red — RGB 254, 0, 52
+      light: COLORS.redLight,
+      dark: COLORS.redDark,
       contrastText: "#FFFFFF",
     },
     secondary: {
-      main: "#FFE51F", // Brand Yellow — RGB 255, 229, 31
+      main: COLORS.yellow, // Brand Yellow — RGB 255, 229, 31
       light: "#FFEC5C",
-      dark: "#F2D500",
+      dark: COLORS.yellowDark,
       contrastText: "#000000",
     },
     success: {
@@ -40,11 +41,11 @@ let theme = createTheme({
       paper: "#FFFFFF",
     },
     text: {
-      primary: "#0F172A",
-      secondary: "#475569",
-      disabled: "#94A3B8",
+      primary: COLORS.ink,
+      secondary: COLORS.textSecondary,
+      disabled: COLORS.disabled,
     },
-    divider: "#E2E8F0",
+    divider: COLORS.border,
   },
   typography: {
     fontFamily: [
@@ -120,9 +121,9 @@ let theme = createTheme({
           },
         },
         containedPrimary: {
-          background: "linear-gradient(135deg, #FE0034 0%, #FF3358 100%)",
+          background: `linear-gradient(135deg, ${COLORS.red} 0%, ${COLORS.redLight} 100%)`,
           "&:hover": {
-            background: "linear-gradient(135deg, #CC002A 0%, #FE0034 100%)",
+            background: `linear-gradient(135deg, ${COLORS.redDark} 0%, ${COLORS.red} 100%)`,
           },
         },
       },
