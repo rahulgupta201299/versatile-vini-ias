@@ -7,6 +7,13 @@ import { HeroBanner } from "@/types";
  */
 export const HERO_BANNERS: HeroBanner[] = [
   {
+    id: "banner-upsc-foundation-2027-28",
+    title: "UPSC Foundation Batch 2027/28",
+    imageUrl: "/images/banners/banner-upsc-foundation-2027-28.webp",
+    href: "#courses",
+    alt: "UPSC Foundation Batch 2027/28 — Hindi & English Medium. Complete GS Foundation, PYQs & Practice, Prelims + Mains Focus, Expert Mentorship. Enrol Now",
+  },
+  {
     id: "banner-1",
     title: "Mains 360 - Ethics (GS-4) & Essay Masterclass",
     imageUrl: "/images/banners/banner-mains360.png", // Direct user-provided banner graphic

@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ResultBanner } from "@/types";
 
@@ -25,8 +26,12 @@ interface ResultBannerSliderProps {
   eager?: boolean;
 }
 
-export default function ResultBannerSlider({ banners, eager = false }: ResultBannerSliderProps) {
-  const [index, setIndex] = useState(0);
+export default function ResultBannerSlider({ banners: allBanners, eager = false }: ResultBannerSliderProps) {
+  // Show only the banners that have art for this screen size (mobile-only / web-only banners)
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const banners = allBanners.filter((b) => (isMobile ? b.mobileImageUrl : b.webImageUrl));
+  const [rawIndex, setIndex] = useState(0);
+  const index = banners.length ? Math.min(rawIndex, banners.length - 1) : 0;
   const [paused, setPaused] = useState(false);
   const touchStartX = useRef<number | null>(null);
   const count = banners.length;
@@ -115,10 +120,10 @@ export default function ResultBannerSlider({ banners, eager = false }: ResultBan
               }}
             >
               <picture>
-                <source media="(max-width: 768px)" srcSet={banner.mobileImageUrl} />
-                <source media="(min-width: 769px)" srcSet={banner.webImageUrl} />
+                {banner.mobileImageUrl && <source media="(max-width: 768px)" srcSet={banner.mobileImageUrl} />}
+                {banner.webImageUrl && <source media="(min-width: 769px)" srcSet={banner.webImageUrl} />}
                 <img
-                  src={banner.webImageUrl}
+                  src={banner.webImageUrl ?? banner.mobileImageUrl}
                   alt={banner.alt || banner.title}
                   loading={eager && i === 0 ? "eager" : "lazy"}
                   decoding="async"

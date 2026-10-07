@@ -93,14 +93,17 @@ export interface FooterResourceColumn {
   }[];
 }
 
-/** A results banner as delivered by the server (separate art for web & mobile). */
+/**
+ * A results banner as delivered by the server (separate art for web & mobile).
+ * Leave out webImageUrl for a mobile-only banner, or mobileImageUrl for a web-only one.
+ */
 export interface ResultBanner {
   id: string;
   title: string;
   /** Desktop/tablet art (> 768px). Reference size 3821 × 1324 (≈ 2.886 : 1), shown at 1120 × 388. */
-  webImageUrl: string;
+  webImageUrl?: string;
   /** Mobile art (≤ 768px). Reference size 1203 × 1650 (≈ 0.729 : 1). */
-  mobileImageUrl: string;
+  mobileImageUrl?: string;
   href?: string;
   alt?: string;
 }

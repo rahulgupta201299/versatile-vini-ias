@@ -75,7 +75,7 @@ export default function HeroSlider({ banners = HERO_BANNERS }: HeroSliderProps) 
                   textDecoration: "none",
                   // Fixed aspect ratio (~3:1) so the banner scales with width
                   // instead of being cropped at fixed heights on small screens
-                  aspectRatio: { xs: "2.9 / 1", md: "3.2 / 1" },
+                  aspectRatio: "2.9 / 1", // matches banner artwork (e.g. 2137 × 736) so nothing is cropped
                   cursor: "pointer",
                 }}
               >

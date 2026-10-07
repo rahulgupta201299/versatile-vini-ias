@@ -21,6 +21,14 @@ export const RESULT_BANNER_TABS: ResultBannerTab[] = [
         alt: "Vini IAS UPSC toppers: AIR 4 Raghav Jhunjhunwala, AIR 7 A R Rajah Mohideen, AIR 10 Ujjwal Priyank, AIR 12 Akshit Bhardwaj and many more",
         href: "#rankers",
       },
+      {
+        // Mobile-only banner
+        id: "upsc-hindi-medium-cse-2024",
+        title: "Hindi Medium 33+ Selections — CSE 2024",
+        mobileImageUrl: "/images/results/upsc-hindi-medium-cse-2024-mobile.webp",
+        alt: "Vini IAS Our Super Achievers: Hindi Medium 33+ selections in UPSC CSE 2024",
+        href: "#rankers",
+      },
     ],
   },
   {
