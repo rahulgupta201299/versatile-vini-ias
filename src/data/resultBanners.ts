@@ -14,17 +14,11 @@ export const RESULT_BANNER_TABS: ResultBannerTab[] = [
     label: "UPSC",
     banners: [
       {
-        id: "upsc-cse-2025",
-        title: "UPSC CSE Results",
-        webImageUrl: "/images/results/upsc-1-web.svg",
-        mobileImageUrl: "/images/results/upsc-1-mobile.svg",
-        href: "#rankers",
-      },
-      {
-        id: "upsc-cse-2024",
-        title: "UPSC CSE Toppers",
-        webImageUrl: "/images/results/upsc-2-web.svg",
-        mobileImageUrl: "/images/results/upsc-2-mobile.svg",
+        id: "upsc-proud-achievers",
+        title: "Vini IAS — Our Proud Achievers",
+        webImageUrl: "/images/results/upsc-toppers-web.webp",
+        mobileImageUrl: "/images/results/upsc-toppers-mobile.webp",
+        alt: "Vini IAS UPSC toppers: AIR 4 Raghav Jhunjhunwala, AIR 7 A R Rajah Mohideen, AIR 10 Ujjwal Priyank, AIR 12 Akshit Bhardwaj and many more",
         href: "#rankers",
       },
     ],
