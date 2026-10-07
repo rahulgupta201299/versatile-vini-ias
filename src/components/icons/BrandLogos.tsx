@@ -101,17 +101,3 @@ export function GooglePlayLogo({ size = 24 }: { size?: number }) {
     </svg>
   );
 }
-
-/** Meta Verified style badge — blue scalloped seal with a white check. */
-export function VerifiedBadge({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" role="img" aria-label="Meta Verified">
-      <title>Meta Verified</title>
-      <path
-        fill="#0866FF"
-        d="M12 1.5l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22.5l-2.4-1.8-3 .2-.9-2.9-2.5-1.7 1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"
-      />
-      <path d="M7.8 12.3l2.8 2.8 5.6-5.8" fill="none" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}

@@ -7,8 +7,6 @@ export const CONTACT = {
   whatsappUrl: `https://wa.me/91${NUMBER}?text=${encodeURIComponent(
     "Hi Vini IAS, I need guidance for my exam preparation."
   )}`,
-  /** Show the Meta Verified badge next to WhatsApp (only if the business account is verified). */
-  whatsappVerified: true,
   email: "support@viniias.com",
 };
 

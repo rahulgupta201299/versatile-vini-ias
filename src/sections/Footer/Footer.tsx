@@ -18,7 +18,6 @@ import {
   XLogo,
   TelegramLogo,
   WhatsAppLogo,
-  VerifiedBadge,
 } from "@/components/icons/BrandLogos";
 import { CONTACT, SOCIAL_LINKS } from "@/data/contact";
 import {
@@ -239,7 +238,6 @@ export default function Footer() {
                       sx={{ display: "flex", alignItems: "center", gap: 0.5, fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.04em" }}
                     >
                       {c.label}
-                      {c.key === "whatsapp" && CONTACT.whatsappVerified && <VerifiedBadge size={13} />}
                     </Box>
                     <Box className="num" component="span" sx={{ display: "block", fontSize: { xs: "0.78rem", sm: "0.92rem" }, fontWeight: 800, color: c.color, whiteSpace: "nowrap" }}>
                       {CONTACT.phoneDisplay}

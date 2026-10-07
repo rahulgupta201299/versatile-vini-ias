@@ -13,7 +13,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Card from "@mui/material/Card";
 import { PhoneCall, CheckCircle2, Clock, ChevronRight } from "lucide-react";
 import CounsellorIllustration from "@/components/illustrations/CounsellorIllustration";
-import { WhatsAppLogo, VerifiedBadge } from "@/components/icons/BrandLogos";
+import { WhatsAppLogo } from "@/components/icons/BrandLogos";
 import { CONTACT } from "@/data/contact";
 import {
   useFormValidation,
@@ -188,7 +188,6 @@ export default function EnquirySection() {
                       <Typography component="span" sx={{ fontSize: { xs: "0.92rem", sm: "1rem" }, fontWeight: 700, color: "#0F172A" }}>
                         {c.title}
                       </Typography>
-                      {c.key === "whatsapp" && CONTACT.whatsappVerified && <VerifiedBadge size={15} />}
                     </Box>
                     <Typography
                       component="span"
