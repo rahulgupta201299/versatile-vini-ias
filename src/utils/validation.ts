@@ -30,6 +30,15 @@ export function validateMobile(value: string): string {
   return "";
 }
 
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+/** Optional e-mail: empty is fine, otherwise it must look like name@domain.tld. */
+export function validateOptionalEmail(value: string): string {
+  const v = value.trim();
+  if (!v) return "";
+  return EMAIL_PATTERN.test(v) ? "" : "Enter a valid email address";
+}
+
 export function validateRequiredSelect(label: string) {
   return (value: string): string => (value ? "" : `Please select ${label}`);
 }

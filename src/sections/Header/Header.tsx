@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -28,6 +29,7 @@ import { IconRenderer } from "@/components";
 import SearchDialog from "@/components/SearchDialog";
 import MobileMenu from "./MobileMenu";
 import { goalPath } from "@/utils/slug";
+import { externalLinkProps } from "@/utils/links";
 
 import { COLORS } from "@/theme/colors";
 /* Layout references: pw.live (menu, All Courses panel) and the header screenshots provided. */
@@ -90,6 +92,21 @@ export default function Header({ onOpenAuth }: HeaderProps) {
       document.removeEventListener("keydown", onKey);
     };
   }, [megaMenuOpen]);
+
+  // Close every menu after navigating (new page, or a #section on the same page)
+  const pathname = usePathname();
+  useEffect(() => {
+    const closeAll = () => {
+      setMegaMenuOpen(false);
+      setDrawerOpen(false);
+      setExpandedCategory(null);
+      setMoreAnchor(null);
+      setSearchOpen(false);
+    };
+    closeAll();
+    window.addEventListener("hashchange", closeAll);
+    return () => window.removeEventListener("hashchange", closeAll);
+  }, [pathname]);
 
   // Ctrl/⌘ + K opens search
   useEffect(() => {
@@ -230,6 +247,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                               key={child.label}
                               component={Link}
                               href={child.href}
+                              {...externalLinkProps(child)}
                               onClick={() => setMoreAnchor(null)}
                               sx={{ display: "block", py: 0.6, color: "#374151", fontSize: "0.9rem", fontWeight: 500, textDecoration: "none", "&:hover": { color: RED } }}
                             >
@@ -541,17 +559,29 @@ export default function Header({ onOpenAuth }: HeaderProps) {
 /** Desktop nav link; items with children show a dropdown on hover / keyboard focus. */
 function NavLinkWithDropdown({ item }: { item: NavItem }) {
   const hasChildren = Boolean(item.children?.length);
+  // Hover/focus opens the dropdown; a click on any link closes it until the pointer leaves.
+  const [closed, setClosed] = useState(false);
+  const closeDropdown = () => {
+    setClosed(true);
+    (document.activeElement as HTMLElement | null)?.blur();
+  };
   return (
     <Box
+      onMouseLeave={() => setClosed(false)}
       sx={{
         position: "relative",
-        "&:hover > .nav-dd, &:focus-within > .nav-dd": { opacity: 1, visibility: "visible", transform: "translate(-50%, 0)" },
-        "&:hover > a, &:focus-within > a": { color: RED },
+        ...(closed
+          ? {}
+          : {
+              "&:hover > .nav-dd, &:focus-within > .nav-dd": { opacity: 1, visibility: "visible", transform: "translate(-50%, 0)" },
+              "&:hover > a, &:focus-within > a": { color: RED },
+            }),
       }}
     >
       <Box
         component={Link}
         href={item.href}
+        onClick={closeDropdown}
         aria-haspopup={hasChildren ? "true" : undefined}
         sx={{
           display: "inline-flex",
@@ -595,6 +625,8 @@ function NavLinkWithDropdown({ item }: { item: NavItem }) {
               key={child.label}
               component={Link}
               href={child.href}
+              {...externalLinkProps(child)}
+              onClick={closeDropdown}
               role="menuitem"
               sx={{
                 display: "block",

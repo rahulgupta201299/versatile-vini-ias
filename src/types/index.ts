@@ -1,6 +1,8 @@
 export interface NavLink {
   label: string;
   href: string;
+  /** Opens in a new tab (defaults to true for http/https links). */
+  external?: boolean;
 }
 
 export interface NavItem {
@@ -274,7 +276,122 @@ export interface FreeResourceLearnItem {
   icon: FreeResourceIcon;
 }
 
+/* ---------- Designed landing layout (e.g. NCERT Foundation Batch) ---------- */
+/** lucide-react icon names the landing sections can render (see sections/CourseLanding/icons.ts). */
+export type LandingIcon =
+  | "BookOpen"
+  | "FileImage"
+  | "NotebookPen"
+  | "ClipboardList"
+  | "Landmark"
+  | "Globe2"
+  | "Building2"
+  | "TrendingUp"
+  | "Leaf"
+  | "Atom"
+  | "Shield"
+  | "Lightbulb"
+  | "GraduationCap"
+  | "Clock"
+  | "UserRound"
+  | "FileCheck2"
+  | "PenLine"
+  | "RotateCcw"
+  | "ListChecks"
+  | "Trophy"
+  | "Smartphone"
+  | "MessageCircleQuestion"
+  | "Users"
+  | "Video"
+  | "FileText"
+  | "Newspaper"
+  | "Monitor"
+  | "ClipboardCheck"
+  | "MessagesSquare"
+  | "Map"
+  | "Eye";
+
+export interface LandingIconItem {
+  title: string;
+  text?: string;
+  icon: LandingIcon;
+}
+
+export interface CourseLandingContent {
+  hero: {
+    badge: string; // "UPSC"
+    heading: string; // "NCERT"
+    subheading: string; // "FOUNDATION COURSE"
+    tagline: string;
+    description: string;
+    /** Handwritten note beside the artwork, one line per entry. */
+    note: string[];
+    /** Book spines in the artwork, top to bottom. */
+    books: string[];
+    ctaLabel: string;
+  };
+  features: LandingIconItem[];
+  highlights: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    subjects: LandingIconItem[];
+    footnotes: string[];
+    levels: { title: string; text: string }[];
+    /** Handwritten progression next to the levels, e.g. ["Concepts", "Clarity", "Confidence"]. */
+    progression: string[];
+  };
+  infographic: { badge: string; title: string; text: string; tags: string[] };
+  studyMaterial: { badge: string; title: string; subtitle: string; items: { title: string; text: string; art: "notes" | "books" | "tests" }[] };
+  enquiry: { badge: string; title: string; text: string; ctaLabel: string };
+}
+
+/* ---------- Live batch layout (e.g. GS Foundation Batch 2027/29) ---------- */
+export interface CoursePlan {
+  id: string;
+  name: string;
+  price: number;
+  /** Header / button colour for this plan's column. */
+  color: string;
+  tint: string;
+}
+
+export interface CourseStage {
+  title: string; // "FOUNDATION SUBJECTS"
+  timeline: string; // "November 2026 - June 2027"
+  /** Item groups shown in columns; a group without a title is a plain list. */
+  groups: { title?: string; items: string[] }[];
+  goal: string;
+}
+
+export interface BatchCourseContent {
+  hero: {
+    liveLabel: string; // "LIVE BATCH"
+    batchLabel: string; // "Batch 1"
+    title: string;
+    /** Part of the title shown in the accent colour. */
+    highlight: string;
+    description: string;
+    highlights: { title: string; text: string; icon: LandingIcon }[];
+    startDate: string;
+    image: { src: string; alt: string };
+  };
+  stats: { value: string; label: string; icon: LandingIcon }[];
+  stagesTitle: { text: string; highlight: string };
+  journey: { title: string; subtitle: string };
+  stages: CourseStage[];
+  plansTitle: { before: string; highlight: string; after: string; subtitle: string };
+  plans: CoursePlan[];
+  /** Comparison rows; `plans` lists the plan ids that include the feature. */
+  features: { label: string; icon: LandingIcon; plans: string[] }[];
+  expert: { title: string; highlight: string; text: string; ctaLabel: string };
+}
+
 export interface FreeResourcePage {
+  /** When present the page uses the designed landing layout instead of the standard course layout. */
+  landing?: CourseLandingContent;
+  /** When present the page uses the live-batch layout (hero, toppers, stages, plans, FAQs). */
+  batch?: BatchCourseContent;
   slug: string;
   /** Page heading, e.g. "Beginners' Kit for UPSC CSE 2027/28". */
   title: string;

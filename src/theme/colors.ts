@@ -19,6 +19,10 @@ export const COLORS = {
   yellow: "#FFE51F",
   yellowDark: "#F2D500",
 
+  /* Deep navy — headings & dark bands on course landing pages */
+  navy: "#13294B",
+  navyDark: "#0C1C36",
+
   /* Text */
   ink: "#0F172A",
   heading: "#1E293B",

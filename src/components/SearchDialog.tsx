@@ -7,6 +7,7 @@ import InputBase from "@mui/material/InputBase";
 import Typography from "@mui/material/Typography";
 import { Search, TrendingUp, CornerDownLeft, ArrowRight } from "lucide-react";
 import { useSiteData } from "@/context/SiteDataContext";
+import { isExternalLink } from "@/utils/links";
 import { SiteData } from "@/types";
 import { goalPath } from "@/utils/slug";
 
@@ -85,7 +86,8 @@ export default function SearchDialog({ open, onClose }: SearchDialogProps) {
   const go = (href: string) => {
     onClose();
     setQuery("");
-    window.location.href = href;
+    if (isExternalLink({ href })) window.open(href, "_blank", "noopener,noreferrer");
+    else window.location.href = href;
   };
 
   const onKeyDown = (e: React.KeyboardEvent) => {

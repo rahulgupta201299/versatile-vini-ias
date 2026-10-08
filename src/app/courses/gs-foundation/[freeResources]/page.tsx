@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { FreeResourceHero, EnrollBand, CourseOverview, CourseFit, ContactInfo, CourseFaqs, StickyEnrollBar } from "@/sections/FreeResource";
 import { TopRankersSection, EnquirySection } from "@/sections";
+import { BatchHero, BatchStats, BatchStages, BatchPlans, BatchFaq } from "@/sections/BatchCourse";
+import { LandingHero, LandingFeatures, LandingHighlights, LandingInfographic, LandingStudyMaterial, LandingEnquiry } from "@/sections/CourseLanding";
 import { getFreeResourcePage, getFreeResourceSlugs, getRankerStats, getResultBanners } from "@/services";
 import { FREE_RESOURCE_BASE } from "@/utils/slug";
 
@@ -32,12 +34,45 @@ export default async function FreeResourcePage({ params }: { params: Params }) {
   const page = await getFreeResourcePage(freeResources);
   if (!page) notFound();
 
-  const [resultTabs, rankerStats] = await Promise.all([getResultBanners(), getRankerStats()]);
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     mainEntity: page.faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
   };
+
+  // Live batch layout (e.g. GS Foundation Batch 2027/29) — toppers come from the homepage results
+  if (page.batch) {
+    const { batch } = page;
+    const [resultTabs, rankerStats] = await Promise.all([getResultBanners(), getRankerStats()]);
+    return (
+      <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+        <BatchHero hero={batch.hero} plans={batch.plans} />
+        <BatchStats stats={batch.stats} />
+        <TopRankersSection tabs={resultTabs} stats={rankerStats} />
+        <BatchStages data={batch} />
+        <BatchPlans data={batch} />
+        <BatchFaq faqs={page.faqs} expert={batch.expert} />
+      </>
+    );
+  }
+
+  // Pages with a designed landing layout (e.g. NCERT Foundation Batch)
+  if (page.landing) {
+    const { landing } = page;
+    return (
+      <>
+        <LandingHero hero={landing.hero} />
+        <LandingFeatures items={landing.features} />
+        <LandingHighlights data={landing.highlights} />
+        <LandingInfographic data={landing.infographic} />
+        <LandingStudyMaterial data={landing.studyMaterial} />
+        <LandingEnquiry data={landing.enquiry} course={page.title} />
+      </>
+    );
+  }
+
+  const [resultTabs, rankerStats] = await Promise.all([getResultBanners(), getRankerStats()]);
 
   return (
     <>

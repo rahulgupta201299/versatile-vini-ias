@@ -1,0 +1,96 @@
+import {
+  Atom,
+  BookOpen,
+  Building2,
+  ClipboardCheck,
+  ClipboardList,
+  Clock,
+  Eye,
+  FileCheck2,
+  FileImage,
+  FileText,
+  GraduationCap,
+  Globe2,
+  Landmark,
+  Leaf,
+  Lightbulb,
+  ListChecks,
+  Map,
+  MessageCircleQuestion,
+  MessagesSquare,
+  Monitor,
+  Newspaper,
+  NotebookPen,
+  PenLine,
+  RotateCcw,
+  Shield,
+  Smartphone,
+  TrendingUp,
+  Trophy,
+  UserRound,
+  Users,
+  Video,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { LandingIcon } from "@/types";
+
+/** Icon names the server can send for landing pages → lucide components. */
+export const LANDING_ICONS: Record<LandingIcon, LucideIcon> = {
+  Atom,
+  BookOpen,
+  Building2,
+  ClipboardList,
+  FileImage,
+  GraduationCap,
+  Globe2,
+  Landmark,
+  Leaf,
+  Lightbulb,
+  NotebookPen,
+  Shield,
+  TrendingUp,
+  Clock,
+  UserRound,
+  FileCheck2,
+  PenLine,
+  RotateCcw,
+  ListChecks,
+  Trophy,
+  Smartphone,
+  MessageCircleQuestion,
+  Users,
+  Video,
+  FileText,
+  Newspaper,
+  Monitor,
+  ClipboardCheck,
+  MessagesSquare,
+  Map,
+  Eye,
+};
+
+/** Soft icon chips, cycled per item (icon colour, background). */
+export const CHIP_TONES = [
+  { color: "#E11D48", bg: "#FFE4EA" },
+  { color: "#2563EB", bg: "#DBEAFE" },
+  { color: "#16A34A", bg: "#DCFCE7" },
+  { color: "#7C3AED", bg: "#EDE9FE" },
+  { color: "#EA580C", bg: "#FFEDD5" },
+  { color: "#0891B2", bg: "#CFFAFE" },
+];
+
+export const HANDWRITTEN = '"Segoe Print", "Bradley Hand", "Marker Felt", "Comic Sans MS", cursive';
+
+/** Small rounded label above section titles. */
+export const badgeSx = (color: string, bg: string, border: string) => ({
+  display: "inline-block",
+  px: 1.5,
+  py: 0.5,
+  borderRadius: "9999px",
+  backgroundColor: bg,
+  border: `1px solid ${border}`,
+  color,
+  fontSize: { xs: "0.68rem", md: "0.74rem" },
+  fontWeight: 800,
+  letterSpacing: "0.06em",
+});

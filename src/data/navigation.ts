@@ -16,8 +16,9 @@ export const NAV_ITEMS: NavItem[] = [
       c("Beginner's Kit For UPSC", freeResourcePath("Beginner's Kit For UPSC")),
       c("NCERT Foundation Batch", freeResourcePath("NCERT Foundation Batch")),
       c("Foundation Batch 2027/29", freeResourcePath("Foundation Batch 2027/29")),
-      c("Test Series (FLT)", freeResourcePath("Test Series (FLT)")),
-      c("Recorded Batch (₹4,999)", freeResourcePath("Recorded Batch")),
+      // External links — open in a new tab (replace with the real URLs)
+      c("Test Series (FLT)", "https://test.viniias.com/upsc-test-series"),
+      c("Recorded Batch (₹4,999)", "https://store.viniias.com/recorded-batch"),
     ],
   },
   {

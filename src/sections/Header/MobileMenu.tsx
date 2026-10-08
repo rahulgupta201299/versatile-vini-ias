@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { IconRenderer } from "@/components";
 import { useSiteData } from "@/context/SiteDataContext";
+import { externalLinkProps } from "@/utils/links";
 
 import { COLORS } from "@/theme/colors";
 const RED = COLORS.red;
@@ -284,6 +285,7 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
                               <Box
                                 component={Link}
                                 href={child.href}
+                                {...externalLinkProps(child)}
                                 onClick={onClose}
                                 sx={{
                                   display: "flex",
