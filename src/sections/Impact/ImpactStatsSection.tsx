@@ -6,13 +6,7 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { keyframes } from "@mui/system";
 import { Radio, MessageCircleQuestion, PenLine } from "lucide-react";
-import {
-  IMPACT_STATS,
-  IMPACT_FEATURES,
-  IMPACT_AVATARS,
-  IMPACT_LOGO_POSITION,
-} from "@/data/impact";
-import { ImpactFeatureChip } from "@/types";
+import { ImpactData, ImpactFeatureChip } from "@/types";
 
 import { COLORS } from "@/theme/colors";
 /* Layout reference: vedantu.com "Impact. At scale" — map artwork 704 × 440 */
@@ -101,7 +95,7 @@ function FeatureChip({ chip, delay }: { chip: ImpactFeatureChip; delay: number }
   );
 }
 
-function ImpactMap() {
+function ImpactMap({ avatars: IMPACT_AVATARS, features: IMPACT_FEATURES, logoPosition: IMPACT_LOGO_POSITION }: ImpactData) {
   return (
     <Box
       role="img"
@@ -173,7 +167,8 @@ function ImpactMap() {
   );
 }
 
-export default function ImpactStatsSection() {
+export default function ImpactStatsSection({ data }: { data: ImpactData }) {
+  const IMPACT_STATS = data.stats;
   return (
     <Box component="section" id="impact" sx={{ py: { xs: 4, md: 6 }, backgroundColor: "#FFFFFF" }}>
       <Container>
@@ -235,7 +230,7 @@ export default function ImpactStatsSection() {
           </Box>
 
           {/* Right: map with floating elements */}
-          <ImpactMap />
+          <ImpactMap {...data} />
         </Box>
       </Container>
     </Box>

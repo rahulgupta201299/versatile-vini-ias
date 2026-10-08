@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import { Header, Footer } from "@/sections";
+import Header from "@/sections/Header/Header";
+import Footer from "@/sections/Footer/Footer";
 import AuthModal from "./AuthModal";
 import { OPEN_AUTH_EVENT } from "@/utils/events";
 

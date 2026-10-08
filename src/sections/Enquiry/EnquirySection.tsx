@@ -14,7 +14,7 @@ import Card from "@mui/material/Card";
 import { PhoneCall, CheckCircle2, Clock, ChevronRight } from "lucide-react";
 import CounsellorIllustration from "@/components/illustrations/CounsellorIllustration";
 import { WhatsAppLogo } from "@/components/icons/BrandLogos";
-import { CONTACT } from "@/data/contact";
+import { useSiteData } from "@/context/SiteDataContext";
 import {
   useFormValidation,
   validateName,
@@ -37,6 +37,7 @@ const COURSE_OPTIONS = [
 ];
 
 export default function EnquirySection() {
+  const CONTACT = useSiteData().config.contact;
   const formRef = useRef<HTMLFormElement>(null);
   const [submitted, setSubmitted] = useState(false);
   const form = useFormValidation(

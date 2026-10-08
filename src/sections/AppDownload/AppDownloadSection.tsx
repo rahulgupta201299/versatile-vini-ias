@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { CheckCircle2 } from "lucide-react";
-import { APP_POINTS } from "@/data/app";
+import { getSiteConfig } from "@/services/site";
 import StoreBadges from "@/components/StoreBadges";
 
 import { COLORS } from "@/theme/colors";
@@ -17,7 +17,9 @@ import { COLORS } from "@/theme/colors";
 const TEXT = "#1B2124";
 const ACCENT = COLORS.red;
 
-export default function AppDownloadSection({ title = "Study smarter with the Vini IAS app today!" }: { title?: string }) {
+/** Server component — reads the app points from the site config (cached). */
+export default async function AppDownloadSection({ title = "Study smarter with the Vini IAS app today!" }: { title?: string }) {
+  const APP_POINTS = (await getSiteConfig()).app.points;
   return (
     <Box component="section" id="download" sx={{ pt: { xs: 4, md: 9 }, pb: { xs: 4, md: 5 }, backgroundColor: "#FFFFFF" }}>
       <Container>

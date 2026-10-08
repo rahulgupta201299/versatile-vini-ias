@@ -6,8 +6,8 @@ import Box from "@mui/material/Box";
 import InputBase from "@mui/material/InputBase";
 import Typography from "@mui/material/Typography";
 import { Search, TrendingUp, CornerDownLeft, ArrowRight } from "lucide-react";
-import { MEGA_MENU_CATEGORIES, NAV_ITEMS, SEARCH_TRENDING } from "@/data/navigation";
-import { EXAM_CATEGORIES } from "@/data/exams";
+import { useSiteData } from "@/context/SiteDataContext";
+import { SiteData } from "@/types";
 import { goalPath } from "@/utils/slug";
 
 import { COLORS } from "@/theme/colors";
@@ -20,7 +20,9 @@ interface SearchItem {
 }
 
 /** Everything searchable on the site (menu courses, nav links, exams). */
-function buildIndex(): SearchItem[] {
+function buildIndex({ navigation, examCategories }: SiteData): SearchItem[] {
+  const { navItems: NAV_ITEMS, megaMenu: MEGA_MENU_CATEGORIES } = navigation;
+  const EXAM_CATEGORIES = examCategories;
   const items: SearchItem[] = [
     ...NAV_ITEMS.filter((n) => !n.isMegaMenu).map((n) => ({ label: n.label, group: "Menu", href: n.href })),
     ...NAV_ITEMS.flatMap((n) => (n.children ?? []).map((ch) => ({ label: ch.label, group: n.label, href: ch.href }))),
@@ -65,7 +67,9 @@ export default function SearchDialog({ open, onClose }: SearchDialogProps) {
   const [active, setActive] = useState(0);
   const [isMac, setIsMac] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const index = useMemo(buildIndex, []);
+  const siteData = useSiteData();
+  const SEARCH_TRENDING = siteData.navigation.searchTrending;
+  const index = useMemo(() => buildIndex(siteData), [siteData]);
 
   useEffect(() => setIsMac(/Mac|iPhone|iPad/.test(navigator.platform)), []);
 

@@ -1,16 +1,17 @@
 import { MetadataRoute } from "next";
-import { ALL_COURSE_SLUGS } from "@/data/coursePages";
+import { getFreeResourceSlugs, getGoalEntries } from "@/services";
+import { FREE_RESOURCE_BASE } from "@/utils/slug";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://viniias.com";
+const BASE_URL = "https://viniias.com";
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [goals, freeResources] = await Promise.all([getGoalEntries(), getFreeResourceSlugs()]);
   const now = new Date();
+  const page = (path: string, priority = 0.8) => ({ url: `${BASE_URL}${path}`, lastModified: now, changeFrequency: "weekly" as const, priority });
+
   return [
-    { url: baseUrl, lastModified: now, changeFrequency: "daily", priority: 1.0 },
-    ...ALL_COURSE_SLUGS.map((slug) => ({
-      url: `${baseUrl}/goal/${slug}`,
-      lastModified: now,
-      changeFrequency: "weekly" as const,
-      priority: 0.8,
-    })),
+    { url: BASE_URL, lastModified: now, changeFrequency: "daily", priority: 1 },
+    ...goals.map((g) => page(`/goal/${g.slug}`)),
+    ...freeResources.map((slug) => page(`${FREE_RESOURCE_BASE}/${slug}`)),
   ];
 }

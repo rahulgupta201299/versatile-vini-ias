@@ -6,18 +6,18 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import { Sparkles } from "lucide-react";
-import { RANKER_STATS } from "@/data/rankers";
-import { RESULT_BANNER_TABS } from "@/data/resultBanners";
-import { ResultBannerTab } from "@/types";
+import { ResultBannerTab, StatItem } from "@/types";
 import { IconRenderer, ResultBannerSlider } from "@/components";
 
 import { COLORS } from "@/theme/colors";
 interface TopRankersSectionProps {
   /** Result banner tabs from the server (UPSC / State PCS / Other Exams). */
-  tabs?: ResultBannerTab[];
+  tabs: ResultBannerTab[];
+  /** Headline numbers above the tabs (server). */
+  stats: StatItem[];
 }
 
-export default function TopRankersSection({ tabs = RESULT_BANNER_TABS }: TopRankersSectionProps) {
+export default function TopRankersSection({ tabs, stats }: TopRankersSectionProps) {
   const visibleTabs = tabs.filter((t) => t.banners.length > 0);
   const [activeTabId, setActiveTabId] = useState(visibleTabs[0]?.id);
   const activeTab = visibleTabs.find((t) => t.id === activeTabId) ?? visibleTabs[0];
@@ -119,7 +119,7 @@ export default function TopRankersSection({ tabs = RESULT_BANNER_TABS }: TopRank
             mb: { xs: 3, md: 4 },
           }}
         >
-          {RANKER_STATS.map((stat, idx) => {
+          {stats.map((stat, idx) => {
             return (
               <Card
                 key={idx}

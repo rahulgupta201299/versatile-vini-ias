@@ -19,18 +19,19 @@ import {
   TelegramLogo,
   WhatsAppLogo,
 } from "@/components/icons/BrandLogos";
-import { CONTACT, SOCIAL_LINKS } from "@/data/contact";
-import {
-  COMPANY_LINKS,
-  UPCOMING_CENTRES,
-  QUICK_LINKS,
-  OUR_PRODUCTS,
-  OUR_BRANDS,
-  FREE_LEARNING_RESOURCES,
-} from "@/data/footerData";
+import { useSiteData } from "@/context/SiteDataContext";
 
 import { COLORS } from "@/theme/colors";
 export default function Footer() {
+  const { contact: CONTACT, social: SOCIAL_LINKS, footer } = useSiteData().config;
+  const {
+    companyLinks: COMPANY_LINKS,
+    upcomingCentres: UPCOMING_CENTRES,
+    quickLinks: QUICK_LINKS,
+    products: OUR_PRODUCTS,
+    brands: OUR_BRANDS,
+    learningResources: FREE_LEARNING_RESOURCES,
+  } = footer;
   return (
     <Box
       component="footer"

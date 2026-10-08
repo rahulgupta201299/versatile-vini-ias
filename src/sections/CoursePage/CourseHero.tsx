@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import HeroSlider from "@/sections/Hero/HeroSlider";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { HeroBanner } from "@/types";
-import { STORE_HREF } from "@/data/navigation";
+import { useSiteData } from "@/context/SiteDataContext";
 import { INK, MUTED, RED } from "./theme";
 
 import { COLORS } from "@/theme/colors";
@@ -16,7 +16,7 @@ const TABS = [
   { id: "get-started", label: "Get Started" },
   { id: "about-exam", label: "About Exam" },
   { id: "batches", label: "Batches" },
-  { id: "store", label: "Store", href: STORE_HREF },
+  { id: "store", label: "Store", href: "store" }, // resolved to the server store link below
   { id: "toppers", label: "Toppers" },
 ];
 
@@ -27,6 +27,7 @@ interface CourseHeroProps {
 }
 
 export default function CourseHero({ name, tagline, banners }: CourseHeroProps) {
+  const storeHref = useSiteData().navigation.storeHref;
   const [active, setActive] = useState("get-started");
 
   // Highlight the tab of the section currently in view
@@ -83,7 +84,7 @@ export default function CourseHero({ name, tagline, banners }: CourseHeroProps) 
                 <Box
                   key={tab.id}
                   component={tab.href ? Link : "a"}
-                  href={tab.href ?? `#${tab.id}`}
+                  href={tab.href === "store" ? storeHref : tab.href ?? `#${tab.id}`}
                   onClick={() => !tab.href && setActive(tab.id)}
                   sx={{
                     flexShrink: 0,

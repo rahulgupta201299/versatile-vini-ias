@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Box from "@mui/material/Box";
@@ -22,7 +22,8 @@ import {
   ShoppingCart,
   GraduationCap,
 } from "lucide-react";
-import { NAV_ITEMS, MEGA_MENU_CATEGORIES, STORE_HREF } from "@/data/navigation";
+import { useSiteData } from "@/context/SiteDataContext";
+import { NavItem } from "@/types";
 import { IconRenderer } from "@/components";
 import SearchDialog from "@/components/SearchDialog";
 import MobileMenu from "./MobileMenu";
@@ -42,12 +43,8 @@ interface HeaderProps {
   onOpenAuth: () => void;
 }
 
-const NAV_LINKS = NAV_ITEMS.filter((item) => !item.isMegaMenu);
 /** Desktop shows the first few links inline; the rest go under "More". */
 const INLINE_LINKS = 5;
-const PRIMARY_LINKS = NAV_LINKS.slice(0, INLINE_LINKS);
-const MORE_LINKS = NAV_LINKS.slice(INLINE_LINKS);
-const ALL_COURSES_LABEL = NAV_ITEMS.find((item) => item.isMegaMenu)?.label ?? "All Exams";
 
 const pillBase = {
   borderRadius: "9999px",
@@ -59,6 +56,15 @@ const pillBase = {
 };
 
 export default function Header({ onOpenAuth }: HeaderProps) {
+  const { navItems: NAV_ITEMS, megaMenu: MEGA_MENU_CATEGORIES, storeHref: STORE_HREF } = useSiteData().navigation;
+  const { PRIMARY_LINKS, MORE_LINKS, ALL_COURSES_LABEL } = useMemo(() => {
+    const links = NAV_ITEMS.filter((item) => !item.isMegaMenu);
+    return {
+      PRIMARY_LINKS: links.slice(0, INLINE_LINKS),
+      MORE_LINKS: links.slice(INLINE_LINKS),
+      ALL_COURSES_LABEL: NAV_ITEMS.find((item) => item.isMegaMenu)?.label ?? "All Exams",
+    };
+  }, [NAV_ITEMS]);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -533,7 +539,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
 }
 
 /** Desktop nav link; items with children show a dropdown on hover / keyboard focus. */
-function NavLinkWithDropdown({ item }: { item: (typeof NAV_ITEMS)[number] }) {
+function NavLinkWithDropdown({ item }: { item: NavItem }) {
   const hasChildren = Boolean(item.children?.length);
   return (
     <Box

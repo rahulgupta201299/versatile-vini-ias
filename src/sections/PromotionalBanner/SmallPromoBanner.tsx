@@ -6,15 +6,14 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { SMALL_PROMO_BANNERS } from "@/data/promoBanners";
 import { HeroBanner } from "@/types";
 
 interface SmallPromoBannerProps {
-  banners?: HeroBanner[];
+  banners: HeroBanner[];
 }
 
 export default function SmallPromoBanner({
-  banners = SMALL_PROMO_BANNERS,
+  banners,
 }: SmallPromoBannerProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);

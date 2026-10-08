@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, GraduationCap } from "lucide-react";
-import { EXAM_CATEGORIES } from "@/data/exams";
+import { useSiteData } from "@/context/SiteDataContext";
 import { goalPath } from "@/utils/slug";
 import { ExamGoalCategory, SubCategory } from "@/types";
 
@@ -93,6 +93,7 @@ const gridSx = {
 } as const;
 
 export default function ExamGoalSection() {
+  const EXAM_CATEGORIES = useSiteData().examCategories;
   const [activeCategoryName, setActiveCategoryName] = useState<string>(
     EXAM_CATEGORIES[0].category
   );

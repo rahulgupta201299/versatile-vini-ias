@@ -6,15 +6,14 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { HERO_BANNERS } from "@/data/heroBanners";
 import { HeroBanner } from "@/types";
 
 import { COLORS } from "@/theme/colors";
 interface HeroSliderProps {
-  banners?: HeroBanner[];
+  banners: HeroBanner[];
 }
 
-export default function HeroSlider({ banners = HERO_BANNERS }: HeroSliderProps) {
+export default function HeroSlider({ banners }: HeroSliderProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 

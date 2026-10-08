@@ -14,4 +14,8 @@ export function slugify(name: string): string {
 export const goalPath = (name: string) => `/goal/${slugify(name)}`;
 
 /** Separate (non-goal) section pages, e.g. pagePath("GS Foundation", "NCERT Foundation Batch") → /gs-foundation/ncert-foundation-batch. */
+/** GS Foundation free-resource pages: /courses/gs-foundation/<resource>. */
+export const FREE_RESOURCE_BASE = "/courses/gs-foundation";
+export const freeResourcePath = (name: string) => `${FREE_RESOURCE_BASE}/${slugify(name)}`;
+
 export const pagePath = (...parts: string[]) => "/" + parts.map(slugify).join("/");

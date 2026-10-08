@@ -6,7 +6,7 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { CheckCircle2, Play, ArrowRight, Clock } from "lucide-react";
 import { CourseVideo } from "@/types";
-import { IMPACT_AVATARS } from "@/data/impact";
+import { ImpactAvatar } from "@/types";
 import { openAuth } from "@/utils/events";
 import { anchorSx, INK, MUTED, RED, RED_DARK, sectionSx, titleSx } from "./theme";
 
@@ -99,7 +99,7 @@ function VideoCard({ video }: { video: CourseVideo }) {
   );
 }
 
-export default function FreeClasses({ videos, channelUrl }: { videos: CourseVideo[]; channelUrl: string }) {
+export default function FreeClasses({ videos, channelUrl, avatars }: { videos: CourseVideo[]; channelUrl: string; avatars: ImpactAvatar[] }) {
   return (
     <Box component="section" id="free-classes" sx={{ ...anchorSx, ...sectionSx }}>
       <Container>
@@ -155,7 +155,7 @@ export default function FreeClasses({ videos, channelUrl }: { videos: CourseVide
           }}
         >
           <Box sx={{ display: "flex", flexShrink: 0 }}>
-            {IMPACT_AVATARS.slice(0, 3).map((a, i) => (
+            {avatars.slice(0, 3).map((a, i) => (
               <Box key={a.src} component="img" src={a.src} alt="" sx={{ width: { xs: 30, md: 36 }, height: { xs: 30, md: 36 }, borderRadius: "50%", border: "2px solid #FFFFFF", ml: i ? -1.25 : 0 }} />
             ))}
           </Box>

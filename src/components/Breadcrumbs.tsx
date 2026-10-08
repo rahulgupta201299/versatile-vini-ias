@@ -5,28 +5,30 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Box from "@mui/material/Box";
 import { ChevronRight } from "lucide-react";
-import { getCourseName } from "@/data/coursePages";
+import { useSiteData } from "@/context/SiteDataContext";
 
 import { COLORS } from "@/theme/colors";
-/** Readable label for one route segment: known course / exam name, else "some-page" → "Some Page". */
-function labelFor(segment: string) {
+
+/** Readable label for one route segment: known name from the server data, else "some-page" → "Some Page". */
+function labelFor(segment: string, labels: Record<string, string>) {
   const slug = decodeURIComponent(segment);
-  return getCourseName(slug) ?? slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  return labels[slug] ?? slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 /**
  * Breadcrumbs built from the current URL — one crumb per nested route level.
  *   /goal/gate                      → Home › Goal › GATE
- *   /gs-foundation/foundation-batch → Home › GS Foundation › Foundation Batch
+ *   /courses/gs-foundation/beginners-kit-for-upsc → Home › Courses › GS Foundation › Beginner's Kit For UPSC
  */
 export default function Breadcrumbs() {
   const pathname = usePathname() ?? "/";
+  const { routeLabels } = useSiteData();
   const segments = pathname.split("/").filter(Boolean);
   if (!segments.length) return null;
 
   const crumbs = [
     { label: "Home", href: "/" },
-    ...segments.map((seg, i) => ({ label: labelFor(seg), href: "/" + segments.slice(0, i + 1).join("/") })),
+    ...segments.map((seg, i) => ({ label: labelFor(seg, routeLabels), href: "/" + segments.slice(0, i + 1).join("/") })),
   ];
 
   return (

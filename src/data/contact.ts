@@ -8,6 +8,7 @@ export const CONTACT = {
     "Hi Vini IAS, I need guidance for my exam preparation."
   )}`,
   email: "support@viniias.com",
+  website: { label: "www.viniias.com", href: "https://viniias.com" },
 };
 
 /** Official social profiles (replace "#" once the profile exists). */

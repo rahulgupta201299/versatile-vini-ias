@@ -1,5 +1,5 @@
 import { NavItem, MegaMenuCategory, MenuSection } from "@/types";
-import { pagePath } from "@/utils/slug";
+import { FREE_RESOURCE_BASE, freeResourcePath, pagePath } from "@/utils/slug";
 
 import { COLORS } from "@/theme/colors";
 /** Dropdown item — href defaults to its section page (/<section>/<item>), filled in below NAV_ITEMS. */
@@ -10,13 +10,14 @@ export const NAV_ITEMS: NavItem[] = [
   {
     id: "gs-foundation",
     label: "GS Foundation",
-    href: pagePath("GS Foundation"),
+    href: FREE_RESOURCE_BASE,
+    // Each item has its own page at /courses/gs-foundation/<resource> (content in data/freeResources.ts)
     children: [
-      c("Beginner's Kit For UPSC"),
-      c("NCERT Foundation Batch"),
-      c("Foundation Batch 2027/29"),
-      c("Test Series (FLT)"),
-      c("Recorded Batch (₹4,999)"),
+      c("Beginner's Kit For UPSC", freeResourcePath("Beginner's Kit For UPSC")),
+      c("NCERT Foundation Batch", freeResourcePath("NCERT Foundation Batch")),
+      c("Foundation Batch 2027/29", freeResourcePath("Foundation Batch 2027/29")),
+      c("Test Series (FLT)", freeResourcePath("Test Series (FLT)")),
+      c("Recorded Batch (₹4,999)", freeResourcePath("Recorded Batch")),
     ],
   },
   {

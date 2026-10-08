@@ -18,8 +18,7 @@ import {
   Download,
 } from "lucide-react";
 import { IconRenderer } from "@/components";
-import { MOBILE_MENU_SECTIONS, NAV_ITEMS, STORE_HREF } from "@/data/navigation";
-import { APP_STORE_LINKS } from "@/data/app";
+import { useSiteData } from "@/context/SiteDataContext";
 
 import { COLORS } from "@/theme/colors";
 const RED = COLORS.red;
@@ -27,15 +26,12 @@ const INK = "#1F2937";
 const MUTED = "#6B7280";
 const LINE = "#EEF0F3";
 
-const ALL_EXAMS_LABEL = NAV_ITEMS.find((n) => n.isMegaMenu)?.label ?? "All Exams";
-const childrenOf = (id?: string) => (id ? NAV_ITEMS.find((n) => n.id === id)?.children ?? [] : []);
-
 /** Store link for the visitor's phone (falls back to the app section). */
-function appInstallHref() {
+function appInstallHref(links: { googlePlay: string; appStore: string }) {
   if (typeof navigator === "undefined") return "/#download";
   const ua = navigator.userAgent;
-  if (/android/i.test(ua) && APP_STORE_LINKS.googlePlay !== "#") return APP_STORE_LINKS.googlePlay;
-  if (/iphone|ipad|ipod/i.test(ua) && APP_STORE_LINKS.appStore !== "#") return APP_STORE_LINKS.appStore;
+  if (/android/i.test(ua) && links.googlePlay !== "#") return links.googlePlay;
+  if (/iphone|ipad|ipod/i.test(ua) && links.appStore !== "#") return links.appStore;
   return "/#download";
 }
 
@@ -54,6 +50,10 @@ interface MobileMenuProps {
 
 export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenExams }: MobileMenuProps) {
   const [openTile, setOpenTile] = useState<string | null>(null);
+  const { navigation, config } = useSiteData();
+  const { navItems: NAV_ITEMS, mobileMenu: MOBILE_MENU_SECTIONS, storeHref: STORE_HREF } = navigation;
+  const ALL_EXAMS_LABEL = NAV_ITEMS.find((n) => n.isMegaMenu)?.label ?? "All Exams";
+  const childrenOf = (id?: string) => (id ? NAV_ITEMS.find((n) => n.id === id)?.children ?? [] : []);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
@@ -153,7 +153,7 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
           </Typography>
           <Box
             component="a"
-            href={appInstallHref()}
+            href={appInstallHref(config.app)}
             onClick={onClose}
             sx={{
               flexShrink: 0,
@@ -316,7 +316,7 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
       {/* Yellow "Download app" bar */}
       <Box
         component="a"
-        href={appInstallHref()}
+        href={appInstallHref(config.app)}
         onClick={onClose}
         sx={{
           flexShrink: 0,

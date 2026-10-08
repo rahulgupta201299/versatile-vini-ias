@@ -1,43 +1,31 @@
 /**
  * Goal (exam) landing pages — route: /goal/<course>, e.g. /goal/upsc-cse-2026-27, /goal/bpsc.
  *
+ * FALLBACK content — used when GET /goals/<slug> is not configured or has no page for the exam.
  * Only exams listed under "All Exams" (mega menu) and "Select Your Goal" get a goal page;
- * the top-menu sections (GS Foundation, Mentorship, CSAT …) have their own separate routes.
- * Content below is generated from the name + category so every page is complete out of the box —
- * add an entry to COURSE_PAGE_OVERRIDES to give a page its own banners, videos, batches, FAQs etc.
+ * a complete page is generated from the exam name + category.
  */
-import { CourseBatch, CoursePageData, CourseVideo } from "@/types";
-import { EXAM_CATEGORIES } from "./exams";
-import { MEGA_MENU_CATEGORIES } from "./navigation";
+import { CourseBatch, CoursePageData, CourseVideo, ExamGoalCategory, MegaMenuCategory } from "@/types";
 import { HERO_BANNERS } from "./heroBanners";
-import { SOCIAL_LINKS } from "./contact";
 import { slugify } from "@/utils/slug";
 
-interface CourseEntry {
+export interface GoalEntry {
   slug: string;
   name: string;
   category: string;
 }
 
-/* ---------- Registry: every linkable course / exam name ---------- */
-const REGISTRY = new Map<string, CourseEntry>();
-const add = (name: string, category: string) => {
-  const slug = slugify(name);
-  if (slug && !REGISTRY.has(slug)) REGISTRY.set(slug, { slug, name, category });
-};
-
-MEGA_MENU_CATEGORIES.forEach((cat) => cat.courses.forEach((course) => add(course.title, cat.title)));
-EXAM_CATEGORIES.forEach((cat) => cat.subcategories.forEach((sub) => add(sub.name, cat.category)));
-
-/** Slugs pre-rendered at build time (All Exams courses). Other goal pages render on first visit. */
-export const PRERENDERED_COURSE_SLUGS = MEGA_MENU_CATEGORIES.flatMap((c) => c.courses.map((co) => slugify(co.title))).filter(
-  (s, i, arr) => arr.indexOf(s) === i,
-);
-
-export const ALL_COURSE_SLUGS = [...REGISTRY.keys()];
-
-/** Display name for a course / exam route segment, e.g. "gate" → "GATE" (undefined if unknown). */
-export const getCourseName = (slug: string) => REGISTRY.get(slug)?.name;
+/** Every exam that has a goal page, from the mega menu + "Select Your Goal" lists (first name wins). */
+export function buildGoalEntries(megaMenu: MegaMenuCategory[], examCategories: ExamGoalCategory[]): GoalEntry[] {
+  const entries = new Map<string, GoalEntry>();
+  const add = (name: string, category: string) => {
+    const slug = slugify(name);
+    if (slug && !entries.has(slug)) entries.set(slug, { slug, name, category });
+  };
+  megaMenu.forEach((cat) => cat.courses.forEach((course) => add(course.title, cat.title)));
+  examCategories.forEach((cat) => cat.subcategories.forEach((sub) => add(sub.name, cat.category)));
+  return [...entries.values()];
+}
 
 /* ---------- Per-page overrides (optional) ---------- */
 export const COURSE_PAGE_OVERRIDES: Record<string, Partial<CoursePageData>> = {
@@ -61,7 +49,7 @@ const UPSC_GROUPS = new Set([
   "Test Series",
 ]);
 
-function resultTabFor(entry: CourseEntry) {
+function resultTabFor(entry: GoalEntry) {
   const text = `${entry.category} ${entry.name}`;
   if (/PSC|PCS/i.test(text) && !/^UPSC/i.test(entry.name)) return "state-pcs";
   if (UPSC_GROUPS.has(entry.category) || /UPSC|IAS/i.test(entry.name)) return "upsc";
@@ -116,12 +104,11 @@ function defaultBatches(name: string): CourseBatch[] {
   ];
 }
 
-export function getCoursePageData(slug: string): CoursePageData | null {
-  const entry = REGISTRY.get(slug);
-  if (!entry) return null;
-  const { name, category } = entry;
+/** Builds a complete goal page for one exam (`all` = every goal entry, for the exam dropdown). */
+export function buildCoursePage(entry: GoalEntry, all: GoalEntry[]): CoursePageData {
+  const { slug, name, category } = entry;
 
-  const sameGroup = [...REGISTRY.values()].filter((e) => e.category === category).map((e) => e.name);
+  const sameGroup = all.filter((e) => e.category === category).map((e) => e.name);
   const examOptions = [name, ...sameGroup.filter((n) => n !== name)].slice(0, 12);
 
   const base: CoursePageData = {
@@ -158,4 +145,3 @@ export function getCoursePageData(slug: string): CoursePageData | null {
   return { ...base, ...COURSE_PAGE_OVERRIDES[slug] };
 }
 
-export const COURSE_CHANNEL_URL = SOCIAL_LINKS.youtube;

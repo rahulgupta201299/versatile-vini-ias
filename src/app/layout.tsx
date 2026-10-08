@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import ThemeRegistry from "@/theme/ThemeRegistry";
 import { AppLayout } from "@/components";
+import { SiteDataProvider } from "@/context/SiteDataContext";
+import { getSiteData } from "@/services/site";
 
 import { COLORS } from "@/theme/colors";
 export const viewport: Viewport = {
@@ -69,11 +71,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Site-wide data (menus, exams, contact, footer) — fetched once, cached, shared with client components
+  const siteData = await getSiteData();
+  const { contact, social } = siteData.config;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
@@ -83,18 +89,12 @@ export default function RootLayout({
     logo: "https://viniias.com/images/logo.png",
     contactPoint: {
       "@type": "ContactPoint",
-      telephone: "+91-8544078245",
+      telephone: contact.tel.replace(/^tel:/, ""),
       contactType: "customer service",
       areaServed: "IN",
       availableLanguage: ["English", "Hindi"],
     },
-    sameAs: [
-      "https://facebook.com/viniias",
-      "https://twitter.com/viniias",
-      "https://instagram.com/viniias",
-      "https://youtube.com/viniias",
-      "https://t.me/viniias",
-    ],
+    sameAs: Object.values(social).filter((url) => url.startsWith("http")),
     description:
       "Premier Indian EdTech institution providing UPSC Civil Services, BPSC, and State PCS online and offline classroom coaching.",
   };
@@ -109,7 +109,9 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeRegistry>
-          <AppLayout>{children}</AppLayout>
+          <SiteDataProvider value={siteData}>
+            <AppLayout>{children}</AppLayout>
+          </SiteDataProvider>
         </ThemeRegistry>
       </body>
     </html>

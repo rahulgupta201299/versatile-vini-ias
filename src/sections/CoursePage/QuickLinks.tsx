@@ -5,7 +5,7 @@ import Link from "next/link";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { ChevronRight, Radio, PlayCircle, ClipboardCheck, FileText, ListChecks, ListVideo, Newspaper, MessageCircleQuestion, Sparkles } from "lucide-react";
+import { ChevronRight, Radio, PlayCircle, ClipboardCheck, FileText, ListChecks, Bell, Newspaper, MessageCircleQuestion, Sparkles } from "lucide-react";
 import { anchorSx, INK, RED, RED_BORDER, RED_TINT } from "./theme";
 
 import { COLORS } from "@/theme/colors";
@@ -15,7 +15,7 @@ const LINKS = [
   { label: "Test Series", href: "#scholarship-test", icon: ClipboardCheck, color: "#0891B2", bg: "#ECFEFF" },
   { label: "PYQs Paper", href: "/#resources", icon: FileText, color: "#EA580C", bg: "#FFF7ED" },
   { label: "Syllabus", href: "#about-exam", icon: ListChecks, color: COLORS.success, bg: "#F0FDF4" },
-  { label: "Playlist", href: "#free-classes", icon: ListVideo, color: "#DB2777", bg: "#FDF2F8" },
+  { label: "Notification", href: "#about-exam", icon: Bell, color: "#DB2777", bg: "#FDF2F8" },
   { label: "Current Affairs", href: "/#resources", icon: Newspaper, color: "#2563EB", bg: "#EFF6FF" },
   { label: "Doubts", href: "#counselling", icon: MessageCircleQuestion, color: "#CA8A04", bg: "#FEFCE8" },
 ];

@@ -9,7 +9,7 @@ import MenuItem from "@mui/material/MenuItem";
 import InputAdornment from "@mui/material/InputAdornment";
 import { CheckCircle2, PhoneCall, User } from "lucide-react";
 import CounsellorIllustration from "@/components/illustrations/CounsellorIllustration";
-import { CONTACT } from "@/data/contact";
+import { useSiteData } from "@/context/SiteDataContext";
 import { useFormValidation, validateName, validateMobile, validateRequiredSelect, sanitizeName, sanitizeMobile } from "@/utils/validation";
 import { anchorSx, INK, MUTED, RED, RED_DARK, sectionSx } from "./theme";
 
@@ -17,6 +17,7 @@ import { COLORS } from "@/theme/colors";
 const FIELD_SX = { backgroundColor: "#FFFFFF", borderRadius: "10px", height: 48, fontSize: "0.95rem" };
 
 export default function CounsellingForm({ name, examOptions }: { name: string; examOptions: string[] }) {
+  const CONTACT = useSiteData().config.contact;
   const formRef = useRef<HTMLFormElement>(null);
   const [submitted, setSubmitted] = useState(false);
   const form = useFormValidation(

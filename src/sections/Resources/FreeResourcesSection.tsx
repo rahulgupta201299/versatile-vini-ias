@@ -4,11 +4,11 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { FREE_RESOURCES } from "@/data/resources";
+import { ResourceItem } from "@/types";
 import { IconRenderer } from "@/components";
 
 import { COLORS } from "@/theme/colors";
-export default function FreeResourcesSection() {
+export default function FreeResourcesSection({ resources }: { resources: ResourceItem[] }) {
   return (
     <Box
       id="resources"
@@ -63,7 +63,7 @@ export default function FreeResourcesSection() {
             gap: { xs: 1, sm: 1.25, md: 1.25, lg: 1.5 },
           }}
         >
-          {FREE_RESOURCES.map((item) => (
+          {resources.map((item) => (
             <Box
               key={item.id}
               component="a"
