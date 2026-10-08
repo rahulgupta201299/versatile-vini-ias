@@ -9,7 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, GraduationCap } from "lucide-react";
 import { EXAM_CATEGORIES } from "@/data/exams";
-import { coursePath } from "@/utils/slug";
+import { goalPath } from "@/utils/slug";
 import { ExamGoalCategory, SubCategory } from "@/types";
 
 import { COLORS } from "@/theme/colors";
@@ -26,7 +26,7 @@ function ExamCard({ sub }: { sub: SubCategory }) {
   return (
     <Box
       component="a"
-      href={sub.href || coursePath(sub.name)}
+      href={sub.href || goalPath(sub.name)}
       sx={{
         p: { xs: 1.25, sm: 1.75 },
         borderRadius: "10px",

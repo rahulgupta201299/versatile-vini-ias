@@ -24,7 +24,7 @@ export default function QuickLinks() {
   return (
     <Box component="section" id="get-started" sx={{ ...anchorSx, pt: { xs: 1, md: 1.5 }, pb: { xs: 3, md: 4 } }}>
       <Container>
-        <Box sx={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: { xs: 1, sm: 1.5, md: 2 } }}>
+        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "repeat(2, minmax(0, 1fr))", md: "repeat(4, minmax(0, 1fr))" }, gap: { xs: 1.25, sm: 1.5, md: 2 } }}>
           {LINKS.map(({ label, href, icon: Icon, color, bg }) => (
             <Box
               key={label}
@@ -32,28 +32,29 @@ export default function QuickLinks() {
               href={href}
               sx={{
                 display: "flex",
-                flexDirection: { xs: "column", md: "row" },
-                alignItems: "center",
-                gap: { xs: 0.75, md: 1.5 },
-                p: { xs: 1.25, md: 2 },
-                borderRadius: "14px",
+                                alignItems: "center",
+                gap: { xs: 1, md: 1.5 },
+                minHeight: { xs: 56, md: "auto" },
+                px: { xs: 1.25, md: 2 },
+                py: { xs: 1.25, md: 2 },
+                borderRadius: { xs: "10px", md: "14px" },
                 border: "1px solid #EEF0F3",
                 backgroundColor: "#FFFFFF",
                 textDecoration: "none",
                 color: INK,
-                textAlign: { xs: "center", md: "left" },
+                textAlign: "left",
                 transition: "all .2s ease",
                 "&:hover": { borderColor: RED_BORDER, boxShadow: "0 8px 20px rgba(15,23,42,.07)", transform: "translateY(-2px)", "& .chev": { color: RED } },
               }}
             >
-              <Box sx={{ width: { xs: 40, md: 46 }, height: { xs: 40, md: 46 }, borderRadius: "12px", backgroundColor: bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <Icon size={22} color={color} />
+              <Box sx={{ width: { xs: 32, md: 46 }, height: { xs: 32, md: 46 }, borderRadius: { xs: "8px", md: "12px" }, backgroundColor: bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <Box component={Icon} color={color} sx={{ width: { xs: 18, md: 22 }, height: { xs: 18, md: 22 } }} />
               </Box>
-              <Typography component="span" sx={{ flex: 1, minWidth: 0, fontWeight: 600, fontSize: { xs: "0.74rem", sm: "0.85rem", md: "0.98rem" }, lineHeight: 1.25 }}>
+              <Typography component="span" sx={{ flex: 1, minWidth: 0, fontWeight: 600, fontSize: { xs: "0.84rem", sm: "0.92rem", md: "0.98rem" }, lineHeight: 1.25 }}>
                 {label}
               </Typography>
-              <Box className="chev" sx={{ display: { xs: "none", md: "flex" }, color: "#CBD5E1", transition: "color .2s" }}>
-                <ChevronRight size={18} />
+              <Box className="chev" sx={{ display: "flex", flexShrink: 0, color: { xs: "#475569", md: "#CBD5E1" }, transition: "color .2s" }}>
+                <Box component={ChevronRight} sx={{ width: { xs: 16, md: 18 }, height: { xs: 16, md: 18 } }} />
               </Box>
             </Box>
           ))}

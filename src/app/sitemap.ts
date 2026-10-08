@@ -7,7 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: baseUrl, lastModified: now, changeFrequency: "daily", priority: 1.0 },
     ...ALL_COURSE_SLUGS.map((slug) => ({
-      url: `${baseUrl}/${slug}`,
+      url: `${baseUrl}/goal/${slug}`,
       lastModified: now,
       changeFrequency: "weekly" as const,
       priority: 0.8,

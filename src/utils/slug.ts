@@ -10,4 +10,8 @@ export function slugify(name: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-export const coursePath = (name: string) => `/${slugify(name)}`;
+/** Goal (exam) landing page — only for "All Exams" and "Select Your Goal": /goal/<slug>. */
+export const goalPath = (name: string) => `/goal/${slugify(name)}`;
+
+/** Separate (non-goal) section pages, e.g. pagePath("GS Foundation", "NCERT Foundation Batch") → /gs-foundation/ncert-foundation-batch. */
+export const pagePath = (...parts: string[]) => "/" + parts.map(slugify).join("/");

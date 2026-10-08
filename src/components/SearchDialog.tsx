@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import { Search, TrendingUp, CornerDownLeft, ArrowRight } from "lucide-react";
 import { MEGA_MENU_CATEGORIES, NAV_ITEMS, SEARCH_TRENDING } from "@/data/navigation";
 import { EXAM_CATEGORIES } from "@/data/exams";
-import { coursePath } from "@/utils/slug";
+import { goalPath } from "@/utils/slug";
 
 import { COLORS } from "@/theme/colors";
 const ACCENT = COLORS.red;
@@ -24,8 +24,8 @@ function buildIndex(): SearchItem[] {
   const items: SearchItem[] = [
     ...NAV_ITEMS.filter((n) => !n.isMegaMenu).map((n) => ({ label: n.label, group: "Menu", href: n.href })),
     ...NAV_ITEMS.flatMap((n) => (n.children ?? []).map((ch) => ({ label: ch.label, group: n.label, href: ch.href }))),
-    ...MEGA_MENU_CATEGORIES.flatMap((c) => c.courses.map((co) => ({ label: co.title, group: c.title, href: coursePath(co.title) }))),
-    ...EXAM_CATEGORIES.flatMap((c) => c.subcategories.map((s) => ({ label: s.name, group: c.category, href: s.href || coursePath(s.name) }))),
+    ...MEGA_MENU_CATEGORIES.flatMap((c) => c.courses.map((co) => ({ label: co.title, group: c.title, href: goalPath(co.title) }))),
+    ...EXAM_CATEGORIES.flatMap((c) => c.subcategories.map((s) => ({ label: s.name, group: c.category, href: s.href || goalPath(s.name) }))),
   ];
   const seen = new Set<string>();
   return items.filter((i) => {

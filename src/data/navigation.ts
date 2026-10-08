@@ -1,16 +1,16 @@
 import { NavItem, MegaMenuCategory, MenuSection } from "@/types";
-import { coursePath } from "@/utils/slug";
+import { pagePath } from "@/utils/slug";
 
 import { COLORS } from "@/theme/colors";
-/** Dropdown item — links to its course page unless an href is given. */
-const c = (label: string, href = coursePath(label)) => ({ label, href });
+/** Dropdown item — href defaults to its section page (/<section>/<item>), filled in below NAV_ITEMS. */
+const c = (label: string, href = "") => ({ label, href });
 
 export const NAV_ITEMS: NavItem[] = [
   { id: "all-exams", label: "All Exams", href: "/#goals", isMegaMenu: true },
   {
     id: "gs-foundation",
     label: "GS Foundation",
-    href: coursePath("GS Foundation"),
+    href: pagePath("GS Foundation"),
     children: [
       c("Beginner's Kit For UPSC"),
       c("NCERT Foundation Batch"),
@@ -22,19 +22,19 @@ export const NAV_ITEMS: NavItem[] = [
   {
     id: "mentorship",
     label: "Mentorship",
-    href: coursePath("Mentorship"),
+    href: pagePath("Mentorship"),
     children: [c("1:1 Mentorship 2028/29"), c("Free Mentorship Program"), c("Test Series (FLT)")],
   },
   {
     id: "csat",
     label: "CSAT",
-    href: coursePath("CSAT"),
+    href: pagePath("CSAT"),
     children: [c("Foundation Batch"), c("CSAT PYQs with Solution"), c("CSAT Recorded Batch (₹1,999)"), c("Test Series (FLT)")],
   },
   {
     id: "optional",
     label: "Optional",
-    href: coursePath("Optional"),
+    href: pagePath("Optional"),
     children: [
       c("Hindi Literature"),
       c("History"),
@@ -49,11 +49,11 @@ export const NAV_ITEMS: NavItem[] = [
   {
     id: "gs-mains",
     label: "GS Mains",
-    href: coursePath("GS Mains"),
+    href: pagePath("GS Mains"),
     children: [
-      c("Mains Mentorship"),
-      c("Mains Foundation"),
-      c("Answer Writing"),
+      c("GS Mains Mentorship"),
+      c("GS Mains Foundation"),
+      c("GS Answer Writing"),
       c("Free Mains Mentorship"),
       c("Test Series (FLT)"),
     ],
@@ -61,7 +61,7 @@ export const NAV_ITEMS: NavItem[] = [
   {
     id: "ethics-essay",
     label: "Ethics & Essay",
-    href: coursePath("Ethics & Essay"),
+    href: pagePath("Ethics & Essay"),
     children: [
       c("Ethics Foundation Batch"),
       c("Essay Foundation Batch"),
@@ -73,7 +73,7 @@ export const NAV_ITEMS: NavItem[] = [
   {
     id: "upsc-plan-b",
     label: "UPSC Plan B",
-    href: coursePath("UPSC Plan B"),
+    href: pagePath("UPSC Plan B"),
     children: [c("RBI Grade B Course"), c("NABARD Grade A"), c("EPFO APFC"), c("EPFO EO/AO"), c("Free Mentorship")],
   },
   {
@@ -82,8 +82,11 @@ export const NAV_ITEMS: NavItem[] = [
     href: "/#enquiry",
     children: ["Noida", "Old Rajinder Nagar", "Delhi", "Patna", "Gaya Ji", "Darbhanga", "Bhagalpur"].map((city) => c(city, "/#enquiry")),
   },
-  { id: "test-series", label: "Test Series", href: coursePath("Test Series") },
-];
+  { id: "test-series", label: "Test Series", href: pagePath("Test Series") },
+].map((item) => ({
+  ...item,
+  children: item.children?.map((child) => ({ ...child, href: child.href || `${item.href}/${pagePath(child.label).slice(1)}` })),
+}));
 
 /** Mobile slide-menu sections (2-column tiles), in display order. */
 export const MOBILE_MENU_SECTIONS: MenuSection[] = [

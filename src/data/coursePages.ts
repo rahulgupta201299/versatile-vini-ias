@@ -1,13 +1,14 @@
 /**
- * Course / exam landing pages (route: /<slug>, e.g. /upsc-cse-2026-27, /bpsc, /gs-foundation).
+ * Goal (exam) landing pages — route: /goal/<course>, e.g. /goal/upsc-cse-2026-27, /goal/bpsc.
  *
- * Every course or exam name used in the menus, the mega menu and "Choose your exam" gets a page.
+ * Only exams listed under "All Exams" (mega menu) and "Select Your Goal" get a goal page;
+ * the top-menu sections (GS Foundation, Mentorship, CSAT …) have their own separate routes.
  * Content below is generated from the name + category so every page is complete out of the box —
  * add an entry to COURSE_PAGE_OVERRIDES to give a page its own banners, videos, batches, FAQs etc.
  */
 import { CourseBatch, CoursePageData, CourseVideo } from "@/types";
 import { EXAM_CATEGORIES } from "./exams";
-import { MEGA_MENU_CATEGORIES, NAV_ITEMS } from "./navigation";
+import { MEGA_MENU_CATEGORIES } from "./navigation";
 import { HERO_BANNERS } from "./heroBanners";
 import { SOCIAL_LINKS } from "./contact";
 import { slugify } from "@/utils/slug";
@@ -25,22 +26,13 @@ const add = (name: string, category: string) => {
   if (slug && !REGISTRY.has(slug)) REGISTRY.set(slug, { slug, name, category });
 };
 
-NAV_ITEMS.forEach((item) => {
-  if (item.isMegaMenu || item.id === "offline-centre") return;
-  add(item.label, "UPSC");
-  item.children?.forEach((child) => add(child.label, item.label));
-});
 MEGA_MENU_CATEGORIES.forEach((cat) => cat.courses.forEach((course) => add(course.title, cat.title)));
 EXAM_CATEGORIES.forEach((cat) => cat.subcategories.forEach((sub) => add(sub.name, cat.category)));
 
-/** Slugs pre-rendered at build time (menu courses). Other exam pages render on first visit. */
-export const PRERENDERED_COURSE_SLUGS = [
-  ...NAV_ITEMS.filter((n) => !n.isMegaMenu && n.id !== "offline-centre").flatMap((n) => [
-    slugify(n.label),
-    ...(n.children ?? []).map((c) => slugify(c.label)),
-  ]),
-  ...MEGA_MENU_CATEGORIES.flatMap((c) => c.courses.map((co) => slugify(co.title))),
-].filter((s, i, arr) => arr.indexOf(s) === i);
+/** Slugs pre-rendered at build time (All Exams courses). Other goal pages render on first visit. */
+export const PRERENDERED_COURSE_SLUGS = MEGA_MENU_CATEGORIES.flatMap((c) => c.courses.map((co) => slugify(co.title))).filter(
+  (s, i, arr) => arr.indexOf(s) === i,
+);
 
 export const ALL_COURSE_SLUGS = [...REGISTRY.keys()];
 

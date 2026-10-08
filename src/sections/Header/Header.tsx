@@ -26,7 +26,7 @@ import { NAV_ITEMS, MEGA_MENU_CATEGORIES, STORE_HREF } from "@/data/navigation";
 import { IconRenderer } from "@/components";
 import SearchDialog from "@/components/SearchDialog";
 import MobileMenu from "./MobileMenu";
-import { coursePath } from "@/utils/slug";
+import { goalPath } from "@/utils/slug";
 
 import { COLORS } from "@/theme/colors";
 /* Layout references: pw.live (menu, All Courses panel) and the header screenshots provided. */
@@ -367,7 +367,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                       <Box
                         key={course.id}
                         component={Link}
-                        href={coursePath(course.title)}
+                        href={goalPath(course.title)}
                         onClick={() => setMegaMenuOpen(false)}
                         sx={{
                           display: "flex",
@@ -497,7 +497,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                           <Box
                             key={course.id}
                             component={Link}
-                            href={coursePath(course.title)}
+                            href={goalPath(course.title)}
                             onClick={closeDrawer}
                             sx={{
                               display: "flex",

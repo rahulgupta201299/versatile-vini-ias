@@ -16,8 +16,8 @@ function labelFor(segment: string) {
 
 /**
  * Breadcrumbs built from the current URL — one crumb per nested route level.
- *   /gate                 → Home › GATE
- *   /upsc/gs-foundation   → Home › UPSC › GS Foundation
+ *   /goal/gate                      → Home › Goal › GATE
+ *   /gs-foundation/foundation-batch → Home › GS Foundation › Foundation Batch
  */
 export default function Breadcrumbs() {
   const pathname = usePathname() ?? "/";
