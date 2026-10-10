@@ -47,17 +47,11 @@ export const NAV_ITEMS: NavItem[] = [
   {
     id: "optional",
     label: "Optional",
-    href: pagePath("Optional"),
-    children: [
-      c("Hindi Literature"),
-      c("History"),
-      c("Geography"),
-      c("PSIR"),
-      c("Sociology"),
-      c("Anthropology"),
-      c("Public Administration"),
-      c("Philosophy"),
-    ],
+    href: `/courses/${COURSE_SECTIONS.optional}`,
+    // One page template for every subject: /courses/optional/<subject> (content in data/optionalPages.ts)
+    children: ["Hindi Literature", "History", "Geography", "PSIR", "Sociology", "Anthropology", "Public Administration", "Philosophy"].map((subject) =>
+      c(subject, coursePagePath(COURSE_SECTIONS.optional, subject))
+    ),
   },
   {
     id: "gs-mains",
