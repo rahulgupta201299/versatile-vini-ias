@@ -35,8 +35,14 @@ export const NAV_ITEMS: NavItem[] = [
   {
     id: "csat",
     label: "CSAT",
-    href: pagePath("CSAT"),
-    children: [c("Foundation Batch"), c("CSAT PYQs with Solution"), c("CSAT Recorded Batch (₹1,999)"), c("Test Series (FLT)")],
+    href: `/courses/${COURSE_SECTIONS.csat}`,
+    // Pages at /courses/csat/<page> (content in data/csatPages.ts); test series is external
+    children: [
+      c("Foundation Batch", coursePagePath(COURSE_SECTIONS.csat, "Foundation Batch")),
+      c("CSAT PYQs with Solution", coursePagePath(COURSE_SECTIONS.csat, "CSAT PYQs with Solution")),
+      c("CSAT Recorded Batch (₹1,999)", "https://store.viniias.com/csat-recorded-batch"),
+      c("Test Series (FLT)", TEST_SERIES_URL),
+    ],
   },
   {
     id: "optional",

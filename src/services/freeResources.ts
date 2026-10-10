@@ -4,6 +4,7 @@ import { FreeResourcePage } from "@/types";
 import { FREE_RESOURCES } from "@/data/freeResources";
 import { MENTORSHIP_PAGES } from "@/data/mentorshipPages";
 import { GS_MAINS_PAGES } from "@/data/gsMainsPages";
+import { CSAT_PAGES } from "@/data/csatPages";
 import { COURSE_SECTIONS } from "@/utils/slug";
 import { getSiteData } from "./site";
 
@@ -12,6 +13,7 @@ const LOCAL_PAGES: Record<string, FreeResourcePage[]> = {
   [COURSE_SECTIONS.gsFoundation]: FREE_RESOURCES,
   [COURSE_SECTIONS.mentorship]: MENTORSHIP_PAGES,
   [COURSE_SECTIONS.gsMains]: GS_MAINS_PAGES,
+  [COURSE_SECTIONS.csat]: CSAT_PAGES,
 };
 
 /** Page slugs of a section — taken from the menu links that point at /courses/<section>/… */

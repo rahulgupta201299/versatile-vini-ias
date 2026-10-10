@@ -7,3 +7,4 @@ export { default as SyllabusStrip } from "./SyllabusStrip";
 export { default as ProblemSolution } from "./ProblemSolution";
 export { default as PlanPicker } from "./PlanPicker";
 export { default as VeteranDiscount } from "./VeteranDiscount";
+export { default as EnrollPlanBand } from "./EnrollPlanBand";

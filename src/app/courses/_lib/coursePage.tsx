@@ -3,7 +3,7 @@ import { FreeResourceHero, EnrollBand, CourseOverview, CourseFit, ContactInfo, C
 import { TopRankersSection, EnquirySection } from "@/sections";
 import { BatchHero, BatchStats, BatchStages, BatchPlans, BatchFaq } from "@/sections/BatchCourse";
 import { LandingHero, LandingFeatures, LandingHighlights, LandingInfographic, LandingStudyMaterial, LandingEnquiry } from "@/sections/CourseLanding";
-import { MentorshipHero, CallbackBanner, ProgramTimeline, HowItWorks, FeatureCards, SyllabusStrip, ProblemSolution, PlanPicker, VeteranDiscount } from "@/sections/MentorshipCourse";
+import { MentorshipHero, CallbackBanner, ProgramTimeline, HowItWorks, FeatureCards, SyllabusStrip, ProblemSolution, PlanPicker, VeteranDiscount, EnrollPlanBand } from "@/sections/MentorshipCourse";
 import { getRankerStats, getResultBanners } from "@/services";
 import { FreeResourcePage } from "@/types";
 
@@ -87,6 +87,7 @@ export async function CoursePageView({ page }: { page: FreeResourcePage }) {
         {m.planPicker && <PlanPicker data={m.planPicker} />}
         {m.discount && <VeteranDiscount data={m.discount} />}
         {!m.planPicker && <EnrollBand priceLabel={page.priceLabel} isFree={page.isFree} priceNote={m.priceNote} />}
+        {m.planPicker?.plans.some((p) => p.price) && <EnrollPlanBand data={m.planPicker} />}
         <EnquirySection />
         <CourseFaqs faqs={page.faqs} />
         <StickyEnrollBar title={page.title} priceLabel={page.priceLabel} isFree={page.isFree} />

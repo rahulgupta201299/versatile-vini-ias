@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -53,7 +54,7 @@ export default function MentorshipHero({ page, data }: { page: FreeResourcePage;
               <CalendarDays size={18} /> {page.startInfo}
             </Box>
 
-            <Box sx={{ display: "flex", gap: 1.5, mt: { xs: 2.5, md: 3 }, "& > button": { flex: { xs: 1, sm: "0 0 auto" }, justifyContent: "center" } }}>
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.5, mt: { xs: 2.5, md: 3 }, "& > button": { flex: { xs: 1, sm: "0 0 auto" }, justifyContent: "center" } }}>
               <Box
                 component="button"
                 type="button"
@@ -70,6 +71,15 @@ export default function MentorshipHero({ page, data }: { page: FreeResourcePage;
               >
                 {data.primaryCta?.label ?? "Enroll Now"} <Zap size={16} fill="currentColor" />
               </Box>
+              {data.secondaryLink && (
+                <Box
+                  component={Link}
+                  href={data.secondaryLink.href}
+                  sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 1, height: 48, px: 3, flex: { xs: "1 1 100%", sm: "0 0 auto" }, borderRadius: "12px", border: `1.5px solid ${COLORS.red}`, backgroundColor: COLORS.redTint, color: COLORS.red, fontWeight: 700, fontSize: "0.98rem", textDecoration: "none", "&:hover": { backgroundColor: COLORS.redTintHover } }}
+                >
+                  {data.secondaryLink.label}
+                </Box>
+              )}
             </Box>
           </Box>
 

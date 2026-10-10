@@ -395,6 +395,8 @@ export interface MentorshipContent {
   lead?: string;
   /** Hero button next to "Course Details" (default: Enroll Now → login). */
   primaryCta?: { label: string; targetId: string };
+  /** Extra outlined link in the hero, e.g. "Explore Offline Batch". */
+  secondaryLink?: { label: string; href: string };
   /** Hide the price in the hero (e.g. when plans are chosen further down). */
   hideHeroPrice?: boolean;
   /** "UPSC Mains Topic-Wise Syllabus — DOWNLOAD HERE" strip. */
@@ -405,7 +407,11 @@ export interface MentorshipContent {
   /** Feature comparison table (same component as the Foundation batch plans). */
   comparison?: { plansTitle: { before: string; highlight: string; after: string; subtitle: string }; plans: CoursePlan[]; features: { label: string; icon: LandingIcon; plans: string[] }[] };
   /** "Choose course" tabs with a description, Enroll button and fee per plan. */
-  planPicker?: { title: string; defaultId?: string; plans: { id: string; name: string; course: string; description: string; fee: string }[] };
+  /**
+   * "Choose course" tabs with a description, Enroll button and fee per plan.
+   * When plans carry `price`, an "Enroll Now" band with the same plan tabs is shown further down.
+   */
+  planPicker?: { title: string; defaultId?: string; plans: { id: string; name: string; course: string; description: string; fee: string; price?: string; priceNote?: string }[] };
   discount?: { title: string; offers: { label: string; value: string }[]; note: string };
   /** e.g. "Batch 1" — small tag beside the hero media. */
   batchLabel?: string;
