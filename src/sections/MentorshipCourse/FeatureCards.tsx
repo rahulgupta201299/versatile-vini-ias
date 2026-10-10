@@ -14,7 +14,7 @@ const RIBBONS = ["#E11D48", "#4F46E5", "#2563EB", "#38BDF8", "#22C55E", "#0F766E
  *  - title-only items → compact ribbon cards (4 per row on desktop)
  */
 export default function FeatureCards({ data, id }: { data: MentorshipContent["features"]; id?: string }) {
-  const detailed = data.items.some((i) => i.text);
+  const detailed = data.items.some((i) => i.text || i.points?.length);
 
   return (
     <Box component="section" id={id} sx={{ py: { xs: 4, md: 6 } }}>
@@ -24,13 +24,20 @@ export default function FeatureCards({ data, id }: { data: MentorshipContent["fe
         </Typography>
 
         {detailed ? (
-          <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "repeat(2, minmax(0, 1fr))" }, columnGap: { xs: 2, md: 6 }, rowGap: { xs: 4, md: 5 }, maxWidth: 820, mx: "auto" }}>
+          <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center", columnGap: { xs: 2, md: 6 }, rowGap: { xs: 4, md: 5 }, maxWidth: 820, mx: "auto", "& > *": { flex: { xs: "0 0 100%", sm: "0 0 calc((100% - 16px) / 2)", md: "0 0 calc((100% - 48px) / 2)" } } }}>
             {data.items.map((item) => (
               <Box key={item.title} sx={{ position: "relative", pt: 4, pb: 3.5, px: { xs: 2.5, md: 4 }, borderRadius: "14px", border: `2px solid ${COLORS.navy}`, backgroundColor: "#FFFFFF", textAlign: "center", boxShadow: "0 10px 24px rgba(15,23,42,.08)" }}>
                 <Box sx={{ position: "absolute", top: 0, left: "50%", transform: "translate(-50%, -50%)", px: 2.25, py: 0.85, borderRadius: "9999px", backgroundColor: COLORS.navy, color: "#FFFFFF", fontWeight: 800, fontSize: { xs: "0.85rem", md: "0.95rem" }, whiteSpace: "nowrap" }}>
                   {item.title}
                 </Box>
-                <Typography sx={{ fontWeight: 600, color: COLORS.ink, fontSize: { xs: "0.9rem", md: "0.95rem" }, lineHeight: 1.6 }}>{item.text}</Typography>
+                {item.text && <Typography sx={{ fontWeight: 600, color: COLORS.ink, fontSize: { xs: "0.9rem", md: "0.95rem" }, lineHeight: 1.6 }}>{item.text}</Typography>}
+                {item.points && (
+                  <Box component="ul" sx={{ m: 0, pl: 2.5, textAlign: "left", display: "grid", gap: 0.5 }}>
+                    {item.points.map((pt) => (
+                      <Typography component="li" key={pt} sx={{ fontWeight: 600, color: COLORS.ink, fontSize: { xs: "0.88rem", md: "0.93rem" }, lineHeight: 1.45 }}>{pt}</Typography>
+                    ))}
+                  </Box>
+                )}
               </Box>
             ))}
           </Box>

@@ -354,6 +354,8 @@ export interface CoursePlan {
   /** Header / button colour for this plan's column. */
   color: string;
   tint: string;
+  /** Shown under the price, default "(TAXES INCLUDED)". */
+  priceNote?: string;
 }
 
 export interface CourseStage {
@@ -389,6 +391,22 @@ export interface BatchCourseContent {
 
 /* ---------- Mentorship layout (1:1 Mentorship, Free Mentorship Program) ---------- */
 export interface MentorshipContent {
+  /** Bold line above the description, e.g. "Preparing for GS 3 for Mains 2027?" */
+  lead?: string;
+  /** Hero button next to "Course Details" (default: Enroll Now → login). */
+  primaryCta?: { label: string; targetId: string };
+  /** Hide the price in the hero (e.g. when plans are chosen further down). */
+  hideHeroPrice?: boolean;
+  /** "UPSC Mains Topic-Wise Syllabus — DOWNLOAD HERE" strip. */
+  syllabus?: { title: string; url: string };
+  /** Problem → solution story (Knowing → Writing → Scoring, then the execution system). */
+  problem?: { steps: { title: string; points: string[] }[]; quote: string };
+  solution?: { heading: string; title: string; steps: { label: string; from: string; to: string }[]; note: string };
+  /** Feature comparison table (same component as the Foundation batch plans). */
+  comparison?: { plansTitle: { before: string; highlight: string; after: string; subtitle: string }; plans: CoursePlan[]; features: { label: string; icon: LandingIcon; plans: string[] }[] };
+  /** "Choose course" tabs with a description, Enroll button and fee per plan. */
+  planPicker?: { title: string; defaultId?: string; plans: { id: string; name: string; course: string; description: string; fee: string }[] };
+  discount?: { title: string; offers: { label: string; value: string }[]; note: string };
   /** e.g. "Batch 1" — small tag beside the hero media. */
   batchLabel?: string;
   /** "(Inclusive of all taxes)" under a paid price. */
@@ -398,7 +416,7 @@ export interface MentorshipContent {
   offer?: { text: string; ctaLabel: string };
   timeline?: { title: string; subtitle: string; phases: { phase: string; period: string; title: string }[] };
   howItWorks?: { title: string; steps: string[] };
-  features: { title: string; items: { title: string; text?: string }[] };
+  features: { title: string; items: { title: string; text?: string; points?: string[] }[] };
   /** Show the homepage "Top Rankers" section (in place of educators). */
   showToppers?: boolean;
 }

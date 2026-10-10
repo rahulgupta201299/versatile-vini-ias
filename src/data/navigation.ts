@@ -56,13 +56,14 @@ export const NAV_ITEMS: NavItem[] = [
   {
     id: "gs-mains",
     label: "GS Mains",
-    href: pagePath("GS Mains"),
+    href: `/courses/${COURSE_SECTIONS.gsMains}`,
+    // Pages at /courses/gs-mains/<page> (content in data/gsMainsPages.ts); test series is external
     children: [
-      c("GS Mains Mentorship"),
-      c("GS Mains Foundation"),
-      c("GS Answer Writing"),
-      c("Free Mains Mentorship"),
-      c("Test Series (FLT)"),
+      c("GS Mains Mentorship", coursePagePath(COURSE_SECTIONS.gsMains, "GS Mains Mentorship")),
+      c("GS Mains Foundation", coursePagePath(COURSE_SECTIONS.gsMains, "GS Mains Foundation")),
+      c("GS Answer Writing", coursePagePath(COURSE_SECTIONS.gsMains, "GS Answer Writing")),
+      c("Free Mains Mentorship", coursePagePath(COURSE_SECTIONS.gsMains, "Free Mains Mentorship")),
+      c("Test Series (FLT)", TEST_SERIES_URL),
     ],
   },
   {

@@ -35,12 +35,19 @@ export default function MentorshipHero({ page, data }: { page: FreeResourcePage;
 
         <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "minmax(0, 1.1fr) minmax(0, 1fr)" }, gap: { xs: 3, md: 6 }, alignItems: "center" }}>
           <Box>
+            {data.lead && <Typography sx={{ mb: 1, fontWeight: 800, color: COLORS.navy, fontSize: { xs: "1.05rem", md: "1.2rem" } }}>{data.lead}</Typography>}
             <Typography sx={{ color: COLORS.body, fontSize: { xs: "0.95rem", md: "1.02rem" }, lineHeight: 1.75 }}>{page.summary}</Typography>
 
-            <Box sx={{ mt: { xs: 2, md: 2.5 } }}>
-              <Typography sx={{ fontWeight: 800, fontSize: { xs: "1.5rem", md: "1.85rem" }, color: page.isFree ? COLORS.success : COLORS.ink, lineHeight: 1.1 }}>{page.priceLabel}</Typography>
-              {data.priceNote && <Typography sx={{ mt: 0.25, fontSize: "0.78rem", color: COLORS.muted }}>{data.priceNote}</Typography>}
-            </Box>
+            {!data.hideHeroPrice && (
+              <Box sx={{ mt: { xs: 2, md: 2.5 } }}>
+                <Typography component="span" sx={{ fontWeight: 800, fontSize: { xs: "1.5rem", md: "1.85rem" }, color: page.isFree ? COLORS.success : COLORS.ink, lineHeight: 1.1 }}>{page.priceLabel}</Typography>
+                {data.priceNote?.startsWith("+") ? (
+                  <Typography component="span" sx={{ ml: 0.75, fontSize: "0.85rem", color: COLORS.muted }}>{data.priceNote}</Typography>
+                ) : (
+                  data.priceNote && <Typography sx={{ mt: 0.25, fontSize: "0.78rem", color: COLORS.muted }}>{data.priceNote}</Typography>
+                )}
+              </Box>
+            )}
 
             <Box sx={{ mt: 1.5, display: "inline-flex", alignItems: "center", gap: 1, color: COLORS.redDark, fontWeight: 700, fontSize: { xs: "0.9rem", md: "0.98rem" } }}>
               <CalendarDays size={18} /> {page.startInfo}
@@ -58,10 +65,10 @@ export default function MentorshipHero({ page, data }: { page: FreeResourcePage;
               <Box
                 component="button"
                 type="button"
-                onClick={openAuth}
+                onClick={data.primaryCta ? () => scrollTo(data.primaryCta!.targetId) : openAuth}
                 sx={{ display: "inline-flex", alignItems: "center", gap: 1, height: 48, px: { xs: 1.5, sm: 3.5 }, borderRadius: "12px", border: "none", backgroundColor: COLORS.red, color: "#FFFFFF", fontFamily: "inherit", fontWeight: 700, fontSize: "0.98rem", cursor: "pointer", boxShadow: "0 8px 20px rgba(254,0,52,.22)", "&:hover": { backgroundColor: COLORS.redDark } }}
               >
-                Enroll Now <Zap size={16} fill="currentColor" />
+                {data.primaryCta?.label ?? "Enroll Now"} <Zap size={16} fill="currentColor" />
               </Box>
             </Box>
           </Box>

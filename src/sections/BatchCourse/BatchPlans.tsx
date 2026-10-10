@@ -105,7 +105,7 @@ export default function BatchPlans({ data }: { data: Pick<BatchCourseContent, "p
             {plans.map((p) => (
               <Box key={p.id} role="cell" data-plan-price={p.id} sx={{ textAlign: "center", py: 2, px: 0.5, backgroundColor: p.tint }}>
                 <Typography sx={{ fontWeight: 900, color: COLORS.ink, fontSize: { xs: "1.05rem", md: "1.6rem" }, lineHeight: 1.1 }}>{formatINR(p.price)}</Typography>
-                <Typography sx={{ fontSize: { xs: "0.55rem", md: "0.65rem" }, color: COLORS.muted, fontWeight: 600 }}>(TAXES INCLUDED)</Typography>
+                <Typography sx={{ fontSize: { xs: "0.55rem", md: "0.65rem" }, color: COLORS.muted, fontWeight: 600 }}>{p.priceNote ?? "(TAXES INCLUDED)"}</Typography>
                 <BuyButton color={p.color} />
               </Box>
             ))}

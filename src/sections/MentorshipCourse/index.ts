@@ -3,3 +3,7 @@ export { default as CallbackBanner } from "./CallbackBanner";
 export { default as ProgramTimeline } from "./ProgramTimeline";
 export { default as HowItWorks } from "./HowItWorks";
 export { default as FeatureCards } from "./FeatureCards";
+export { default as SyllabusStrip } from "./SyllabusStrip";
+export { default as ProblemSolution } from "./ProblemSolution";
+export { default as PlanPicker } from "./PlanPicker";
+export { default as VeteranDiscount } from "./VeteranDiscount";

@@ -22,6 +22,14 @@ export const RESULT_BANNER_TABS: ResultBannerTab[] = [
         href: "/#rankers",
       },
       {
+        id: "upsc-mentor-600-rankers",
+        title: "Mentor to 600+ Successful Rankers — Selections in UPSC 2025",
+        webImageUrl: "/images/results/upsc-mentor-600-rankers-web.webp",
+        mobileImageUrl: "/images/results/upsc-mentor-600-rankers-mobile.webp",
+        alt: "Mentor to 600+ successful rankers — UPSC 2025 selections: AIR 4 Raghav Jhunjhunwala, AIR 23 Jaswanth Jeenu, AIR 27 Vikas, AIR 34 Nancy Singh, AIR 41 Sudipa Dutta, AIR 46 Shambhavi Tiwari, AIR 48 Anket Ranjan, AIR 58 Mohit Gupta, AIR 72 Kanishak Aggarwal, AIR 73 Aakash Om Trivedi, AIR 75 Rahul Shekhar, AIR 76 Sukhwardeep Singh Masoun, AIR 86 Puru Dubey, AIR 98 Aditya Mathur, AIR 101 Akash Kumar",
+        href: "/#rankers",
+      },
+      {
         // Mobile-only banner
         id: "upsc-hindi-medium-cse-2024",
         title: "Hindi Medium 33+ Selections — CSE 2024",

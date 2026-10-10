@@ -3,7 +3,7 @@ import { FreeResourceHero, EnrollBand, CourseOverview, CourseFit, ContactInfo, C
 import { TopRankersSection, EnquirySection } from "@/sections";
 import { BatchHero, BatchStats, BatchStages, BatchPlans, BatchFaq } from "@/sections/BatchCourse";
 import { LandingHero, LandingFeatures, LandingHighlights, LandingInfographic, LandingStudyMaterial, LandingEnquiry } from "@/sections/CourseLanding";
-import { MentorshipHero, CallbackBanner, ProgramTimeline, HowItWorks, FeatureCards } from "@/sections/MentorshipCourse";
+import { MentorshipHero, CallbackBanner, ProgramTimeline, HowItWorks, FeatureCards, SyllabusStrip, ProblemSolution, PlanPicker, VeteranDiscount } from "@/sections/MentorshipCourse";
 import { getRankerStats, getResultBanners } from "@/services";
 import { FreeResourcePage } from "@/types";
 
@@ -63,20 +63,30 @@ export async function CoursePageView({ page }: { page: FreeResourcePage }) {
     );
   }
 
-  // Mentorship layout (1:1 Mentorship, Free Mentorship Program) — no educators; toppers when enabled
+  // Mentorship layout (Mentorship + GS Mains pages) — no educators; toppers when enabled
   if (page.mentorship) {
     const m = page.mentorship;
     const [resultTabs, rankerStats] = m.showToppers ? await Promise.all([getResultBanners(), getRankerStats()]) : [null, null];
+    const toppers = resultTabs && rankerStats ? <TopRankersSection tabs={resultTabs} stats={rankerStats} /> : null;
+    const story = Boolean(m.problem || m.solution); // Mains Mentorship style
+    const syllabus = m.syllabus ? <SyllabusStrip title={m.syllabus.title} url={m.syllabus.url} /> : null;
     return (
       <>
         <FaqJsonLd page={page} />
         <MentorshipHero page={page} data={m} />
+        {!story && syllabus}
         <CallbackBanner />
+        {story && toppers}
+        {story && <ProblemSolution problem={m.problem} solution={m.solution} />}
+        {story && syllabus}
         {m.timeline && <ProgramTimeline data={m.timeline} />}
         {m.howItWorks && <HowItWorks data={m.howItWorks} />}
-        <FeatureCards data={m.features} id={m.timeline ? undefined : "course-details"} />
-        {resultTabs && rankerStats && <TopRankersSection tabs={resultTabs} stats={rankerStats} />}
-        <EnrollBand priceLabel={page.priceLabel} isFree={page.isFree} priceNote={m.priceNote} />
+        <FeatureCards data={m.features} id={m.timeline || story ? undefined : "course-details"} />
+        {!story && toppers}
+        {m.comparison && <BatchPlans data={m.comparison} />}
+        {m.planPicker && <PlanPicker data={m.planPicker} />}
+        {m.discount && <VeteranDiscount data={m.discount} />}
+        {!m.planPicker && <EnrollBand priceLabel={page.priceLabel} isFree={page.isFree} priceNote={m.priceNote} />}
         <EnquirySection />
         <CourseFaqs faqs={page.faqs} />
         <StickyEnrollBar title={page.title} priceLabel={page.priceLabel} isFree={page.isFree} />
