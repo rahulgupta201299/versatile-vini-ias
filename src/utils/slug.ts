@@ -18,4 +18,11 @@ export const goalPath = (name: string) => `/goal/${slugify(name)}`;
 export const FREE_RESOURCE_BASE = "/courses/gs-foundation";
 export const freeResourcePath = (name: string) => `${FREE_RESOURCE_BASE}/${slugify(name)}`;
 
+/** Course pages are grouped by menu section: /courses/<section>/<page>. */
+export const COURSE_SECTIONS = { gsFoundation: "gs-foundation", mentorship: "mentorship" } as const;
+export const coursePagePath = (section: string, name: string) => `/courses/${section}/${slugify(name)}`;
+
+/** External test-series site (replace with the real URL). */
+export const TEST_SERIES_URL = "https://test.viniias.com/upsc-test-series";
+
 export const pagePath = (...parts: string[]) => "/" + parts.map(slugify).join("/");

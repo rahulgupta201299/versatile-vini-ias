@@ -387,7 +387,25 @@ export interface BatchCourseContent {
   expert: { title: string; highlight: string; text: string; ctaLabel: string };
 }
 
+/* ---------- Mentorship layout (1:1 Mentorship, Free Mentorship Program) ---------- */
+export interface MentorshipContent {
+  /** e.g. "Batch 1" — small tag beside the hero media. */
+  batchLabel?: string;
+  /** "(Inclusive of all taxes)" under a paid price. */
+  priceNote?: string;
+  media: { image: string; alt: string; videoUrl?: string; caption?: string };
+  /** "Fill the form to get Special Offer" bar under the media. */
+  offer?: { text: string; ctaLabel: string };
+  timeline?: { title: string; subtitle: string; phases: { phase: string; period: string; title: string }[] };
+  howItWorks?: { title: string; steps: string[] };
+  features: { title: string; items: { title: string; text?: string }[] };
+  /** Show the homepage "Top Rankers" section (in place of educators). */
+  showToppers?: boolean;
+}
+
 export interface FreeResourcePage {
+  /** When present the page uses the mentorship layout. */
+  mentorship?: MentorshipContent;
   /** When present the page uses the designed landing layout instead of the standard course layout. */
   landing?: CourseLandingContent;
   /** When present the page uses the live-batch layout (hero, toppers, stages, plans, FAQs). */

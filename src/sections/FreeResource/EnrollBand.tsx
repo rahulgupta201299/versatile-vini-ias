@@ -10,7 +10,7 @@ import { COLORS } from "@/theme/colors";
 import { scrollToDetails } from "./FreeResourceHero";
 
 /** "Enroll Now · FREE Course · [Course Details] [Enroll]" call-to-action band. */
-export default function EnrollBand({ priceLabel, isFree }: { priceLabel: string; isFree: boolean }) {
+export default function EnrollBand({ priceLabel, isFree, priceNote }: { priceLabel: string; isFree: boolean; priceNote?: string }) {
   return (
     <Box component="section" sx={{ py: { xs: 4.5, md: 7 }, backgroundColor: COLORS.redTintSoft, textAlign: "center" }}>
       <Container>
@@ -18,8 +18,9 @@ export default function EnrollBand({ priceLabel, isFree }: { priceLabel: string;
           Enroll Now
         </Typography>
         <Typography sx={{ mt: { xs: 1, md: 1.5 }, fontWeight: 800, fontSize: { xs: "1.8rem", md: "2.7rem" }, lineHeight: 1.15, color: isFree ? COLORS.success : COLORS.heading }}>
-          {priceLabel}
+          {isFree ? priceLabel : `Price: ${priceLabel}`}
         </Typography>
+        {priceNote && <Typography sx={{ mt: 0.5, color: COLORS.muted, fontSize: { xs: "0.85rem", md: "0.95rem" } }}>{priceNote}</Typography>}
         <Box sx={{ display: "flex", justifyContent: "center", gap: 1.5, mt: { xs: 3, md: 4 } }}>
           <Box
             component="button"

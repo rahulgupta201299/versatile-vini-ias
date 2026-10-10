@@ -1,5 +1,5 @@
 import { NavItem, MegaMenuCategory, MenuSection } from "@/types";
-import { FREE_RESOURCE_BASE, freeResourcePath, pagePath } from "@/utils/slug";
+import { COURSE_SECTIONS, FREE_RESOURCE_BASE, coursePagePath, freeResourcePath, pagePath, TEST_SERIES_URL } from "@/utils/slug";
 
 import { COLORS } from "@/theme/colors";
 /** Dropdown item — href defaults to its section page (/<section>/<item>), filled in below NAV_ITEMS. */
@@ -17,15 +17,20 @@ export const NAV_ITEMS: NavItem[] = [
       c("NCERT Foundation Batch", freeResourcePath("NCERT Foundation Batch")),
       c("Foundation Batch 2027/29", freeResourcePath("Foundation Batch 2027/29")),
       // External links — open in a new tab (replace with the real URLs)
-      c("Test Series (FLT)", "https://test.viniias.com/upsc-test-series"),
+      c("Test Series (FLT)", TEST_SERIES_URL),
       c("Recorded Batch (₹4,999)", "https://store.viniias.com/recorded-batch"),
     ],
   },
   {
     id: "mentorship",
     label: "Mentorship",
-    href: pagePath("Mentorship"),
-    children: [c("1:1 Mentorship 2028/29"), c("Free Mentorship Program"), c("Test Series (FLT)")],
+    href: `/courses/${COURSE_SECTIONS.mentorship}`,
+    // Pages at /courses/mentorship/<page> (content in data/mentorshipPages.ts); test series is external
+    children: [
+      c("1:1 Mentorship 2028/29", coursePagePath(COURSE_SECTIONS.mentorship, "1:1 Mentorship 2028/29")),
+      c("Free Mentorship Program", coursePagePath(COURSE_SECTIONS.mentorship, "Free Mentorship Program")),
+      c("Test Series (FLT)", TEST_SERIES_URL),
+    ],
   },
   {
     id: "csat",

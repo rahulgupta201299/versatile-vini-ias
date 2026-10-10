@@ -2,13 +2,20 @@ import { cache } from "react";
 import { fetchApi, CACHE_TAGS } from "@/lib/api";
 import { FreeResourcePage } from "@/types";
 import { FREE_RESOURCES } from "@/data/freeResources";
-import { FREE_RESOURCE_BASE } from "@/utils/slug";
+import { MENTORSHIP_PAGES } from "@/data/mentorshipPages";
+import { COURSE_SECTIONS } from "@/utils/slug";
 import { getSiteData } from "./site";
 
-/** Slugs of the GS Foundation pages — taken from the menu links that point at /courses/gs-foundation/… */
-export const getFreeResourceSlugs = cache(async () => {
+/** Local fallback content per course section (/courses/<section>/<page>). */
+const LOCAL_PAGES: Record<string, FreeResourcePage[]> = {
+  [COURSE_SECTIONS.gsFoundation]: FREE_RESOURCES,
+  [COURSE_SECTIONS.mentorship]: MENTORSHIP_PAGES,
+};
+
+/** Page slugs of a section — taken from the menu links that point at /courses/<section>/… */
+export const getCourseSectionSlugs = cache(async (section: string) => {
   const { navigation } = await getSiteData();
-  const prefix = `${FREE_RESOURCE_BASE}/`;
+  const prefix = `/courses/${section}/`;
   const slugs = navigation.navItems
     .flatMap((item) => item.children ?? [])
     .map((child) => child.href)
@@ -17,10 +24,14 @@ export const getFreeResourceSlugs = cache(async () => {
   return [...new Set(slugs)];
 });
 
-/** One GS Foundation page: GET /courses/gs-foundation/<slug> (falls back to local content, else null → 404). */
-export const getFreeResourcePage = cache((slug: string) =>
-  fetchApi<FreeResourcePage | null>(`courses/gs-foundation/${encodeURIComponent(slug)}`, {
-    fallback: FREE_RESOURCES.find((p) => p.slug === slug) ?? null,
+/** One course page: GET /courses/<section>/<slug> (falls back to local content, else null → 404). */
+export const getCourseSectionPage = cache((section: string, slug: string) =>
+  fetchApi<FreeResourcePage | null>(`courses/${section}/${encodeURIComponent(slug)}`, {
+    fallback: LOCAL_PAGES[section]?.find((p) => p.slug === slug) ?? null,
     tags: [CACHE_TAGS.freeResources],
   })
 );
+
+/* GS Foundation shortcuts */
+export const getFreeResourceSlugs = () => getCourseSectionSlugs(COURSE_SECTIONS.gsFoundation);
+export const getFreeResourcePage = (slug: string) => getCourseSectionPage(COURSE_SECTIONS.gsFoundation, slug);

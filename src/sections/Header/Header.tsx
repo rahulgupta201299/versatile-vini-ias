@@ -559,46 +559,72 @@ export default function Header({ onOpenAuth }: HeaderProps) {
 /** Desktop nav link; items with children show a dropdown on hover / keyboard focus. */
 function NavLinkWithDropdown({ item }: { item: NavItem }) {
   const hasChildren = Boolean(item.children?.length);
-  // Hover/focus opens the dropdown; a click on any link closes it until the pointer leaves.
-  const [closed, setClosed] = useState(false);
+  /*
+   * Items with a dropdown don't navigate — a click opens / closes the dropdown (same on touch),
+   * and it also closes on outside click, Escape, or after picking an item.
+   */
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const visible = hasChildren && open;
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  const toggle = () => setOpen((o) => !o);
   const closeDropdown = () => {
-    setClosed(true);
+    setOpen(false);
     (document.activeElement as HTMLElement | null)?.blur();
   };
+
+  const triggerSx = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 0.4,
+    color: visible ? RED : "#374151",
+    fontWeight: 600,
+    fontSize: "0.93rem",
+    fontFamily: "inherit",
+    textDecoration: "none",
+    whiteSpace: "nowrap",
+    py: 2.5,
+    px: 0,
+    border: "none",
+    background: "none",
+    cursor: "pointer",
+    transition: "color .15s ease",
+    "&:hover": { color: RED },
+    "& svg": { transition: "transform .2s", transform: visible ? "rotate(180deg)" : "none" },
+  } as const;
+
   return (
     <Box
-      onMouseLeave={() => setClosed(false)}
+      ref={rootRef}
       sx={{
         position: "relative",
-        ...(closed
-          ? {}
-          : {
-              "&:hover > .nav-dd, &:focus-within > .nav-dd": { opacity: 1, visibility: "visible", transform: "translate(-50%, 0)" },
-              "&:hover > a, &:focus-within > a": { color: RED },
-            }),
+        ...(visible ? { "& > .nav-dd": { opacity: 1, visibility: "visible", transform: "translate(-50%, 0)" } } : {}),
       }}
     >
-      <Box
-        component={Link}
-        href={item.href}
-        onClick={closeDropdown}
-        aria-haspopup={hasChildren ? "true" : undefined}
-        sx={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 0.4,
-          color: "#374151",
-          fontWeight: 600,
-          fontSize: "0.93rem",
-          textDecoration: "none",
-          whiteSpace: "nowrap",
-          py: 2.5,
-          transition: "color .15s ease",
-        }}
-      >
-        {item.label}
-        {hasChildren && <ChevronDown size={15} />}
-      </Box>
+      {hasChildren ? (
+        <Box component="button" type="button" onClick={toggle} aria-haspopup="true" aria-expanded={visible} sx={triggerSx}>
+          {item.label}
+          <ChevronDown size={15} />
+        </Box>
+      ) : (
+        <Box component={Link} href={item.href} sx={triggerSx}>
+          {item.label}
+        </Box>
+      )}
       {hasChildren && (
         <Box
           className="nav-dd"
