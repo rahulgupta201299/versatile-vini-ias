@@ -25,7 +25,7 @@ export default async function ExamsBlogHome() {
 
       {/* Latest: lead story + 4 rows */}
       {lead && (
-        <Box component="section" aria-label="Latest stories" sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "minmax(0, 1.55fr) minmax(0, 1fr)" }, gap: { xs: 2, md: 3 } }}>
+        <Box component="section" aria-label="Latest stories" sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "minmax(0, 1.55fr) minmax(0, 1fr)" }, gap: { xs: 2, md: 3 }, alignItems: "start" }}>
           <FeaturedPost post={lead} categoryName={names[lead.category]} />
           <Box sx={{ p: 2, borderRadius: "18px", backgroundColor: "#FFFFFF", border: `1px solid ${COLORS.border}` }}>
             <SectionTitle title="Top Stories" as="h2" />

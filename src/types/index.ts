@@ -637,7 +637,7 @@ export interface BlogPost {
   category: string;
   title: string;
   excerpt: string;
-  /** Cover image; a designed cover is drawn when missing. */
+  /** Cover / thumbnail image, 1280 × 800 px (16:10); a designed cover is drawn when missing. */
   cover?: string;
   author: string;
   /** Author photo; initials are shown when missing. */

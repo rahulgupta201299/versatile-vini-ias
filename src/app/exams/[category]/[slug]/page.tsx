@@ -71,7 +71,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
             <AuthorStrip post={post} />
           </Box>
 
-          <Box sx={{ position: "relative", mt: 2.5, aspectRatio: "16 / 8", borderRadius: "18px", overflow: "hidden" }}>
+          <Box sx={{ position: "relative", mt: 2.5, aspectRatio: "16 / 10", borderRadius: "18px", overflow: "hidden" }}>
             <BlogCover post={post} categoryName={categoryName} size="lg" priority />
           </Box>
 

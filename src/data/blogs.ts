@@ -60,6 +60,7 @@ export const BLOG_POSTS: BlogPost[] = [
     author: "Vini IAS Editorial",
     publishedAt: "2026-10-12T18:52:00+05:30",
     readMinutes: 6,
+    cover: "/images/blogs/upsc-cse-2027-notification.webp",
     tags: ["UPSC CSE", "Notification", "2027"],
     featured: true,
     content: [

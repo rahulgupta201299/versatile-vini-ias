@@ -17,11 +17,11 @@ const stretched = { color: "inherit", textDecoration: "none", "&::after": { cont
 /** Big lead story — image with the title on a dark gradient. */
 export function FeaturedPost({ post, categoryName }: CardProps) {
   return (
-    <Box component="article" sx={{ position: "relative", borderRadius: "18px", overflow: "hidden", aspectRatio: { xs: "4 / 3", sm: "16 / 10", md: "auto" }, height: { md: "100%" }, minHeight: { md: 400 }, boxShadow: "0 18px 40px rgba(15,23,42,.14)", "&:hover .zoom": { transform: "scale(1.04)" } }}>
+    <Box component="article" sx={{ position: "relative", borderRadius: "18px", overflow: "hidden", aspectRatio: { xs: "4 / 3", sm: "16 / 10" }, boxShadow: "0 18px 40px rgba(15,23,42,.14)", "&:hover .zoom": { transform: "scale(1.04)" } }}>
       <Box className="zoom" sx={{ position: "absolute", inset: 0, transition: "transform .5s ease" }}>
         <BlogCover post={post} categoryName={categoryName} size="lg" priority />
       </Box>
-      <Box sx={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(12,28,54,0) 30%, rgba(12,28,54,.92) 100%)" }} />
+      <Box sx={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(12,28,54,0) 25%, rgba(12,28,54,.75) 55%, rgba(12,28,54,.96) 100%)" }} />
       <Box sx={{ position: "absolute", left: 0, right: 0, bottom: 0, p: { xs: 2, md: 3 } }}>
         <CategoryTag slug={post.category} name={categoryName} onDark />
         <Typography component="h2" sx={{ mt: 1, fontWeight: 900, color: "#FFFFFF", fontSize: { xs: "1.2rem", sm: "1.5rem", md: "1.9rem" }, lineHeight: 1.25 }}>
@@ -43,7 +43,7 @@ export function PostRow({ post, categoryName, index }: CardProps & { index?: num
       {index !== undefined && (
         <Typography aria-hidden sx={{ flexShrink: 0, width: 22, fontWeight: 900, fontSize: "1.4rem", lineHeight: 1, color: index < 3 ? COLORS.red : COLORS.disabled }}>{index + 1}</Typography>
       )}
-      <Box sx={{ position: "relative", flexShrink: 0, width: index !== undefined ? 76 : { xs: 96, md: 108 }, aspectRatio: "4 / 3", borderRadius: "10px", overflow: "hidden" }}>
+      <Box sx={{ position: "relative", flexShrink: 0, width: index !== undefined ? 76 : { xs: 96, md: 108 }, aspectRatio: "16 / 10", borderRadius: "10px", overflow: "hidden" }}>
         <BlogCover post={post} categoryName={categoryName} size="sm" />
       </Box>
       <Box sx={{ minWidth: 0 }}>
@@ -63,7 +63,7 @@ export function PostRow({ post, categoryName, index }: CardProps & { index?: num
 export function PostCard({ post, categoryName }: CardProps) {
   return (
     <Box component="article" sx={{ position: "relative", display: "flex", flexDirection: "column", borderRadius: "16px", overflow: "hidden", backgroundColor: "#FFFFFF", border: `1px solid ${COLORS.border}`, boxShadow: "0 8px 22px rgba(15,23,42,.05)", transition: "transform .2s, box-shadow .2s", "&:hover": { transform: "translateY(-4px)", boxShadow: "0 16px 32px rgba(15,23,42,.1)" }, "&:hover h3": { color: COLORS.red } }}>
-      <Box sx={{ position: "relative", aspectRatio: "16 / 9" }}>
+      <Box sx={{ position: "relative", aspectRatio: "16 / 10" }}>
         <BlogCover post={post} categoryName={categoryName} />
         <Box sx={{ position: "absolute", left: 12, top: 12, zIndex: 2 }}>
           <CategoryTag slug={post.category} name={categoryName} onDark />
