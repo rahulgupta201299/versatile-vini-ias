@@ -11,12 +11,12 @@ export const CONTACT = {
   website: { label: "www.viniias.com", href: "https://viniias.com" },
 };
 
-/** Official social profiles (replace "#" once the profile exists). */
+/** Official social profiles. */
 export const SOCIAL_LINKS = {
-  facebook: "https://facebook.com/viniias",
-  instagram: "https://instagram.com/viniias",
+  facebook: "https://m.facebook.com/viniiasacademy",
+  instagram: "https://instagram.com/viniiasofficial",
   youtube: "https://youtube.com/viniias",
-  linkedin: "#",
-  x: "https://x.com/viniias",
-  telegram: "https://t.me/viniias",
+  linkedin: "https://in.linkedin.com/company/viniiasofficial",
+  x: "https://twitter.com/viniiasofficial",
+  telegram: "https://telegram.me/viniiasofficial",
 };

@@ -21,13 +21,19 @@ export default function MagazineHero({ data }: { data: MagazineContent }) {
         pt: { xs: 1.5, md: 2 },
         pb: { xs: 5, md: 8 },
         background: hero.background
-          ? `center / cover no-repeat url("${hero.background}")`
+          ? dark
+            ? {
+                // navy overlay keeps white text readable; the artwork shows through on the right (desktop)
+                xs: `linear-gradient(180deg, rgba(12,28,54,.96) 0%, rgba(19,41,75,.9) 100%), right center / cover no-repeat url("${hero.background}")`,
+                md: `linear-gradient(90deg, rgba(12,28,54,.97) 0%, rgba(19,41,75,.9) 45%, rgba(19,41,75,.35) 100%), right center / cover no-repeat url("${hero.background}")`,
+              }
+            : `center / cover no-repeat url("${hero.background}")`
           : dark
             ? `radial-gradient(circle at 85% 30%, #3B82F6 0%, #1E3A8A 35%, ${COLORS.navyDark} 75%)`
             : `linear-gradient(120deg, #ECFDF5 0%, #F8FAFC 50%, ${COLORS.redTintSoft} 100%)`,
         color: dark ? "#FFFFFF" : COLORS.ink,
         "& nav a, & nav span, & nav p, & nav li": dark
-          ? { color: "rgba(255,255,255,.8) !important" }
+          ? { color: "rgba(255,255,255,.85) !important" }
           : {},
       }}
     >

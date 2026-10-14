@@ -28,8 +28,8 @@ export const FREE_RESOURCE_SECTION_PAGES: FreeResourcePage[] = [
     startInfo: "Enrolments open",
     shortlist: {
       quickLinks: [
-        { label: "Monthly Magazine", href: MONTHLY_MAGAZINE_PATH },
-        { label: "PRISM SIMPLIFIED", href: PRISM_PATH },
+        { label: "Monthly Magazine", href: MONTHLY_MAGAZINE_PATH, icon: "Newspaper", badge: "FREE" },
+        { label: "PRISM SIMPLIFIED", href: PRISM_PATH, icon: "Sparkles", badge: "FREE" },
       ],
       hero: {
         eyebrow: "CURRENT AFFAIRS",

@@ -567,7 +567,7 @@ export interface MagazineContent {
 /** Current Affairs "Shortlist" landing. */
 export interface ShortlistContent {
   /** Buttons in the bottom bar that appears after the hero (e.g. Monthly Magazine, PRISM Simplified). */
-  quickLinks?: { label: string; href: string }[];
+  quickLinks?: { label: string; href: string; icon?: LandingIcon; badge?: string }[];
   hero: { eyebrow: string; badge: string; title: string; highlight: string; text: string; pillars: string[] };
   /** "The Current Affairs Problem" vs "The Shortlist Course" artwork — side by side on desktop, stacked on mobile. */
   problem: { problem: { image: string; alt: string }; solution: { image: string; alt: string } };

@@ -62,7 +62,7 @@ export default function Footer() {
           {/* Brand Col */}
           <Box sx={{ gridColumn: { xs: "span 2", md: "span 1" } }}>
             <Box sx={{ position: "relative", width: 140, height: 46, mb: 2 }}>
-              <Image src="/images/logo.png" alt="Vini IAS" fill style={{ objectFit: "contain" }} />
+              <Image src="/images/logo.png" alt="Vini IAS" fill style={{ objectFit: "contain", objectPosition: "left center" }} />
             </Box>
 
             <Typography

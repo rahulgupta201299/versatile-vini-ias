@@ -115,7 +115,7 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
         </IconButton>
       </Box>
 
-      <Box sx={{ flex: 1, overflowY: "auto", px: 2, pt: 2, pb: 3 }}>
+      <Box sx={{ flex: 1, overflowY: "auto", overscrollBehavior: "contain", px: 2, pt: 2, pb: 3 }}>
         {/* Search */}
         <Box
           component="button"

@@ -77,6 +77,18 @@ export default function Header({ onOpenAuth }: HeaderProps) {
   const megaMenuRef = useRef<HTMLDivElement>(null);
   const coursesButtonRef = useRef<HTMLButtonElement>(null);
 
+  // Freeze the page behind the slide menu. <html> is the scroll container (overflow-x: clip),
+  // so the body lock MUI applies is not enough on its own.
+  useEffect(() => {
+    if (!drawerOpen) return;
+    const root = document.documentElement;
+    const prev = root.style.overflow;
+    root.style.overflow = "hidden";
+    return () => {
+      root.style.overflow = prev;
+    };
+  }, [drawerOpen]);
+
   // Close desktop mega menu on outside click / Escape
   useEffect(() => {
     if (!megaMenuOpen) return;
@@ -459,7 +471,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
         anchor="left"
         open={drawerOpen}
         onClose={closeDrawer}
-        PaperProps={{ sx: { width: { xs: "86%", sm: 400 }, maxWidth: 400, display: "flex", flexDirection: "column" } }}
+        PaperProps={{ sx: { width: { xs: "86%", sm: 400 }, maxWidth: 400, display: "flex", flexDirection: "column", overscrollBehavior: "contain" } }}
       >
         {drawerView === "menu" ? (
           <MobileMenu
