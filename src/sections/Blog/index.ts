@@ -10,3 +10,5 @@ export { default as PostMeta } from "./PostMeta";
 export { FeaturedPost, PostRow, PostCard } from "./PostCards";
 export { default as AuthorStrip } from "./AuthorStrip";
 export { default as LanguageSwitcher } from "./LanguageSwitcher";
+export { default as ShareBlog } from "./ShareBlog";
+export { default as TableOfContents } from "./TableOfContents";

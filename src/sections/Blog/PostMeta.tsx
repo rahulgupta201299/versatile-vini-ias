@@ -1,11 +1,11 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import { CalendarDays, Clock } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import { BlogPost } from "@/types";
 import { COLORS } from "@/theme/colors";
 import { formatDate } from "./blogUtils";
 
-/** Date · read time (· author). */
+/** Date (· author). */
 export default function PostMeta({ post, withAuthor, onDark }: { post: BlogPost; withAuthor?: boolean; onDark?: boolean }) {
   const color = onDark ? "rgba(255,255,255,.85)" : COLORS.muted;
   return (
@@ -13,9 +13,6 @@ export default function PostMeta({ post, withAuthor, onDark }: { post: BlogPost;
       {withAuthor && <Box component="span" sx={{ fontWeight: 700, color: onDark ? "#FFFFFF" : COLORS.navy }}>{post.author}</Box>}
       <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: 0.5 }}>
         <CalendarDays size={13} /> <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
-      </Box>
-      <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: 0.5 }}>
-        <Clock size={13} /> {post.readMinutes} min read
       </Box>
     </Box>
   );

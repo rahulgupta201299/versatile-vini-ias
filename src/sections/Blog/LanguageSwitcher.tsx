@@ -103,23 +103,23 @@ export default function LanguageSwitcher() {
         aria-expanded={Boolean(anchor)}
         aria-label={`Switch language, current: ${current.label}`}
         onClick={(e: React.MouseEvent<HTMLElement>) => setAnchor(e.currentTarget)}
-        sx={{ display: "inline-flex", alignItems: "center", gap: 0.6, height: 28, px: 1.25, borderRadius: "9999px", border: `1px solid ${COLORS.redBorder}`, backgroundColor: COLORS.redTint, color: COLORS.red, fontFamily: "inherit", fontWeight: 700, fontSize: "0.75rem", cursor: "pointer", "&:hover": { backgroundColor: COLORS.redTintHover } }}
+        sx={{ display: "inline-flex", alignItems: "center", gap: 0.4, height: 24, px: 0.9, borderRadius: "9999px", border: `1px solid ${COLORS.redBorder}`, backgroundColor: COLORS.redTint, color: COLORS.red, fontFamily: "inherit", fontWeight: 600, fontSize: "0.7rem", cursor: "pointer", "&:hover": { backgroundColor: COLORS.redTintHover } }}
       >
-        <Languages size={14} />
+        <Languages size={12} />
         {current.label}
-        <ChevronDown size={14} />
+        <ChevronDown size={12} />
       </Box>
       <Menu
         anchorEl={anchor}
         open={Boolean(anchor)}
         onClose={() => setAnchor(null)}
         className="notranslate"
-        slotProps={{ paper: { sx: { mt: 0.75, borderRadius: "12px", minWidth: 180, maxHeight: 320, boxShadow: "0 12px 32px rgba(15,23,42,.14)" } } }}
+        slotProps={{ paper: { sx: { mt: 0.75, borderRadius: "12px", minWidth: 150, maxHeight: 300, boxShadow: "0 12px 32px rgba(15,23,42,.14)" } } }}
       >
         {LANGUAGES.map((l) => (
-          <MenuItem key={l.code} selected={l.code === lang} onClick={() => choose(l.code)} translate="no" sx={{ fontSize: "0.9rem", fontWeight: l.code === lang ? 700 : 500, color: l.code === lang ? COLORS.red : COLORS.navy, gap: 1, justifyContent: "space-between" }}>
+          <MenuItem key={l.code} selected={l.code === lang} onClick={() => choose(l.code)} translate="no" sx={{ minHeight: 34, py: 0.5, fontSize: "0.82rem", fontWeight: l.code === lang ? 700 : 500, color: l.code === lang ? COLORS.red : COLORS.navy, gap: 1, justifyContent: "space-between" }}>
             {l.label}
-            {l.code === lang && <Check size={16} />}
+            {l.code === lang && <Check size={14} />}
           </MenuItem>
         ))}
       </Menu>
