@@ -10,7 +10,7 @@ import { BlogCategory } from "@/types";
 import { COLORS } from "@/theme/colors";
 import { categoryIcon } from "./blogUtils";
 
-/** Exam categories under the header — sticky, scrolls sideways on small screens, active tab highlighted. */
+/** Exam categories under the header (blog home + category pages) — sticky, scrolls sideways on small screens, active tab highlighted. */
 export default function CategoryBar({ categories }: { categories: BlogCategory[] }) {
   const pathname = usePathname();
   const active = pathname.split("/")[2] ?? "";
@@ -20,6 +20,9 @@ export default function CategoryBar({ categories }: { categories: BlogCategory[]
   useEffect(() => {
     rowRef.current?.querySelector<HTMLElement>('[aria-current="page"]')?.scrollIntoView({ block: "nearest", inline: "center" });
   }, [active]);
+
+  // article pages (/exams/<category>/<post>) don't show the bar
+  if (pathname.split("/").filter(Boolean).length > 2) return null;
 
   const items = [{ slug: "", name: "All Exams" }, ...categories];
   return (

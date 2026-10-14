@@ -23,6 +23,9 @@ const LANGUAGES = [
   { code: "ur", label: "اردو" },
 ] as const;
 
+/** Google Translate blue. */
+const GOOGLE_BLUE = "#1A73E8";
+
 const SCRIPT_ID = "google-translate-script";
 const ELEMENT_ID = "google_translate_element";
 
@@ -103,7 +106,7 @@ export default function LanguageSwitcher() {
         aria-expanded={Boolean(anchor)}
         aria-label={`Switch language, current: ${current.label}`}
         onClick={(e: React.MouseEvent<HTMLElement>) => setAnchor(e.currentTarget)}
-        sx={{ display: "inline-flex", alignItems: "center", gap: 0.4, height: 24, px: 0.9, borderRadius: "9999px", border: `1px solid ${COLORS.redBorder}`, backgroundColor: COLORS.redTint, color: COLORS.red, fontFamily: "inherit", fontWeight: 600, fontSize: "0.7rem", cursor: "pointer", "&:hover": { backgroundColor: COLORS.redTintHover } }}
+        sx={{ display: "inline-flex", alignItems: "center", gap: 0.4, height: 24, px: 0.9, borderRadius: "9999px", border: `1px solid ${GOOGLE_BLUE}55`, backgroundColor: "#E8F0FE", color: GOOGLE_BLUE, fontFamily: "inherit", fontWeight: 600, fontSize: "0.7rem", cursor: "pointer", "&:hover": { backgroundColor: "#D2E3FC" } }}
       >
         <Languages size={12} />
         {current.label}
@@ -117,7 +120,7 @@ export default function LanguageSwitcher() {
         slotProps={{ paper: { sx: { mt: 0.75, borderRadius: "12px", minWidth: 150, maxHeight: 300, boxShadow: "0 12px 32px rgba(15,23,42,.14)" } } }}
       >
         {LANGUAGES.map((l) => (
-          <MenuItem key={l.code} selected={l.code === lang} onClick={() => choose(l.code)} translate="no" sx={{ minHeight: 34, py: 0.5, fontSize: "0.82rem", fontWeight: l.code === lang ? 700 : 500, color: l.code === lang ? COLORS.red : COLORS.navy, gap: 1, justifyContent: "space-between" }}>
+          <MenuItem key={l.code} selected={l.code === lang} onClick={() => choose(l.code)} translate="no" sx={{ minHeight: 34, py: 0.5, fontSize: "0.82rem", fontWeight: l.code === lang ? 700 : 500, color: l.code === lang ? GOOGLE_BLUE : COLORS.navy, gap: 1, justifyContent: "space-between" }}>
             {l.label}
             {l.code === lang && <Check size={14} />}
           </MenuItem>

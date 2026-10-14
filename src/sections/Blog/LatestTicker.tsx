@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
@@ -14,10 +15,13 @@ const scroll = keyframes`
   to { transform: translateX(-50%); }
 `;
 
-/** "LATEST NEWS" ticker — newest headlines scroll by (pauses on hover), can be dismissed. */
+/** "LATEST NEWS" ticker (blog home + category pages) — newest headlines scroll by (pauses on hover), can be dismissed. */
 export default function LatestTicker({ items }: { items: { title: string; href: string }[] }) {
   const [open, setOpen] = useState(true);
-  if (!open || !items.length) return null;
+  const pathname = usePathname();
+  // article pages (/exams/<category>/<post>) don't show the ticker
+  const isArticle = pathname.split("/").filter(Boolean).length > 2;
+  if (!open || !items.length || isArticle) return null;
   const loop = [...items, ...items]; // duplicated for a seamless loop
   return (
     <Container sx={{ mt: { xs: 1.5, md: 2 } }}>

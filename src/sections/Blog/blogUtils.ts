@@ -35,13 +35,6 @@ export function coverTone(seed: string) {
 export const formatDate = (iso: string) =>
   new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(new Date(iso));
 
-/** "October 12, 2026" or "October 12, 2026 6:52 PM" (IST) when the ISO value has a time. */
-export const formatDateTime = (iso: string) => {
-  const hasTime = iso.includes("T");
-  return new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-    ...(hasTime ? { hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" } : { timeZone: "UTC" }),
-  }).format(new Date(iso)).replace(" at ", " ");
-};
+/** "October 12, 2026" (date only, IST). */
+export const formatLongDate = (iso: string) =>
+  new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "Asia/Kolkata" }).format(new Date(iso));

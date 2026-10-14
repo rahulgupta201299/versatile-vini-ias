@@ -6,7 +6,7 @@ import { BadgeCheck, CalendarDays } from "lucide-react";
 import ShareBlog from "./ShareBlog";
 import { BlogPost } from "@/types";
 import { COLORS } from "@/theme/colors";
-import { formatDateTime } from "./blogUtils";
+import { formatLongDate } from "./blogUtils";
 
 const initials = (name: string) =>
   name
@@ -31,7 +31,7 @@ export default function AuthorStrip({ post, url }: { post: BlogPost; url: string
         </Typography>
         <Box sx={{ mt: 0.5, display: "flex", flexWrap: "wrap", alignItems: "center", columnGap: 1.5, rowGap: 0.25, fontSize: { xs: "0.8rem", sm: "0.875rem" }, color: "#52525B" }}>
           <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: 0.6 }}>
-            <CalendarDays size={15} style={{ flexShrink: 0 }} /> <time dateTime={post.publishedAt} style={{ whiteSpace: "nowrap" }}>{formatDateTime(post.publishedAt)}</time>
+            <CalendarDays size={15} style={{ flexShrink: 0 }} /> <time dateTime={post.publishedAt} style={{ whiteSpace: "nowrap" }}>{formatLongDate(post.publishedAt)}</time>
           </Box>
         </Box>
       </Box>

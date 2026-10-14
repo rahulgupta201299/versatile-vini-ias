@@ -17,7 +17,7 @@ export default function ArticleBody({ blocks }: { blocks: BlogBlock[] }) {
         switch (b.type) {
           case "h2":
             return (
-              <Typography key={i} id={slugify(b.text)} component="h2" sx={{ mt: 1.5, scrollMarginTop: { xs: 200, lg: 210 }, fontFamily: "inherit", fontWeight: 700, fontSize: { xs: "1.25rem", md: "1.5rem" }, color: "#27272A", lineHeight: 1.5, pl: 1.5, borderLeft: `4px solid ${COLORS.red}` }}>
+              <Typography key={i} id={slugify(b.text)} component="h2" sx={{ mt: 1.5, scrollMarginTop: { xs: 150, lg: 160 }, fontFamily: "inherit", fontWeight: 700, fontSize: { xs: "1.25rem", md: "1.5rem" }, color: "#27272A", lineHeight: 1.5, pl: 1.5, borderLeft: `4px solid ${COLORS.red}` }}>
                 {b.text}
               </Typography>
             );

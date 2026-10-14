@@ -131,15 +131,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
               <Link href="/">Home</Link> › <Link href="/exams">Exams</Link> ›{" "}
               <Link href={`/exams/${post.category}`}>{categoryName}</Link>
             </Box>
-            <Box
-              sx={{
-                mt: 1.5,
-                display: "flex",
-                alignItems: "center",
-                flexWrap: "wrap",
-                gap: 1,
-              }}
-            >
+            <Box sx={{ mt: 1.5, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 1 }}>
               <CategoryTag slug={post.category} name={categoryName} />
               <LanguageSwitcher />
             </Box>
@@ -176,7 +168,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                 sx={{
                   mt: 2,
                   position: "sticky",
-                  top: { xs: 112, lg: 120 },
+                  top: { xs: 72, lg: 80 },
                   zIndex: 1000,
                 }}
               >
