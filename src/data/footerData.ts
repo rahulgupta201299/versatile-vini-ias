@@ -6,7 +6,7 @@ export const COMPANY_LINKS = [
   { name: "Contact Us", href: "/#enquiry" },
   { name: "Careers", href: "#careers" },
   { name: "Updates", href: "#updates" },
-  { name: "Blogs & Editorials", href: "#blogs" },
+  { name: "Blogs & Editorials", href: "/exams" },
   { name: "Account Deletion", href: "#account-deletion" },
 ];
 

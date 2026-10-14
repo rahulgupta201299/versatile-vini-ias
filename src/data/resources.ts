@@ -23,7 +23,7 @@ export const FREE_RESOURCES: ResourceItem[] = [
     bgColor: "#DBEAFE", // Soft Blue circle
     iconColor: "#2563EB",
     borderColor: "#BFDBFE",
-    href: "#blogs",
+    href: "/exams",
   },
   {
     id: "pyqs",

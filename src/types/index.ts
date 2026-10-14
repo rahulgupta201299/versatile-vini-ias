@@ -614,3 +614,36 @@ export interface FreeResourcePage {
   bestFor: string[];
   faqs: CourseFaq[];
 }
+
+/* ---------------- Blogs (/exams) ---------------- */
+
+/** Article body block — the server can send these as JSON. */
+export type BlogBlock =
+  | { type: "p"; text: string }
+  | { type: "h2"; text: string }
+  | { type: "ul"; items: string[] }
+  | { type: "quote"; text: string };
+
+/** Exam category tab on /exams (order follows "Select Your Goal"). */
+export interface BlogCategory {
+  slug: string;
+  name: string;
+  description: string;
+}
+
+export interface BlogPost {
+  slug: string;
+  /** BlogCategory.slug */
+  category: string;
+  title: string;
+  excerpt: string;
+  /** Cover image; a designed cover is drawn when missing. */
+  cover?: string;
+  author: string;
+  /** ISO date */
+  publishedAt: string;
+  readMinutes: number;
+  tags: string[];
+  featured?: boolean;
+  content: BlogBlock[];
+}

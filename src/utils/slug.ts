@@ -35,3 +35,6 @@ export const coursePagePath = (section: string, name: string) => `/courses/${sec
 export const TEST_SERIES_URL = "https://test.viniias.com/upsc-test-series";
 
 export const pagePath = (...parts: string[]) => "/" + parts.map(slugify).join("/");
+
+/** Blog post route: /exams/<category>/<post>. */
+export const blogPath = (post: { category: string; slug: string }) => `/exams/${post.category}/${post.slug}`;
