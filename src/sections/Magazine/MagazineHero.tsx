@@ -5,11 +5,17 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { MagazineContent } from "@/types";
-import { LANDING_ICONS, CHIP_TONES } from "@/sections/CourseLanding/icons";
+import { LANDING_ICONS } from "@/sections/CourseLanding/icons";
 import HighlightText from "@/sections/EthicsFoundation/HighlightText";
 import { COLORS } from "@/theme/colors";
 
-/** Magazine hero — light "Shortlist" style or dark blue "PRISM" style, with the stacked-books artwork. */
+/** Icon chips in the brand colours only: red · yellow. */
+const THEME_TONES = [
+  { color: COLORS.red, bg: COLORS.redTint },
+  { color: COLORS.ink, bg: COLORS.yellow },
+];
+
+/** Magazine hero — light "Shortlist" style or deep-red "PRISM" style, with the stacked-books artwork. */
 export default function MagazineHero({ data }: { data: MagazineContent }) {
   const { hero } = data;
   const dark = data.theme === "prism";
@@ -23,17 +29,17 @@ export default function MagazineHero({ data }: { data: MagazineContent }) {
         background: hero.background
           ? dark
             ? {
-                // navy overlay keeps white text readable; the artwork shows through on the right (desktop)
-                xs: `linear-gradient(180deg, rgba(12,28,54,.96) 0%, rgba(19,41,75,.9) 100%), right center / cover no-repeat url("${hero.background}")`,
-                md: `linear-gradient(90deg, rgba(12,28,54,.97) 0%, rgba(19,41,75,.9) 45%, rgba(19,41,75,.35) 100%), right center / cover no-repeat url("${hero.background}")`,
+                // deep brand-red overlay keeps white / yellow text readable; the artwork glows through on the right (desktop)
+                xs: `linear-gradient(180deg, rgba(102,0,20,.96) 0%, rgba(153,0,31,.93) 100%), right center / cover no-repeat url("${hero.background}")`,
+                md: `linear-gradient(90deg, rgba(102,0,20,.97) 0%, rgba(153,0,31,.92) 45%, rgba(204,0,42,.5) 100%), right center / cover no-repeat url("${hero.background}")`,
               }
             : `center / cover no-repeat url("${hero.background}")`
           : dark
-            ? `radial-gradient(circle at 85% 30%, #3B82F6 0%, #1E3A8A 35%, ${COLORS.navyDark} 75%)`
-            : `linear-gradient(120deg, #ECFDF5 0%, #F8FAFC 50%, ${COLORS.redTintSoft} 100%)`,
+            ? `radial-gradient(circle at 85% 30%, ${COLORS.red} 0%, ${COLORS.redDark} 35%, #660014 75%)`
+            : `linear-gradient(120deg, #FFFBEA 0%, #FFFFFF 50%, ${COLORS.redTintSoft} 100%)`,
         color: dark ? "#FFFFFF" : COLORS.ink,
         "& nav a, & nav span, & nav p, & nav li": dark
-          ? { color: "rgba(255,255,255,.85) !important" }
+          ? { color: "rgba(255,255,255,.9) !important" }
           : {},
       }}
     >
@@ -58,7 +64,7 @@ export default function MagazineHero({ data }: { data: MagazineContent }) {
                   fontWeight: 800,
                   letterSpacing: ".14em",
                   fontSize: { xs: "0.72rem", md: "0.8rem" },
-                  color: "rgba(255,255,255,.85)",
+                  color: "rgba(255,255,255,.92)",
                 }}
               >
                 {hero.eyebrow}
@@ -68,7 +74,7 @@ export default function MagazineHero({ data }: { data: MagazineContent }) {
                 sx={{
                   fontWeight: 800,
                   fontSize: { xs: "1.4rem", md: "1.8rem" },
-                  color: COLORS.navy,
+                  color: COLORS.ink,
                 }}
               >
                 {hero.eyebrow.replace(/IAS$/, "")}
@@ -82,7 +88,7 @@ export default function MagazineHero({ data }: { data: MagazineContent }) {
                 sx={{
                   fontWeight: 800,
                   fontSize: { xs: "1.1rem", md: "1.45rem" },
-                  color: COLORS.navy,
+                  color: COLORS.ink,
                 }}
               >
                 {hero.kicker}
@@ -135,7 +141,7 @@ export default function MagazineHero({ data }: { data: MagazineContent }) {
             >
               {hero.points.map((pt, i) => {
                 const Icon = LANDING_ICONS[pt.icon];
-                const tone = CHIP_TONES[i % CHIP_TONES.length];
+                const tone = THEME_TONES[i % THEME_TONES.length];
                 return (
                   <Box
                     key={pt.title}
@@ -156,7 +162,7 @@ export default function MagazineHero({ data }: { data: MagazineContent }) {
                         width: 40,
                         height: 40,
                         borderRadius: "10px",
-                        backgroundColor: dark ? tone.bg : COLORS.navy,
+                        backgroundColor: dark ? tone.bg : COLORS.red,
                         color: dark ? tone.color : COLORS.yellow,
                         display: "flex",
                         alignItems: "center",
@@ -170,7 +176,7 @@ export default function MagazineHero({ data }: { data: MagazineContent }) {
                         sx={{
                           fontWeight: 800,
                           fontSize: { xs: "0.9rem", md: "0.95rem" },
-                          color: COLORS.navy,
+                          color: COLORS.ink,
                           lineHeight: 1.3,
                         }}
                       >

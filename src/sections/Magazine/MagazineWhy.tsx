@@ -7,16 +7,16 @@ import { COLORS } from "@/theme/colors";
 
 type Why = NonNullable<MagazineContent["why"]>;
 
-/** "Why PRISM Simplified?" — quote + source card beside a dark stat card. */
+/** "Why PRISM Simplified?" — quote + source card beside a red stat card. */
 export default function MagazineWhy({ data }: { data: Why }) {
   const [before, after] = data.title.split(data.highlight);
   return (
-    <Box component="section" sx={{ py: { xs: 4.5, md: 7 }, backgroundColor: "#FBF7F0" }}>
+    <Box component="section" sx={{ py: { xs: 4.5, md: 7 }, backgroundColor: COLORS.redTintSoft }}>
       <Container>
         <Typography sx={{ display: "flex", alignItems: "center", gap: 1, fontWeight: 800, letterSpacing: ".12em", fontSize: "0.72rem", color: COLORS.redDark }}>
           <Box component="span" sx={{ width: 8, height: 8, borderRadius: "50%", backgroundColor: COLORS.red }} /> {data.eyebrow}
         </Typography>
-        <Typography component="h2" sx={{ mt: 1, fontFamily: "Georgia, serif", fontWeight: 800, fontSize: { xs: "2rem", md: "2.9rem" }, color: COLORS.navy }}>
+        <Typography component="h2" sx={{ mt: 1, fontFamily: "Georgia, serif", fontWeight: 800, fontSize: { xs: "2rem", md: "2.9rem" }, color: COLORS.ink }}>
           {before}
           <Box component="span" sx={{ fontStyle: "italic", color: COLORS.red }}>{data.highlight}</Box>
           {after}
@@ -26,16 +26,16 @@ export default function MagazineWhy({ data }: { data: Why }) {
             <Typography component="blockquote" sx={{ m: 0, pl: 2, borderLeft: `4px solid ${COLORS.yellowDark}`, fontSize: { xs: "1rem", md: "1.08rem" }, lineHeight: 1.7, color: COLORS.ink }}>
               “{data.quote}”
             </Typography>
-            <Box sx={{ mt: 3, p: 2, borderRadius: "14px", backgroundColor: COLORS.surface }}>
-              <Typography sx={{ fontWeight: 800, letterSpacing: ".08em", fontSize: "0.75rem", color: COLORS.navy }}>{data.source.title}</Typography>
+            <Box sx={{ mt: 3, p: 2, borderRadius: "14px", backgroundColor: "#FFF9D6" }}>
+              <Typography sx={{ fontWeight: 800, letterSpacing: ".08em", fontSize: "0.75rem", color: COLORS.redDark }}>{data.source.title}</Typography>
               <Typography sx={{ mt: 0.5, fontSize: "0.92rem", color: COLORS.body, lineHeight: 1.6 }}>{data.source.text}</Typography>
             </Box>
           </Box>
-          <Box sx={{ p: { xs: 2.5, md: 3.5 }, borderRadius: "20px", backgroundColor: COLORS.navyDark, color: "#FFFFFF", boxShadow: "0 18px 36px rgba(12,28,54,.3)" }}>
+          <Box sx={{ p: { xs: 2.5, md: 3.5 }, borderRadius: "20px", background: `linear-gradient(145deg, ${COLORS.red} 0%, ${COLORS.redDarker} 100%)`, color: "#FFFFFF", boxShadow: "0 18px 36px rgba(254,0,52,.28)" }}>
             <Typography sx={{ fontWeight: 800, letterSpacing: ".12em", fontSize: "0.72rem", color: COLORS.yellow }}>{data.stat.eyebrow}</Typography>
             <Typography sx={{ mt: 1, fontFamily: "Georgia, serif", fontWeight: 800, fontSize: { xs: "3.2rem", md: "4rem" }, lineHeight: 1 }}>{data.stat.value}</Typography>
             <Typography sx={{ mt: 0.75, fontWeight: 800, letterSpacing: ".1em", fontSize: "0.72rem", color: COLORS.yellow }}>{data.stat.label}</Typography>
-            <Typography sx={{ mt: 2, fontSize: "0.95rem", lineHeight: 1.7, color: "rgba(255,255,255,.85)" }}>{data.stat.text}</Typography>
+            <Typography sx={{ mt: 2, fontSize: "0.95rem", lineHeight: 1.7, color: "rgba(255,255,255,.92)" }}>{data.stat.text}</Typography>
           </Box>
         </Box>
       </Container>
