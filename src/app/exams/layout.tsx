@@ -1,8 +1,9 @@
 import { CategoryBar, LatestTicker } from "@/sections/Blog";
+import AppDownloadSection from "@/sections/AppDownload/AppDownloadSection";
 import { getBlogIndex } from "@/services";
 import { blogPath } from "@/utils/slug";
 
-/** /exams (blogs): exam category bar under the header + "Latest News" ticker on every blog page. */
+/** /exams (blogs): exam category bar + "Latest News" ticker on top, the homepage app section at the bottom of every blog page. */
 export default async function ExamsLayout({ children }: { children: React.ReactNode }) {
   const { categories, posts } = await getBlogIndex();
   return (
@@ -10,6 +11,7 @@ export default async function ExamsLayout({ children }: { children: React.ReactN
       <CategoryBar categories={categories} />
       <LatestTicker items={posts.slice(0, 6).map((p) => ({ title: p.title, href: blogPath(p) }))} />
       {children}
+      <AppDownloadSection />
     </>
   );
 }

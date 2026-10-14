@@ -28,7 +28,7 @@ export default async function ExamCategoryPage({ params }: { params: Params }) {
   const { category } = await params;
   const c = await getBlogCategory(category);
   if (!c) notFound();
-  const { categories, posts, names, counts } = await getBlogIndex();
+  const { posts, names } = await getBlogIndex();
   const list = posts.filter((p) => p.category === c.slug);
 
   return (
@@ -55,7 +55,7 @@ export default async function ExamCategoryPage({ params }: { params: Params }) {
             <Typography sx={{ mt: 0.5, fontSize: "0.9rem" }}>We&apos;re preparing {c.name} news and preparation guides. Check back shortly.</Typography>
           </Box>
         )}
-        <BlogSidebar latest={posts.slice(0, 5)} categories={categories} counts={counts} names={names} />
+        <BlogSidebar latest={posts.slice(0, 5)} names={names} />
       </Box>
     </Container>
   );

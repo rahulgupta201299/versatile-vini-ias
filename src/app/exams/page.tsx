@@ -64,7 +64,7 @@ export default async function ExamsBlogHome() {
           </Box>
         </Box>
 
-        <BlogSidebar latest={posts.slice(0, 5)} categories={categories} counts={counts} names={names} />
+        <BlogSidebar latest={posts.slice(0, 5)} names={names} />
       </Box>
     </Container>
   );

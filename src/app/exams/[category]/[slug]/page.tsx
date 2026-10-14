@@ -36,7 +36,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
   const { category, slug } = await params;
   const post = await getBlogPost(category, slug);
   if (!post) notFound();
-  const { categories, posts, names, counts } = await getBlogIndex();
+  const { posts, names } = await getBlogIndex();
   const categoryName = names[post.category] ?? post.category;
   const related = posts.filter((p) => p.category === post.category && p.slug !== post.slug).slice(0, 3);
   const more = related.length ? related : posts.filter((p) => p.slug !== post.slug).slice(0, 3);
@@ -97,7 +97,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
           </Box>
         </Box>
 
-        <BlogSidebar latest={posts.filter((p) => p.slug !== post.slug).slice(0, 5)} categories={categories} counts={counts} names={names} />
+        <BlogSidebar latest={posts.filter((p) => p.slug !== post.slug).slice(0, 5)} names={names} />
       </Box>
     </Container>
   );
