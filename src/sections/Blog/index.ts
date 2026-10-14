@@ -8,3 +8,5 @@ export { default as BlogCover } from "./BlogCover";
 export { default as CategoryTag } from "./CategoryTag";
 export { default as PostMeta } from "./PostMeta";
 export { FeaturedPost, PostRow, PostCard } from "./PostCards";
+export { default as AuthorStrip } from "./AuthorStrip";
+export { default as LanguageSwitcher } from "./LanguageSwitcher";

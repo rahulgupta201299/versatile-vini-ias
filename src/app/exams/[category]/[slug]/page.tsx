@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { ArticleBody, BlogCover, BlogSidebar, CategoryTag, PostCard, PostMeta, SectionTitle, ShareButtons } from "@/sections/Blog";
+import { ArticleBody, AuthorStrip, LanguageSwitcher, BlogCover, BlogSidebar, CategoryTag, PostCard, SectionTitle, ShareButtons } from "@/sections/Blog";
 import { getBlogIndex, getBlogPost, getBlogPosts } from "@/services";
 import { blogPath } from "@/utils/slug";
 import { COLORS } from "@/theme/colors";
@@ -61,13 +61,14 @@ export default async function BlogPostPage({ params }: { params: Params }) {
           <Box component="nav" aria-label="Breadcrumb" sx={{ fontSize: "0.78rem", color: COLORS.muted, "& a": { color: COLORS.muted, textDecoration: "none", "&:hover": { color: COLORS.red } } }}>
             <Link href="/">Home</Link> › <Link href="/exams">Exams</Link> › <Link href={`/exams/${post.category}`}>{categoryName}</Link>
           </Box>
-          <Box sx={{ mt: 1.5 }}>
+          <Box sx={{ mt: 1.5, display: "flex", alignItems: "center", flexWrap: "wrap", gap: 1 }}>
             <CategoryTag slug={post.category} name={categoryName} />
+            <LanguageSwitcher />
           </Box>
           <Typography component="h1" sx={{ mt: 1.25, fontWeight: 900, fontSize: { xs: "1.6rem", md: "2.3rem" }, lineHeight: 1.25, color: COLORS.navy }}>{post.title}</Typography>
           <Typography sx={{ mt: 1.25, fontSize: { xs: "1rem", md: "1.1rem" }, color: COLORS.body, lineHeight: 1.7 }}>{post.excerpt}</Typography>
-          <Box sx={{ mt: 1.5, pb: 2, borderBottom: `1px solid ${COLORS.border}` }}>
-            <PostMeta post={post} withAuthor />
+          <Box sx={{ mt: 2 }}>
+            <AuthorStrip post={post} />
           </Box>
 
           <Box sx={{ position: "relative", mt: 2.5, aspectRatio: "16 / 8", borderRadius: "18px", overflow: "hidden" }}>

@@ -34,3 +34,14 @@ export function coverTone(seed: string) {
 /** "12 Oct 2026" — fixed locale + UTC so server and client render the same text. */
 export const formatDate = (iso: string) =>
   new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(new Date(iso));
+
+/** "October 12, 2026" or "October 12, 2026 6:52 PM" (IST) when the ISO value has a time. */
+export const formatDateTime = (iso: string) => {
+  const hasTime = iso.includes("T");
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    ...(hasTime ? { hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" } : { timeZone: "UTC" }),
+  }).format(new Date(iso)).replace(" at ", " ");
+};

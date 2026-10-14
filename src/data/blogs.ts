@@ -58,7 +58,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "UPSC CSE 2027 Notification: Expected Dates, Vacancies and Key Changes",
     excerpt: "Everything aspirants should track for UPSC CSE 2027 — the expected notification window, likely vacancies, eligibility reminders and what could change in the exam pattern.",
     author: "Vini IAS Editorial",
-    publishedAt: "2026-10-12",
+    publishedAt: "2026-10-12T18:52:00+05:30",
     readMinutes: 6,
     tags: ["UPSC CSE", "Notification", "2027"],
     featured: true,

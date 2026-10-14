@@ -640,7 +640,9 @@ export interface BlogPost {
   /** Cover image; a designed cover is drawn when missing. */
   cover?: string;
   author: string;
-  /** ISO date */
+  /** Author photo; initials are shown when missing. */
+  authorImage?: string;
+  /** ISO date or date-time, e.g. "2026-10-12" or "2026-10-12T18:52:00+05:30" */
   publishedAt: string;
   readMinutes: number;
   tags: string[];

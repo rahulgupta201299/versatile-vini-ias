@@ -45,3 +45,23 @@ a {
 ::-webkit-scrollbar-thumb:hover {
   background: #94A3B8;
 }
+
+/* Google Translate (blog language switcher): hide Google's own banner, tooltip and highlight */
+.goog-te-banner-frame,
+.skiptranslate > iframe,
+iframe.skiptranslate,
+#goog-gt-tt,
+.goog-te-balloon-frame,
+.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf {
+  display: none !important;
+}
+body {
+  top: 0 !important;
+}
+.goog-text-highlight,
+.VIpgJd-yAWNEb-VIpgJd-fmcmfc,
+font[style*="background-color"] {
+  background: none !important;
+  box-shadow: none !important;
+}
