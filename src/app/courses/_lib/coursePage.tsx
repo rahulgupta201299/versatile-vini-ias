@@ -3,7 +3,7 @@ import { FreeResourceHero, EnrollBand, CourseOverview, CourseFit, ContactInfo, C
 import { TopRankersSection, EnquirySection } from "@/sections";
 import { BatchHero, BatchStats, BatchStages, BatchPlans, BatchFaq } from "@/sections/BatchCourse";
 import { LandingHero, LandingFeatures, LandingHighlights, LandingInfographic, LandingStudyMaterial, LandingEnquiry } from "@/sections/CourseLanding";
-import { MentorshipHero, CallbackBanner, ProgramTimeline, HowItWorks, FeatureCards, SyllabusStrip, ProblemSolution, PlanPicker, VeteranDiscount, EnrollPlanBand, NumberedFeatures, CourseFacts, PrepResources, OverlapTable, NoticeStrip } from "@/sections/MentorshipCourse";
+import { MentorshipHero, CallbackBanner, ProgramTimeline, HowItWorks, FeatureCards, SyllabusStrip, ProblemSolution, PlanPicker, VeteranDiscount, EnrollPlanBand, NumberedFeatures, CourseFacts, PrepResources, OverlapTable, NoticeStrip, DownloadBanner, ExamCompare } from "@/sections/MentorshipCourse";
 import { EthicsHero, EthicsWhy, EthicsProgramDetails } from "@/sections/EthicsFoundation";
 import { ShortlistHero, ShortlistProblem, ShortlistFeatures, ShortlistEcosystem, ShortlistPlans } from "@/sections/CurrentAffairs";
 import { getRankerStats, getResultBanners } from "@/services";
@@ -114,6 +114,9 @@ export async function CoursePageView({ page }: { page: FreeResourcePage }) {
         {m.notice && <NoticeStrip text={m.notice} />}
         <MentorshipHero page={page} data={m} />
         {!story && syllabus}
+        {m.syllabusBanner && <DownloadBanner data={m.syllabusBanner} />}
+        {m.examCompare && <ExamCompare data={m.examCompare} />}
+        {m.pyqBanner && <DownloadBanner data={m.pyqBanner} />}
         {m.facts && <CourseFacts data={m.facts} />}
         {m.resources && <PrepResources data={m.resources} />}
         {m.overlap && <OverlapTable data={m.overlap} />}

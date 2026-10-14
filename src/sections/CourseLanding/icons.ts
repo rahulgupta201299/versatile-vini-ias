@@ -39,6 +39,11 @@ import {
   Sparkles,
   BookMarked,
   Repeat,
+  Calculator,
+  Puzzle,
+  IndianRupee,
+  Briefcase,
+  Scale,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { LandingIcon } from "@/types";
@@ -85,6 +90,11 @@ export const LANDING_ICONS: Record<LandingIcon, LucideIcon> = {
   Sparkles,
   BookMarked,
   Repeat,
+  Calculator,
+  Puzzle,
+  IndianRupee,
+  Briefcase,
+  Scale,
 };
 
 /** Soft icon chips, cycled per item (icon colour, background). */

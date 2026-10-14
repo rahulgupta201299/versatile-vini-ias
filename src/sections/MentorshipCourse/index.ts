@@ -13,3 +13,5 @@ export { default as CourseFacts } from "./CourseFacts";
 export { default as PrepResources } from "./PrepResources";
 export { default as OverlapTable } from "./OverlapTable";
 export { default as NoticeStrip } from "./NoticeStrip";
+export { default as DownloadBanner } from "./DownloadBanner";
+export { default as ExamCompare } from "./ExamCompare";

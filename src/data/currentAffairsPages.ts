@@ -30,18 +30,14 @@ export const FREE_RESOURCE_SECTION_PAGES: FreeResourcePage[] = [
         pillars: ["Filter", "Organise", "Retain"],
       },
       problem: {
-        title: "The Current Affairs Problem vs The Shortlist System",
-        highlight: "The Shortlist System",
-        problems: [
-          { title: "Too much info to read", text: "News, PIB, magazines, videos and notes — too many sources and no clear end point." },
-          { title: "Nothing is organised", text: "Scattered information that is hard to connect subject-wise or month-wise." },
-          { title: "Nothing gets retained", text: "Without revision and practice, what you read today is forgotten next month." },
-        ],
-        solutions: [
-          { title: "Filter", text: "Only the exam-relevant current affairs — shortlisted, so you read less and cover more." },
-          { title: "Organise", text: "Everything arranged subject-wise and month-wise in one place." },
-          { title: "Retain", text: "Quizzes, smart practice and a mistake notebook make sure it sticks." },
-        ],
+        problem: {
+          image: "/images/current-affairs/comparison-problem.jpg",
+          alt: "The Current Affairs Problem — too much info to read, nothing is organised, nothing gets retained",
+        },
+        solution: {
+          image: "/images/current-affairs/comparison-solution.jpg",
+          alt: "The Shortlist Course, a single Current Affairs system — filter, organise, retain",
+        },
       },
       features: {
         title: "Features",

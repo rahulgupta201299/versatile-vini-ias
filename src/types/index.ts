@@ -320,7 +320,12 @@ export type LandingIcon =
   | "PlayCircle"
   | "Sparkles"
   | "BookMarked"
-  | "Repeat";
+  | "Repeat"
+  | "Calculator"
+  | "Puzzle"
+  | "IndianRupee"
+  | "Briefcase"
+  | "Scale";
 
 export interface LandingIconItem {
   title: string;
@@ -450,6 +455,34 @@ export interface MentorshipContent {
   resources?: { title: string; items: { title: string; text: string; ctaLabel: string; href: string }[] };
   /** UPSC CSE vs exam syllabus overlap table. */
   overlap?: SyllabusOverlap;
+  /** "Download Complete Syllabus" banner (shown right after the hero). */
+  syllabusBanner?: DownloadBannerContent;
+  /** "Why <exam>? Plan B for UPSC CSE" ✓ / ✗ comparison. */
+  examCompare?: ExamCompareContent;
+  /** "Download PYQs PDF" banner (shown after the comparison). */
+  pyqBanner?: DownloadBannerContent;
+}
+
+export interface DownloadBannerContent {
+  /** Book / file artwork: "book" (syllabus) or "pdf" (PYQs). */
+  art: "book" | "pdf";
+  /** Lines printed on the artwork, e.g. ["RBI", "GRADE B"] and the coloured caption "COMPLETE SYLLABUS". */
+  artTitle: string[];
+  artCaption: string;
+  badge: string;
+  title: string;
+  highlight: string;
+  ctaLabel: string;
+  href: string;
+}
+
+/** ✓ = true, ✗ = false, or a short note shown as a pill. */
+export type CompareCell = boolean | string;
+export interface ExamCompareContent {
+  title: string;
+  highlight: string;
+  columns: { topic: string; exam: string; other: string };
+  rows: { topic: string; icon: LandingIcon; exam: CompareCell; other: CompareCell }[];
 }
 
 export interface CallbackContent {
@@ -499,7 +532,8 @@ export interface EthicsLandingContent {
 /** Current Affairs "Shortlist" landing. */
 export interface ShortlistContent {
   hero: { eyebrow: string; badge: string; title: string; highlight: string; text: string; pillars: string[] };
-  problem: { title: string; highlight: string; problems: { title: string; text: string }[]; solutions: { title: string; text: string }[] };
+  /** "The Current Affairs Problem" vs "The Shortlist Course" artwork — side by side on desktop, stacked on mobile. */
+  problem: { problem: { image: string; alt: string }; solution: { image: string; alt: string } };
   features: { title: string; items: { title: string; text: string; icon: LandingIcon }[] };
   ecosystem: { title: string; highlight: string; steps: { title: string; text: string; icon: LandingIcon }[] };
   plans: {
