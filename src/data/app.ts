@@ -1,6 +1,9 @@
-/** Mobile app section content & store links (replace "#" with the real store URLs). */
+/** Vini IAS app on Google Play. */
+export const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.viniiasofficial.app";
+
+/** Mobile app store links ("#" = not published yet). */
 export const APP_STORE_LINKS = {
-  googlePlay: "#",
+  googlePlay: PLAY_STORE_URL,
   appStore: "#",
 };
 

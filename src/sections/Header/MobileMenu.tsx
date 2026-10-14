@@ -27,12 +27,11 @@ const INK = "#1F2937";
 const MUTED = "#6B7280";
 const LINE = "#EEF0F3";
 
-/** Store link for the visitor's phone (falls back to the app section). */
+/** Store link for the visitor's phone: App Store on iOS (when published), otherwise Google Play; falls back to the app section. */
 function appInstallHref(links: { googlePlay: string; appStore: string }) {
-  if (typeof navigator === "undefined") return "/#download";
-  const ua = navigator.userAgent;
-  if (/android/i.test(ua) && links.googlePlay !== "#") return links.googlePlay;
-  if (/iphone|ipad|ipod/i.test(ua) && links.appStore !== "#") return links.appStore;
+  const ios = typeof navigator !== "undefined" && /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if (ios && links.appStore !== "#") return links.appStore;
+  if (links.googlePlay !== "#") return links.googlePlay;
   return "/#download";
 }
 
@@ -155,6 +154,7 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
           <Box
             component="a"
             href={appInstallHref(config.app)}
+            {...externalLinkProps({ href: appInstallHref(config.app) })}
             onClick={onClose}
             sx={{
               flexShrink: 0,
@@ -319,6 +319,7 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
       <Box
         component="a"
         href={appInstallHref(config.app)}
+        {...externalLinkProps({ href: appInstallHref(config.app) })}
         onClick={onClose}
         sx={{
           flexShrink: 0,

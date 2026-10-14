@@ -78,7 +78,7 @@ export default async function RootLayout({
 }>) {
   // Site-wide data (menus, exams, contact, footer) — fetched once, cached, shared with client components
   const siteData = await getSiteData();
-  const { contact, social } = siteData.config;
+  const { contact, social, app } = siteData.config;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -94,7 +94,7 @@ export default async function RootLayout({
       areaServed: "IN",
       availableLanguage: ["English", "Hindi"],
     },
-    sameAs: Object.values(social).filter((url) => url.startsWith("http")),
+    sameAs: [...Object.values(social), app.googlePlay, app.appStore].filter((url) => url.startsWith("http")),
     description:
       "Premier Indian EdTech institution providing UPSC Civil Services, BPSC, and State PCS online and offline classroom coaching.",
   };

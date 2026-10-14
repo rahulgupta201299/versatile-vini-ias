@@ -1,7 +1,9 @@
 import { ResourceItem } from "@/types";
-import { COURSE_SECTIONS, coursePagePath, TEST_SERIES_URL } from "@/utils/slug";
+import { COURSE_SECTIONS, coursePagePath } from "@/utils/slug";
+import { PLAY_STORE_URL } from "./app";
 
 import { COLORS } from "@/theme/colors";
+/** Free resources grid — Current Affairs, Blogs, Notes and Topper Copy open on the site; the rest open the app on Google Play. */
 export const FREE_RESOURCES: ResourceItem[] = [
   {
     id: "current-affairs",
@@ -31,7 +33,7 @@ export const FREE_RESOURCES: ResourceItem[] = [
     bgColor: "#F3E8FF", // Soft Purple circle
     iconColor: "#9333EA",
     borderColor: "#E9D5FF",
-    href: "/#resources",
+    href: PLAY_STORE_URL,
   },
   {
     id: "notes",
@@ -51,7 +53,7 @@ export const FREE_RESOURCES: ResourceItem[] = [
     bgColor: "#FFE4E6", // Soft Rose circle
     iconColor: "#E11D48",
     borderColor: "#FECDD3",
-    href: TEST_SERIES_URL,
+    href: PLAY_STORE_URL,
   },
   {
     id: "free-batches",
@@ -61,7 +63,7 @@ export const FREE_RESOURCES: ResourceItem[] = [
     bgColor: "#E0F2FE", // Soft Sky circle
     iconColor: "#0284C7",
     borderColor: "#BAE6FD",
-    href: "/#courses",
+    href: PLAY_STORE_URL,
   },
   {
     id: "topper-copy",
@@ -81,7 +83,7 @@ export const FREE_RESOURCES: ResourceItem[] = [
     bgColor: "#E0E7FF", // Soft Indigo circle
     iconColor: "#4F46E5",
     borderColor: "#C7D2FE",
-    href: "/#resources",
+    href: PLAY_STORE_URL,
   },
   {
     id: "our-selections",
@@ -91,7 +93,7 @@ export const FREE_RESOURCES: ResourceItem[] = [
     bgColor: "#DCFCE7", // Soft Green circle
     iconColor: COLORS.success,
     borderColor: "#BBF7D0",
-    href: "/#rankers",
+    href: PLAY_STORE_URL,
   },
   {
     id: "paid-batches",
@@ -101,6 +103,6 @@ export const FREE_RESOURCES: ResourceItem[] = [
     bgColor: "#FCE7F3", // Soft Pink / Rose circle
     iconColor: "#E11D48",
     borderColor: "#FBCFE8",
-    href: "/#courses",
+    href: PLAY_STORE_URL,
   },
 ];
