@@ -52,9 +52,7 @@ export const CACHE_TAGS = {
   goals: "goals",
   freeResources: "free-resources",
 } as const;
-export type CacheTag = (typeof CACHE_TAGS)[keyof typeof CACHE_TAGS];
-
-export const isApiConfigured = () => Boolean(BASE_URL);
+type CacheTag = (typeof CACHE_TAGS)[keyof typeof CACHE_TAGS];
 
 /**
  * Endpoints that just failed or returned nothing are skipped for a short time, so a down API

@@ -185,5 +185,4 @@ function buildOptionalPage(s: OptionalSubject): FreeResourcePage {
   };
 }
 
-export const OPTIONAL_SUBJECTS = SUBJECTS.map((s) => s.name);
 export const OPTIONAL_PAGES: FreeResourcePage[] = SUBJECTS.map(buildOptionalPage);

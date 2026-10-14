@@ -40,4 +40,3 @@ export const COLORS = {
   success: "#16A34A",
 } as const;
 
-export type ColorName = keyof typeof COLORS;

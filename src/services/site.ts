@@ -11,7 +11,7 @@ import { slugify } from "@/utils/slug";
  * request, and fetchApi's ISR cache shares the result across requests.
  */
 
-export const getNavigation = cache(() =>
+const getNavigation = cache(() =>
   fetchApi<NavigationData>("navigation", {
     fallback: { navItems: NAV_ITEMS, megaMenu: MEGA_MENU_CATEGORIES, mobileMenu: MOBILE_MENU_SECTIONS, searchTrending: SEARCH_TRENDING, storeHref: STORE_HREF },
     revalidate: REVALIDATE.slow,
@@ -19,7 +19,7 @@ export const getNavigation = cache(() =>
   })
 );
 
-export const getExamCategories = cache(() =>
+const getExamCategories = cache(() =>
   fetchApi<ExamGoalCategory[]>("exam-categories", { fallback: EXAM_CATEGORIES, revalidate: REVALIDATE.slow, tags: [CACHE_TAGS.exams] })
 );
 
@@ -29,7 +29,7 @@ export const getSiteConfig = cache(() =>
 
 /** Display names for route segments, so breadcrumbs can label any URL. */
 function buildRouteLabels(navigation: NavigationData, examCategories: ExamGoalCategory[]) {
-  const labels: Record<string, string> = { goal: "Goal", courses: "Courses", "free-resources": "Free Resources", "current-affairs": "Current Affairs", "ethics-essay": "Ethics & Essay" };
+  const labels: Record<string, string> = { goal: "Goal", courses: "Courses", "free-resources": "Free Resources", "current-affairs": "Current Affairs", "ethics-essay": "Ethics & Essay", "monthly-magazine": "Monthly Magazine", "prism-simplified": "PRISM Simplified" };
   const add = (slug: string, label: string) => {
     if (slug && !labels[slug]) labels[slug] = label;
   };

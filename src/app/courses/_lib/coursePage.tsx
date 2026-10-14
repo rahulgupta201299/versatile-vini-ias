@@ -6,6 +6,7 @@ import { LandingHero, LandingFeatures, LandingHighlights, LandingInfographic, La
 import { MentorshipHero, CallbackBanner, ProgramTimeline, HowItWorks, FeatureCards, SyllabusStrip, ProblemSolution, PlanPicker, VeteranDiscount, EnrollPlanBand, NumberedFeatures, CourseFacts, PrepResources, OverlapTable, NoticeStrip, DownloadBanner, ExamCompare } from "@/sections/MentorshipCourse";
 import { EthicsHero, EthicsWhy, EthicsProgramDetails } from "@/sections/EthicsFoundation";
 import { ShortlistHero, ShortlistProblem, ShortlistFeatures, ShortlistEcosystem, ShortlistPlans } from "@/sections/CurrentAffairs";
+import { MagazineHero, MagazineWhy, MagazineDownloads, MagazineHelp } from "@/sections/Magazine";
 import { getRankerStats, getResultBanners } from "@/services";
 import { FreeResourcePage } from "@/types";
 
@@ -82,6 +83,21 @@ export async function CoursePageView({ page }: { page: FreeResourcePage }) {
         <ShortlistPlans data={shortlist.plans} />
         <CallbackBanner data={shortlist.callback} />
         {page.faqs.length > 0 && <CourseFaqs faqs={page.faqs} />}
+        {shortlist.quickLinks && <StickyEnrollBar links={shortlist.quickLinks} />}
+      </>
+    );
+  }
+
+  // Free magazine pages (Monthly Magazine, PRISM Simplified)
+  if (page.magazine) {
+    const { magazine } = page;
+    return (
+      <>
+        <FaqJsonLd page={page} />
+        <MagazineHero data={magazine} />
+        {magazine.why && <MagazineWhy data={magazine.why} />}
+        <MagazineDownloads data={magazine.downloads} theme={magazine.theme} />
+        <MagazineHelp faqs={page.faqs} help={magazine.help} />
       </>
     );
   }

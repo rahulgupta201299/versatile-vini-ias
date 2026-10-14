@@ -10,7 +10,7 @@ import { CourseBatch, CoursePageData, CourseVideo, ExamGoalCategory, MegaMenuCat
 import { HERO_BANNERS } from "./heroBanners";
 import { slugify } from "@/utils/slug";
 
-export interface GoalEntry {
+interface GoalEntry {
   slug: string;
   name: string;
   category: string;
@@ -29,7 +29,7 @@ export function buildGoalEntries(megaMenu: MegaMenuCategory[], examCategories: E
 }
 
 /* ---------- Per-page overrides (optional) ---------- */
-export const COURSE_PAGE_OVERRIDES: Record<string, Partial<CoursePageData>> = {
+const COURSE_PAGE_OVERRIDES: Record<string, Partial<CoursePageData>> = {
   // "upsc-cse-2026-27": { tagline: "...", videos: [{ title: "...", youtubeId: "VIDEO_ID", ... }] },
 };
 

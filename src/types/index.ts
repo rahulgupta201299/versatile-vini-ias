@@ -125,7 +125,7 @@ export interface ImpactStat {
 }
 
 /** Floating element on the impact map; x / y are % positions of the element's centre. */
-export interface ImpactMapItem {
+interface ImpactMapItem {
   x: number;
   y: number;
 }
@@ -193,7 +193,7 @@ export interface CoursePageData {
  * (See src/lib/api.ts for the endpoint list.)
  * ==================================================================== */
 
-export interface LinkItem {
+interface LinkItem {
   name: string;
   href: string;
 }
@@ -315,8 +315,6 @@ export type LandingIcon =
   | "Brain"
   | "Target"
   | "BarChart3"
-  | "Filter"
-  | "FolderKanban"
   | "PlayCircle"
   | "Sparkles"
   | "BookMarked"
@@ -529,8 +527,47 @@ export interface EthicsLandingContent {
   callback: CallbackContent;
 }
 
+export interface MagazineIssue {
+  label: string;
+  href: string;
+  /** Cover image of the issue. */
+  image: string;
+}
+
+export interface MagazineContent {
+  theme: "shortlist" | "prism";
+  hero: {
+    eyebrow: string;
+    kicker?: string;
+    title: string;
+    highlight?: string;
+    tagline?: string;
+    points: { title: string; text?: string; icon: LandingIcon }[];
+    /** Section background and the stacked-books artwork. */
+    background?: string;
+    image: { src: string; alt: string; width: number; height: number };
+  };
+  why?: {
+    eyebrow: string;
+    title: string;
+    highlight: string;
+    quote: string;
+    source: { title: string; text: string };
+    stat: { eyebrow: string; value: string; label: string; text: string };
+  };
+  downloads: {
+    title: string;
+    highlight: string;
+    ctaLabel: string;
+    groups: { title?: string; issues: MagazineIssue[] }[];
+  };
+  help: { title: string; highlight: string; text: string; ctaLabel: string };
+}
+
 /** Current Affairs "Shortlist" landing. */
 export interface ShortlistContent {
+  /** Buttons in the bottom bar that appears after the hero (e.g. Monthly Magazine, PRISM Simplified). */
+  quickLinks?: { label: string; href: string }[];
   hero: { eyebrow: string; badge: string; title: string; highlight: string; text: string; pillars: string[] };
   /** "The Current Affairs Problem" vs "The Shortlist Course" artwork — side by side on desktop, stacked on mobile. */
   problem: { problem: { image: string; alt: string }; solution: { image: string; alt: string } };
@@ -557,6 +594,8 @@ export interface FreeResourcePage {
   ethics?: EthicsLandingContent;
   /** Current Affairs "Shortlist" landing layout. */
   shortlist?: ShortlistContent;
+  /** Free magazine page (Monthly Magazine, PRISM Simplified). */
+  magazine?: MagazineContent;
   slug: string;
   /** Page heading, e.g. "Beginners' Kit for UPSC CSE 2027/28". */
   title: string;

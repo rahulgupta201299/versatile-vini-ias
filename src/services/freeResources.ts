@@ -46,6 +46,3 @@ export const getCourseSectionPage = cache((section: string, slug: string) =>
   })
 );
 
-/* GS Foundation shortcuts */
-export const getFreeResourceSlugs = () => getCourseSectionSlugs(COURSE_SECTIONS.gsFoundation);
-export const getFreeResourcePage = (slug: string) => getCourseSectionPage(COURSE_SECTIONS.gsFoundation, slug);

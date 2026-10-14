@@ -13,7 +13,7 @@ import { COLORS } from "@/theme/colors";
  *  - web   (> 768px): 3821 × 1324 art, rendered max 1120 × 388
  *  - mobile (≤ 768px): 1203 × 1650 art, full container width
  */
-export const RESULT_BANNER_MAX_WIDTH = 1120;
+const RESULT_BANNER_MAX_WIDTH = 1120;
 const MOBILE_QUERY = "@media (max-width: 768px)";
 const WEB_RATIO = "3821 / 1324";
 const MOBILE_RATIO = "1203 / 1650";

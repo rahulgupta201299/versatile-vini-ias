@@ -1,4 +1,3 @@
-export { default as Header } from "./Header/Header";
 export { default as HeroSlider } from "./Hero/HeroSlider";
 export { default as FreeResourcesSection } from "./Resources/FreeResourcesSection";
 export { default as MarketAdBanner } from "./PromotionalBanner/MarketAdBanner";
@@ -9,4 +8,3 @@ export { default as MentorshipCallbackSection } from "./Mentorship/MentorshipCal
 export { default as ImpactStatsSection } from "./Impact/ImpactStatsSection";
 export { default as EnquirySection } from "./Enquiry/EnquirySection";
 export { default as AppDownloadSection } from "./AppDownload/AppDownloadSection";
-export { default as Footer } from "./Footer/Footer";
