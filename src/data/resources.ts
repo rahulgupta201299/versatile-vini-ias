@@ -1,4 +1,5 @@
 import { ResourceItem } from "@/types";
+import { COURSE_SECTIONS, coursePagePath } from "@/utils/slug";
 
 import { COLORS } from "@/theme/colors";
 export const FREE_RESOURCES: ResourceItem[] = [
@@ -10,7 +11,7 @@ export const FREE_RESOURCES: ResourceItem[] = [
     bgColor: "#E0F2FE", // Soft Cyan / Blue circle
     iconColor: "#0284C7",
     borderColor: "#BAE6FD",
-    href: "/#resources",
+    href: coursePagePath(COURSE_SECTIONS.freeResources, "Current Affairs"),
   },
   {
     id: "blogs",

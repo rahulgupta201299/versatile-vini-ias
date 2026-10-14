@@ -3,14 +3,17 @@ import { FreeResourceHero, EnrollBand, CourseOverview, CourseFit, ContactInfo, C
 import { TopRankersSection, EnquirySection } from "@/sections";
 import { BatchHero, BatchStats, BatchStages, BatchPlans, BatchFaq } from "@/sections/BatchCourse";
 import { LandingHero, LandingFeatures, LandingHighlights, LandingInfographic, LandingStudyMaterial, LandingEnquiry } from "@/sections/CourseLanding";
-import { MentorshipHero, CallbackBanner, ProgramTimeline, HowItWorks, FeatureCards, SyllabusStrip, ProblemSolution, PlanPicker, VeteranDiscount, EnrollPlanBand } from "@/sections/MentorshipCourse";
+import { MentorshipHero, CallbackBanner, ProgramTimeline, HowItWorks, FeatureCards, SyllabusStrip, ProblemSolution, PlanPicker, VeteranDiscount, EnrollPlanBand, NumberedFeatures, CourseFacts, PrepResources, OverlapTable, NoticeStrip } from "@/sections/MentorshipCourse";
+import { EthicsHero, EthicsWhy, EthicsProgramDetails } from "@/sections/EthicsFoundation";
+import { ShortlistHero, ShortlistProblem, ShortlistFeatures, ShortlistEcosystem, ShortlistPlans } from "@/sections/CurrentAffairs";
 import { getRankerStats, getResultBanners } from "@/services";
 import { FreeResourcePage } from "@/types";
 
 /**
  * Shared renderer for /courses/<section>/<page>.
  * The layout is chosen by the content block the page carries:
- *   batch → live batch layout · landing → designed landing · mentorship → mentorship layout · else → standard course layout
+ *   batch → live batch layout · landing → designed landing · ethics → Ethics Foundation landing
+ *   shortlist → Current Affairs landing · mentorship → mentorship layout · else → standard course layout
  */
 
 export function courseMetadata(page: FreeResourcePage | null, section: string): Metadata {
@@ -48,6 +51,41 @@ export async function CoursePageView({ page }: { page: FreeResourcePage }) {
     );
   }
 
+  // Ethics Foundation landing — toppers from the homepage instead of the educator
+  if (page.ethics) {
+    const { ethics } = page;
+    const [resultTabs, rankerStats] = await Promise.all([getResultBanners(), getRankerStats()]);
+    return (
+      <>
+        <FaqJsonLd page={page} />
+        <EthicsHero hero={ethics.hero} />
+        <EthicsWhy data={ethics.why} />
+        <EthicsProgramDetails details={ethics.details} hero={ethics.hero} priceLabel={page.priceLabel} />
+        <CallbackBanner data={ethics.callback} />
+        <TopRankersSection tabs={resultTabs} stats={rankerStats} />
+        {page.faqs.length > 0 && <CourseFaqs faqs={page.faqs} />}
+        <StickyEnrollBar title={page.title} priceLabel={page.priceLabel} isFree={page.isFree} />
+      </>
+    );
+  }
+
+  // Current Affairs "Shortlist" landing
+  if (page.shortlist) {
+    const { shortlist } = page;
+    return (
+      <>
+        <FaqJsonLd page={page} />
+        <ShortlistHero hero={shortlist.hero} />
+        <ShortlistProblem data={shortlist.problem} />
+        <ShortlistFeatures data={shortlist.features} />
+        <ShortlistEcosystem data={shortlist.ecosystem} />
+        <ShortlistPlans data={shortlist.plans} />
+        <CallbackBanner data={shortlist.callback} />
+        {page.faqs.length > 0 && <CourseFaqs faqs={page.faqs} />}
+      </>
+    );
+  }
+
   // Designed landing layout (e.g. NCERT Foundation Batch)
   if (page.landing) {
     const { landing } = page;
@@ -73,15 +111,23 @@ export async function CoursePageView({ page }: { page: FreeResourcePage }) {
     return (
       <>
         <FaqJsonLd page={page} />
+        {m.notice && <NoticeStrip text={m.notice} />}
         <MentorshipHero page={page} data={m} />
         {!story && syllabus}
-        <CallbackBanner />
+        {m.facts && <CourseFacts data={m.facts} />}
+        {m.resources && <PrepResources data={m.resources} />}
+        {m.overlap && <OverlapTable data={m.overlap} />}
+        <CallbackBanner data={m.callback} />
         {story && toppers}
         {story && <ProblemSolution problem={m.problem} solution={m.solution} />}
         {story && syllabus}
         {m.timeline && <ProgramTimeline data={m.timeline} />}
         {m.howItWorks && <HowItWorks data={m.howItWorks} />}
-        <FeatureCards data={m.features} id={m.timeline || story ? undefined : "course-details"} />
+        {m.featureStyle === "numbered" ? (
+          <NumberedFeatures data={m.features} id="course-details" />
+        ) : (
+          <FeatureCards data={m.features} id={m.timeline || story ? undefined : "course-details"} />
+        )}
         {!story && toppers}
         {m.comparison && <BatchPlans data={m.comparison} />}
         {m.planPicker && <PlanPicker data={m.planPicker} />}

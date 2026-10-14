@@ -8,3 +8,8 @@ export { default as ProblemSolution } from "./ProblemSolution";
 export { default as PlanPicker } from "./PlanPicker";
 export { default as VeteranDiscount } from "./VeteranDiscount";
 export { default as EnrollPlanBand } from "./EnrollPlanBand";
+export { default as NumberedFeatures } from "./NumberedFeatures";
+export { default as CourseFacts } from "./CourseFacts";
+export { default as PrepResources } from "./PrepResources";
+export { default as OverlapTable } from "./OverlapTable";
+export { default as NoticeStrip } from "./NoticeStrip";

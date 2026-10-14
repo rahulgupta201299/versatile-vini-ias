@@ -6,7 +6,7 @@ import Link from "next/link";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { CalendarDays, ExternalLink, Play, Zap } from "lucide-react";
+import { CalendarDays, CheckCircle2, ExternalLink, Play, Zap } from "lucide-react";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { FreeResourcePage, MentorshipContent } from "@/types";
 import { openAuth } from "@/utils/events";
@@ -38,6 +38,15 @@ export default function MentorshipHero({ page, data }: { page: FreeResourcePage;
           <Box>
             {data.lead && <Typography sx={{ mb: 1, fontWeight: 800, color: COLORS.navy, fontSize: { xs: "1.05rem", md: "1.2rem" } }}>{data.lead}</Typography>}
             <Typography sx={{ color: COLORS.body, fontSize: { xs: "0.95rem", md: "1.02rem" }, lineHeight: 1.75 }}>{page.summary}</Typography>
+            {data.heroPoints && (
+              <Box component="ul" sx={{ listStyle: "none", m: 0, mt: 1.5, p: 0, display: "grid", gap: 0.75 }}>
+                {data.heroPoints.map((pt) => (
+                  <Box component="li" key={pt} sx={{ display: "flex", gap: 1, alignItems: "center", fontWeight: 600, color: COLORS.ink, fontSize: { xs: "0.9rem", md: "0.96rem" } }}>
+                    <CheckCircle2 size={18} color={COLORS.red} style={{ flexShrink: 0 }} /> {pt}
+                  </Box>
+                ))}
+              </Box>
+            )}
 
             {!data.hideHeroPrice && (
               <Box sx={{ mt: { xs: 2, md: 2.5 } }}>

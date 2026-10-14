@@ -30,6 +30,15 @@ import {
   UserRound,
   Users,
   Video,
+  Brain,
+  Target,
+  BarChart3,
+  Filter,
+  FolderKanban,
+  PlayCircle,
+  Sparkles,
+  BookMarked,
+  Repeat,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { LandingIcon } from "@/types";
@@ -67,6 +76,15 @@ export const LANDING_ICONS: Record<LandingIcon, LucideIcon> = {
   MessagesSquare,
   Map,
   Eye,
+  Brain,
+  Target,
+  BarChart3,
+  Filter,
+  FolderKanban,
+  PlayCircle,
+  Sparkles,
+  BookMarked,
+  Repeat,
 };
 
 /** Soft icon chips, cycled per item (icon colour, background). */

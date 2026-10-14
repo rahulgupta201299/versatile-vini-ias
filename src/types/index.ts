@@ -309,7 +309,16 @@ export type LandingIcon =
   | "ClipboardCheck"
   | "MessagesSquare"
   | "Map"
-  | "Eye";
+  | "Eye"
+  | "Brain"
+  | "Target"
+  | "BarChart3"
+  | "Filter"
+  | "FolderKanban"
+  | "PlayCircle"
+  | "Sparkles"
+  | "BookMarked"
+  | "Repeat";
 
 export interface LandingIconItem {
   title: string;
@@ -422,9 +431,83 @@ export interface MentorshipContent {
   offer?: { text: string; ctaLabel: string };
   timeline?: { title: string; subtitle: string; phases: { phase: string; period: string; title: string }[] };
   howItWorks?: { title: string; steps: string[] };
-  features: { title: string; items: { title: string; text?: string; points?: string[] }[] };
+  features: { title: string; eyebrow?: string; subtitle?: string; items: { title: string; tagline?: string; text?: string; points?: string[] }[] };
   /** Show the homepage "Top Rankers" section (in place of educators). */
   showToppers?: boolean;
+  /** Feature card style: "numbered" → 01, 02 … cards with a tagline and ticks (Plan B courses). */
+  featureStyle?: "tabs" | "numbered";
+  /** Custom wording for the callback card (default: "Crack UPSC with our Expert Guidance"). */
+  callback?: CallbackContent;
+  /** Thin notice strip above the hero, e.g. notification dates. */
+  notice?: string;
+  /** Tick list under the hero description. */
+  heroPoints?: string[];
+  /** "Course Details" fact tiles (language, validity, fee …). */
+  facts?: { title: string; items: { label: string; value: string; note?: string }[] };
+  /** "Essential Preparation Resources" download cards. */
+  resources?: { title: string; items: { title: string; text: string; ctaLabel: string; href: string }[] };
+  /** UPSC CSE vs exam syllabus overlap table. */
+  overlap?: SyllabusOverlap;
+}
+
+export interface CallbackContent {
+  eyebrow?: string;
+  title: string;
+  /** Part of the title shown in the brand red. */
+  highlight?: string;
+  subtitle: string;
+  points?: string[];
+  ctaLabel: string;
+}
+
+export type OverlapLevel = "strong" | "good" | "specific";
+export interface SyllabusOverlap {
+  title: string;
+  columns: { subject: string; upsc: string; exam: string; overlap: string };
+  /** Legend labels per level, e.g. { strong: "Strong Overlap", good: "Good Overlap", specific: "APFC-Specific" } */
+  levels: Record<OverlapLevel, string>;
+  rows: { subject: string; upsc: string; exam: string; level: OverlapLevel }[];
+}
+
+/** Ethics Foundation landing (hero, "why" points, program-details card, callback). */
+export interface EthicsLandingContent {
+  hero: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    forLabel: string;
+    exam: string;
+    /** Tagline; words wrapped in *asterisks* are highlighted in red. */
+    tagline: string;
+    meta: { label: string; value: string }[];
+    rating: { value: string; label: string };
+    stories: { value: string; label: string };
+  };
+  why: { title: string; intro: string; points: string[] };
+  details: {
+    title: string;
+    startLabel: string;
+    startDate: string;
+    items: { title: string; note: string }[];
+    priceNote: string;
+  };
+  callback: CallbackContent;
+}
+
+/** Current Affairs "Shortlist" landing. */
+export interface ShortlistContent {
+  hero: { eyebrow: string; badge: string; title: string; highlight: string; text: string; pillars: string[] };
+  problem: { title: string; highlight: string; problems: { title: string; text: string }[]; solutions: { title: string; text: string }[] };
+  features: { title: string; items: { title: string; text: string; icon: LandingIcon }[] };
+  ecosystem: { title: string; highlight: string; steps: { title: string; text: string; icon: LandingIcon }[] };
+  plans: {
+    title: string;
+    highlight: string;
+    intro: string;
+    notes: string[];
+    items: { id: string; option: string; name: string; validity: string; months: number; basePrice: string; originalPrice?: string; launchPrice: string; popular?: boolean }[];
+  };
+  callback: CallbackContent;
 }
 
 export interface FreeResourcePage {
@@ -434,6 +517,10 @@ export interface FreeResourcePage {
   landing?: CourseLandingContent;
   /** When present the page uses the live-batch layout (hero, toppers, stages, plans, FAQs). */
   batch?: BatchCourseContent;
+  /** Ethics Foundation landing layout. */
+  ethics?: EthicsLandingContent;
+  /** Current Affairs "Shortlist" landing layout. */
+  shortlist?: ShortlistContent;
   slug: string;
   /** Page heading, e.g. "Beginners' Kit for UPSC CSE 2027/28". */
   title: string;

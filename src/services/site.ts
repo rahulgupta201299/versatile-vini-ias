@@ -29,7 +29,7 @@ export const getSiteConfig = cache(() =>
 
 /** Display names for route segments, so breadcrumbs can label any URL. */
 function buildRouteLabels(navigation: NavigationData, examCategories: ExamGoalCategory[]) {
-  const labels: Record<string, string> = { goal: "Goal", courses: "Courses" };
+  const labels: Record<string, string> = { goal: "Goal", courses: "Courses", "free-resources": "Free Resources", "current-affairs": "Current Affairs" };
   const add = (slug: string, label: string) => {
     if (slug && !labels[slug]) labels[slug] = label;
   };

@@ -71,18 +71,27 @@ export const NAV_ITEMS: NavItem[] = [
     label: "Ethics & Essay",
     href: pagePath("Ethics & Essay"),
     children: [
-      c("Ethics Foundation Batch"),
-      c("Essay Foundation Batch"),
-      c("Ethics Answer Writing"),
-      c("Test Series (FLT)"),
-      c("Free Mentorship"),
+      // Each item has its own page at /courses/ethics-essay/<page> (content in data/ethicsEssayPages.ts)
+      c("Ethics Foundation Batch", coursePagePath(COURSE_SECTIONS.ethicsEssay, "Ethics Foundation Batch")),
+      c("Essay Foundation Batch", coursePagePath(COURSE_SECTIONS.ethicsEssay, "Essay Foundation Batch")),
+      c("Ethics Answer Writing", coursePagePath(COURSE_SECTIONS.ethicsEssay, "Ethics Answer Writing")),
+      // External link — opens in a new tab
+      c("Test Series (FLT)", TEST_SERIES_URL),
+      c("Free Mentorship", coursePagePath(COURSE_SECTIONS.mentorship, "Free Mentorship Program")),
     ],
   },
   {
     id: "upsc-plan-b",
     label: "UPSC Plan B",
     href: pagePath("UPSC Plan B"),
-    children: [c("RBI Grade B Course"), c("NABARD Grade A"), c("EPFO APFC"), c("EPFO EO/AO"), c("Free Mentorship")],
+    // Each item has its own page at /courses/upsc-plan-b/<page> (content in data/planBPages.ts)
+    children: [
+      c("RBI Grade B Course", coursePagePath(COURSE_SECTIONS.upscPlanB, "RBI Grade B Course")),
+      c("NABARD Grade A", coursePagePath(COURSE_SECTIONS.upscPlanB, "NABARD Grade A")),
+      c("EPFO APFC", coursePagePath(COURSE_SECTIONS.upscPlanB, "EPFO APFC")),
+      c("EPFO EO/AO", coursePagePath(COURSE_SECTIONS.upscPlanB, "EPFO EO/AO")),
+      c("Free Mentorship", coursePagePath(COURSE_SECTIONS.mentorship, "Free Mentorship Program")),
+    ],
   },
   {
     id: "offline-centre",
@@ -120,8 +129,8 @@ export const MOBILE_MENU_SECTIONS: MenuSection[] = [
       { label: "प्रारंभिक परीक्षा", href: "/#resources", icon: "FileText" },
       { label: "Mains", href: "/#resources", icon: "Folder" },
       { label: "मुख्य परीक्षा", href: "/#resources", icon: "Folder" },
-      { label: "Current Affairs", href: "/#resources", icon: "Newspaper" },
-      { label: "करेंट अफेयर्स", href: "/#resources", icon: "Newspaper" },
+      { label: "Current Affairs", href: coursePagePath(COURSE_SECTIONS.freeResources, "Current Affairs"), icon: "Newspaper" },
+      { label: "करेंट अफेयर्स", href: coursePagePath(COURSE_SECTIONS.freeResources, "Current Affairs"), icon: "Newspaper" },
       { label: "Vini Specials", href: "/#resources", icon: "Sparkles" },
       { label: "विनी स्पेशल्स", href: "/#resources", icon: "Sparkles" },
       { label: "Free Downloads", href: "/#resources", icon: "Download" },
