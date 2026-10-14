@@ -1,4 +1,5 @@
 import { HeroBanner } from "@/types";
+import { TEST_SERIES_URL } from "@/utils/slug";
 
 export const SMALL_PROMO_BANNERS: HeroBanner[] = [
   {
@@ -12,7 +13,7 @@ export const SMALL_PROMO_BANNERS: HeroBanner[] = [
     id: "promo-testseries",
     title: "All India Prelims & Mains Test Series 2026",
     imageUrl: "/images/banners/promo-prelims-testseries.jpg",
-    href: "/#courses",
+    href: TEST_SERIES_URL,
     alt: "Ace the UPSC Prelims 2026 - Comprehensive All India Test Series",
   },
   {

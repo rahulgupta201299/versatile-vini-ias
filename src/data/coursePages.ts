@@ -5,6 +5,7 @@
  * Only exams listed under "All Exams" (mega menu) and "Select Your Goal" get a goal page;
  * a complete page is generated from the exam name + category.
  */
+import { TEST_SERIES_URL } from "@/utils/slug";
 import { CourseBatch, CoursePageData, CourseVideo, ExamGoalCategory, MegaMenuCategory } from "@/types";
 import { HERO_BANNERS } from "./heroBanners";
 import { slugify } from "@/utils/slug";
@@ -100,6 +101,7 @@ function defaultBatches(name: string): CourseBatch[] {
       price: 1999,
       mrp: 3999,
       tag: "New",
+      href: TEST_SERIES_URL,
     },
   ];
 }

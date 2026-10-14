@@ -9,10 +9,12 @@ import { ChevronRight, Radio, PlayCircle, ClipboardCheck, FileText, ListChecks, 
 import { anchorSx, INK, RED, RED_BORDER, RED_TINT } from "./theme";
 
 import { COLORS } from "@/theme/colors";
+import { TEST_SERIES_URL } from "@/utils/slug";
+import { externalLinkProps } from "@/utils/links";
 const LINKS = [
   { label: "Live Courses", href: "#batches", icon: Radio, color: COLORS.red, bg: COLORS.redTint },
   { label: "Free Batch", href: "#free-classes", icon: PlayCircle, color: "#7C3AED", bg: "#F5F3FF" },
-  { label: "Test Series", href: "#scholarship-test", icon: ClipboardCheck, color: "#0891B2", bg: "#ECFEFF" },
+  { label: "Test Series", href: TEST_SERIES_URL, icon: ClipboardCheck, color: "#0891B2", bg: "#ECFEFF" },
   { label: "PYQs Paper", href: "/#resources", icon: FileText, color: "#EA580C", bg: "#FFF7ED" },
   { label: "Syllabus", href: "#about-exam", icon: ListChecks, color: COLORS.success, bg: "#F0FDF4" },
   { label: "Notification", href: "#about-exam", icon: Bell, color: "#DB2777", bg: "#FDF2F8" },
@@ -30,6 +32,7 @@ export default function QuickLinks() {
               key={label}
               component={href.startsWith("/") ? Link : "a"}
               href={href}
+              {...externalLinkProps({ href })}
               sx={{
                 display: "flex",
                                 alignItems: "center",

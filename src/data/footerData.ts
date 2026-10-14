@@ -1,4 +1,5 @@
 import { FooterResourceColumn } from "@/types";
+import { TEST_SERIES_URL } from "@/utils/slug";
 
 export const COMPANY_LINKS = [
   { name: "About Us", href: "#about" },
@@ -150,7 +151,7 @@ export const FREE_LEARNING_RESOURCES: FooterResourceColumn[] = [
       { name: "Aspirant Stationery & Highlighters", href: "#" },
       { name: "Official Vini IAS Merchandise", href: "#" },
       { name: "Standard OMR Practice Sheets", href: "#" },
-      { name: "All India Test Series Booklets", href: "#" },
+      { name: "All India Test Series Booklets", href: TEST_SERIES_URL },
       { name: "Previous Year Question (PYQ) Papers", href: "#" },
       { name: "UPSC Standard Answer Writing Copies", href: "#" },
     ],

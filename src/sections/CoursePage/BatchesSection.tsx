@@ -8,6 +8,7 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { ArrowRight, CalendarDays, Languages, MonitorPlay } from "lucide-react";
 import { CourseBatch } from "@/types";
+import { externalLinkProps } from "@/utils/links";
 import { anchorSx, formatINR, INK, MUTED, RED, RED_DARK, RED_TINT, sectionSx, titleSx } from "./theme";
 
 import { COLORS } from "@/theme/colors";
@@ -68,7 +69,8 @@ function BatchCard({ batch }: { batch: CourseBatch }) {
           </Box>
           <Box
             component="a"
-            href="#counselling"
+            href={batch.href ?? "#counselling"}
+            {...externalLinkProps({ href: batch.href ?? "#counselling" })}
             sx={{ px: 1.75, height: 38, display: "inline-flex", alignItems: "center", borderRadius: "10px", border: `1.5px solid ${RED}`, color: RED, backgroundColor: RED_TINT, fontWeight: 700, fontSize: "0.88rem", textDecoration: "none", "&:hover": { backgroundColor: RED, color: "#FFF" } }}
           >
             Explore

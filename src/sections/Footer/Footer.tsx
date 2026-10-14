@@ -22,6 +22,7 @@ import {
 import { useSiteData } from "@/context/SiteDataContext";
 
 import { COLORS } from "@/theme/colors";
+import { externalLinkProps } from "@/utils/links";
 export default function Footer() {
   const { contact: CONTACT, social: SOCIAL_LINKS, footer } = useSiteData().config;
   const {
@@ -347,6 +348,7 @@ export default function Footer() {
                       key={lIdx}
                       component="a"
                       href={link.href}
+                      {...externalLinkProps(link)}
                       variant="body2"
                       sx={{
                         color: COLORS.muted,

@@ -99,7 +99,7 @@ export const NAV_ITEMS: NavItem[] = [
     href: "/#enquiry",
     children: ["Noida", "Old Rajinder Nagar", "Delhi", "Patna", "Gaya Ji", "Darbhanga", "Bhagalpur"].map((city) => c(city, "/#enquiry")),
   },
-  { id: "test-series", label: "Test Series", href: pagePath("Test Series") },
+  { id: "test-series", label: "Test Series", href: TEST_SERIES_URL }, // external — opens in a new tab
 ].map((item) => ({
   ...item,
   children: item.children?.map((child) => ({ ...child, href: child.href || `${item.href}/${pagePath(child.label).slice(1)}` })),
@@ -149,7 +149,7 @@ export const MOBILE_MENU_SECTIONS: MenuSection[] = [
       { label: "Trend", href: "/#resources", icon: "TrendingUp" },
       { label: "Books", href: "/#resources", icon: "Book" },
       { label: "Magazine", href: "/#resources", icon: "BookOpen" },
-      { label: "Test Series", href: "/#resources", icon: "ClipboardCheck" },
+      { label: "Test Series", href: TEST_SERIES_URL, icon: "ClipboardCheck" },
       { label: "Toppers Copies", href: "/#resources", icon: "FileCheck" },
       { label: "Blogs Articles", href: "/#resources", icon: "Lightbulb" },
       { label: "Vini Publication", href: "/#resources", icon: "BookMarked" },

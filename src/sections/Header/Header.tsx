@@ -260,6 +260,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                           key={item.id}
                           component={Link}
                           href={item.href}
+                          {...externalLinkProps(item)}
                           onClick={() => setMoreAnchor(null)}
                           sx={{ fontWeight: 600, fontSize: "0.93rem", color: "#374151", py: 1.25, "&:hover": { color: RED, backgroundColor: COLORS.redTintSoft } }}
                         >
@@ -621,7 +622,7 @@ function NavLinkWithDropdown({ item }: { item: NavItem }) {
           <ChevronDown size={15} />
         </Box>
       ) : (
-        <Box component={Link} href={item.href} sx={triggerSx}>
+        <Box component={Link} href={item.href} {...externalLinkProps(item)} sx={triggerSx}>
           {item.label}
         </Box>
       )}

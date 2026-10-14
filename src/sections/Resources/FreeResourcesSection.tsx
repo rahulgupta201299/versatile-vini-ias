@@ -8,6 +8,7 @@ import { ResourceItem } from "@/types";
 import { IconRenderer } from "@/components";
 
 import { COLORS } from "@/theme/colors";
+import { externalLinkProps } from "@/utils/links";
 export default function FreeResourcesSection({ resources }: { resources: ResourceItem[] }) {
   return (
     <Box
@@ -68,6 +69,7 @@ export default function FreeResourcesSection({ resources }: { resources: Resourc
               key={item.id}
               component="a"
               href={item.href}
+              {...externalLinkProps(item)}
               sx={{
                 backgroundColor: "#FFFFFF",
                 border: `1px solid ${COLORS.borderLight}`,

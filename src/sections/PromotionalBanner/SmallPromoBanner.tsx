@@ -7,6 +7,7 @@ import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { HeroBanner } from "@/types";
+import { externalLinkProps } from "@/utils/links";
 
 interface SmallPromoBannerProps {
   banners: HeroBanner[];
@@ -71,6 +72,7 @@ export default function SmallPromoBanner({
                 key={banner.id}
                 component="a"
                 href={banner.href}
+                {...externalLinkProps(banner)}
                 sx={{
                   width: `${100 / banners.length}%`,
                   flexShrink: 0,

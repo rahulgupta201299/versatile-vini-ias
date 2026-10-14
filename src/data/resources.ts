@@ -1,5 +1,5 @@
 import { ResourceItem } from "@/types";
-import { COURSE_SECTIONS, coursePagePath } from "@/utils/slug";
+import { COURSE_SECTIONS, coursePagePath, TEST_SERIES_URL } from "@/utils/slug";
 
 import { COLORS } from "@/theme/colors";
 export const FREE_RESOURCES: ResourceItem[] = [
@@ -51,7 +51,7 @@ export const FREE_RESOURCES: ResourceItem[] = [
     bgColor: "#FFE4E6", // Soft Rose circle
     iconColor: "#E11D48",
     borderColor: "#FECDD3",
-    href: "/#courses",
+    href: TEST_SERIES_URL,
   },
   {
     id: "free-batches",

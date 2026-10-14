@@ -261,7 +261,7 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
                         {content}
                       </Box>
                     ) : (
-                      <Box component={Link} href={item.href} onClick={onClose} sx={tileSx}>
+                      <Box component={Link} href={item.href} {...externalLinkProps(item)} onClick={onClose} sx={tileSx}>
                         {content}
                       </Box>
                     )}

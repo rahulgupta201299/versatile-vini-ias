@@ -161,6 +161,8 @@ export interface CourseBatch {
   price: number;
   mrp: number;
   tag?: string;
+  /** "Explore" link (default: counselling form). External links open in a new tab. */
+  href?: string;
 }
 
 export interface CourseFaq {
