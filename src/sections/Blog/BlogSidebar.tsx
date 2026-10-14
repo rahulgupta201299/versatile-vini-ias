@@ -15,7 +15,7 @@ type Props = { latest: BlogPost[]; categories: BlogCategory[]; counts: Record<st
 /** Sidebar: latest posts (numbered), app download card, categories with counts. */
 export default function BlogSidebar({ latest, categories, counts, names }: Props) {
   return (
-    <Box component="aside" sx={{ display: "grid", gap: 3, alignContent: "start", position: { lg: "sticky" }, top: { lg: 150 } }}>
+    <Box component="aside" sx={{ display: "grid", gap: 3, alignContent: "start", position: { lg: "sticky" }, top: { lg: 128 } }}>
       <Box sx={{ p: 2.25, borderRadius: "16px", backgroundColor: "#FFFFFF", border: `1px solid ${COLORS.border}` }}>
         <SectionTitle title="Latest News" as="h3" />
         <Box sx={{ "& > article + article": { borderTop: `1px dashed ${COLORS.border}` } }}>
