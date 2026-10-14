@@ -543,8 +543,7 @@ export interface MagazineContent {
     highlight?: string;
     tagline?: string;
     points: { title: string; text?: string; icon: LandingIcon }[];
-    /** Section background and the stacked-books artwork. */
-    background?: string;
+    /** Stacked-books artwork. */
     image: { src: string; alt: string; width: number; height: number };
   };
   why?: {

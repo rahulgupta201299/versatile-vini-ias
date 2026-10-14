@@ -105,7 +105,7 @@ export const FREE_RESOURCE_SECTION_PAGES: FreeResourcePage[] = [
     magazine: {
       theme: "shortlist",
       hero: {
-        eyebrow: "Vini IAS",
+        eyebrow: "VINI IAS",
         kicker: "Monthly Current Affairs Magazine",
         title: "The Shortlist",
         points: [
@@ -113,7 +113,6 @@ export const FREE_RESOURCE_SECTION_PAGES: FreeResourcePage[] = [
           { title: "Prelims & Mains Value Added Content", icon: "Sparkles" },
           { title: "PYQ linkage with Current Affairs", icon: "Repeat" },
         ],
-        background: "/images/magazines/soft-glow-bg.webp",
         image: { src: "/images/magazines/shortlist-hero-books.webp", alt: "The Shortlist — Monthly Current Affairs Magazine", width: 1400, height: 1225 },
       },
       downloads: {
@@ -170,7 +169,6 @@ export const FREE_RESOURCE_SECTION_PAGES: FreeResourcePage[] = [
           { title: "Schemes & Initiatives", text: "(Covers all exam relevant information)", icon: "Landmark" },
           { title: "Data, Trends, Examples, Case Studies", text: "(Enhances the content of answer writing)", icon: "BarChart3" },
         ],
-        background: "/images/magazines/prism-hero-bg.webp",
         image: { src: "/images/magazines/prism-hero-books.webp", alt: "PRISM Simplified — PIB Monthly Magazine Summary", width: 1365, height: 1400 },
       },
       why: {

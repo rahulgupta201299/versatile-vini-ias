@@ -24,12 +24,12 @@ export default function MagazineHelp({ faqs, help }: { faqs: CourseFaq[]; help: 
   const [before, after] = help.title.split(help.highlight);
 
   return (
-    <Box component="section" id="faqs" sx={{ py: { xs: 4.5, md: 7 }, background: `linear-gradient(180deg, #FFFFFF 0%, #FFF8E1 100%)` }}>
+    <Box component="section" id="faqs" sx={{ py: { xs: 4.5, md: 7 }, backgroundColor: COLORS.surface }}>
       <Container>
-        <Typography component="h2" sx={{ textAlign: "center", fontWeight: 900, fontSize: { xs: "1.7rem", md: "2.4rem" }, color: COLORS.ink }}>
+        <Typography component="h2" sx={{ textAlign: "center", fontWeight: 900, fontSize: { xs: "1.7rem", md: "2.4rem" }, color: COLORS.navy }}>
           Frequently <Box component="span" sx={{ color: COLORS.red }}>Asked</Box> Questions
         </Typography>
-        <Box sx={{ width: 120, height: 4, borderRadius: 2, mx: "auto", mt: 1, mb: { xs: 3, md: 4.5 }, backgroundColor: COLORS.yellow }} />
+        <Box sx={{ width: 120, height: 4, borderRadius: 2, mx: "auto", mt: 1, mb: { xs: 3, md: 4.5 }, backgroundColor: COLORS.red }} />
 
         <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "minmax(0, 1fr) minmax(0, 1fr)" }, gap: { xs: 3, md: 4 }, alignItems: "start" }}>
           <Box sx={{ display: "grid", gap: 1.25 }}>
@@ -43,7 +43,7 @@ export default function MagazineHelp({ faqs, help }: { faqs: CourseFaq[]; help: 
                 sx={{ borderRadius: "14px !important", border: `1px solid ${open === i ? COLORS.redBorder : COLORS.border}`, backgroundColor: "#FFFFFF", boxShadow: "0 6px 16px rgba(15,23,42,.05)", "&::before": { display: "none" } }}
               >
                 <AccordionSummary expandIcon={<ChevronDown size={20} color={open === i ? COLORS.red : COLORS.muted} />} sx={{ px: 2.25, "& .MuiAccordionSummary-content": { my: 1.75 } }}>
-                  <Typography sx={{ fontWeight: 700, fontSize: { xs: "0.92rem", md: "0.98rem" }, color: COLORS.ink }}>{f.q}</Typography>
+                  <Typography sx={{ fontWeight: 700, fontSize: { xs: "0.92rem", md: "0.98rem" }, color: COLORS.navy }}>{f.q}</Typography>
                 </AccordionSummary>
                 <AccordionDetails sx={{ px: 2.25, pt: 0, pb: 2 }}>
                   <Typography sx={{ color: COLORS.body, fontSize: { xs: "0.88rem", md: "0.94rem" }, lineHeight: 1.7 }}>{f.a}</Typography>
@@ -52,18 +52,18 @@ export default function MagazineHelp({ faqs, help }: { faqs: CourseFaq[]; help: 
             ))}
           </Box>
 
-          <Box id="callback" sx={{ position: { md: "sticky" }, top: { md: 96 }, p: { xs: 2.5, md: 3.5 }, borderRadius: "22px", backgroundColor: "#FFFFFF", border: `1px solid ${COLORS.border}`, boxShadow: "0 18px 40px rgba(15,23,42,.08)" }}>
+          <Box id="callback" sx={{ position: { md: "sticky" }, top: { md: 96 }, p: { xs: 2.5, md: 3.5 }, borderRadius: "22px", background: `linear-gradient(120deg, ${COLORS.navyDark} 0%, ${COLORS.navy} 100%)`, color: "#FFFFFF", boxShadow: "0 18px 40px rgba(12,28,54,.25)" }}>
             <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start", justifyContent: "space-between" }}>
               <Box>
-                <Typography component="h3" sx={{ fontWeight: 900, fontSize: { xs: "1.35rem", md: "1.7rem" }, color: COLORS.ink, lineHeight: 1.25 }}>
+                <Typography component="h3" sx={{ fontWeight: 900, fontSize: { xs: "1.35rem", md: "1.7rem" }, color: "#FFFFFF", lineHeight: 1.25 }}>
                   {before}
-                  <Box component="span" sx={{ color: COLORS.red }}>{help.highlight}</Box>
+                  <Box component="span" sx={{ color: COLORS.yellow }}>{help.highlight}</Box>
                   {after}
                 </Typography>
-                <Typography sx={{ mt: 1, color: COLORS.body, fontSize: "0.92rem" }}>{help.text}</Typography>
+                <Typography sx={{ mt: 1, color: "rgba(255,255,255,.8)", fontSize: "0.92rem" }}>{help.text}</Typography>
               </Box>
-              <Box sx={{ display: { xs: "none", sm: "block" }, flexShrink: 0 }}>
-                <CounsellorIllustration width={150} />
+              <Box sx={{ display: { xs: "none", sm: "block" }, flexShrink: 0, p: 1, borderRadius: "16px", backgroundColor: "#FFFFFF" }}>
+                <CounsellorIllustration width={140} />
               </Box>
             </Box>
             {sent ? (
@@ -91,7 +91,7 @@ export default function MagazineHelp({ faqs, help }: { faqs: CourseFaq[]; help: 
                   autoComplete="tel-national"
                   inputProps={{ inputMode: "numeric", "aria-label": "Mobile number" }}
                   InputProps={{
-                    startAdornment: <InputAdornment position="start"><Box component="span" sx={{ fontWeight: 700, color: COLORS.ink }}>+91</Box></InputAdornment>,
+                    startAdornment: <InputAdornment position="start"><Box component="span" sx={{ fontWeight: 700, color: COLORS.navy }}>+91</Box></InputAdornment>,
                     sx: { height: 48, borderRadius: "10px", backgroundColor: "#FFFFFF" },
                   }}
                   sx={{ flex: 1 }}
