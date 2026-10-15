@@ -12,11 +12,10 @@ import {
   LanguageSwitcher,
   TableOfContents,
   BlogCover,
-  BlogSidebar,
+  RelatedPosts,
   CategoryTag,
-  PostCard,
-  SectionTitle,
-  ShareButtons,
+  DownloadPdfButton,
+  PrevNextArticles,
 } from "@/sections/Blog";
 import {
   getBlogIndex,
@@ -74,13 +73,21 @@ export default async function BlogPostPage({ params }: { params: Params }) {
     getHeroBanners(),
   ]);
   const toc = headingsOf(post.content);
+  // posts are newest first: previous = older, next = newer
+  const index = posts.findIndex(
+    (p) => p.slug === post.slug && p.category === post.category,
+  );
+  const prev = index >= 0 ? posts[index + 1] : undefined;
+  const next = index > 0 ? posts[index - 1] : undefined;
   const categoryName = names[post.category] ?? post.category;
-  const related = posts
-    .filter((p) => p.category === post.category && p.slug !== post.slug)
-    .slice(0, 3);
-  const more = related.length
-    ? related
-    : posts.filter((p) => p.slug !== post.slug).slice(0, 3);
+  // 5 related posts: same exam first, then the newest from other exams
+  const others = posts.filter(
+    (p) => !(p.slug === post.slug && p.category === post.category),
+  );
+  const related = [
+    ...others.filter((p) => p.category === post.category),
+    ...others.filter((p) => p.category !== post.category),
+  ].slice(0, 5);
   const url = `${SITE_URL}${blogPath(post)}`;
 
   const jsonLd = {
@@ -110,11 +117,11 @@ export default async function BlogPostPage({ params }: { params: Params }) {
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: { xs: "1fr", lg: "minmax(0, 1fr) 340px" },
-            gap: 4,
+            maxWidth: 880,
+            mx: "auto",
           }}
         >
-          <Box component="article" sx={{ minWidth: 0 }}>
+          <Box component="article" id="print-article" sx={{ minWidth: 0 }}>
             <Box
               component="nav"
               aria-label="Breadcrumb"
@@ -131,9 +138,20 @@ export default async function BlogPostPage({ params }: { params: Params }) {
               <Link href="/">Home</Link> › <Link href="/exams">Exams</Link> ›{" "}
               <Link href={`/exams/${post.category}`}>{categoryName}</Link>
             </Box>
-            <Box sx={{ mt: 1.5, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 1 }}>
+            <Box
+              sx={{
+                mt: 1.5,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: 1,
+              }}
+            >
               <CategoryTag slug={post.category} name={categoryName} />
-              <LanguageSwitcher />
+              <Box data-noprint>
+                <LanguageSwitcher />
+              </Box>
             </Box>
             <Typography
               component="h1"
@@ -165,6 +183,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
 
             {toc.length > 0 && (
               <Box
+                data-noprint
                 sx={{
                   mt: 2,
                   position: "sticky",
@@ -219,49 +238,15 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                 ))}
               </Box>
             )}
-            <Box
-              sx={{ mt: 2.5, pt: 2.5, borderTop: `1px solid ${COLORS.border}` }}
-            >
-              <ShareButtons title={post.title} url={url} />
+            <Box data-noprint sx={{ mt: 3.5, display: "grid", gap: 3 }}>
+              <DownloadPdfButton href={post.pdf} />
+              <PrevNextArticles prev={prev} next={next} />
             </Box>
 
-            <Box
-              component="section"
-              aria-label="Related articles"
-              sx={{ mt: 5 }}
-            >
-              <SectionTitle
-                title={
-                  related.length ? `More from ${categoryName}` : "More Articles"
-                }
-                href={`/exams/${post.category}`}
-              />
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: {
-                    xs: "1fr",
-                    sm: "repeat(2, minmax(0, 1fr))",
-                    xl: "repeat(3, minmax(0, 1fr))",
-                  },
-                  gap: 2.5,
-                }}
-              >
-                {more.map((p) => (
-                  <PostCard
-                    key={p.slug}
-                    post={p}
-                    categoryName={names[p.category]}
-                  />
-                ))}
-              </Box>
+            <Box data-noprint sx={{ mt: 5 }}>
+              <RelatedPosts posts={related} names={names} />
             </Box>
           </Box>
-
-          <BlogSidebar
-            latest={posts.filter((p) => p.slug !== post.slug).slice(0, 5)}
-            names={names}
-          />
         </Box>
       </Container>
     </>

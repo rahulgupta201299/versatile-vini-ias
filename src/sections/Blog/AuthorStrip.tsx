@@ -35,7 +35,9 @@ export default function AuthorStrip({ post, url }: { post: BlogPost; url: string
           </Box>
         </Box>
       </Box>
-      <ShareBlog title={post.title} url={url} id={post.slug} />
+      <Box data-noprint>
+        <ShareBlog title={post.title} url={url} id={post.slug} />
+      </Box>
     </Box>
   );
 }

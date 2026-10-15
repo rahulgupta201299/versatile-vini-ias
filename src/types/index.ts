@@ -647,5 +647,7 @@ export interface BlogPost {
   readMinutes: number;
   tags: string[];
   featured?: boolean;
+  /** Published PDF of the article (else the browser saves the page as PDF). */
+  pdf?: string;
   content: BlogBlock[];
 }
