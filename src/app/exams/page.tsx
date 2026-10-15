@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { BlogSidebar, FeaturedPost, PostCard, PostRow, SectionTitle } from "@/sections/Blog";
-import { getBlogIndex } from "@/services";
+import { BlogSidebar, FeaturedPost, LatestUpdates, PostCard, PostRow, SectionTitle } from "@/sections/Blog";
+import { getBlogIndex, getExamUpdates } from "@/services";
 import { COLORS } from "@/theme/colors";
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 /** /exams — lead story + latest list, category blocks and sidebar (newspaper-style). */
 export default async function ExamsBlogHome() {
-  const { categories, posts, names, counts } = await getBlogIndex();
+  const [{ categories, posts, names, counts }, updates] = await Promise.all([getBlogIndex(), getExamUpdates()]);
   const lead = posts.find((p) => p.featured) ?? posts[0];
   const side = posts.filter((p) => p !== lead).slice(0, 4);
   const withPosts = categories.filter((c) => counts[c.slug]);
@@ -35,6 +35,9 @@ export default async function ExamsBlogHome() {
           </Box>
         </Box>
       )}
+
+      {/* Notifications / Admit Cards / Results */}
+      <LatestUpdates boards={updates.boards} />
 
       <Box sx={{ mt: { xs: 4, md: 5 }, display: "grid", gridTemplateColumns: { xs: "1fr", lg: "minmax(0, 1fr) 340px" }, gap: { xs: 4, lg: 4 } }}>
         <Box sx={{ display: "grid", gap: { xs: 4, md: 5 }, alignContent: "start" }}>

@@ -25,7 +25,6 @@ import {
   getBlogPost,
   getBlogPosts,
   getHeroBanners,
-  getRankerStats,
   getResultBanners,
 } from "@/services";
 import { blogPath } from "@/utils/slug";
@@ -73,13 +72,11 @@ export default async function BlogPostPage({ params }: { params: Params }) {
   const { category, slug } = await params;
   const post = await getBlogPost(category, slug);
   if (!post) notFound();
-  const [{ posts, names }, heroBanners, resultTabs, rankerStats] =
-    await Promise.all([
-      getBlogIndex(),
-      getHeroBanners(),
-      getResultBanners(),
-      getRankerStats(),
-    ]);
+  const [{ posts, names }, heroBanners, resultTabs] = await Promise.all([
+    getBlogIndex(),
+    getHeroBanners(),
+    getResultBanners(),
+  ]);
   // counselling form: exams of this post's category (first one pre-selected)
   const examOptions = (
     EXAM_CATEGORIES.find((c) => names[post.category] === c.category)
@@ -147,7 +144,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
             mx: "auto",
           }}
         >
-          <Box component="article" id="print-article" sx={{ minWidth: 0 }}>
+          <Box component="article" sx={{ minWidth: 0 }}>
             <Box
               component="nav"
               aria-label="Breadcrumb"
@@ -175,7 +172,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
               }}
             >
               <CategoryTag slug={post.category} name={categoryName} />
-              <Box data-noprint>
+              <Box>
                 <LanguageSwitcher />
               </Box>
             </Box>
@@ -209,7 +206,6 @@ export default async function BlogPostPage({ params }: { params: Params }) {
 
             {toc.length > 0 && (
               <Box
-                data-noprint
                 sx={{
                   mt: 2,
                   position: "sticky",
@@ -264,13 +260,13 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                 ))}
               </Box>
             )}
-            <Box data-noprint sx={{ mt: 3.5, display: "grid", gap: 3 }}>
-              <DownloadPdfButton href={post.pdf} />
+            <Box sx={{ mt: 3.5, display: "grid", gap: 3 }}>
+              <DownloadPdfButton href={post.pdf ?? `${blogPath(post)}/pdf`} />
               <BlogFaqs faqs={post.faqs} />
               <PrevNextArticles prev={prev} next={next} />
             </Box>
 
-            <Box data-noprint sx={{ mt: 5 }}>
+            <Box sx={{ mt: 5 }}>
               <RelatedPosts posts={related} names={names} />
             </Box>
           </Box>
@@ -278,8 +274,8 @@ export default async function BlogPostPage({ params }: { params: Params }) {
       </Container>
 
       {/* homepage toppers + counselling form */}
-      <Box data-noprint>
-        <TopRankersSection tabs={resultTabs} stats={rankerStats} />
+      <Box>
+        <TopRankersSection tabs={resultTabs} stats={[]} hideStats />
         <CounsellingForm
           name={examOptions[0] ?? categoryName}
           examOptions={examOptions.length ? examOptions : [categoryName]}

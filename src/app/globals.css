@@ -65,30 +65,3 @@ font[style*="background-color"] {
   background: none !important;
   box-shadow: none !important;
 }
-
-/* Blog "Download this Article as PDF" (print → Save as PDF): print only the article */
-@media print {
-  body * {
-    visibility: hidden;
-  }
-  #print-article,
-  #print-article * {
-    visibility: visible;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-  #print-article {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    padding: 0 12mm;
-  }
-  #print-article [data-noprint],
-  #print-article [data-noprint] * {
-    display: none !important;
-  }
-  #print-article h2 {
-    break-after: avoid;
-  }
-}

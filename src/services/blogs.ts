@@ -1,7 +1,8 @@
 import { cache } from "react";
 import { fetchApi, CACHE_TAGS, REVALIDATE } from "@/lib/api";
-import { BlogCategory, BlogPost } from "@/types";
+import { BlogCategory, BlogPost, ExamUpdates } from "@/types";
 import { BLOG_CATEGORIES, BLOG_POSTS } from "@/data/blogs";
+import { EXAM_UPDATES } from "@/data/examUpdates";
 
 const byDate = (a: BlogPost, b: BlogPost) => b.publishedAt.localeCompare(a.publishedAt);
 
@@ -37,3 +38,8 @@ export const getBlogIndex = cache(async () => {
   posts.forEach((p) => (counts[p.category] = (counts[p.category] ?? 0) + 1));
   return { categories, posts, names, counts };
 });
+
+/** Notification / admit card / result boards + important exam links: GET /blogs/updates. */
+export const getExamUpdates = cache(() =>
+  fetchApi<ExamUpdates>("blogs/updates", { fallback: EXAM_UPDATES, tags: [CACHE_TAGS.blogs], revalidate: REVALIDATE.fast })
+);

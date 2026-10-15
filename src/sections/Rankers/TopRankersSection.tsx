@@ -15,9 +15,11 @@ interface TopRankersSectionProps {
   tabs: ResultBannerTab[];
   /** Headline numbers above the tabs (server). */
   stats: StatItem[];
+  /** Hide the 4 headline stat cards (used on blog articles). */
+  hideStats?: boolean;
 }
 
-export default function TopRankersSection({ tabs, stats }: TopRankersSectionProps) {
+export default function TopRankersSection({ tabs, stats, hideStats = false }: TopRankersSectionProps) {
   const visibleTabs = tabs.filter((t) => t.banners.length > 0);
   const [activeTabId, setActiveTabId] = useState(visibleTabs[0]?.id);
   const activeTab = visibleTabs.find((t) => t.id === activeTabId) ?? visibleTabs[0];
@@ -110,7 +112,8 @@ export default function TopRankersSection({ tabs, stats }: TopRankersSectionProp
           </Typography>
         </Box>
 
-        {/* 4 Stat Boxes Matching Screenshot 18.05.42 */}
+        {/* 4 stat boxes (hidden on blog pages) */}
+        {!hideStats && (
         <Box
           sx={{
             display: "grid",
@@ -188,6 +191,7 @@ export default function TopRankersSection({ tabs, stats }: TopRankersSectionProp
             );
           })}
         </Box>
+        )}
 
         {/* Results tabs (UPSC / State PCS / Other Exams) */}
         {visibleTabs.length > 1 && (

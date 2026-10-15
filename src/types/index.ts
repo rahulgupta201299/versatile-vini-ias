@@ -647,9 +647,15 @@ export interface BlogPost {
   readMinutes: number;
   tags: string[];
   featured?: boolean;
-  /** Published PDF of the article (else the browser saves the page as PDF). */
+  /** Published PDF of the article (else one is generated at /exams/<category>/<post>/pdf). */
   pdf?: string;
   content: BlogBlock[];
   /** 5–7 questions shown under the article (with FAQ structured data). */
   faqs: CourseFaq[];
+}
+
+/** "Latest Notification & Updates" boards + "Important Exams" link grid on /exams. */
+export interface ExamUpdates {
+  boards: { id: string; title: string; items: { title: string; href: string }[] }[];
+  importantExams: { title: string; href: string }[][];
 }
