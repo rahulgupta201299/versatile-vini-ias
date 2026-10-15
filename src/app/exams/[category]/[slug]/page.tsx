@@ -5,7 +5,9 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { headingsOf } from "@/sections/Blog/ArticleBody";
-import { HeroSlider } from "@/sections";
+import { HeroSlider, TopRankersSection } from "@/sections";
+import { CounsellingForm } from "@/sections/CoursePage";
+import { EXAM_CATEGORIES } from "@/data/exams";
 import {
   ArticleBody,
   AuthorStrip,
@@ -14,6 +16,7 @@ import {
   BlogCover,
   RelatedPosts,
   CategoryTag,
+  BlogFaqs,
   DownloadPdfButton,
   PrevNextArticles,
 } from "@/sections/Blog";
@@ -22,6 +25,8 @@ import {
   getBlogPost,
   getBlogPosts,
   getHeroBanners,
+  getRankerStats,
+  getResultBanners,
 } from "@/services";
 import { blogPath } from "@/utils/slug";
 import { COLORS } from "@/theme/colors";
@@ -68,10 +73,20 @@ export default async function BlogPostPage({ params }: { params: Params }) {
   const { category, slug } = await params;
   const post = await getBlogPost(category, slug);
   if (!post) notFound();
-  const [{ posts, names }, heroBanners] = await Promise.all([
-    getBlogIndex(),
-    getHeroBanners(),
-  ]);
+  const [{ posts, names }, heroBanners, resultTabs, rankerStats] =
+    await Promise.all([
+      getBlogIndex(),
+      getHeroBanners(),
+      getResultBanners(),
+      getRankerStats(),
+    ]);
+  // counselling form: exams of this post's category (first one pre-selected)
+  const examOptions = (
+    EXAM_CATEGORIES.find((c) => names[post.category] === c.category)
+      ?.subcategories ?? []
+  )
+    .map((e) => e.name)
+    .slice(0, 12);
   const toc = headingsOf(post.content);
   // posts are newest first: previous = older, next = newer
   const index = posts.findIndex(
@@ -104,6 +119,17 @@ export default async function BlogPostPage({ params }: { params: Params }) {
     },
     mainEntityOfPage: url,
   };
+  const faqJsonLd = post.faqs.length
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: post.faqs.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      }
+    : null;
 
   return (
     <>
@@ -240,6 +266,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
             )}
             <Box data-noprint sx={{ mt: 3.5, display: "grid", gap: 3 }}>
               <DownloadPdfButton href={post.pdf} />
+              <BlogFaqs faqs={post.faqs} />
               <PrevNextArticles prev={prev} next={next} />
             </Box>
 
@@ -249,6 +276,21 @@ export default async function BlogPostPage({ params }: { params: Params }) {
           </Box>
         </Box>
       </Container>
+
+      {/* homepage toppers + counselling form */}
+      <Box data-noprint>
+        <TopRankersSection tabs={resultTabs} stats={rankerStats} />
+        <CounsellingForm
+          name={examOptions[0] ?? categoryName}
+          examOptions={examOptions.length ? examOptions : [categoryName]}
+        />
+      </Box>
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
     </>
   );
 }

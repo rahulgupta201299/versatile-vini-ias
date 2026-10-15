@@ -14,3 +14,4 @@ export { default as TableOfContents } from "./TableOfContents";
 export { default as DownloadPdfButton } from "./DownloadPdfButton";
 export { default as PrevNextArticles } from "./PrevNextArticles";
 export { default as RelatedPosts } from "./RelatedPosts";
+export { default as BlogFaqs } from "./BlogFaqs";

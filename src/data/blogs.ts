@@ -4,7 +4,7 @@
  * FALLBACK / SAMPLE content — used until GET /blogs is configured. Every post here is a placeholder
  * (dates, numbers and notifications are illustrative). Category tabs follow the "Select Your Goal" order.
  */
-import { BlogBlock, BlogCategory, BlogPost } from "@/types";
+import { BlogBlock, BlogCategory, BlogPost, CourseFaq } from "@/types";
 import { EXAM_CATEGORIES } from "./exams";
 import { slugify } from "@/utils/slug";
 
@@ -36,9 +36,24 @@ const h2 = (text: string): BlogBlock => ({ type: "h2", text });
 const ul = (...items: string[]): BlogBlock => ({ type: "ul", items });
 const quote = (text: string): BlogBlock => ({ type: "quote", text });
 
-type Draft = Omit<BlogPost, "slug" | "content"> & { content?: BlogBlock[] };
+type Draft = Omit<BlogPost, "slug" | "content" | "faqs"> & { content?: BlogBlock[]; faqs?: CourseFaq[] };
+/** Sample FAQs per exam category (replace per post when real content arrives). */
+const NAME_BY_SLUG: Record<string, string> = Object.fromEntries(EXAM_CATEGORIES.map((c) => [slugify(c.category), c.category]));
+const defaultFaqs = (category: string): CourseFaq[] => {
+  const exam = NAME_BY_SLUG[category] ?? "this exam";
+  return [
+    { q: `When is the next ${exam} notification expected?`, a: `The ${exam} notification is released as per the official exam calendar. Keep checking the official website and Vini IAS updates — we publish every change as soon as it is announced.` },
+    { q: `What is the best way to start ${exam} preparation?`, a: "Begin with the official syllabus and previous year questions, build basics from standard books, then move to regular practice tests and revision." },
+    { q: `How many hours should I study daily for ${exam}?`, a: "Consistency matters more than long hours. 6–8 focused hours with weekly revision and tests work well for most aspirants; working aspirants can follow a 3–4 hour plan." },
+    { q: `Are previous year questions important for ${exam}?`, a: "Yes. PYQs show the exam's pattern, difficulty and frequently asked areas. Solve them topic-wise first and then as full papers under time limits." },
+    { q: `Can I prepare for ${exam} without coaching?`, a: "Yes, with a clear plan, good study material and regular test practice. Guidance from mentors helps you avoid common mistakes and save time." },
+    { q: `Does Vini IAS offer free resources for ${exam}?`, a: "Yes — free classes, notes, current affairs and quizzes are available on the Vini IAS website and app." },
+  ];
+};
+
 const post = (d: Draft): BlogPost => ({
   ...d,
+  faqs: d.faqs ?? defaultFaqs(d.category),
   slug: slugify(d.title),
   content: d.content ?? [
     p(d.excerpt),

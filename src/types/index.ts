@@ -650,4 +650,6 @@ export interface BlogPost {
   /** Published PDF of the article (else the browser saves the page as PDF). */
   pdf?: string;
   content: BlogBlock[];
+  /** 5–7 questions shown under the article (with FAQ structured data). */
+  faqs: CourseFaq[];
 }
