@@ -152,7 +152,7 @@ export async function renderBlogPdf(post: BlogPost, categoryName: string, relate
             Source: <Link src={url} style={{ color: MUTED }}>{url}</Link>
           </Text>
           <Text style={s.endStrong}>© Vini IAS. For personal use only.</Text>
-          <Text style={s.endStrong}>Copyright © Vini Educentre Pvt. LTD. | All rights Reserved.</Text>
+          <Text style={s.endStrong}>Copyright © Vini Eduventure Pvt. LTD. | All rights Reserved.</Text>
         </View>
 
         <Text style={s.footer} fixed>Vini IAS • viniias.com</Text>

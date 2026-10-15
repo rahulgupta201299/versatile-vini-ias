@@ -29,9 +29,9 @@ export const metadata: Metadata = {
     "Ethics and Essay Masterclass",
     "State PCS Notes",
   ],
-  authors: [{ name: "Vini Educentre Pvt. LTD." }],
+  authors: [{ name: "Vini Eduventure Pvt. LTD." }],
   creator: "Vini IAS",
-  publisher: "Vini Educentre Pvt. LTD.",
+  publisher: "Vini Eduventure Pvt. LTD.",
   metadataBase: new URL("https://viniias.com"),
   openGraph: {
     title: "Vini IAS (विनी IAS) - Crack UPSC & BPSC with Top Rankers",

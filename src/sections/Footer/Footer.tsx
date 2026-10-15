@@ -454,7 +454,7 @@ export default function Footer() {
           </Box>
 
           <Typography variant="body2" sx={{ fontSize: "0.82rem", color: COLORS.muted, textTransform: "uppercase" }}>
-            Copyright © Vini Educentre Pvt. LTD. | All rights Reserved.
+            Copyright © Vini Eduventure Pvt. LTD. | All rights Reserved.
           </Typography>
         </Box>
       </Container>
