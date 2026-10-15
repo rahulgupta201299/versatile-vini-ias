@@ -453,7 +453,7 @@ export default function Footer() {
             </Link>
           </Box>
 
-          <Typography variant="body2" sx={{ fontSize: { xs: "clamp(0.5rem, 2.55vw, 0.82rem)", sm: "0.82rem" }, letterSpacing: { xs: "-0.01em", sm: "normal" }, whiteSpace: "nowrap", color: COLORS.muted, textTransform: "uppercase" }}>
+          <Typography variant="body2" sx={{ fontSize: { xs: "clamp(0.6rem, 3.1vw, 0.82rem)", sm: "0.82rem" }, whiteSpace: "nowrap", color: COLORS.muted, textTransform: { xs: "none", sm: "uppercase" } }}>
             Copyright © Vini Eduventure Pvt. LTD. | All rights Reserved.
           </Typography>
         </Box>
