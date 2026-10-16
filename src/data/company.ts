@@ -32,6 +32,7 @@ export const ABOUT_CONTENT: AboutContent = {
       name: "Rahul Yadav",
       role: "Founder & CEO, VINI GROUP",
       image: "/images/about/rahul-yadav.webp",
+      linkedin: "https://www.linkedin.com/in/rahulviniias",
       quote: "My aim is to make quality civil services preparation reachable for every aspirant — whichever corner of the country they come from.",
       bio: [
         "Rahul Yadav founded Vini IAS with a simple belief: talent is everywhere, but quality guidance is not. As Founder & CEO of VINI GROUP, he leads the vision behind Vini IAS and its growing ecosystem of learning brands.",
@@ -59,6 +60,10 @@ export const ABOUT_CONTENT: AboutContent = {
     text: "We are a young, mission-driven team that cares deeply about students. If you want your work to change lives, we would love to hear from you.",
     cta: { label: "Explore careers", href: "/careers" },
   },
+  contacts: [
+    { kind: "press", title: "Public relations", text: "For media enquiries, email us at", email: "pr@groupvini.in" },
+    { kind: "support", title: "Contact us", text: "Shoot your questions to us at", email: "support@groupvini.in" },
+  ],
 };
 
 /** /careers — sample openings; replace via GET /pages/careers once the CMS is live. */

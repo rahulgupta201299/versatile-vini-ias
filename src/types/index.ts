@@ -671,9 +671,10 @@ export interface AboutContent {
   hero: { badge: string; kicker: string; highlight: string; title: string; intro: string };
   mission: { icon: CompanyIcon; text: string; highlight: string }[];
   vision: { points: string[]; tiles: { value: string; label: string }[] };
-  founders: { name: string; role: string; image: string; quote: string; bio: string[] }[];
+  founders: { name: string; role: string; image: string; linkedin?: string; quote: string; bio: string[] }[];
   presence: { intro: string; stats: { value: string; label: string }[]; centres: { name: string; city: string; status: "Open" | "Opening soon" }[] };
   culture: { title: string; text: string; cta: { label: string; href: string } };
+  contacts: { kind: "press" | "support"; title: string; text: string; email: string }[];
 }
 
 export interface CareerJob {

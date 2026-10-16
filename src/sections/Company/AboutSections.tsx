@@ -8,6 +8,7 @@ import { ArrowRight, ChevronDown, ChevronsDown, MapPin, Quote, Star } from "luci
 import { AboutContent } from "@/types";
 import { COLORS } from "@/theme/colors";
 import { COMPANY_ICONS } from "./companyIcons";
+import { LinkedInLogo } from "@/components/icons/BrandLogos";
 import SectionHeading from "./SectionHeading";
 
 const DOTS = "radial-gradient(rgba(255,255,255,.09) 1.2px, transparent 1.2px)";
@@ -192,7 +193,14 @@ export function AboutFounders({ founders }: { founders: AboutContent["founders"]
                 <Image src={f.image} alt={`${f.name}, ${f.role}`} fill sizes="(max-width: 600px) 100vw, 300px" style={{ objectFit: "cover", objectPosition: "50% 15%" }} />
               </Box>
               <Box sx={{ p: { xs: 2.5, sm: 3.5, md: 4.5 }, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                <Typography component="h3" sx={{ fontWeight: 800, color: COLORS.navy, fontSize: { xs: "1.6rem", md: "2rem" }, lineHeight: 1.15 }}>{f.name}</Typography>
+                <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 2 }}>
+                  <Typography component="h3" sx={{ fontWeight: 800, color: COLORS.navy, fontSize: { xs: "1.6rem", md: "2rem" }, lineHeight: 1.15 }}>{f.name}</Typography>
+                  {f.linkedin && (
+                    <Box component="a" href={f.linkedin} target="_blank" rel="noopener noreferrer" aria-label={`${f.name} on LinkedIn`} sx={{ flexShrink: 0, width: 42, height: 42, borderRadius: "12px", border: "1px solid #D6E4F5", bgcolor: "#F2F7FD", display: "flex", alignItems: "center", justifyContent: "center", transition: "transform .2s, box-shadow .2s", "&:hover": { transform: "translateY(-2px)", boxShadow: "0 8px 18px rgba(10,102,194,.22)" } }}>
+                      <LinkedInLogo size={24} />
+                    </Box>
+                  )}
+                </Box>
                 <Box component="span" sx={{ alignSelf: "flex-start", mt: 1, px: 1.5, py: 0.5, borderRadius: 999, bgcolor: COLORS.redTint, color: COLORS.redDark, fontWeight: 700, fontSize: "0.82rem", letterSpacing: ".02em" }}>{f.role}</Box>
                 <Box sx={{ position: "relative", mt: 3, pl: { xs: 4.5, md: 5.5 } }}>
                   <Quote aria-hidden size={34} color={COLORS.yellowDark} fill={COLORS.yellow} style={{ position: "absolute", left: 0, top: -4, transform: "scaleX(-1)" }} />
@@ -212,6 +220,51 @@ export function AboutFounders({ founders }: { founders: AboutContent["founders"]
             </Box>
           ))}
         </Box>
+      </Container>
+    </Box>
+  );
+}
+
+/** Press + support contact cards below the careers band (Unacademy-style, theme colours). */
+export function AboutContacts({ contacts }: { contacts: AboutContent["contacts"] }) {
+  if (!contacts.length) return null;
+  return (
+    <Box component="section" aria-label="Get in touch" sx={{ py: { xs: 6, md: 8 }, bgcolor: COLORS.surface }}>
+      <Container sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" }, gap: { xs: 3, md: 4 } }}>
+        {contacts.map((c) => {
+          const press = c.kind === "press";
+          const bg = press ? COLORS.red : COLORS.navy;
+          return (
+            <Box key={c.email} sx={{ borderRadius: "18px", overflow: "hidden", bgcolor: "#FFFFFF", boxShadow: "0 12px 30px rgba(15,23,42,.07)", transition: "transform .25s, box-shadow .25s", "&:hover": { transform: "translateY(-3px)", boxShadow: "0 18px 38px rgba(15,23,42,.12)" } }}>
+              <Box sx={{ position: "relative", height: { xs: 150, md: 170 }, bgcolor: bg, overflow: "hidden" }}>
+                {press ? (
+                  <Box component="svg" viewBox="0 0 220 170" aria-hidden sx={{ position: "absolute", left: 0, bottom: 0, height: "100%" }}>
+                    <circle cx="140" cy="62" r="46" fill="#FFFFFF" opacity=".16" />
+                    <path d="M0 26h112a12 12 0 0 1 12 12v86l-46 46H0z" fill="#FFD5DD" />
+                    <path d="M124 124l-46 46v-34a12 12 0 0 1 12-12z" fill="#FFF0F3" />
+                    <rect x="20" y="58" width="62" height="14" rx="7" fill={COLORS.red} opacity=".75" />
+                    <rect x="26" y="82" width="48" height="14" rx="7" fill={COLORS.red} opacity=".75" />
+                  </Box>
+                ) : (
+                  <Box component="svg" viewBox="0 0 230 170" aria-hidden sx={{ position: "absolute", left: 0, bottom: 0, height: "100%" }}>
+                    <path d="M26 92a22 22 0 0 1 22-22h70a22 22 0 0 1 22 22v40a22 22 0 0 1-22 22H62l-30 16 6-20a22 22 0 0 1-12-18z" fill="#DCE6F5" />
+                    <path d="M98 50a24 24 0 0 1 24-24h68a24 24 0 0 1 24 24v52a24 24 0 0 1-24 24h-6l4 22-30-22h-36a24 24 0 0 1-24-24z" fill={COLORS.yellow} />
+                    <circle cx="132" cy="76" r="6" fill={COLORS.navy} /><circle cx="156" cy="76" r="6" fill={COLORS.navy} /><circle cx="180" cy="76" r="6" fill={COLORS.navy} />
+                  </Box>
+                )}
+                <Typography component="h2" sx={{ position: "absolute", right: { xs: 20, md: 28 }, bottom: { xs: 16, md: 22 }, color: "#FFFFFF", fontWeight: 800, fontSize: { xs: "1.5rem", md: "1.8rem" } }}>
+                  {c.title}
+                </Typography>
+              </Box>
+              <Box sx={{ p: { xs: 2.5, md: 3 } }}>
+                <Typography sx={{ color: COLORS.textSecondary, fontSize: { xs: "1rem", md: "1.08rem" } }}>{c.text}</Typography>
+                <Box component="a" href={`mailto:${c.email}`} sx={{ display: "inline-block", mt: 0.5, color: COLORS.red, fontWeight: 700, fontSize: { xs: "1.05rem", md: "1.15rem" }, textDecoration: "none", wordBreak: "break-all", "&:hover": { textDecoration: "underline" } }}>
+                  {c.email}
+                </Box>
+              </Box>
+            </Box>
+          );
+        })}
       </Container>
     </Box>
   );
