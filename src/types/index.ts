@@ -689,6 +689,7 @@ export interface CareerJob {
 
 export interface CareersContent {
   hero: { notice: string; title: string; subtitle: string };
+  life: { title: string; subtitle: string; photos: { src: string; caption: string }[] };
   stats: { icon: CompanyIcon; value: string; label: string }[];
   pillars: { text: string; tone: "red" | "navy" | "yellow" | "cream" }[];
   benefits: { icon: CompanyIcon; title: string; points: string[] }[];

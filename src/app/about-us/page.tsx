@@ -16,8 +16,8 @@ export default async function AboutUsPage() {
       <AboutMission items={about.mission} />
       <AboutVision vision={about.vision} />
       <AboutFounders founders={about.founders} />
-      <AboutPresence presence={about.presence} />
       <AboutJourney journey={about.journey} />
+      <AboutPresence presence={about.presence} />
       <AboutCulture culture={about.culture} />
       <AboutContacts contacts={about.contacts} />
     </>

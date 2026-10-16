@@ -89,6 +89,16 @@ export const CAREERS_CONTENT: CareersContent = {
     title: "Let's build the future of education together",
     subtitle: "Come, join us and together we can transform the way India prepares for civil services.",
   },
+  life: {
+    title: "Life at VINI GROUP",
+    subtitle: "We're building a workspace that promotes growth — both personally and professionally.",
+    photos: [
+      { src: "/images/about/life-workspace.webp", caption: "Our Noida workspace" },
+      { src: "/images/about/life-game-zone.webp", caption: "Game zone — time to unwind" },
+      { src: "/images/about/life-team.webp", caption: "Where ideas get built" },
+      { src: "/images/about/life-reception.webp", caption: "Welcome to VINI IAS" },
+    ],
+  },
   stats: [
     { icon: "trophy", value: "1000+", label: "Selections" },
     { icon: "live", value: "10 lakh+", label: "Hours of live learning" },

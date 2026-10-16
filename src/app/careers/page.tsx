@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CareersBenefits, CareersHero, CareersPillars, CareersStats, JobOpenings } from "@/sections/Company";
+import { CareersBenefits, CareersHero, CareersPillars, CareersStats, JobOpenings, LifeGallery } from "@/sections/Company";
 import { getCareersContent } from "@/services";
 
 export const metadata: Metadata = {
@@ -14,6 +14,7 @@ export default async function CareersPage() {
     <>
       <CareersHero hero={careers.hero} />
       <CareersStats stats={careers.stats} />
+      <LifeGallery life={careers.life} />
       <CareersPillars pillars={careers.pillars} />
       <CareersBenefits benefits={careers.benefits} />
       <JobOpenings jobs={careers.jobs} email={careers.email} />

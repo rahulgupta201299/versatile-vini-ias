@@ -2,3 +2,4 @@ export { AboutHero, AboutMission, AboutVision, AboutFounders, AboutPresence, Abo
 export { CareersHero, CareersStats, CareersPillars, CareersBenefits } from "./CareersSections";
 export { default as JobOpenings } from "./JobOpenings";
 export { default as AboutJourney } from "./JourneyTimeline";
+export { default as LifeGallery } from "./LifeGallery";
