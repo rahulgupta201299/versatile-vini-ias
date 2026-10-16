@@ -7,7 +7,7 @@ export const CONTACT = {
   whatsappUrl: `https://wa.me/91${NUMBER}?text=${encodeURIComponent(
     "Hi Vini IAS, I need guidance for my exam preparation."
   )}`,
-  email: "support@viniias.com",
+  email: "support@groupvini.in",
   website: { label: "www.viniias.com", href: "https://viniias.com" },
 };
 

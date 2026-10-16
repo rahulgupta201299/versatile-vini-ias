@@ -130,5 +130,5 @@ export const CAREERS_CONTENT: CareersContent = {
     { id: "social-media-executive", title: "Social Media Executive", team: "Marketing", location: "New Delhi", type: "Full-time", summary: "Plan and run content calendars across Instagram, YouTube and Telegram." },
     { id: "content-intern", title: "Current Affairs Intern", team: "Academics", location: "Remote", type: "Internship", summary: "Prepare daily current affairs summaries and quizzes from newspapers and PIB." },
   ],
-  email: "careers@viniias.com",
+  email: "careers@groupvini.in",
 };

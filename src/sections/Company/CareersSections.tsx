@@ -21,7 +21,7 @@ export function CareersHero({ hero }: { hero: CareersContent["hero"] }) {
             {hero.title}
           </Typography>
           <Typography sx={{ mt: 2, color: COLORS.textSecondary, fontSize: { xs: "1.02rem", md: "1.15rem" }, lineHeight: 1.6, maxWidth: 520 }}>{hero.subtitle}</Typography>
-          <Box component="a" href="#openings" sx={{ mt: 3.5, display: "inline-flex", alignItems: "center", gap: 1, px: 3, py: 1.5, borderRadius: "12px", bgcolor: COLORS.red, color: "#FFFFFF", fontWeight: 700, textDecoration: "none", boxShadow: "0 10px 24px rgba(254,0,52,.25)", transition: "background-color .2s, transform .2s", "&:hover": { bgcolor: COLORS.redDark, transform: "translateY(-2px)" } }}>
+          <Box component="a" href="#openings" sx={{ mt: 3.5, display: "flex", width: "fit-content", mx: { xs: "auto", md: 0 }, alignItems: "center", gap: 1, px: 3, py: 1.5, borderRadius: "12px", bgcolor: COLORS.red, color: "#FFFFFF", fontWeight: 700, textDecoration: "none", boxShadow: "0 10px 24px rgba(254,0,52,.25)", transition: "background-color .2s, transform .2s", "&:hover": { bgcolor: COLORS.redDark, transform: "translateY(-2px)" } }}>
             View all job openings <ArrowDown size={18} />
           </Box>
         </Box>
