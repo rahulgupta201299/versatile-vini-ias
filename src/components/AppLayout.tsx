@@ -5,6 +5,8 @@ import Box from "@mui/material/Box";
 import Header from "@/sections/Header/Header";
 import Footer from "@/sections/Footer/Footer";
 import AuthModal from "./AuthModal";
+import AppPromoPopup from "./AppPromoPopup";
+import SupportCallback from "./SupportCallback";
 import { OPEN_AUTH_EVENT } from "@/utils/events";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -24,6 +26,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </Box>
       <Footer />
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
+      <AppPromoPopup />
+      <SupportCallback />
     </Box>
   );
 }
