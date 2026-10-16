@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Box from "@mui/material/Box";
-import Dialog from "@mui/material/Dialog";
+import Fade from "@mui/material/Fade";
+import Grow from "@mui/material/Grow";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
@@ -17,9 +18,13 @@ import { useFormValidation, validateName, validateMobile, validateRequiredSelect
 import { COLORS } from "@/theme/colors";
 
 const FIELD_SX = { backgroundColor: "#FFFFFF", borderRadius: "10px", height: 46, fontSize: "0.93rem" };
+const PRIMARY_BTN = { height: 50, width: "100%", border: "none", borderRadius: "12px", backgroundColor: COLORS.red, color: "#FFFFFF", fontFamily: "inherit", fontWeight: 700, fontSize: "1rem", cursor: "pointer", boxShadow: "0 8px 20px rgba(254,0,52,.22)", transition: "background-color .2s", "&:hover": { backgroundColor: "#D9002C" } } as const;
+const CALL_BTN = { height: 46, display: "flex", alignItems: "center", justifyContent: "center", gap: 0.75, borderRadius: "12px", border: "1px solid #E4E4E7", bgcolor: "#FFFFFF", color: COLORS.navy, fontSize: "0.93rem", fontWeight: 600, textDecoration: "none", "&:hover": { borderColor: COLORS.red, color: COLORS.red } } as const;
 
-/** "Have questions?" sheet: illustration, request-a-call-back form and a call-us link. */
-function CallbackPanel({ onClose }: { onClose: () => void }) {
+/** "Have questions?" panel: intro (call back / call us) → enquiry form. */
+function CallbackPanel({ layout }: { layout: "sheet" | "card" }) {
+  const card = layout === "card";
+  const [step, setStep] = useState<"intro" | "form">("intro");
   const { config, examCategories } = useSiteData();
   const CONTACT = config.contact;
   const examOptions = [...examCategories.map((c) => c.category), "Other"];
@@ -37,19 +42,22 @@ function CallbackPanel({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <Box sx={{ position: "relative", px: { xs: 2.25, sm: 3.5 }, pt: { xs: 1.25, sm: 3 }, pb: { xs: "calc(20px + env(safe-area-inset-bottom))", sm: 3.5 }, background: `linear-gradient(180deg, ${COLORS.redTint} 0%, #FFFFFF 46%)`, textAlign: "center" }}>
-      {/* grab handle (mobile sheet) */}
-      <Box sx={{ display: { xs: "block", sm: "none" }, width: 42, height: 4, borderRadius: 2, bgcolor: "#D4D4D8", mx: "auto", mb: 1.5 }} />
-      <Box sx={{ width: { xs: 132, sm: 150 }, height: { xs: 132, sm: 150 }, mx: "auto", borderRadius: "50%", bgcolor: "#FFFFFF", border: `1px solid ${COLORS.redTintHover}`, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 10px 26px rgba(254,0,52,.10)" }}>
-        <CounsellorIllustration width={{ xs: 112, sm: 128 }} />
-      </Box>
+    <Box sx={{ position: "relative", px: card ? 2.5 : 2.25, pt: card ? 2.5 : 1.25, pb: card ? 2.5 : "calc(20px + env(safe-area-inset-bottom))", background: card ? "#FFFFFF" : `linear-gradient(180deg, ${COLORS.redTint} 0%, #FFFFFF 46%)`, textAlign: card ? "left" : "center" }}>
+      {!card && <Box sx={{ width: 42, height: 4, borderRadius: 2, bgcolor: "#D4D4D8", mx: "auto", mb: 1.5 }} />}
 
-      <Typography id="support-callback-title" component="h2" sx={{ mt: 2, fontWeight: 800, color: COLORS.navy, fontSize: { xs: "1.15rem", sm: "1.3rem" } }}>
-        Have questions about your prep?
-      </Typography>
-      <Typography sx={{ color: "#52525B", fontSize: { xs: "0.9rem", sm: "0.95rem" }, mt: 0.5, mb: 2.25 }}>
-        Our experts can answer all your questions
-      </Typography>
+      <Box sx={card ? { display: "flex", alignItems: "center", gap: 1.5, mb: 2.25 } : { mb: 2.25 }}>
+        <Box sx={{ order: card ? 2 : 0, flexShrink: 0, width: card ? 112 : 132, height: card ? 112 : 132, mx: card ? 0 : "auto", borderRadius: "50%", bgcolor: card ? COLORS.redTint : "#FFFFFF", border: `1px solid ${COLORS.redTintHover}`, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: card ? "none" : "0 10px 26px rgba(254,0,52,.10)" }}>
+          <CounsellorIllustration width={card ? 96 : 112} />
+        </Box>
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Typography id="support-callback-title" component="h2" sx={{ mt: card ? 0 : 2, fontWeight: 800, color: COLORS.navy, fontSize: card ? "1.2rem" : "1.15rem", lineHeight: 1.3 }}>
+            Have questions about your prep?
+          </Typography>
+          <Typography sx={{ color: "#52525B", fontSize: "0.92rem", mt: 0.5 }}>
+            Our experts can answer all your questions
+          </Typography>
+        </Box>
+      </Box>
 
       {submitted ? (
         <Box sx={{ p: 2.25, borderRadius: "12px", backgroundColor: "#F0FDF4", border: "1px solid #BBF7D0", display: "flex", gap: 1.5, textAlign: "left" }}>
@@ -59,6 +67,15 @@ function CallbackPanel({ onClose }: { onClose: () => void }) {
             <Typography sx={{ fontSize: "0.88rem", color: COLORS.body }}>
               Thanks {form.values.name}, our expert will call you at <b>+91 {form.values.mobile}</b> shortly.
             </Typography>
+          </Box>
+        </Box>
+      ) : step === "intro" ? (
+        <Box sx={{ display: "grid", gap: 1.1 }}>
+          <Box component="button" type="button" onClick={() => setStep("form")} sx={PRIMARY_BTN}>
+            Request a call back
+          </Box>
+          <Box component="a" href={CONTACT.tel} sx={CALL_BTN}>
+            <PhoneCall size={16} /> or call us @ {CONTACT.phoneDisplay}
           </Box>
         </Box>
       ) : (
@@ -105,64 +122,78 @@ function CallbackPanel({ onClose }: { onClose: () => void }) {
           <Box
             component="button"
             type="submit"
-            sx={{ mt: 0.5, height: 50, border: "none", borderRadius: "12px", backgroundColor: COLORS.red, color: "#FFFFFF", fontFamily: "inherit", fontWeight: 700, fontSize: "1rem", cursor: "pointer", boxShadow: "0 8px 20px rgba(254,0,52,.22)", transition: "background-color .2s", "&:hover": { backgroundColor: "#D9002C" } }}
+            sx={{ ...PRIMARY_BTN, mt: 0.5 }}
           >
-            Request a call back
+            Submit
           </Box>
           <Box
             component="a"
             href={CONTACT.tel}
-            sx={{ height: 46, display: "flex", alignItems: "center", justifyContent: "center", gap: 0.75, borderRadius: "12px", border: "1px solid #E4E4E7", bgcolor: "#FFFFFF", color: COLORS.navy, fontSize: "0.93rem", fontWeight: 600, textDecoration: "none", "&:hover": { borderColor: COLORS.red, color: COLORS.red } }}
+            sx={CALL_BTN}
           >
             <PhoneCall size={16} /> or call us @ {CONTACT.phoneDisplay}
           </Box>
         </Box>
       )}
 
-      {/* desktop close */}
-      <IconButton aria-label="Close" onClick={onClose} sx={{ display: { xs: "none", sm: "inline-flex" }, position: "absolute", top: 10, right: 10, color: COLORS.navy }}>
-        <X size={20} />
-      </IconButton>
     </Box>
   );
 }
 
-/** Floating light-red support tab on the right edge; opens the call-back sheet (bottom sheet on phones). */
+/**
+ * Floating light-red support tab. Desktop: a call-back card pops up above the tab (tab turns into ✕), like pw.live.
+ * Phones: a bottom sheet. "Request a call back" reveals the enquiry form.
+ */
 export default function SupportCallback() {
   const [open, setOpen] = useState(false);
+  const [session, setSession] = useState(0); // remount panel on each open → starts at the intro step
   const isPhone = useMediaQuery("(max-width:599.95px)");
   const close = () => setOpen(false);
+  const toggle = () => {
+    if (!open) setSession((n) => n + 1);
+    setOpen((o) => !o);
+  };
+
+  useEffect(() => {
+    if (!open || isPhone) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, isPhone]);
+
+  const desktopOpen = open && !isPhone;
 
   return (
     <>
       <Box
         component="button"
         type="button"
-        aria-label="Have questions? Request a call back"
-        onClick={() => setOpen(true)}
+        aria-label={desktopOpen ? "Close" : "Have questions? Request a call back"}
+        aria-expanded={open}
+        onClick={toggle}
         sx={{
           position: "fixed",
           right: 0,
           bottom: { xs: 96, md: 120 },
-          zIndex: 1090,
+          zIndex: desktopOpen ? 1302 : 1090,
           width: { xs: 46, md: 52 },
           height: { xs: 50, md: 56 },
-          display: open ? "none" : "flex",
+          display: open && isPhone ? "none" : "flex",
           alignItems: "center",
           justifyContent: "center",
-          border: `1px solid ${COLORS.redTintHover}`,
+          border: `1px solid ${desktopOpen ? COLORS.red : COLORS.redTintHover}`,
           borderRight: "none",
           borderRadius: "14px 0 0 14px",
-          bgcolor: COLORS.redTint,
-          color: COLORS.red,
+          bgcolor: desktopOpen ? COLORS.red : COLORS.redTint,
+          color: desktopOpen ? "#FFFFFF" : COLORS.red,
           cursor: "pointer",
           boxShadow: "0 6px 18px rgba(254,0,52,.18)",
-          transition: "width .2s, background-color .2s",
-          "&:hover": { bgcolor: COLORS.redTintHover, width: { xs: 46, md: 58 } },
+          transition: "width .2s, background-color .2s, color .2s",
+          "&:hover": { bgcolor: desktopOpen ? "#D9002C" : COLORS.redTintHover, width: { xs: 46, md: 58 } },
           "&:focus-visible": { outline: `2px solid ${COLORS.red}`, outlineOffset: 2 },
         }}
       >
-        <Headset size={24} strokeWidth={2.2} />
+        {desktopOpen ? <X size={24} strokeWidth={2.4} /> : <Headset size={24} strokeWidth={2.2} />}
       </Box>
 
       {isPhone ? (
@@ -181,13 +212,25 @@ export default function SupportCallback() {
             <X size={20} />
           </IconButton>
           <Box sx={{ borderRadius: "20px 20px 0 0", overflowY: "auto" }}>
-            <CallbackPanel onClose={close} />
+            <CallbackPanel key={session} layout="sheet" />
           </Box>
         </Drawer>
       ) : (
-        <Dialog open={open} onClose={close} aria-labelledby="support-callback-title" slotProps={{ paper: { sx: { width: 440, maxWidth: "calc(100% - 32px)", borderRadius: "20px", overflow: "hidden" } } }}>
-          <CallbackPanel onClose={close} />
-        </Dialog>
+        <>
+          <Fade in={desktopOpen} unmountOnExit>
+            <Box onClick={close} aria-hidden sx={{ position: "fixed", inset: 0, zIndex: 1300, bgcolor: "rgba(15,23,42,.45)" }} />
+          </Fade>
+          <Grow in={desktopOpen} unmountOnExit style={{ transformOrigin: "bottom right" }}>
+            <Box
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="support-callback-title"
+              sx={{ position: "fixed", right: 24, bottom: { sm: 162, md: 192 }, zIndex: 1301, width: 400, maxWidth: "calc(100vw - 48px)", maxHeight: "calc(100vh - 220px)", overflowY: "auto", borderRadius: "18px", bgcolor: "#FFFFFF", boxShadow: "0 24px 60px rgba(15,23,42,.28)" }}
+            >
+              <CallbackPanel key={session} layout="card" />
+            </Box>
+          </Grow>
+        </>
       )}
     </>
   );
