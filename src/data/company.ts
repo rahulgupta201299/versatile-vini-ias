@@ -55,6 +55,22 @@ export const ABOUT_CONTENT: AboutContent = {
       { name: "Station Road", city: "Bhagalpur", status: "Opening soon" },
     ],
   },
+  /** "Our Journey" — condensed from the founder's story document. */
+  journey: {
+    subtitle: "From a UPSC aspirant to building an educational ecosystem.",
+    quote: "Money should not be an obstacle in the path of achieving one's dreams.",
+    steps: [
+      { year: "2019", icon: "flag", title: "The Beginning of a Dream", text: "Started a YouTube channel during my own UPSC preparation to guide beginner aspirants." },
+      { year: "2020", icon: "live", title: "Inspire For IAS", text: "A dedicated channel for syllabus breakdowns, booklists and live answer-writing sessions." },
+      { year: "2021", icon: "laptop", title: "Into Digital Education", text: "Our first website — exam articles and affordable e-books for government job aspirants." },
+      { year: "2022", icon: "reach", title: "The Birth of VINI IAS", text: "Launched viniias.com and earned Google AdSense approval in November." },
+      { year: "2023", icon: "rocket", title: "The Entrepreneurial Leap", text: "Left a design & web-development job to build the business full-time." },
+      { year: "2024", icon: "centre", title: "Vini Eduventure Pvt. Ltd.", text: "Incorporated on 26 June 2024 — from a channel to a company." },
+      { year: "2024", icon: "phone", title: "VINI Learning App", text: "Launched on Google Play on 5 October 2024." },
+      { year: "2025", icon: "network", title: "The VINI GROUP Ecosystem", text: "Moved into our Noida office and launched 10+ brands across education, tech, publishing & media." },
+      { year: "Today", icon: "sparkles", title: "Building Together", text: "One vision, multiple possibilities — and this is only the beginning." },
+    ],
+  },
   culture: {
     title: "Build the future of learning with us",
     text: "We are a young, mission-driven team that cares deeply about students. If you want your work to change lives, we would love to hear from you.",

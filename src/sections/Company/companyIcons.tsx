@@ -1,4 +1,4 @@
-import { BadgeCheck, BookOpen, Building2, Eye, Globe2, HeartHandshake, MapPin, MessageCircleQuestion, PlayCircle, Rocket, Scale, Sprout, Target, Trophy } from "lucide-react";
+import { Flag, Laptop, Network, Smartphone, Sparkles, BadgeCheck, BookOpen, Building2, Eye, Globe2, HeartHandshake, MapPin, MessageCircleQuestion, PlayCircle, Rocket, Scale, Sprout, Target, Trophy } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { CompanyIcon } from "@/types";
 
@@ -17,4 +17,9 @@ export const COMPANY_ICONS: Record<CompanyIcon, LucideIcon> = {
   heart: HeartHandshake,
   learn: BookOpen,
   pin: MapPin,
+  flag: Flag,
+  phone: Smartphone,
+  sparkles: Sparkles,
+  laptop: Laptop,
+  network: Network,
 };

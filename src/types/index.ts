@@ -665,7 +665,7 @@ export interface ExamUpdates {
 /** Icon keys rendered by the company sections (mapped to lucide icons). */
 export type CompanyIcon =
   | "equity" | "reach" | "growth" | "trophy" | "live" | "centre" | "views" | "doubt" | "exams"
-  | "mission" | "rocket" | "heart" | "learn" | "pin";
+  | "mission" | "rocket" | "heart" | "learn" | "pin" | "flag" | "phone" | "sparkles" | "laptop" | "network";
 
 export interface AboutContent {
   hero: { badge: string; kicker: string; highlight: string; title: string; intro: string };
@@ -673,6 +673,7 @@ export interface AboutContent {
   vision: { points: string[]; tiles: { value: string; label: string }[] };
   founders: { name: string; role: string; image: string; linkedin?: string; quote: string; bio: string[] }[];
   presence: { intro: string; stats: { value: string; label: string }[]; centres: { name: string; city: string; status: "Open" | "Opening soon" }[] };
+  journey: { subtitle: string; quote: string; steps: { year: string; title: string; text: string; icon: CompanyIcon }[] };
   culture: { title: string; text: string; cta: { label: string; href: string } };
   contacts: { kind: "press" | "support"; title: string; text: string; email: string }[];
 }

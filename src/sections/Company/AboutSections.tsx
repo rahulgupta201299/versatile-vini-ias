@@ -225,6 +225,9 @@ export function AboutFounders({ founders }: { founders: AboutContent["founders"]
   );
 }
 
+/** Public-relations card colour (green, per design request). */
+const PR_GREEN = "#3DAE72";
+
 /** Press + support contact cards below the careers band (Unacademy-style, theme colours). */
 export function AboutContacts({ contacts }: { contacts: AboutContent["contacts"] }) {
   if (!contacts.length) return null;
@@ -233,17 +236,17 @@ export function AboutContacts({ contacts }: { contacts: AboutContent["contacts"]
       <Container sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" }, gap: { xs: 3, md: 4 } }}>
         {contacts.map((c) => {
           const press = c.kind === "press";
-          const bg = press ? COLORS.red : COLORS.navy;
+          const bg = press ? PR_GREEN : COLORS.navy;
           return (
             <Box key={c.email} sx={{ borderRadius: "18px", overflow: "hidden", bgcolor: "#FFFFFF", boxShadow: "0 12px 30px rgba(15,23,42,.07)", transition: "transform .25s, box-shadow .25s", "&:hover": { transform: "translateY(-3px)", boxShadow: "0 18px 38px rgba(15,23,42,.12)" } }}>
               <Box sx={{ position: "relative", height: { xs: 150, md: 170 }, bgcolor: bg, overflow: "hidden" }}>
                 {press ? (
                   <Box component="svg" viewBox="0 0 220 170" aria-hidden sx={{ position: "absolute", left: 0, bottom: 0, height: "100%" }}>
                     <circle cx="140" cy="62" r="46" fill="#FFFFFF" opacity=".16" />
-                    <path d="M0 26h112a12 12 0 0 1 12 12v86l-46 46H0z" fill="#FFD5DD" />
-                    <path d="M124 124l-46 46v-34a12 12 0 0 1 12-12z" fill="#FFF0F3" />
-                    <rect x="20" y="58" width="62" height="14" rx="7" fill={COLORS.red} opacity=".75" />
-                    <rect x="26" y="82" width="48" height="14" rx="7" fill={COLORS.red} opacity=".75" />
+                    <path d="M0 26h112a12 12 0 0 1 12 12v86l-46 46H0z" fill="#A6E8C5" />
+                    <path d="M124 124l-46 46v-34a12 12 0 0 1 12-12z" fill="#DDF7EA" />
+                    <rect x="20" y="58" width="62" height="14" rx="7" fill={PR_GREEN} opacity=".85" />
+                    <rect x="26" y="82" width="48" height="14" rx="7" fill={PR_GREEN} opacity=".85" />
                   </Box>
                 ) : (
                   <Box component="svg" viewBox="0 0 230 170" aria-hidden sx={{ position: "absolute", left: 0, bottom: 0, height: "100%" }}>
