@@ -15,6 +15,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: BASE_URL, lastModified: now, changeFrequency: "daily", priority: 1 },
     ...goals.map((g) => page(`/goal/${g.slug}`)),
     ...sections.flatMap((section, i) => sectionSlugs[i].map((slug) => page(`/courses/${section}/${slug}`))),
+    page("/about-us", 0.6),
+    page("/careers", 0.6),
     page("/exams", 0.9),
     ...blogCategories.map((c) => page(`/exams/${c.slug}`, 0.7)),
     ...posts.map((p) => ({ ...page(blogPath(p), 0.7), lastModified: new Date(p.publishedAt) })),

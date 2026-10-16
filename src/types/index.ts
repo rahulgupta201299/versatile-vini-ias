@@ -659,3 +659,36 @@ export interface ExamUpdates {
   boards: { id: string; title: string; items: { title: string; href: string }[] }[];
   importantExams: { title: string; href: string }[][];
 }
+
+/* ---------- Company pages (/about-us, /careers) ---------- */
+
+/** Icon keys rendered by the company sections (mapped to lucide icons). */
+export type CompanyIcon =
+  | "equity" | "reach" | "growth" | "trophy" | "live" | "centre" | "views" | "doubt" | "exams"
+  | "mission" | "rocket" | "heart" | "learn" | "pin";
+
+export interface AboutContent {
+  hero: { badge: string; kicker: string; highlight: string; title: string; intro: string };
+  mission: { icon: CompanyIcon; text: string; highlight: string }[];
+  vision: { points: string[]; tiles: { value: string; label: string }[] };
+  presence: { intro: string; stats: { value: string; label: string }[]; centres: { name: string; city: string; status: "Open" | "Opening soon" }[] };
+  culture: { title: string; text: string; cta: { label: string; href: string } };
+}
+
+export interface CareerJob {
+  id: string;
+  title: string;
+  team: string;
+  location: string;
+  type: "Full-time" | "Part-time" | "Internship" | "Contract";
+  summary: string;
+}
+
+export interface CareersContent {
+  hero: { notice: string; title: string; subtitle: string };
+  stats: { icon: CompanyIcon; value: string; label: string }[];
+  pillars: { text: string; tone: "red" | "navy" | "yellow" | "cream" }[];
+  benefits: { icon: CompanyIcon; title: string; points: string[] }[];
+  jobs: CareerJob[];
+  email: string;
+}

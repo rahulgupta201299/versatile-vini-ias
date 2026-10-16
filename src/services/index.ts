@@ -5,3 +5,4 @@ export * from "./home";
 export * from "./goals";
 export * from "./freeResources";
 export * from "./blogs";
+export * from "./company";

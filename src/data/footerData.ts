@@ -2,9 +2,9 @@ import { FooterResourceColumn } from "@/types";
 import { TEST_SERIES_URL } from "@/utils/slug";
 
 export const COMPANY_LINKS = [
-  { name: "About Us", href: "#about" },
+  { name: "About Us", href: "/about-us" },
   { name: "Contact Us", href: "/#enquiry" },
-  { name: "Careers", href: "#careers" },
+  { name: "Careers", href: "/careers" },
   { name: "Updates", href: "#updates" },
   { name: "Blogs & Editorials", href: "/exams" },
   { name: "Account Deletion", href: "#account-deletion" },
