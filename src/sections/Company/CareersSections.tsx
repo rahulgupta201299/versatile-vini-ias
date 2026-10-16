@@ -70,7 +70,7 @@ const POSTER_TONES = {
 /** Framed "posters" — one per leadership principle. */
 export function CareersPillars({ pillars }: { pillars: CareersContent["pillars"] }) {
   return (
-    <Box component="section" sx={{ py: { xs: 7, md: 10 }, bgcolor: "#FFFFFF" }}>
+    <Box component="section" sx={{ pt: { xs: 3, md: 4 }, pb: { xs: 7, md: 10 }, bgcolor: "#FFFFFF" }}>
       <Container>
         <SectionHeading align="center" title="Pillars of our culture" subtitle="The principles that guide every decision we make — for our students and for each other." />
         <Box sx={{ display: "grid", gridTemplateColumns: { xs: "repeat(2, 1fr)", md: "repeat(3, 1fr)" }, gap: { xs: 2, sm: 3, md: 4 }, maxWidth: 820, mx: "auto" }}>

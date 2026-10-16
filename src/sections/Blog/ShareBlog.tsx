@@ -10,12 +10,34 @@ import { FacebookLogo, LinkedInLogo, TelegramLogo, WhatsAppLogo, XLogo } from "@
 import { COLORS } from "@/theme/colors";
 
 /** "Share" pill → "Share Blog" dialog: link with tracking params, copy button and social apps (like pw.live). */
-export default function ShareBlog({ title, url, id }: { title: string; url: string; id: string }) {
+export default function ShareBlog({
+  title,
+  url,
+  id,
+  dialogTitle = "Share Blog",
+  campaign,
+  message,
+  variant = "pill",
+}: {
+  title: string;
+  url: string;
+  id: string;
+  dialogTitle?: string;
+  /** utm_campaign value (default: blog_<id>). */
+  campaign?: string;
+  /** Text sent with the link on WhatsApp / X / Telegram / native share (default: title). */
+  message?: string;
+  /** "pill" = "Share" button, "icon" = round share icon. */
+  variant?: "pill" | "icon";
+}) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const link = useMemo(() => `${url}?utm_source=direct_copy&utm_medium=social_share&utm_campaign=blog_${id}`, [url, id]);
-  const forApp = (source: string) => encodeURIComponent(`${url}?utm_source=${source}&utm_medium=social_share&utm_campaign=blog_${id}`);
-  const t = encodeURIComponent(title);
+  const camp = campaign ?? `blog_${id}`;
+  const sep = url.includes("?") ? "&" : "?";
+  const tagged = (source: string) => `${url}${sep}utm_source=${source}&utm_medium=social_share&utm_campaign=${camp}`;
+  const link = useMemo(() => tagged("direct_copy"), [url, camp]); // eslint-disable-line react-hooks/exhaustive-deps
+  const forApp = (source: string) => encodeURIComponent(tagged(source));
+  const t = encodeURIComponent(message ?? title);
   const apps = [
     { label: "WhatsApp", icon: <WhatsAppLogo size={26} />, href: `https://wa.me/?text=${t}%20${forApp("whatsapp")}` },
     { label: "Facebook", icon: <FacebookLogo size={26} />, href: `https://www.facebook.com/sharer/sharer.php?u=${forApp("facebook")}` },
@@ -37,20 +59,34 @@ export default function ShareBlog({ title, url, id }: { title: string; url: stri
 
   return (
     <>
-      <Box
-        component="button"
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-haspopup="dialog"
-        sx={{ flexShrink: 0, display: "inline-flex", alignItems: "center", gap: 0.75, height: 36, px: 1.5, borderRadius: "9999px", border: `1px solid ${COLORS.border}`, backgroundColor: "#FFFFFF", color: "#27272A", fontFamily: "inherit", fontSize: "0.92rem", fontWeight: 500, cursor: "pointer", boxShadow: "0 2px 6px rgba(15,23,42,.06)", "&:hover": { borderColor: COLORS.redBorder, color: COLORS.red } }}
-      >
-        <Share2 size={16} /> Share
-      </Box>
+      {variant === "icon" ? (
+        <Box
+          component="button"
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-haspopup="dialog"
+          aria-label={`Share: ${title}`}
+          title="Share"
+          sx={{ flexShrink: 0, width: 42, height: 42, display: "inline-flex", alignItems: "center", justifyContent: "center", borderRadius: "50%", border: `1px solid ${COLORS.border}`, backgroundColor: "#FFFFFF", color: COLORS.navy, cursor: "pointer", transition: "all .2s", "&:hover": { borderColor: COLORS.redBorder, color: COLORS.red, backgroundColor: COLORS.redTint } }}
+        >
+          <Share2 size={18} />
+        </Box>
+      ) : (
+        <Box
+          component="button"
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-haspopup="dialog"
+          sx={{ flexShrink: 0, display: "inline-flex", alignItems: "center", gap: 0.75, height: 36, px: 1.5, borderRadius: "9999px", border: `1px solid ${COLORS.border}`, backgroundColor: "#FFFFFF", color: "#27272A", fontFamily: "inherit", fontSize: "0.92rem", fontWeight: 500, cursor: "pointer", boxShadow: "0 2px 6px rgba(15,23,42,.06)", "&:hover": { borderColor: COLORS.redBorder, color: COLORS.red } }}
+        >
+          <Share2 size={16} /> Share
+        </Box>
+      )}
 
       <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs" slotProps={{ paper: { sx: { borderRadius: "16px", m: 2 } } }}>
         <Box sx={{ p: { xs: 2.25, sm: 2.75 } }}>
           <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <Typography component="h2" sx={{ fontFamily: "inherit", fontWeight: 700, fontSize: "1.2rem", color: "#27272A" }}>Share Blog</Typography>
+            <Typography component="h2" sx={{ fontFamily: "inherit", fontWeight: 700, fontSize: "1.2rem", color: "#27272A" }}>{dialogTitle}</Typography>
             <IconButton aria-label="Close" onClick={() => setOpen(false)} size="small"><X size={20} /></IconButton>
           </Box>
 
@@ -70,7 +106,7 @@ export default function ShareBlog({ title, url, id }: { title: string; url: stri
               </Box>
             ))}
             {canNativeShare && (
-              <Box component="button" type="button" onClick={() => navigator.share({ title, url: link }).catch(() => null)} sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0.5, border: "none", background: "none", p: 0, cursor: "pointer", fontFamily: "inherit", color: COLORS.body, fontSize: "0.72rem" }}>
+              <Box component="button" type="button" onClick={() => navigator.share({ title, text: message ?? title, url: link }).catch(() => null)} sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0.5, border: "none", background: "none", p: 0, cursor: "pointer", fontFamily: "inherit", color: COLORS.body, fontSize: "0.72rem" }}>
                 <Box sx={{ width: 46, height: 46, borderRadius: "50%", backgroundColor: COLORS.surface, border: `1px solid ${COLORS.border}`, color: COLORS.navy, display: "flex", alignItems: "center", justifyContent: "center" }}><MoreHorizontal size={22} /></Box>
                 More
               </Box>

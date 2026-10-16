@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -9,6 +9,9 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { CareersContent } from "@/types";
 import { COLORS } from "@/theme/colors";
 import SectionHeading from "./SectionHeading";
+
+/** Autoplay interval (ms). */
+const AUTOPLAY_MS = 4000;
 
 const arrowSx = {
   position: "absolute",
@@ -33,12 +36,30 @@ const arrowSx = {
 /** "Life at VINI GROUP" — large photo with caption + clickable thumbnails (Unacademy-style). */
 export default function LifeGallery({ life }: { life: CareersContent["life"] }) {
   const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
   const photos = life.photos;
-  if (!photos.length) return null;
-  const go = (d: number) => setActive((i) => (i + d + photos.length) % photos.length);
+  const count = photos.length;
+
+  // Auto-advance; restarts after every slide change (so manual clicks reset the timer).
+  // Paused on hover/focus and for users who prefer reduced motion.
+  useEffect(() => {
+    if (paused || count < 2) return;
+    if (typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    const t = window.setTimeout(() => setActive((i) => (i + 1) % count), AUTOPLAY_MS);
+    return () => window.clearTimeout(t);
+  }, [active, paused, count]);
+
+  if (!count) return null;
+  const go = (d: number) => setActive((i) => (i + d + count) % count);
+  const pauseProps = {
+    onMouseEnter: () => setPaused(true),
+    onMouseLeave: () => setPaused(false),
+    onFocus: () => setPaused(true),
+    onBlur: () => setPaused(false),
+  };
 
   return (
-    <Box component="section" sx={{ py: { xs: 7, md: 10 }, bgcolor: "#FFFFFF" }}>
+    <Box component="section" sx={{ pt: { xs: 7, md: 10 }, pb: { xs: 3, md: 4 }, bgcolor: "#FFFFFF" }}>
       <Container sx={{ maxWidth: "1100px !important" }}>
         <SectionHeading align="center" title={life.title} subtitle={life.subtitle} />
 
@@ -47,6 +68,7 @@ export default function LifeGallery({ life }: { life: CareersContent["life"] }) 
           aria-roledescription="carousel"
           aria-label={life.title}
           tabIndex={0}
+          {...pauseProps}
           onKeyDown={(e) => {
             if (e.key === "ArrowRight") go(1);
             if (e.key === "ArrowLeft") go(-1);
@@ -64,6 +86,21 @@ export default function LifeGallery({ life }: { life: CareersContent["life"] }) 
               {String(active + 1).padStart(2, "0")} / {String(photos.length).padStart(2, "0")}
             </Typography>
           </Box>
+          {/* autoplay progress */}
+          <Box aria-hidden sx={{ position: "absolute", left: 0, right: 0, bottom: 0, zIndex: 2, height: 4, bgcolor: "rgba(255,255,255,.18)" }}>
+            <Box
+              key={`${active}-${paused}`}
+              sx={{
+                height: "100%",
+                bgcolor: COLORS.yellow,
+                transformOrigin: "left",
+                transform: paused ? "scaleX(0)" : undefined,
+                animation: paused ? "none" : `lifeProgress ${AUTOPLAY_MS}ms linear forwards`,
+                "@keyframes lifeProgress": { from: { transform: "scaleX(0)" }, to: { transform: "scaleX(1)" } },
+                "@media (prefers-reduced-motion: reduce)": { display: "none" },
+              }}
+            />
+          </Box>
           <Box component="button" type="button" aria-label="Previous photo" onClick={() => go(-1)} sx={{ ...arrowSx, left: { xs: 10, md: 18 } }}>
             <ChevronLeft size={22} />
           </Box>
@@ -72,7 +109,7 @@ export default function LifeGallery({ life }: { life: CareersContent["life"] }) 
           </Box>
         </Box>
 
-        <Box sx={{ mt: { xs: 1.5, md: 2.25 }, display: "grid", gridTemplateColumns: `repeat(${photos.length}, minmax(0, 1fr))`, gap: { xs: 1, md: 2 } }}>
+        <Box {...pauseProps} sx={{ mt: { xs: 1.5, md: 2.25 }, display: "grid", gridTemplateColumns: `repeat(${photos.length}, minmax(0, 1fr))`, gap: { xs: 1, md: 2 } }}>
           {photos.map((p, i) => (
             <Box
               key={p.src}

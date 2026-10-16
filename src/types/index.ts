@@ -685,6 +685,12 @@ export interface CareerJob {
   location: string;
   type: "Full-time" | "Part-time" | "Internship" | "Contract";
   summary: string;
+  /** ISO date the role was posted (shown as "Posted 10 Oct 2026"). */
+  postedAt: string;
+  experience?: string;
+  /** JD details (shown in the "View JD Details" dialog). */
+  responsibilities: string[];
+  requirements: string[];
 }
 
 export interface CareersContent {
