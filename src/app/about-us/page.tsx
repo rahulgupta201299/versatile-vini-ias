@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { AppDownloadSection } from "@/sections";
-import { AboutCulture, AboutHero, AboutMission, AboutPresence, AboutVision } from "@/sections/Company";
+import { AboutCulture, AboutFounders, AboutHero, AboutMission, AboutPresence, AboutVision } from "@/sections/Company";
 import { getAboutContent } from "@/services";
 
 export const metadata: Metadata = {
@@ -16,6 +16,7 @@ export default async function AboutUsPage() {
       <AboutHero hero={about.hero} />
       <AboutMission items={about.mission} />
       <AboutVision vision={about.vision} />
+      <AboutFounders founders={about.founders} />
       <AboutPresence presence={about.presence} />
       <AboutCulture culture={about.culture} />
       <AppDownloadSection />

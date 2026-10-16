@@ -1,9 +1,10 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { ArrowRight, ChevronsDown, MapPin, Star } from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronsDown, MapPin, Quote, Star } from "lucide-react";
 import { AboutContent } from "@/types";
 import { COLORS } from "@/theme/colors";
 import { COMPANY_ICONS } from "./companyIcons";
@@ -170,6 +171,46 @@ export function AboutCulture({ culture }: { culture: AboutContent["culture"] }) 
         </Box>
         <Box component={Link} href={culture.cta.href} sx={{ flexShrink: 0, display: "inline-flex", alignItems: "center", gap: 1, px: 3, py: 1.5, borderRadius: "12px", bgcolor: COLORS.yellow, color: COLORS.navy, fontWeight: 800, textDecoration: "none", boxShadow: "0 10px 24px rgba(0,0,0,.2)", transition: "transform .2s", "&:hover": { transform: "translateY(-2px)" } }}>
           {culture.cta.label} <ArrowRight size={18} />
+        </Box>
+      </Container>
+    </Box>
+  );
+}
+
+/** "Our Founders" — navy band with founder cards (photo, quote, expandable bio), pw.live style. */
+export function AboutFounders({ founders }: { founders: AboutContent["founders"] }) {
+  if (!founders.length) return null;
+  const single = founders.length === 1;
+  return (
+    <Box component="section" sx={{ position: "relative", overflow: "hidden", py: { xs: 7, md: 10 }, bgcolor: COLORS.navyDark, "&::before": { content: '""', position: "absolute", inset: 0, backgroundImage: DOTS, backgroundSize: "26px 26px" }, "&::after": { content: '""', position: "absolute", width: 520, height: 520, borderRadius: "50%", right: -220, top: -180, background: "radial-gradient(circle, rgba(254,0,52,.35), transparent 65%)" } }}>
+      <Container sx={{ position: "relative", zIndex: 1 }}>
+        <SectionHeading title={single ? "Our Founder" : "Our Founders"} light />
+        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: single ? "1fr" : "repeat(2, 1fr)" }, gap: { xs: 3, md: 4 }, maxWidth: single ? 980 : "none", mx: "auto" }}>
+          {founders.map((f) => (
+            <Box key={f.name} sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: single ? "300px 1fr" : "1fr" }, borderRadius: "20px", overflow: "hidden", bgcolor: "#FFFFFF", boxShadow: "0 24px 50px rgba(0,0,0,.35)" }}>
+              <Box sx={{ position: "relative", bgcolor: "#000", aspectRatio: { xs: "4 / 4.2", sm: "auto" }, minHeight: { sm: 360 }, borderBottom: { xs: `4px solid ${COLORS.red}`, sm: "none" }, borderRight: { sm: `4px solid ${COLORS.red}` } }}>
+                <Image src={f.image} alt={`${f.name}, ${f.role}`} fill sizes="(max-width: 600px) 100vw, 300px" style={{ objectFit: "cover", objectPosition: "50% 15%" }} />
+              </Box>
+              <Box sx={{ p: { xs: 2.5, sm: 3.5, md: 4.5 }, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                <Typography component="h3" sx={{ fontWeight: 800, color: COLORS.navy, fontSize: { xs: "1.6rem", md: "2rem" }, lineHeight: 1.15 }}>{f.name}</Typography>
+                <Box component="span" sx={{ alignSelf: "flex-start", mt: 1, px: 1.5, py: 0.5, borderRadius: 999, bgcolor: COLORS.redTint, color: COLORS.redDark, fontWeight: 700, fontSize: "0.82rem", letterSpacing: ".02em" }}>{f.role}</Box>
+                <Box sx={{ position: "relative", mt: 3, pl: { xs: 4.5, md: 5.5 } }}>
+                  <Quote aria-hidden size={34} color={COLORS.yellowDark} fill={COLORS.yellow} style={{ position: "absolute", left: 0, top: -4, transform: "scaleX(-1)" }} />
+                  <Typography sx={{ color: COLORS.ink, fontStyle: "italic", fontSize: { xs: "1.05rem", md: "1.2rem" }, lineHeight: 1.6, fontWeight: 500 }}>&ldquo;{f.quote}&rdquo;</Typography>
+                </Box>
+                <Box component="details" sx={{ mt: 3, borderTop: `1px solid ${COLORS.border}`, pt: 2, "&[open] .chev": { transform: "rotate(180deg)" }, "& summary::-webkit-details-marker": { display: "none" } }}>
+                  <Box component="summary" sx={{ listStyle: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 0.75, color: COLORS.red, fontWeight: 700, fontSize: "0.95rem", "&:hover": { color: COLORS.redDark } }}>
+                    Read more about {f.name} <ChevronDown className="chev" size={18} style={{ transition: "transform .2s" }} />
+                  </Box>
+                  <Box sx={{ mt: 1.5, display: "grid", gap: 1.25 }}>
+                    {f.bio.map((para) => (
+                      <Typography key={para.slice(0, 24)} sx={{ color: COLORS.body, fontSize: "0.97rem", lineHeight: 1.7 }}>{para}</Typography>
+                    ))}
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          ))}
         </Box>
       </Container>
     </Box>

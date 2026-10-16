@@ -27,6 +27,18 @@ export const ABOUT_CONTENT: AboutContent = {
       { value: "10,000+", label: "Doubts solved" },
     ],
   },
+  founders: [
+    {
+      name: "Rahul Yadav",
+      role: "Founder & CEO, VINI GROUP",
+      image: "/images/about/rahul-yadav.webp",
+      quote: "My aim is to make quality civil services preparation reachable for every aspirant — whichever corner of the country they come from.",
+      bio: [
+        "Rahul Yadav founded Vini IAS with a simple belief: talent is everywhere, but quality guidance is not. As Founder & CEO of VINI GROUP, he leads the vision behind Vini IAS and its growing ecosystem of learning brands.",
+        "Under his leadership, Vini IAS brings live classes, structured study material, daily answer writing and personal mentorship together — online, offline and hybrid — to help aspirants preparing for UPSC, BPSC and State PCS turn their dreams into ranks.",
+      ],
+    },
+  ],
   presence: {
     intro: "Rooted in Bihar and growing across India — learn with us online from anywhere or walk into one of our centres.",
     stats: [
