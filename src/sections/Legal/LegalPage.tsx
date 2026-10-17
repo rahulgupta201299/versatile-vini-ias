@@ -9,6 +9,9 @@ import { COLORS } from "@/theme/colors";
 import LegalToc from "./LegalToc";
 
 const DOC_ICON = { "terms-and-conditions": Scale, "privacy-policy": ShieldCheck, "refund-policy": RotateCcw } as const;
+/** Compact tab labels on phones so all three fit in one row. */
+const SHORT_LABEL = { "terms-and-conditions": "Terms", "privacy-policy": "Privacy", "refund-policy": "Refunds" } as const;
+
 const HIGHLIGHT_TONES = [
   { bg: COLORS.redTint, fg: COLORS.red },
   { bg: "#FFF7CC", fg: "#8A6D00" },
@@ -118,16 +121,17 @@ export default function LegalPage({ doc, docs }: { doc: LegalDoc; docs: LegalDoc
             <Typography component="h1" sx={{ fontWeight: 800, fontSize: { xs: "1.85rem", md: "2.75rem" }, lineHeight: 1.15 }}>{doc.title}</Typography>
           </Box>
           <Typography sx={{ mt: 2, maxWidth: 720, color: "rgba(255,255,255,.82)", fontSize: { xs: "0.98rem", md: "1.08rem" }, lineHeight: 1.6 }}>{doc.description}</Typography>
-          <Box sx={{ mt: 2.5, display: "inline-flex", alignItems: "center", gap: 0.75, px: 1.5, py: 0.6, borderRadius: 999, bgcolor: "rgba(255,229,31,.14)", border: "1px solid rgba(255,229,31,.35)", color: COLORS.yellow, fontSize: "0.85rem", fontWeight: 700 }}>
-            <CalendarDays size={15} /> Last updated: {fmtDate(doc.updated)}
+          <Box sx={{ mt: 2, display: "inline-flex", alignItems: "center", gap: 0.6, px: 1.25, py: 0.35, borderRadius: 999, bgcolor: "rgba(255,229,31,.12)", border: "1px solid rgba(255,229,31,.3)", color: COLORS.yellow, fontSize: { xs: "0.74rem", md: "0.78rem" }, fontWeight: 700 }}>
+            <CalendarDays size={13} /> Last updated: {fmtDate(doc.updated)}
           </Box>
           {/* switch between policies */}
-          <Box component="nav" aria-label="Legal documents" sx={{ mt: 3.5, display: "flex", gap: 1, overflowX: "auto", pb: 0.5, "&::-webkit-scrollbar": { display: "none" } }}>
+          <Box component="nav" aria-label="Legal documents" sx={{ mt: { xs: 2.25, md: 2.5 }, display: "flex", gap: 0.75, overflowX: "auto", pb: 0.5, "&::-webkit-scrollbar": { display: "none" } }}>
             {docs.map((d) => {
               const on = d.slug === doc.slug;
               return (
-                <Box key={d.slug} component={Link} href={`/${d.slug}`} aria-current={on ? "page" : undefined} sx={{ flexShrink: 0, px: 2, py: 0.9, borderRadius: 999, textDecoration: "none", fontWeight: 700, fontSize: "0.9rem", whiteSpace: "nowrap", color: on ? COLORS.navy : "#FFFFFF", bgcolor: on ? COLORS.yellow : "rgba(255,255,255,.08)", border: `1px solid ${on ? COLORS.yellow : "rgba(255,255,255,.22)"}`, transition: "all .2s", "&:hover": { bgcolor: on ? COLORS.yellow : "rgba(255,255,255,.16)" } }}>
-                  {d.label}
+                <Box key={d.slug} component={Link} href={`/${d.slug}`} aria-current={on ? "page" : undefined} aria-label={d.title} sx={{ flexShrink: 0, px: { xs: 1.25, md: 1.5 }, py: 0.45, borderRadius: 999, textDecoration: "none", fontWeight: 700, fontSize: { xs: "0.74rem", md: "0.78rem" }, whiteSpace: "nowrap", color: on ? COLORS.navy : "#FFFFFF", bgcolor: on ? COLORS.yellow : "rgba(255,255,255,.08)", border: `1px solid ${on ? COLORS.yellow : "rgba(255,255,255,.22)"}`, transition: "all .2s", "&:hover": { bgcolor: on ? COLORS.yellow : "rgba(255,255,255,.16)" } }}>
+                  <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>{d.label}</Box>
+                  <Box component="span" sx={{ display: { xs: "inline", sm: "none" } }}>{SHORT_LABEL[d.slug]}</Box>
                 </Box>
               );
             })}

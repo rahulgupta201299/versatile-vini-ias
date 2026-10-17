@@ -3,7 +3,7 @@ import { TEST_SERIES_URL } from "@/utils/slug";
 
 export const COMPANY_LINKS = [
   { name: "About Us", href: "/about-us" },
-  { name: "Contact Us", href: "/#enquiry" },
+  { name: "Contact Us", href: "/contact-us" },
   { name: "Careers", href: "/careers" },
   { name: "Updates", href: "#updates" },
   { name: "Blogs & Editorials", href: "/exams" },
