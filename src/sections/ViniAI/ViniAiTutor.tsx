@@ -2,13 +2,16 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Dialog from "@mui/material/Dialog";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { BookOpen, Camera, CalendarClock, ChevronRight, FilePenLine, ImagePlus, Mic, MicOff, Newspaper, Paperclip, Plus, Search, Send, Smartphone, Target, X } from "lucide-react";
+import { ArrowLeft, BookOpen, Camera, CalendarClock, ChevronRight, FilePenLine, ImagePlus, Mic, MicOff, Newspaper, Paperclip, Plus, Search, Send, Smartphone, Target, X } from "lucide-react";
 import { PLAY_STORE_URL } from "@/data/app";
+import StoreBadges from "@/components/StoreBadges";
 
 /* VINI AI sub-brand palette (from the logo). */
 const AI = { orange: "#EC5530", orangeDark: "#D5441F", soft: "#FFF4EF", softer: "#FFF9F6", line: "#FAD9CC", pink: "#E0447A", pinkSoft: "#FDEEF4", ink: "#111827", body: "#4B5563", muted: "#9CA3AF" };
@@ -88,6 +91,13 @@ export default function ViniAiTutor() {
   }, []);
   useEffect(() => () => { if (photo) URL.revokeObjectURL(photo.url); }, [photo]);
 
+  const router = useRouter();
+  /** Back to the previous page; straight to the VINI IAS home when VINI AI was opened directly. */
+  const goBack = () => {
+    const fromSite = typeof document !== "undefined" && document.referrer.startsWith(window.location.origin);
+    if (fromSite && window.history.length > 1) router.back();
+    else router.push("/");
+  };
   const exam = target?.exam.split(" ")[0] ?? "UPSC";
   const submit = (text: string) => {
     const t = text.trim();
@@ -118,22 +128,24 @@ export default function ViniAiTutor() {
   };
 
   return (
-    <Box sx={{ background: `radial-gradient(circle at 90% 0%, ${AI.soft} 0%, transparent 45%), linear-gradient(180deg, #FFFFFF 0%, ${AI.softer} 100%)`, minHeight: "80vh" }}>
+    <Box sx={{ background: `radial-gradient(circle at 90% 0%, ${AI.soft} 0%, transparent 45%), linear-gradient(180deg, #FFFFFF 0%, ${AI.softer} 100%)`, minHeight: "100dvh", display: "flex", flexDirection: "column" }}>
       <input ref={fileRef} type="file" accept="image/*" capture="environment" hidden onChange={(e) => { pickPhoto(e.target.files?.[0]); e.target.value = ""; }} />
 
-      <Container sx={{ maxWidth: "820px !important", pt: { xs: 2.5, md: 4 }, pb: { xs: 3, md: 5 } }}>
-        {/* top bar */}
-        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2 }}>
-          <Box sx={{ position: "relative", width: { xs: 140, md: 180 }, aspectRatio: "800 / 255" }}>
-            <Image src="/images/vini-ai/logo.webp" alt="VINI AI" fill priority sizes="180px" style={{ objectFit: "contain" }} />
+      {/* own sticky header (the site header is hidden on this page) */}
+      <Box component="header" sx={{ position: "sticky", top: 0, zIndex: 10, bgcolor: "rgba(255,255,255,.88)", backdropFilter: "saturate(1.4) blur(10px)", borderBottom: `1px solid ${AI.line}`, pt: "env(safe-area-inset-top)" }}>
+        <Container sx={{ maxWidth: "820px !important", height: { xs: 62, md: 72 }, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 1.5 }}>
+          <Box component={Link} href="/vini-ai" aria-label="VINI AI home" sx={{ position: "relative", display: "block", width: { xs: 128, md: 160 }, aspectRatio: "800 / 255" }}>
+            <Image src="/images/vini-ai/logo.webp" alt="VINI AI" fill priority sizes="160px" style={{ objectFit: "contain" }} />
           </Box>
-          <Box component="button" type="button" onClick={() => setTargetOpen(true)} sx={{ display: "inline-flex", alignItems: "center", gap: 0.9, height: { xs: 40, md: 44 }, px: { xs: 1.5, md: 2 }, borderRadius: 999, border: `1.5px solid ${AI.orange}`, bgcolor: "#FFFFFF", color: AI.orange, fontFamily: "inherit", fontWeight: 700, fontSize: { xs: "0.88rem", md: "0.95rem" }, cursor: "pointer", transition: "background-color .2s", "&:hover": { bgcolor: AI.soft } }}>
-            <Target size={19} /> {target ? `${target.exam.split(" ")[0]} ${target.year}` : "Set Target"}
+          <Box component="button" type="button" onClick={() => setTargetOpen(true)} sx={{ flexShrink: 0, display: "inline-flex", alignItems: "center", gap: 0.75, height: { xs: 38, md: 42 }, px: { xs: 1.4, md: 2 }, borderRadius: 999, border: `1.5px solid ${AI.orange}`, bgcolor: "#FFFFFF", color: AI.orange, fontFamily: "inherit", fontWeight: 700, fontSize: { xs: "0.85rem", md: "0.95rem" }, cursor: "pointer", transition: "background-color .2s", "&:hover": { bgcolor: AI.soft } }}>
+            <Target size={18} /> {target ? `${target.exam.split(" ")[0]} ${target.year}` : "Set Target"}
           </Box>
-        </Box>
+        </Container>
+      </Box>
 
+      <Container sx={{ flex: 1, maxWidth: "820px !important", pt: { xs: 1, md: 2 }, pb: { xs: 3, md: 4 } }}>
         {/* hero */}
-        <Box sx={{ mt: { xs: 3.5, md: 5 }, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2 }}>
+        <Box sx={{ mt: { xs: 2.5, md: 4 }, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2 }}>
           <Box>
             <Typography component="h1" sx={{ fontWeight: 900, fontSize: { xs: "2.4rem", sm: "3rem", md: "3.6rem" }, lineHeight: 1.05, color: AI.ink, letterSpacing: "-.02em" }}>
               Ask <Box component="span" sx={{ color: AI.orange }}>Doubt</Box>
@@ -196,7 +208,7 @@ export default function ViniAiTutor() {
       </Container>
 
       {/* ask bar — sticks to the bottom while on this page */}
-      <Box sx={{ position: "sticky", bottom: 0, zIndex: 5, pb: { xs: "calc(12px + env(safe-area-inset-bottom))", md: 3 }, pt: 1.5, background: `linear-gradient(180deg, transparent, ${AI.softer} 40%)` }}>
+      <Box sx={{ position: "sticky", bottom: 0, zIndex: 5, pb: { xs: "calc(12px + env(safe-area-inset-bottom))", md: 2 }, pt: 1.5, background: `linear-gradient(180deg, transparent, ${AI.softer} 40%)` }}>
         <Container sx={{ maxWidth: "820px !important" }}>
           {photo && (
             <Box sx={{ mb: 1, display: "inline-flex", alignItems: "center", gap: 1, p: 0.75, pr: 1, borderRadius: "12px", bgcolor: "#FFFFFF", border: `1px solid ${AI.line}`, boxShadow: "0 6px 16px rgba(0,0,0,.06)" }}>
@@ -213,6 +225,26 @@ export default function ViniAiTutor() {
             <Box component="button" type="submit" aria-label="Send" sx={{ flexShrink: 0, width: { xs: 46, md: 50 }, height: { xs: 46, md: 50 }, borderRadius: "50%", border: "none", cursor: "pointer", color: "#FFFFFF", background: `linear-gradient(145deg, #F7774F, ${AI.orange})`, boxShadow: `0 8px 18px ${AI.orange}55`, display: "flex", alignItems: "center", justifyContent: "center", transition: "transform .2s", "&:hover": { transform: "scale(1.06)" } }}>
               <Send size={20} style={{ marginLeft: -2 }} />
             </Box>
+          </Box>
+        </Container>
+      </Box>
+
+      {/* app store badges — below the ask bar */}
+      <Container sx={{ maxWidth: "820px !important", pt: { xs: 0.5, md: 1 }, pb: { xs: 2.5, md: 3 }, display: "flex", flexDirection: { xs: "column", sm: "row" }, alignItems: "center", justifyContent: "center", gap: { xs: 1, sm: 1.5 } }}>
+        <Typography sx={{ color: AI.body, fontWeight: 600, fontSize: { xs: "0.85rem", md: "0.92rem" } }}>Get VINI AI on the app</Typography>
+        <Box sx={{ width: { xs: "100%", sm: "auto" }, display: "flex", justifyContent: "center" }}>
+          <StoreBadges size="sm" />
+        </Box>
+      </Container>
+
+      {/* bottom actions */}
+      <Box component="footer" sx={{ borderTop: `1px solid ${AI.line}`, bgcolor: "#FFFFFF", pb: "env(safe-area-inset-bottom)" }}>
+        <Container sx={{ maxWidth: "820px !important", py: { xs: 2, md: 2.5 }, display: "grid", gridTemplateColumns: "1fr 1.4fr", gap: { xs: 1.25, md: 2 } }}>
+          <Box component="button" type="button" onClick={goBack} sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 1, height: { xs: 50, md: 54 }, borderRadius: 999, border: `1.5px solid ${AI.line}`, bgcolor: "#FFFFFF", color: AI.ink, fontFamily: "inherit", fontWeight: 700, fontSize: { xs: "0.98rem", md: "1.05rem" }, cursor: "pointer", transition: "border-color .2s, color .2s", "&:hover": { borderColor: AI.orange, color: AI.orange } }}>
+            <ArrowLeft size={20} /> Back
+          </Box>
+          <Box component="a" href={PLAY_STORE_URL} target="_blank" rel="noopener noreferrer" sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 1, height: { xs: 50, md: 54 }, borderRadius: 999, color: "#FFFFFF", fontWeight: 800, fontSize: { xs: "0.98rem", md: "1.05rem" }, textDecoration: "none", background: `linear-gradient(145deg, #F7774F, ${AI.orange})`, boxShadow: `0 10px 22px ${AI.orange}44`, transition: "transform .2s", "&:hover": { transform: "translateY(-1px)" } }}>
+            <Smartphone size={20} /> Open in App
           </Box>
         </Container>
       </Box>

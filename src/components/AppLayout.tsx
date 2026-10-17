@@ -9,6 +9,7 @@ import AppPromoPopup from "./AppPromoPopup";
 import SupportCallback from "./SupportCallback";
 import { OPEN_AUTH_EVENT } from "@/utils/events";
 
+/** Main-site chrome: header, footer, login modal, app popup and the help tab. Used by app/(site)/layout.tsx and the 404 page. */
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [authOpen, setAuthOpen] = useState(false);
 

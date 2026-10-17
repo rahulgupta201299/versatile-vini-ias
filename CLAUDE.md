@@ -11,3 +11,10 @@
 - Plans are only **Foundation** and **Foundation Plus**.
 - Toppers come from the homepage Top Rankers section.
 - Every "Test Series" link is external (`TEST_SERIES_URL`, opens in a new tab).
+
+## Layouts / route groups
+- `src/app/layout.tsx` is the bare root shell only (html, body, theme, site data). Do not add page chrome there.
+- `src/app/(site)/` — every main-site page. Its `layout.tsx` renders `AppLayout` (header, footer, login modal, app popup, help tab). New site pages go here.
+- `src/app/(vini-ai)/` — standalone VINI AI sub-brand (own header + Back / Open in App footer, orange palette, its own logo). No site header/footer.
+- Never hide/show the header or footer with pathname checks — add a new route group with its own layout instead.
+- `api/`, `sitemap.ts`, `robots.ts`, `not-found.tsx` stay at the app root (404 wraps itself in `AppLayout`).

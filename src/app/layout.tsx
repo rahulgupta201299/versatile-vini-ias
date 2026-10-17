@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import ThemeRegistry from "@/theme/ThemeRegistry";
-import { AppLayout } from "@/components";
 import { SiteDataProvider } from "@/context/SiteDataContext";
 import { getSiteData } from "@/services/site";
 
@@ -71,6 +70,7 @@ export const metadata: Metadata = {
   },
 };
 
+/** Root shell shared by every route group: <html>/<body>, theme and site-wide data. Page chrome lives in the group layouts — (site) and (vini-ai). */
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -110,7 +110,7 @@ export default async function RootLayout({
       <body>
         <ThemeRegistry>
           <SiteDataProvider value={siteData}>
-            <AppLayout>{children}</AppLayout>
+            {children}
           </SiteDataProvider>
         </ThemeRegistry>
       </body>
