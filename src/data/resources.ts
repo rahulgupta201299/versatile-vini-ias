@@ -26,14 +26,14 @@ export const FREE_RESOURCES: ResourceItem[] = [
     href: "/exams",
   },
   {
-    id: "pyqs",
-    title: "PYQs",
-    subtitle: "Solved Past 15 Year Papers",
-    icon: "FileCheck",
+    id: "vini-ai",
+    title: "विनीAI",
+    subtitle: "Your AI Doubt Solver",
+    icon: "Sparkles",
     bgColor: "#F3E8FF", // Soft Purple circle
     iconColor: "#9333EA",
     borderColor: "#E9D5FF",
-    href: PLAY_STORE_URL,
+    href: "/vini-ai",
   },
   {
     id: "notes",

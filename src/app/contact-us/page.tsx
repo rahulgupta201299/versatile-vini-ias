@@ -15,7 +15,9 @@ export const metadata: Metadata = {
 };
 
 const ADDRESS = "D-247/4A, Noida Sector 63, Uttar Pradesh (India)";
-const MAP_QUERY = encodeURIComponent("D-247/4A, Sector 63, Noida, Uttar Pradesh 201301");
+const MAP_QUERY = encodeURIComponent("Procapitus Business Park, D-247, 4A, D Block, Sector 63, Noida, Uttar Pradesh 201309");
+/** Official Google Maps pin for the head office. */
+const MAP_LINK = "https://maps.app.goo.gl/odASbVEKABeAeDMi6";
 const SUPPORT_EMAIL = "support@groupvini.in";
 const PR_EMAIL = "pr@groupvini.in";
 const CAREERS_EMAIL = "careers@groupvini.in";
@@ -92,13 +94,15 @@ export default function ContactUsPage() {
                 <MapPin size={20} color={COLORS.red} />
                 <Typography id="office-title" component="h2" sx={{ fontWeight: 800, color: COLORS.navy, fontSize: "1.2rem" }}>Head Office</Typography>
               </Box>
-              <Typography sx={{ mt: 1, color: COLORS.body, lineHeight: 1.6 }}>{ADDRESS}</Typography>
+              <Box component="a" href={MAP_LINK} target="_blank" rel="noopener noreferrer" sx={{ display: "block", mt: 1, color: COLORS.body, lineHeight: 1.6, textDecoration: "none", "&:hover": { color: COLORS.red } }}>
+                Procapitus Business Park, {ADDRESS}
+              </Box>
               <Box sx={{ mt: 1.75, pt: 1.75, borderTop: `1px dashed ${COLORS.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 1.5, flexWrap: "wrap" }}>
                 <Box>
                   <Typography sx={{ color: COLORS.muted, fontSize: "0.8rem", fontWeight: 600 }}>Enquiry</Typography>
                   <Box component="a" href={`mailto:${SUPPORT_EMAIL}`} sx={linkSx}>{SUPPORT_EMAIL}</Box>
                 </Box>
-                <Box component="a" href={`https://www.google.com/maps/dir/?api=1&destination=${MAP_QUERY}`} target="_blank" rel="noopener noreferrer" sx={btn("#FFFFFF", COLORS.navy, COLORS.border)}><Navigation size={15} /> Directions</Box>
+                <Box component="a" href={MAP_LINK} target="_blank" rel="noopener noreferrer" sx={btn("#FFFFFF", COLORS.navy, COLORS.border)}><Navigation size={15} /> Directions</Box>
               </Box>
             </Box>
           </Box>

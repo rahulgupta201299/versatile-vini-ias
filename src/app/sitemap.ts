@@ -18,6 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     page("/about-us", 0.6),
     page("/careers", 0.6),
     page("/contact-us", 0.6),
+    page("/vini-ai", 0.7),
     page("/terms-and-conditions", 0.3),
     page("/privacy-policy", 0.3),
     page("/refund-policy", 0.3),

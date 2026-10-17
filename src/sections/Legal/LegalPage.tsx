@@ -121,11 +121,11 @@ export default function LegalPage({ doc, docs }: { doc: LegalDoc; docs: LegalDoc
             <Typography component="h1" sx={{ fontWeight: 800, fontSize: { xs: "1.85rem", md: "2.75rem" }, lineHeight: 1.15 }}>{doc.title}</Typography>
           </Box>
           <Typography sx={{ mt: 2, maxWidth: 720, color: "rgba(255,255,255,.82)", fontSize: { xs: "0.98rem", md: "1.08rem" }, lineHeight: 1.6 }}>{doc.description}</Typography>
-          <Box sx={{ mt: 2, display: "inline-flex", alignItems: "center", gap: 0.6, px: 1.25, py: 0.35, borderRadius: 999, bgcolor: "rgba(255,229,31,.12)", border: "1px solid rgba(255,229,31,.3)", color: COLORS.yellow, fontSize: { xs: "0.74rem", md: "0.78rem" }, fontWeight: 700 }}>
+          <Box sx={{ mt: 2, display: "flex", width: "fit-content", mx: { xs: "auto", md: 0 }, alignItems: "center", gap: 0.6, px: 1.25, py: 0.35, borderRadius: 999, bgcolor: "rgba(255,229,31,.12)", border: "1px solid rgba(255,229,31,.3)", color: COLORS.yellow, fontSize: { xs: "0.74rem", md: "0.78rem" }, fontWeight: 700 }}>
             <CalendarDays size={13} /> Last updated: {fmtDate(doc.updated)}
           </Box>
           {/* switch between policies */}
-          <Box component="nav" aria-label="Legal documents" sx={{ mt: { xs: 2.25, md: 2.5 }, display: "flex", gap: 0.75, overflowX: "auto", pb: 0.5, "&::-webkit-scrollbar": { display: "none" } }}>
+          <Box component="nav" aria-label="Legal documents" sx={{ mt: { xs: 2.25, md: 2.5 }, display: "flex", justifyContent: { xs: "center", md: "flex-start" }, gap: 0.75, overflowX: "auto", pb: 0.5, "&::-webkit-scrollbar": { display: "none" } }}>
             {docs.map((d) => {
               const on = d.slug === doc.slug;
               return (

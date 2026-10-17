@@ -33,7 +33,7 @@ export const OUR_PRODUCTS = [
   { name: "Vini Kiddos", href: "#" },
   { name: "Vini Law", href: "#" },
   { name: "Vini Store", href: "/#market-ad" },
-  { name: "Vini AI Tutor", href: "#" },
+  { name: "Vini AI Tutor", href: "/vini-ai" },
   { name: "Junior Kaksha", href: "#" },
   { name: "View All Products", href: "#products" },
 ];
