@@ -21,9 +21,9 @@ export const UPCOMING_CENTRES = [
 export const QUICK_LINKS = [
   { name: "Pay EMI Options", href: "#pay-emi" },
   { name: "Student App Login", href: "#login" },
-  { name: "Terms & Conditions", href: "#terms" },
-  { name: "Privacy Policy", href: "#privacy" },
-  { name: "Refund & Cancellation", href: "#refund" },
+  { name: "Terms & Conditions", href: "/terms-and-conditions" },
+  { name: "Privacy Policy", href: "/privacy-policy" },
+  { name: "Refund & Cancellation", href: "/refund-policy" },
   { name: "Press Releases", href: "#press" },
   { name: "Legal Documents", href: "#legal" },
 ];

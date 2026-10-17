@@ -702,3 +702,31 @@ export interface CareersContent {
   jobs: CareerJob[];
   email: string;
 }
+
+/* ---------- Legal pages (/privacy-policy, /terms-and-conditions, /refund-policy) ---------- */
+
+export type LegalBlock =
+  | { kind: "p"; text: string }
+  | { kind: "h"; text: string }
+  | { kind: "list"; items: string[]; ordered?: boolean }
+  | { kind: "note"; text: string }
+  | { kind: "contact"; rows: { label: string; value: string; href?: string }[] };
+
+export interface LegalSection {
+  id: string;
+  title: string;
+  blocks: LegalBlock[];
+}
+
+export interface LegalDoc {
+  slug: "privacy-policy" | "terms-and-conditions" | "refund-policy";
+  title: string;
+  /** Short label for nav / related links. */
+  label: string;
+  description: string;
+  updated: string;
+  /** 3 key points shown as cards under the title. */
+  highlights: { title: string; text: string }[];
+  intro: LegalBlock[];
+  sections: LegalSection[];
+}
