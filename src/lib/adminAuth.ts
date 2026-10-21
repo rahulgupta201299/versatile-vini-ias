@@ -121,7 +121,12 @@ export async function startLogin(email: string, password: string): Promise<StepR
   if (ADMIN_MODE === "live") {
     const r = await backend("admin/auth/login", { body: { email, password, ...(trustToken ? { trustToken } : {}) } }).catch(() => null);
     if (!r) return { ok: false, status: 502, error: UNREACHABLE };
-    if (!r.ok) return { ok: false, status: r.status === 429 ? 429 : r.status >= 500 ? 502 : 401, error: r.status === 429 ? backendMessage(r.json, "Too many attempts. Please wait and try again.") : r.status >= 500 ? "Couldn't send the verification code. Please try again." : GENERIC_LOGIN_ERROR };
+    if (!r.ok) {
+      if (r.status === 429) return { ok: false, status: 429, error: backendMessage(r.json, "Too many attempts. Please wait and try again.") };
+      // 5xx: show the backend's reason (e.g. "Database unavailable") instead of a generic message
+      if (r.status >= 500) return { ok: false, status: 502, error: backendMessage(r.json, "The server ran into a problem. Please try again in a minute.") };
+      return { ok: false, status: 401, error: GENERIC_LOGIN_ERROR };
+    }
     if (r.json.otpRequired === false && typeof r.json.token === "string") {
       await setSessionCookie(r.json.token, toTime(r.json.expiresAt, SESSION_TTL_MS));
       return { ok: true, signedIn: true };
