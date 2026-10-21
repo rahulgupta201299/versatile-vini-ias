@@ -18,3 +18,4 @@
 - `src/app/(vini-ai)/` — standalone VINI AI sub-brand (own header + Back / Open in App footer, orange palette, its own logo). No site header/footer.
 - Never hide/show the header or footer with pathname checks — add a new route group with its own layout instead.
 - `api/`, `sitemap.ts`, `robots.ts`, `not-found.tsx` stay at the app root (404 wraps itself in `AppLayout`).
+- `src/app/(admin)/` — admin panel at /admin (no site chrome, noindex, never linked from the site). Auth: email + password → 6-digit email OTP → 2-day httpOnly cookie (`src/lib/adminAuth.ts`, `/api/admin/auth/*`, gate in `src/middleware.ts`). Production uses ADMIN_AUTH_MODE=live (backend /admin/auth/*).
