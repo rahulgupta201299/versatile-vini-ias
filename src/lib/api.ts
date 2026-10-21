@@ -1,8 +1,8 @@
 /**
  * Backend API client (server only — used by Server Components, route handlers and services).
  *
- * ┌ Environment (.env.local) ───────────────────────────────────────────────┐
- * │ API_BASE_URL      e.g. https://api.viniias.com/v1   (unset → local data)  │
+ * ┌ Environment (.env) ─────────────────────────────────────────────────────┐
+ * │ API_BASE_URL      https://vini-backend.vercel.app    (unset → local data)  │
  * │ API_TOKEN         optional bearer token sent with every request           │
  * │ API_TIMEOUT_MS    request timeout, default 8000                           │
  * │ REVALIDATE_SECRET secret for POST /api/revalidate (on-demand refresh)     │
