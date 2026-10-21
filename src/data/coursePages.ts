@@ -1,13 +1,12 @@
 /**
- * Goal (exam) landing pages — route: /goal/<course>, e.g. /goal/upsc-cse-2026-27, /goal/bpsc.
+ * Generated goal pages — route: /goal/<course>.
  *
- * FALLBACK content — used when GET /goals/<slug> is not configured or has no page for the exam.
- * Only exams listed under "All Exams" (mega menu) and "Select Your Goal" get a goal page;
- * a complete page is generated from the exam name + category.
+ * "All Exams" pages come from the database (admin panel → Web → Homepage → All Exams).
+ * This file only builds pages for "Select Your Goal" exams that are not in All Exams,
+ * generated from the exam name + category.
  */
 import { TEST_SERIES_URL } from "@/utils/slug";
-import { CourseBatch, CoursePageData, CourseVideo, ExamGoalCategory, MegaMenuCategory } from "@/types";
-import { HERO_BANNERS } from "./heroBanners";
+import { CourseBatch, CoursePageData, CourseVideo, ExamGoalCategory } from "@/types";
 import { slugify } from "@/utils/slug";
 
 interface GoalEntry {
@@ -16,25 +15,17 @@ interface GoalEntry {
   category: string;
 }
 
-/** Every exam that has a goal page, from the mega menu + "Select Your Goal" lists (first name wins). */
-export function buildGoalEntries(megaMenu: MegaMenuCategory[], examCategories: ExamGoalCategory[]): GoalEntry[] {
+/** Every "Select Your Goal" exam (first name wins). */
+export function buildGoalEntries(examCategories: ExamGoalCategory[]): GoalEntry[] {
   const entries = new Map<string, GoalEntry>();
-  const add = (name: string, category: string) => {
-    const slug = slugify(name);
-    if (slug && !entries.has(slug)) entries.set(slug, { slug, name, category });
-  };
-  megaMenu.forEach((cat) => cat.courses.forEach((course) => add(course.title, cat.title)));
-  examCategories.forEach((cat) => cat.subcategories.forEach((sub) => add(sub.name, cat.category)));
+  examCategories.forEach((cat) =>
+    cat.subcategories.forEach((sub) => {
+      const slug = slugify(sub.name);
+      if (slug && !entries.has(slug)) entries.set(slug, { slug, name: sub.name, category: cat.category });
+    })
+  );
   return [...entries.values()];
 }
-
-/* ---------- Per-page overrides (optional) ---------- */
-const COURSE_PAGE_OVERRIDES: Record<string, Partial<CoursePageData>> = {
-  // "upsc-cse-2026-27": { tagline: "...", videos: [{ title: "...", youtubeId: "VIDEO_ID", ... }] },
-};
-
-/** True when a page's banners are set locally in COURSE_PAGE_OVERRIDES (they win over the server). */
-export const COURSE_PAGE_HAS_OWN_BANNERS = (slug: string) => Boolean(COURSE_PAGE_OVERRIDES[slug]?.banners?.length);
 
 /* ---------- Helpers ---------- */
 const UPSC_GROUPS = new Set([
@@ -118,7 +109,7 @@ export function buildCoursePage(entry: GoalEntry, all: GoalEntry[]): CoursePageD
     name,
     category,
     tagline: `Live classes, free lectures, test series & mentorship for ${name} — in Hindi & English medium.`,
-    banners: HERO_BANNERS,
+    banners: [], // the page uses the shared hero banners
     videos: defaultVideos(name),
     batches: defaultBatches(name),
     highlights: [
@@ -144,6 +135,6 @@ export function buildCoursePage(entry: GoalEntry, all: GoalEntry[]): CoursePageD
     examOptions,
   };
 
-  return { ...base, ...COURSE_PAGE_OVERRIDES[slug] };
+  return base;
 }
 

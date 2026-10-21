@@ -14,12 +14,14 @@ import { anchorSx, BODY, INK, MUTED, RED, RED_TINT, sectionSx, titleSx } from ".
 import { COLORS } from "@/theme/colors";
 interface AboutExamProps {
   name: string;
+  /** Section heading; empty → "All About <name> Exam". */
+  title?: string;
   about: string[];
   highlights: { label: string; value: string }[];
   faqs: CourseFaq[];
 }
 
-export default function AboutExam({ name, about, highlights, faqs }: AboutExamProps) {
+export default function AboutExam({ name, title, about, highlights, faqs }: AboutExamProps) {
   const [expanded, setExpanded] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | false>(0);
 
@@ -27,7 +29,7 @@ export default function AboutExam({ name, about, highlights, faqs }: AboutExamPr
     <Box component="section" id="about-exam" sx={{ ...anchorSx, ...sectionSx, backgroundColor: COLORS.surface }}>
       <Container>
         <Typography component="h2" sx={titleSx}>
-          All About {name} Exam
+          {title || `All About ${name} Exam`}
         </Typography>
         <Typography sx={{ color: MUTED, fontSize: { xs: "0.85rem", md: "0.95rem" }, mt: 0.5, mb: { xs: 2, md: 3 } }}>Your complete guide to exam preparation</Typography>
 

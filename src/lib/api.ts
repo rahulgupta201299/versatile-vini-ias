@@ -19,7 +19,8 @@ import { API_BASE_URL } from "@/lib/apiBase";
  *   /home/ranker-stats             StatItem[]
  *   /home/impact                   ImpactData
  *   /home/resources                ResourceItem[]
- *   /goals/<slug>                  CoursePageData        (404 → page generated from local data)
+ *   /exams                         AllExamsMenuCategory[] (header "All Exams" menu — see services/exams.ts)
+ *   /exams/<slug>                  AllExam               (exam page; 404 → generated page for "Select Your Goal" exams)
  *   /courses/gs-foundation/<slug>  FreeResourcePage      (404 → local data / not found)
  *
  * Every call has a local fallback (src/data/*), so the site keeps working when the API is
@@ -51,6 +52,8 @@ export const CACHE_TAGS = {
   promo: "promo-banners",
   home: "home",
   goals: "goals",
+  /** Homepage → All Exams (header menu + exam pages) — refreshed on every admin save */
+  allExams: "all-exams",
   freeResources: "free-resources",
   blogs: "blogs",
   company: "company-pages",

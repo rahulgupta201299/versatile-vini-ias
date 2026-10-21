@@ -95,6 +95,9 @@ const ICONS: Record<string, LucideIcon> = {
   Users,
 };
 
+/** Icon names that can be chosen in the admin panel (e.g. the All Exams menu icon). */
+export const ICON_NAMES = Object.keys(ICONS).sort();
+
 interface IconRendererProps {
   name: string;
   size?: number;

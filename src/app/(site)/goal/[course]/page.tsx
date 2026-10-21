@@ -11,12 +11,11 @@ import {
   CounsellingForm,
 } from "@/sections/CoursePage";
 import AppDownloadSection from "@/sections/AppDownload/AppDownloadSection";
-import { COURSE_PAGE_HAS_OWN_BANNERS } from "@/data/coursePages";
 import { getGoalPage, getHeroBanners, getImpactData, getPrerenderedGoalSlugs, getResultBanners, getSiteConfig } from "@/services";
 
 type Params = Promise<{ course: string }>;
 
-/** "All Exams" courses are built ahead of time; every other goal page renders on first visit (then cached). */
+/** All Exams pages are built ahead of time; every other goal page renders on first visit (then cached). */
 export const dynamicParams = true;
 export async function generateStaticParams() {
   return (await getPrerenderedGoalSlugs()).map((course) => ({ course }));
@@ -41,12 +40,13 @@ export default async function GoalPage({ params }: { params: Params }) {
   if (!page) notFound();
 
   const [heroBanners, resultTabs, impact, config] = await Promise.all([
-    COURSE_PAGE_HAS_OWN_BANNERS(course) ? Promise.resolve(page.banners) : getHeroBanners(course),
+    // All Exams pages have their own banners; generated pages use the shared hero banners
+    page.banners.length ? Promise.resolve(page.banners) : getHeroBanners(course),
     getResultBanners(),
     getImpactData(),
     getSiteConfig(),
   ]);
-  const toppers = (resultTabs.find((t) => t.id === page.resultTabId) ?? resultTabs[0])?.banners ?? [];
+  const toppers = page.topRankers?.length ? page.topRankers : ((resultTabs.find((t) => t.id === page.resultTabId) ?? resultTabs[0])?.banners ?? []);
 
   const faqJsonLd = {
     "@context": "https://schema.org",
@@ -63,7 +63,7 @@ export default async function GoalPage({ params }: { params: Params }) {
       <FreeClasses videos={page.videos} channelUrl={config.social.youtube} avatars={impact.avatars} />
       <BatchesSection batches={page.batches} />
       <CourseToppers banners={toppers} />
-      <AboutExam name={page.name} about={page.about} highlights={page.highlights} faqs={page.faqs} />
+      <AboutExam name={page.name} title={page.aboutTitle} about={page.about} highlights={page.highlights} faqs={page.faqs} />
       <CounsellingForm name={page.name} examOptions={page.examOptions} />
       <AppDownloadSection title="Join 100K+ students on the app today!" />
     </>

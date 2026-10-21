@@ -1,7 +1,8 @@
 import { cache } from "react";
 import { fetchApi, CACHE_TAGS, REVALIDATE } from "@/lib/api";
 import { ExamGoalCategory, NavigationData, SiteConfig, SiteData } from "@/types";
-import { MEGA_MENU_CATEGORIES, MOBILE_MENU_SECTIONS, NAV_ITEMS, SEARCH_TRENDING, STORE_HREF } from "@/data/navigation";
+import { MOBILE_MENU_SECTIONS, NAV_ITEMS, SEARCH_TRENDING, STORE_HREF } from "@/data/navigation";
+import { getExamMenu, toMegaMenu } from "./exams";
 import { EXAM_CATEGORIES } from "@/data/exams";
 import { SITE_CONFIG } from "@/data/siteConfig";
 import { slugify } from "@/utils/slug";
@@ -11,13 +12,19 @@ import { slugify } from "@/utils/slug";
  * request, and fetchApi's ISR cache shares the result across requests.
  */
 
-const getNavigation = cache(() =>
-  fetchApi<NavigationData>("navigation", {
-    fallback: { navItems: NAV_ITEMS, megaMenu: MEGA_MENU_CATEGORIES, mobileMenu: MOBILE_MENU_SECTIONS, searchTrending: SEARCH_TRENDING, storeHref: STORE_HREF },
-    revalidate: REVALIDATE.slow,
-    tags: [CACHE_TAGS.navigation],
-  })
-);
+/** Header menus. The "All Exams" mega menu comes from the All Exams API (managed in the admin panel). */
+const getNavigation = cache(async (): Promise<NavigationData> => {
+  const [navigation, examMenu] = await Promise.all([
+    fetchApi<Omit<NavigationData, "megaMenu">>("navigation", {
+      fallback: { navItems: NAV_ITEMS, mobileMenu: MOBILE_MENU_SECTIONS, searchTrending: SEARCH_TRENDING, storeHref: STORE_HREF },
+      revalidate: REVALIDATE.slow,
+      tags: [CACHE_TAGS.navigation],
+    }),
+    getExamMenu(),
+  ]);
+
+  return { ...navigation, megaMenu: toMegaMenu(examMenu) };
+});
 
 const getExamCategories = cache(() =>
   fetchApi<ExamGoalCategory[]>("exam-categories", { fallback: EXAM_CATEGORIES, revalidate: REVALIDATE.slow, tags: [CACHE_TAGS.exams] })

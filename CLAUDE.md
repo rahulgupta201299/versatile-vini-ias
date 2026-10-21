@@ -19,3 +19,11 @@
 - Never hide/show the header or footer with pathname checks — add a new route group with its own layout instead.
 - `api/`, `sitemap.ts`, `robots.ts`, `not-found.tsx` stay at the app root (404 wraps itself in `AppLayout`).
 - `src/app/(admin)/` — admin panel at /admin (no site chrome, noindex, never linked from the site). Auth: email + password → 6-digit email OTP → 2-day httpOnly cookie (`src/lib/adminAuth.ts`, `/api/admin/auth/*`, gate in `src/middleware.ts`). Production uses ADMIN_AUTH_MODE=live (backend /admin/auth/*).
+
+## Admin panel rules (always follow)
+- **Loading data in admin pages (server):** use `loadAdminData()` from `src/lib/adminData.ts` — it sends signed-out admins to sign in (401), shows the nearest `not-found.tsx` (404) and throws for server problems so the nearest `error.tsx` shows "Try again". Don't render raw backend errors in pages.
+- **Changes from admin screens (browser):** use `adminRequest()` from `src/lib/adminClient.ts` (friendly offline / session-ended / server messages). Show its error message next to the field or in a red `role="alert"` box.
+- **Error screens:** every admin section folder gets its own `error.tsx` (and `not-found.tsx` when it has `[id]` pages), using `AdminErrorState`. Admin-wide fallbacks: `(admin)/admin/error.tsx` (panel can't load), `(panel)/error.tsx`, `(panel)/not-found.tsx`; whole site: `app/global-error.tsx`.
+- **No browser pop-ups:** never use `window.prompt`, `window.confirm` or `window.alert` — edit inline with fields (e.g. `CategoryNameForm`), with Enter to save and Esc to cancel.
+- **Nothing is deleted in All Exams** — categories and sub categories are switched active / inactive, and the admin list shows active and inactive separately.
+

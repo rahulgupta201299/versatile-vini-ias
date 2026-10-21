@@ -11,7 +11,10 @@ export const metadata: Metadata = { title: "Sign in" };
 export const dynamic = "force-dynamic";
 
 export default async function AdminLoginPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
-  if (await getAdminSession()) redirect("/admin");
+  // If the server is down the session can't be checked — still show the form (signing in will explain the problem)
+  const admin = await getAdminSession().catch(() => null);
+
+  if (admin) redirect("/admin");
   const { next } = await searchParams;
 
   return (

@@ -192,7 +192,11 @@ export async function getAdminSession(): Promise<AdminUser | null> {
   if (!token) return null;
   if (ADMIN_MODE === "live") {
     const r = await backend("admin/auth/me", { method: "GET", token }).catch(() => null);
-    return r?.ok && typeof r.json.email === "string" ? (r.json as AdminUser) : null;
+
+    // Server down or failing → show the admin error screen instead of pretending the admin is signed out
+    if (!r || r.status >= 500) throw new Error(`Admin session check failed: ${r ? `HTTP ${r.status}` : "server unreachable"}`);
+
+    return r.ok && typeof r.json.email === "string" ? (r.json as AdminUser) : null;
   }
   const s = unseal<{ email: string; exp: number; typ?: string }>(token);
   return s && !s.typ && s.exp > Date.now() ? { email: s.email, name: "Admin" } : null;

@@ -182,7 +182,11 @@ export interface CoursePageData {
   highlights: { label: string; value: string }[];
   about: string[];
   faqs: CourseFaq[];
-  /** Results tab shown in the Toppers section (see data/resultBanners.ts). */
+  /** Toppers banners for this exam (All Exams pages). When empty, the `resultTabId` tab is used. */
+  topRankers?: ResultBanner[];
+  /** Heading of the "All About" section; empty → "All About <name> Exam". */
+  aboutTitle?: string;
+  /** Results tab shown in the Toppers section when the page has no own toppers (see data/resultBanners.ts). */
   resultTabId: string;
   /** Options for the "Exam" dropdown in the counselling form. */
   examOptions: string[];
@@ -730,3 +734,116 @@ export interface LegalDoc {
   intro: LegalBlock[];
   sections: LegalSection[];
 }
+
+/* ======================================================================
+ * Homepage → All Exams (GET /exams, GET /exams/:slug, admin /admin/homepage/all-exams)
+ * One record per sub category; drives the header "All Exams" menu and /goal/<slug> pages.
+ * ==================================================================== */
+
+/** A banner with separate web (wide) and mobile (tall) art. Used for hero banners and top rankers. */
+export interface ExamBanner {
+  title: string;
+  alt: string;
+  webImageUrl: string;
+  mobileImageUrl: string;
+  link: string;
+}
+
+export interface ExamFreeClass {
+  title: string;
+  educator: string;
+  duration: string;
+  youtubeId: string;
+  link: string;
+}
+
+export interface ExamBatch {
+  title: string;
+  thumbnail: string;
+  language: string;
+  mode: string;
+  startDate: string;
+  price: number;
+  mrp: number;
+  tag: string;
+  link: string;
+}
+
+export interface ExamDetails {
+  subTitle: string;
+  banners: ExamBanner[];
+  freeClasses: ExamFreeClass[];
+  batches: ExamBatch[];
+  topRankers: ExamBanner[];
+  aboutExam: { title: string; highlights: { label: string; value: string }[]; paragraphs: string[] };
+  faqs: { question: string; answer: string }[];
+}
+
+export interface ExamMenuIcon {
+  name: string;
+  color: string;
+  background: string;
+}
+
+/** One exam (sub category) with everything shown on its page. */
+export interface AllExam {
+  _id?: string;
+  category: string;
+  subCategory: string;
+  slug: string;
+  order?: number;
+  menuIcon: ExamMenuIcon;
+  details: ExamDetails;
+  updatedAt?: string;
+}
+
+/** GET /exams — the header "All Exams" menu. */
+export interface AllExamsMenuCategory {
+  category: string;
+  subCategories: Pick<AllExam, "subCategory" | "slug" | "menuIcon">[];
+}
+
+/* ---------- All Exams in the admin panel (categories and sub categories are separate, joined by category id) ---------- */
+
+export interface AdminExamCategory {
+  _id: string;
+  name: string;
+  isActive: boolean;
+  order: number;
+}
+
+export interface AdminSubCategorySummary {
+  _id: string;
+  name: string;
+  slug: string;
+  isActive: boolean;
+  menuIcon: ExamMenuIcon;
+  updatedAt?: string;
+}
+
+/** GET /admin/homepage/all-exams — every category with its sub categories (active and inactive). */
+export interface AdminExamCategoryWithSubCategories extends AdminExamCategory {
+  subCategories: AdminSubCategorySummary[];
+}
+
+/** GET /admin/homepage/all-exams/sub-categories/:id — one sub category with its category joined in. */
+export interface AdminSubCategory {
+  _id: string;
+  category: AdminExamCategory;
+  name: string;
+  slug: string;
+  isActive: boolean;
+  menuIcon: ExamMenuIcon;
+  details: ExamDetails;
+  updatedAt?: string;
+}
+
+/** What the admin editor sends when saving a sub category. */
+export interface AdminSubCategoryInput {
+  category: string; // category id
+  name: string;
+  isActive: boolean;
+  menuIcon: ExamMenuIcon;
+  details: ExamDetails;
+}
+
