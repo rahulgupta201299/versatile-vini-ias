@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { ArrowDown, ArrowUp, Plus, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, GripVertical, Plus, Trash2 } from "lucide-react";
 import { COLORS } from "@/theme/colors";
 
 /** Small form building blocks for admin editors (inputs, section cards, repeatable lists). */
@@ -53,21 +53,6 @@ export const primaryButtonSx = {
   bgcolor: COLORS.red,
   color: "#FFFFFF",
   "&:hover:not(:disabled)": { bgcolor: COLORS.redDark },
-} as const;
-
-export const iconButtonSx = {
-  width: 32,
-  height: 32,
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  borderRadius: "8px",
-  border: `1px solid ${COLORS.border}`,
-  bgcolor: "#FFFFFF",
-  color: COLORS.textSecondary,
-  cursor: "pointer",
-  "&:hover:not(:disabled)": { color: COLORS.red, borderColor: COLORS.redBorder },
-  "&:disabled": { opacity: 0.35, cursor: "not-allowed" },
 } as const;
 
 /** Label + input. `hint` explains the field, `required` adds a red star. */
@@ -141,16 +126,47 @@ type ListEditorProps<T> = {
   emptyText?: string;
 };
 
-/** A list of items that can be added, removed and moved up / down. */
-export function ListEditor<T>({ items, onChange, createItem, renderItem, itemLabel, addLabel, emptyText = "Nothing added yet." }: ListEditorProps<T>) {
-  const updateItem = (index: number, next: T) => onChange(items.map((item, i) => (i === index ? next : item)));
-  const removeItem = (index: number) => onChange(items.filter((_, i) => i !== index));
-  const moveItem = (index: number, direction: -1 | 1) => {
-    const next = [...items];
-    const target = index + direction;
+/** Moves one item of a list to a new position. */
+const moveItem = <T,>(list: T[], from: number, to: number) => {
+  const next = [...list];
+  const [item] = next.splice(from, 1);
 
-    [next[index], next[target]] = [next[target], next[index]];
-    onChange(next);
+  next.splice(to, 0, item);
+
+  return next;
+};
+
+const smallButtonSx = { ...buttonSx, height: 30, px: 1.25, fontSize: "0.78rem", gap: 0.5 } as const;
+
+/**
+ * A list of cards that can be added, removed and reordered — drag a card by its handle,
+ * or use "Move up" / "Move down". Removing asks for a quick confirmation on the card.
+ */
+export function ListEditor<T>({ items, onChange, createItem, renderItem, itemLabel, addLabel, emptyText = "Nothing added yet." }: ListEditorProps<T>) {
+  // The dragged card's index is kept in a ref too, so a drop works even before React re-renders
+  const dragFromRef = useRef<number | null>(null);
+  const [dragFrom, setDragFrom] = useState<number | null>(null);
+  const [dropAt, setDropAt] = useState<number | null>(null);
+  const [confirmingRemove, setConfirmingRemove] = useState<number | null>(null);
+
+  const updateItem = (index: number, next: T) => onChange(items.map((item, i) => (i === index ? next : item)));
+
+  const removeItem = (index: number) => {
+    onChange(items.filter((_, i) => i !== index));
+    setConfirmingRemove(null);
+  };
+
+  const move = (from: number, to: number) => {
+    if (to < 0 || to > items.length - 1 || from === to) return;
+
+    onChange(moveItem(items, from, to));
+    setConfirmingRemove(null);
+  };
+
+  const endDrag = () => {
+    dragFromRef.current = null;
+    setDragFrom(null);
+    setDropAt(null);
   };
 
   return (
@@ -158,20 +174,61 @@ export function ListEditor<T>({ items, onChange, createItem, renderItem, itemLab
       {!items.length && <Typography sx={{ color: COLORS.muted, fontSize: "0.86rem", py: 1 }}>{emptyText}</Typography>}
 
       {items.map((item, index) => (
-        <Box key={index} sx={{ p: 2, borderRadius: "14px", border: `1px solid ${COLORS.borderLight}`, bgcolor: COLORS.surface }}>
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 1, mb: 1.75 }}>
-            <Typography noWrap sx={{ fontWeight: 700, color: COLORS.heading, fontSize: "0.88rem", minWidth: 0 }}>{itemLabel(item, index)}</Typography>
-            <Box sx={{ display: "flex", gap: 0.75, flexShrink: 0 }}>
-              <Box component="button" type="button" aria-label="Move up" disabled={index === 0} onClick={() => moveItem(index, -1)} sx={iconButtonSx}>
-                <ArrowUp size={15} />
+        <Box
+          key={index}
+          data-list-card
+          onDragOver={(e: React.DragEvent) => { if (dragFromRef.current === null) return; e.preventDefault(); setDropAt(index); }}
+          onDrop={(e: React.DragEvent) => { e.preventDefault(); if (dragFromRef.current !== null) move(dragFromRef.current, index); endDrag(); }}
+          sx={{
+            p: 2,
+            borderRadius: "14px",
+            border: `1px solid ${dropAt === index && dragFrom !== index ? COLORS.yellowDark : COLORS.borderLight}`,
+            boxShadow: dropAt === index && dragFrom !== index ? `0 0 0 2px ${COLORS.yellow}` : "none",
+            bgcolor: COLORS.surface,
+            opacity: dragFrom === index ? 0.45 : 1,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 1, mb: 1.75, flexWrap: "wrap" }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, minWidth: 0 }}>
+              <Box
+                draggable
+                title="Drag to reorder"
+                aria-hidden
+                onDragStart={(e: React.DragEvent) => {
+                  dragFromRef.current = index;
+                  setDragFrom(index);
+                  e.dataTransfer.effectAllowed = "move";
+                  e.dataTransfer.setData("text/plain", String(index));
+                  const card = (e.currentTarget as HTMLElement).closest<HTMLElement>("[data-list-card]");
+                  if (card) e.dataTransfer.setDragImage(card, 20, 20);
+                }}
+                onDragEnd={endDrag}
+                sx={{ display: "flex", alignItems: "center", justifyContent: "center", width: 26, height: 30, borderRadius: "8px", color: COLORS.muted, cursor: "grab", "&:hover": { bgcolor: "#FFFFFF", color: COLORS.ink } }}
+              >
+                <GripVertical size={17} />
               </Box>
-              <Box component="button" type="button" aria-label="Move down" disabled={index === items.length - 1} onClick={() => moveItem(index, 1)} sx={iconButtonSx}>
-                <ArrowDown size={15} />
-              </Box>
-              <Box component="button" type="button" aria-label="Remove" onClick={() => removeItem(index)} sx={{ ...iconButtonSx, "&:hover": { color: "#FFFFFF", bgcolor: COLORS.red, borderColor: COLORS.red } }}>
-                <Trash2 size={15} />
-              </Box>
+              <Typography noWrap sx={{ fontWeight: 700, color: COLORS.heading, fontSize: "0.88rem", minWidth: 0 }}>{itemLabel(item, index)}</Typography>
             </Box>
+
+            {confirmingRemove === index ? (
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1, px: 1.25, py: 0.5, borderRadius: "10px", bgcolor: COLORS.redTint, border: `1px solid ${COLORS.redBorder}` }}>
+                <Typography sx={{ color: COLORS.redDark, fontSize: "0.78rem", fontWeight: 700 }}>Remove?</Typography>
+                <Box component="button" type="button" onClick={() => removeItem(index)} sx={{ ...primaryButtonSx, height: 28, px: 1.25, fontSize: "0.78rem" }}>Remove</Box>
+                <Box component="button" type="button" onClick={() => setConfirmingRemove(null)} sx={{ ...buttonSx, height: 28, px: 1.25, fontSize: "0.78rem" }}>Keep</Box>
+              </Box>
+            ) : (
+              <Box sx={{ display: "flex", gap: 0.75, flexShrink: 0 }}>
+                <Box component="button" type="button" disabled={index === 0} onClick={() => move(index, index - 1)} sx={smallButtonSx}>
+                  <ArrowUp size={14} /> Move up
+                </Box>
+                <Box component="button" type="button" disabled={index === items.length - 1} onClick={() => move(index, index + 1)} sx={smallButtonSx}>
+                  <ArrowDown size={14} /> Move down
+                </Box>
+                <Box component="button" type="button" onClick={() => setConfirmingRemove(index)} sx={{ ...smallButtonSx, "&:hover": { color: COLORS.red, borderColor: COLORS.red } }}>
+                  <Trash2 size={14} /> Remove
+                </Box>
+              </Box>
+            )}
           </Box>
           {renderItem(item, (next) => updateItem(index, next), index)}
         </Box>

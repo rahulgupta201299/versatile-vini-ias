@@ -13,7 +13,7 @@ import { AdminExamCategory, AdminSubCategory, AdminSubCategoryInput, ExamDetails
 import { slugify } from "@/utils/slug";
 import { adminRequest } from "@/lib/adminClient";
 import { PageHeader } from "../ui";
-import BannerListEditor from "./BannerListEditor";
+import BannerGallery from "./BannerGallery";
 import ImageField from "./ImageField";
 import { buttonSx, Field, FieldGrid, inputSx, ListEditor, NumberInput, primaryButtonSx, SectionCard, StatusToggle, TextArea, TextInput } from "./formKit";
 import { cleanInput, discountPercent, newBatch, newFreeClass, newSubCategory, toInput, toYoutubeId, validateSubCategory } from "./examForm";
@@ -226,7 +226,7 @@ export default function ExamEditor({ subCategory, categories: initialCategories,
 
         {/* 2 · Banners */}
         <SectionCard id="banners" step={2} title="Banners" description="Slider at the top of the page. Upload separate art for web and mobile — the mobile image is used on phones (web image if empty).">
-          <BannerListEditor banners={details.banners} onChange={(banners) => updateDetails({ banners })} itemName="Banner" webHint="Wide art, about 2.9 : 1 (e.g. 2400 × 828 px)" mobileHint="Tall art for phones (e.g. 1080 × 1440 px)" />
+          <BannerGallery banners={details.banners} onChange={(banners) => updateDetails({ banners })} itemName="Banner" webHint="Wide art, about 2.9 : 1 (e.g. 2400 × 828 px)" mobileHint="Tall art for phones (e.g. 1080 × 1440 px)" />
         </SectionCard>
 
         {/* 3 · Free classes */}
@@ -317,7 +317,7 @@ export default function ExamEditor({ subCategory, categories: initialCategories,
 
         {/* 5 · Top rankers */}
         <SectionCard id="top-rankers" step={5} title="Top Rankers" description="Results banners in the “Our Top Rankers” slider. Separate web and mobile art.">
-          <BannerListEditor banners={details.topRankers} onChange={(topRankers) => updateDetails({ topRankers })} itemName="Rankers banner" webHint="Wide art, about 2.9 : 1 (e.g. 3821 × 1324 px)" mobileHint="Tall art (e.g. 1203 × 1650 px)" />
+          <BannerGallery banners={details.topRankers} onChange={(topRankers) => updateDetails({ topRankers })} itemName="Rankers banner" webHint="Wide art, about 2.9 : 1 (e.g. 3821 × 1324 px)" mobileHint="Tall art (e.g. 1203 × 1650 px)" />
         </SectionCard>
 
         {/* 6 · About exam */}
