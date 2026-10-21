@@ -19,12 +19,9 @@ import { API_BASE_URL } from "@/lib/apiBase";
  *   demo — no email is sent; credentials come from ADMIN_DEMO_EMAIL / ADMIN_DEMO_PASSWORD and the OTP is 123456.
  *   Tokens are HMAC-signed with ADMIN_SESSION_SECRET. Never use demo in production.
  */
+/** Production always uses the backend (demo mode would accept the demo password on the live site). */
 export const ADMIN_MODE: "live" | "demo" =
-  process.env.ADMIN_AUTH_MODE === "live" || process.env.ADMIN_AUTH_MODE === "demo"
-    ? process.env.ADMIN_AUTH_MODE
-    : process.env.NODE_ENV === "production"
-      ? "live"
-      : "demo";
+  process.env.NODE_ENV === "production" ? "live" : process.env.ADMIN_AUTH_MODE === "demo" ? "demo" : "live";
 
 export const ADMIN_COOKIE = "vini_admin_session";
 /** Trusted-device cookie: present and valid → no OTP on the next sign-in (48h). Survives sign-out on purpose. */
