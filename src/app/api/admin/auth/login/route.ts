@@ -3,7 +3,7 @@ import { isEmail, startLogin } from "@/lib/adminAuth";
 
 export const dynamic = "force-dynamic";
 
-/** POST { email, password } → { challengeId } (OTP sent to the admin's email). */
+/** POST { email, password } → { challengeId } (OTP sent to the admin's email), or { signedIn: true } on a trusted device (48h). */
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
   const email = typeof body?.email === "string" ? body.email.trim() : "";

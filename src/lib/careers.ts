@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from "crypto";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 /**
  * Careers application helpers (server only).
@@ -11,7 +12,7 @@ export const DEMO_OTP = "123456";
 const SECRET = process.env.CAREERS_OTP_SECRET || "vini-careers-dev-secret";
 const TOKEN_TTL_MS = 2 * 60 * 60 * 1000; // 2 hours — lets a candidate apply to several roles in one sitting
 
-export const API_BASE = (process.env.API_BASE_URL ?? "").replace(/\/+$/, "");
+export const API_BASE = API_BASE_URL;
 export const API_TOKEN = process.env.API_TOKEN;
 
 export const isIndianMobile = (v: unknown): v is string => typeof v === "string" && /^[6-9]\d{9}$/.test(v);

@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "@/lib/apiBase";
 /**
  * Backend API client (server only — used by Server Components, route handlers and services).
  *
@@ -26,7 +27,7 @@
  * be refreshed instantly via POST /api/revalidate { "tag": "<CACHE_TAGS value>" }.
  */
 
-const BASE_URL = (process.env.API_BASE_URL ?? "").replace(/\/+$/, "");
+const BASE_URL = API_BASE_URL;
 const TOKEN = process.env.API_TOKEN;
 const TIMEOUT_MS = Number(process.env.API_TIMEOUT_MS) || 8000;
 
