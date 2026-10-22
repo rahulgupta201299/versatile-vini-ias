@@ -5,13 +5,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { EyeOff, ExternalLink, FolderPlus, Pencil, Plus, Search } from "lucide-react";
+import { ArrowUpDown, EyeOff, ExternalLink, FolderPlus, Pencil, Plus, Search } from "lucide-react";
 import { COLORS } from "@/theme/colors";
 import IconRenderer from "@/components/IconRenderer";
 import { AdminExamCategoryWithSubCategories, AdminSubCategorySummary } from "@/types";
 import { Chip, PageHeader } from "../ui";
 import { adminRequest } from "@/lib/adminClient";
 import CategoryNameForm from "./CategoryNameForm";
+import CategoryOrder from "./CategoryOrder";
 import { buttonSx, inputSx, primaryButtonSx, StatusToggle } from "./formKit";
 
 const BASE_PATH = "/admin/web/homepage/all-exams";
@@ -71,6 +72,7 @@ export default function AllExamsList({ categories }: { categories: AdminExamCate
   const [actionError, setActionError] = useState("");
   const [renamingId, setRenamingId] = useState("");
   const [isCreatingCategory, setIsCreatingCategory] = useState(false);
+  const [isReordering, setIsReordering] = useState(false);
 
   const visible = useMemo(() => {
     const text = query.trim().toLowerCase();
@@ -117,6 +119,12 @@ export default function AllExamsList({ categories }: { categories: AdminExamCate
   const createCategory = async (name: string) => {
     await adminRequest(`${API_PATH}/categories`, { method: "POST", body: { name } });
     setIsCreatingCategory(false);
+    router.refresh();
+  };
+
+  const saveCategoryOrder = async (ids: string[]) => {
+    await adminRequest(`${API_PATH}/categories/order`, { method: "PUT", body: { ids } });
+    setIsReordering(false);
     router.refresh();
   };
 
@@ -178,6 +186,9 @@ export default function AllExamsList({ categories }: { categories: AdminExamCate
         subtitle={`${categories.length} categories · ${subCategoryCount} sub categories. Switch anything off instead of deleting it — inactive items are hidden on the website.`}
         actions={
           <>
+            <Box component="button" type="button" disabled={isReordering || categories.length < 2} onClick={() => setIsReordering(true)} sx={buttonSx}>
+              <ArrowUpDown size={16} /> Reorder categories
+            </Box>
             <Box component="button" type="button" disabled={isCreatingCategory} onClick={() => setIsCreatingCategory(true)} sx={buttonSx}>
               <FolderPlus size={16} /> New category
             </Box>
@@ -193,6 +204,8 @@ export default function AllExamsList({ categories }: { categories: AdminExamCate
           {actionError}
         </Box>
       )}
+
+      {isReordering && <CategoryOrder categories={categories} onSave={saveCategoryOrder} onCancel={() => setIsReordering(false)} />}
 
       {isCreatingCategory && (
         <Box sx={{ mb: 2.5, p: 2, borderRadius: "14px", bgcolor: "#FFFFFF", border: `1px solid ${COLORS.redBorder}` }}>
