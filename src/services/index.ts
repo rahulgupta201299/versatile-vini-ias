@@ -7,3 +7,4 @@ export * from "./exams";
 export * from "./freeResources";
 export * from "./blogs";
 export * from "./company";
+export * from "./celebration";

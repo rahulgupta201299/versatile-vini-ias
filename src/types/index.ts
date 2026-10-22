@@ -868,3 +868,50 @@ export interface AdminRoleInfo {
   access: string;
 }
 
+
+/* ---------- Homepage → Celebration banner (festival sale banner under the hero) ---------- */
+
+export interface CelebrationOffer {
+  title: string;
+  /** e.g. "Starting @" — shown before the price */
+  priceLabel: string;
+  /** In rupees */
+  price: number;
+  /** Price strip colour, e.g. "#A8323E" */
+  color: string;
+  link: string;
+}
+
+export interface CelebrationTheme {
+  titleColor: string;
+  accentColor: string;
+  background: string;
+}
+
+/** GET /celebration-banner → { banner } — only the banner live right now. */
+export interface CelebrationBanner {
+  title: string;
+  /** Empty → counts down to `endsAt` ("Sale ends in 3 days") */
+  subtitle: string;
+  /** Line under the title as the website shows it: `subtitle`, or the countdown (worked out by the backend). */
+  tagline?: string;
+  /** Empty → built-in festive lamps artwork */
+  imageUrl: string;
+  alt: string;
+  theme: CelebrationTheme;
+  offers: CelebrationOffer[];
+  startsAt: string;
+  endsAt: string;
+}
+
+/** Admin: a banner in the list (without its image). */
+export interface AdminCelebrationBanner extends CelebrationBanner {
+  _id: string;
+  isActive: boolean;
+  updatedAt?: string;
+}
+
+export type CelebrationBannerInput = Omit<CelebrationBanner, "alt" | "tagline"> & {
+  isActive: boolean;
+  // [S3 SNAPSHOT] snapshotUrl?: string; — the whole banner as one final image (see src/lib/bannerSnapshot.ts)
+};

@@ -1,5 +1,6 @@
 import {
   HeroSlider,
+  CelebrationBanner,
   FreeResourcesSection,
   MarketAdBanner,
   ExamGoalSection,
@@ -10,12 +11,13 @@ import {
   EnquirySection,
   AppDownloadSection,
 } from "@/sections";
-import { getHeroBanners, getImpactData, getLearningResources, getPromoBanners, getRankerStats, getResultBanners } from "@/services";
+import { getCelebrationBanner, getHeroBanners, getImpactData, getLearningResources, getPromoBanners, getRankerStats, getResultBanners } from "@/services";
 
 export default async function HomePage() {
   // All homepage data in parallel (each call is cached + revalidated, with local fallbacks)
-  const [heroBanners, resources, promoBanners, resultTabs, rankerStats, impact] = await Promise.all([
+  const [heroBanners, celebration, resources, promoBanners, resultTabs, rankerStats, impact] = await Promise.all([
     getHeroBanners(),
+    getCelebrationBanner(),
     getLearningResources(),
     getPromoBanners(),
     getResultBanners(),
@@ -26,6 +28,7 @@ export default async function HomePage() {
   return (
     <>
       <HeroSlider banners={heroBanners} />
+      {celebration && <CelebrationBanner banner={celebration} />}
       <FreeResourcesSection resources={resources} />
       <MarketAdBanner />
       <ExamGoalSection />

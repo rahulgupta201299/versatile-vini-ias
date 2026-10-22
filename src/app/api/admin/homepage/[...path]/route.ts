@@ -5,11 +5,17 @@ export const dynamic = "force-dynamic";
 
 type Context = { params: Promise<{ path: string[] }> };
 
-/** /api/admin/homepage/<path> → backend. Changes refresh the website's All Exams data. */
+/** Which website data each homepage section's changes refresh. */
+const REFRESH_TAGS: Record<string, string> = {
+  "all-exams": CACHE_TAGS.allExams,
+  "celebration-banners": CACHE_TAGS.celebration,
+};
+
+/** /api/admin/homepage/<section>/<path> → backend. Changes refresh that section on the website. */
 async function forward(req: Request, { params }: Context) {
   const { path } = await params;
 
-  return proxyToBackend(req, "homepage", path, { refreshTag: CACHE_TAGS.allExams });
+  return proxyToBackend(req, "homepage", path, { refreshTag: REFRESH_TAGS[path[0]] });
 }
 
 export { forward as GET, forward as POST, forward as PUT, forward as PATCH };

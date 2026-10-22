@@ -2,10 +2,26 @@ import React from "react";
 import Link from "next/link";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { ArrowRight, ArrowUpRight, Clock, LayoutGrid } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Clock, LayoutGrid, PartyPopper } from "lucide-react";
 import { COLORS } from "@/theme/colors";
 import { Chip, Notice, PageHeader } from "../ui";
 import { HOMEPAGE_SECTIONS } from "./homepageSections";
+
+/** Homepage sections that already have their own editor. */
+const EDITABLE_SECTIONS = [
+  {
+    href: "/admin/web/homepage/celebration-banners",
+    title: "Celebration banner",
+    description: "Festival sale banner under the hero slider — greeting, artwork, three offer cards with prices and colours, and start / end dates.",
+    icon: PartyPopper,
+  },
+  {
+    href: "/admin/web/homepage/all-exams",
+    title: "All Exams",
+    description: "Categories and exams in the header menu, and each exam's page — banners, free classes, batches, top rankers, about & FAQs.",
+    icon: LayoutGrid,
+  },
+];
 
 /** Web → Homepage: every sub-section of the live homepage, in page order. Editors are added one section at a time. */
 export default function HomepageManager() {
@@ -23,17 +39,21 @@ export default function HomepageManager() {
       />
 
       {/* Editable now */}
-      <Box component={Link} href="/admin/web/homepage/all-exams" sx={{ display: "flex", alignItems: "center", gap: 2, p: { xs: 2.25, md: 3 }, mb: 3, borderRadius: "18px", bgcolor: COLORS.navy, color: "#FFFFFF", transition: "transform .2s", "&:hover": { transform: "translateY(-2px)" } }}>
-        <Box sx={{ width: 52, height: 52, flexShrink: 0, borderRadius: "14px", bgcolor: COLORS.yellow, color: COLORS.ink, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <LayoutGrid size={24} />
-        </Box>
-        <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Typography sx={{ fontWeight: 800, fontSize: "1.1rem" }}>All Exams</Typography>
-          <Typography sx={{ color: "rgba(255,255,255,.75)", fontSize: "0.88rem" }}>Categories and exams in the header menu, and each exam&apos;s page — banners, free classes, batches, top rankers, about & FAQs.</Typography>
-        </Box>
-        <Box sx={{ display: { xs: "none", sm: "inline-flex" }, alignItems: "center", gap: 0.75, px: 2, height: 40, borderRadius: "10px", bgcolor: COLORS.red, fontWeight: 700, fontSize: "0.88rem", flexShrink: 0 }}>
-          Manage <ArrowRight size={16} />
-        </Box>
+      <Box sx={{ display: "grid", gap: 2, mb: 3 }}>
+        {EDITABLE_SECTIONS.map(({ href, title, description, icon: Icon }) => (
+          <Box key={href} component={Link} href={href} sx={{ display: "flex", alignItems: "center", gap: 2, p: { xs: 2.25, md: 3 }, borderRadius: "18px", bgcolor: COLORS.navy, color: "#FFFFFF", transition: "transform .2s", "&:hover": { transform: "translateY(-2px)" } }}>
+            <Box sx={{ width: 52, height: 52, flexShrink: 0, borderRadius: "14px", bgcolor: COLORS.yellow, color: COLORS.ink, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Icon size={24} />
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Typography sx={{ fontWeight: 800, fontSize: "1.1rem" }}>{title}</Typography>
+              <Typography sx={{ color: "rgba(255,255,255,.75)", fontSize: "0.88rem" }}>{description}</Typography>
+            </Box>
+            <Box sx={{ display: { xs: "none", sm: "inline-flex" }, alignItems: "center", gap: 0.75, px: 2, height: 40, borderRadius: "10px", bgcolor: COLORS.red, fontWeight: 700, fontSize: "0.88rem", flexShrink: 0 }}>
+              Manage <ArrowRight size={16} />
+            </Box>
+          </Box>
+        ))}
       </Box>
 
       <Notice>

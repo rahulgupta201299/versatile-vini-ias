@@ -20,6 +20,7 @@ import { API_BASE_URL } from "@/lib/apiBase";
  *   /home/impact                   ImpactData
  *   /home/resources                ResourceItem[]
  *   /exams                         AllExamsMenuCategory[] (header "All Exams" menu — see services/exams.ts)
+ *   /celebration-banner            { banner: CelebrationBanner | null } (festival banner under the hero)
  *   /exams/<slug>                  AllExam               (exam page; 404 → generated page for "Select Your Goal" exams)
  *   /courses/gs-foundation/<slug>  FreeResourcePage      (404 → local data / not found)
  *
@@ -54,6 +55,8 @@ export const CACHE_TAGS = {
   goals: "goals",
   /** Homepage → All Exams (header menu + exam pages) — refreshed on every admin save */
   allExams: "all-exams",
+  /** Homepage → Celebration banner — refreshed on every admin save */
+  celebration: "celebration-banner",
   freeResources: "free-resources",
   blogs: "blogs",
   company: "company-pages",
