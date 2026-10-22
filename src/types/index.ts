@@ -181,6 +181,8 @@ export interface CoursePageData {
   batches: CourseBatch[];
   highlights: { label: string; value: string }[];
   about: string[];
+  /** Rich-text description from the admin (sanitised HTML). Shown instead of `about` when set. */
+  aboutHtml?: string;
   faqs: CourseFaq[];
   /** Toppers banners for this exam (All Exams pages). When empty, the `resultTabId` tab is used. */
   topRankers?: ResultBanner[];
@@ -775,7 +777,7 @@ export interface ExamDetails {
   freeClasses: ExamFreeClass[];
   batches: ExamBatch[];
   topRankers: ExamBanner[];
-  aboutExam: { title: string; highlights: { label: string; value: string }[]; paragraphs: string[] };
+  aboutExam: { title: string; highlights: { label: string; value: string }[]; /** Rich text (sanitised HTML). */ content: string };
   faqs: { question: string; answer: string }[];
 }
 
@@ -845,5 +847,24 @@ export interface AdminSubCategoryInput {
   isActive: boolean;
   menuIcon: ExamMenuIcon;
   details: ExamDetails;
+}
+
+/* ---------- Admin users (RBAC) ---------- */
+
+export interface AdminAccount {
+  id: string;
+  email: string;
+  name: string;
+  roles: string[];
+  isActive: boolean;
+  lastLoginAt?: string;
+  createdAt?: string;
+}
+
+/** GET /admin/admins/roles */
+export interface AdminRoleInfo {
+  key: string;
+  label: string;
+  access: string;
 }
 

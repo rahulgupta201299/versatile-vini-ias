@@ -1,4 +1,5 @@
 import { createHmac, randomInt, timingSafeEqual } from "crypto";
+import { cache } from "react";
 import { cookies } from "next/headers";
 import { API_BASE_URL } from "@/lib/apiBase";
 
@@ -35,7 +36,7 @@ export const DEMO_OTP = "123456";
 const API_BASE = API_BASE_URL;
 const SECRET = process.env.ADMIN_SESSION_SECRET || (process.env.NODE_ENV === "production" ? "" : "vini-admin-dev-secret");
 
-export type AdminUser = { email: string; name?: string; role?: string };
+export type AdminUser = { id?: string; email: string; name?: string; roles: string[] };
 
 export const isEmail = (v: unknown): v is string => typeof v === "string" && v.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
 
@@ -169,7 +170,7 @@ export async function verifyOtp(challengeId: string, code: string): Promise<Step
     if (!r.ok || typeof r.json.token !== "string") return { ok: false, status: r.status === 429 ? 429 : 401, error: backendMessage(r.json, "Incorrect or expired code.") };
     await setSessionCookie(r.json.token, toTime(r.json.expiresAt, SESSION_TTL_MS));
     if (typeof r.json.trustToken === "string") await setTrustCookie(r.json.trustToken, toTime(r.json.trustExpiresAt, TRUST_TTL_MS));
-    return { ok: true, admin: (r.json.admin as AdminUser) ?? { email: "" } };
+    return { ok: true, admin: (r.json.admin as AdminUser) ?? { email: "", roles: [] } };
   }
 
   const c = unseal<Challenge>(challengeId);
@@ -183,11 +184,14 @@ export async function verifyOtp(challengeId: string, code: string): Promise<Step
   await setSessionCookie(seal({ email: c.email, exp }), exp);
   const trustExp = Date.now() + TRUST_TTL_MS;
   await setTrustCookie(seal({ email: c.email, exp: trustExp, typ: "trust" }), trustExp);
-  return { ok: true, admin: { email: c.email, name: "Admin" } };
+  return { ok: true, admin: { email: c.email, name: "Admin", roles: ["superAdmin"] } };
 }
 
-/** Current admin from the session cookie, or null. Use in server components / route handlers under /admin. */
-export async function getAdminSession(): Promise<AdminUser | null> {
+/**
+ * Current admin from the session cookie, or null. Use in server components / route handlers under /admin.
+ * `cache` = one backend check per request, however many layouts and pages ask.
+ */
+export const getAdminSession = cache(async (): Promise<AdminUser | null> => {
   const token = (await cookies()).get(ADMIN_COOKIE)?.value;
   if (!token) return null;
   if (ADMIN_MODE === "live") {
@@ -199,8 +203,9 @@ export async function getAdminSession(): Promise<AdminUser | null> {
     return r.ok && typeof r.json.email === "string" ? (r.json as AdminUser) : null;
   }
   const s = unseal<{ email: string; exp: number; typ?: string }>(token);
-  return s && !s.typ && s.exp > Date.now() ? { email: s.email, name: "Admin" } : null;
-}
+  // Demo mode (local testing only) signs in as a Super Admin
+  return s && !s.typ && s.exp > Date.now() ? { email: s.email, name: "Admin", roles: ["superAdmin"] } : null;
+});
 
 /** Signs out. The trusted-device cookie is kept, so the OTP stays skipped until its 48h run out. */
 export async function endAdminSession() {

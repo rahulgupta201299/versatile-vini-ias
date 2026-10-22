@@ -21,7 +21,7 @@ export const newSubCategory = (categoryId = ""): AdminSubCategoryInput => ({
     freeClasses: [],
     batches: [],
     topRankers: [],
-    aboutExam: { title: "", highlights: [], paragraphs: [] },
+    aboutExam: { title: "", highlights: [], content: "" },
     faqs: [],
   },
 });
@@ -74,12 +74,15 @@ export function validateSubCategory({ name, details }: AdminSubCategoryInput, { 
   return problems;
 }
 
-/** Trims the name and removes empty paragraphs before saving. */
+/** True when rich text has no words, e.g. "<p></p>". */
+const isEmptyHtml = (html = "") => !html.replace(/<[^>]*>|&nbsp;/g, "").trim() && !/<(table|hr)\b/i.test(html);
+
+/** Trims the name and drops an empty description before saving. */
 export const cleanInput = (input: AdminSubCategoryInput): AdminSubCategoryInput => ({
   ...input,
   name: input.name.trim(),
   details: {
     ...input.details,
-    aboutExam: { ...input.details.aboutExam, paragraphs: input.details.aboutExam.paragraphs.map((p) => p.trim()).filter(Boolean) },
+    aboutExam: { ...input.details.aboutExam, content: isEmptyHtml(input.details.aboutExam.content) ? "" : input.details.aboutExam.content },
   },
 });

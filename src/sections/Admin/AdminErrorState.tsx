@@ -4,11 +4,11 @@ import React from "react";
 import Link from "next/link";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { AlertTriangle, Home, RotateCcw, SearchX } from "lucide-react";
+import { AlertTriangle, Home, Lock, RotateCcw, SearchX } from "lucide-react";
 import { COLORS } from "@/theme/colors";
 
 type AdminErrorStateProps = {
-  variant?: "error" | "not-found";
+  variant?: "error" | "not-found" | "no-access";
   title: string;
   message: string;
   /** Next.js error reference — helps find the error in the server logs. */
@@ -18,10 +18,10 @@ type AdminErrorStateProps = {
   backLabel?: string;
 };
 
-/** Friendly full-width message for admin errors and missing pages, with "Try again" and a way back. */
-export default function AdminErrorState({ variant = "error", title, message, digest, onRetry, backHref = "/admin/web", backLabel = "Go to dashboard" }: AdminErrorStateProps) {
+/** Friendly full-width message for admin errors, missing pages and sections without access, with a way back. */
+export default function AdminErrorState({ variant = "error", title, message, digest, onRetry, backHref = "/admin", backLabel = "Go to my sections" }: AdminErrorStateProps) {
   const isError = variant === "error";
-  const Icon = isError ? AlertTriangle : SearchX;
+  const Icon = { error: AlertTriangle, "not-found": SearchX, "no-access": Lock }[variant];
 
   return (
     <Box role={isError ? "alert" : undefined} sx={{ maxWidth: 560, mx: "auto", my: { xs: 4, md: 8 }, p: { xs: 3, md: 4 }, borderRadius: "20px", bgcolor: "#FFFFFF", border: `1px solid ${COLORS.border}`, textAlign: "center" }}>

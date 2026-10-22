@@ -56,9 +56,18 @@ export const primaryButtonSx = {
 } as const;
 
 /** Label + input. `hint` explains the field, `required` adds a red star. */
-export function Field({ label, hint, required, children }: { label: string; hint?: string; required?: boolean; children: React.ReactNode }) {
+type FieldProps = {
+  label: string;
+  hint?: string;
+  required?: boolean;
+  /** Use for widgets with their own buttons (editor, pickers): a <label> would re-click their first button. */
+  group?: boolean;
+  children: React.ReactNode;
+};
+
+export function Field({ label, hint, required, group = false, children }: FieldProps) {
   return (
-    <Box component="label" sx={{ display: "block", minWidth: 0 }}>
+    <Box component={group ? "div" : "label"} role={group ? "group" : undefined} aria-label={group ? label : undefined} sx={{ display: "block", minWidth: 0 }}>
       <Typography component="span" sx={{ display: "block", mb: 0.6, color: COLORS.heading, fontWeight: 700, fontSize: "0.82rem" }}>
         {label}
         {required && <Box component="span" sx={{ color: COLORS.red }}> *</Box>}

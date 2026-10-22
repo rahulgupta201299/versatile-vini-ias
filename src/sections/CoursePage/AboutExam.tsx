@@ -12,16 +12,20 @@ import { CourseFaq } from "@/types";
 import { anchorSx, BODY, INK, MUTED, RED, RED_TINT, sectionSx, titleSx } from "./theme";
 
 import { COLORS } from "@/theme/colors";
+import { richTextSx } from "@/theme/richText";
+
 interface AboutExamProps {
   name: string;
   /** Section heading; empty → "All About <name> Exam". */
   title?: string;
   about: string[];
+  /** Sanitised HTML from the admin; shown instead of `about` when set. */
+  aboutHtml?: string;
   highlights: { label: string; value: string }[];
   faqs: CourseFaq[];
 }
 
-export default function AboutExam({ name, title, about, highlights, faqs }: AboutExamProps) {
+export default function AboutExam({ name, title, about, aboutHtml, highlights, faqs }: AboutExamProps) {
   const [expanded, setExpanded] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | false>(0);
 
@@ -51,11 +55,15 @@ export default function AboutExam({ name, title, about, highlights, faqs }: Abou
               "&::after": expanded ? {} : { content: '""', position: "absolute", left: 0, right: 0, bottom: 0, height: 56, background: "linear-gradient(transparent, #FFFFFF)" },
             }}
           >
-            {about.map((p, i) => (
-              <Typography key={i} sx={{ color: BODY, fontSize: { xs: "0.9rem", md: "0.98rem" }, lineHeight: 1.75, mb: 1.5 }}>
-                {p}
-              </Typography>
-            ))}
+            {aboutHtml ? (
+              <Box sx={richTextSx} dangerouslySetInnerHTML={{ __html: aboutHtml }} />
+            ) : (
+              about.map((p, i) => (
+                <Typography key={i} sx={{ color: BODY, fontSize: { xs: "0.9rem", md: "0.98rem" }, lineHeight: 1.75, mb: 1.5 }}>
+                  {p}
+                </Typography>
+              ))
+            )}
           </Box>
           <Box component="button" type="button" onClick={() => setExpanded((e) => !e)} sx={{ mt: 0.5, p: 0, border: "none", background: "none", color: RED, fontWeight: 700, fontSize: "0.9rem", fontFamily: "inherit", cursor: "pointer" }}>
             {expanded ? "Read less" : "Read more"}

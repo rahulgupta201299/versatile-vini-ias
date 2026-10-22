@@ -52,7 +52,7 @@ export default function ImageField({ label, value, onChange, aspectRatio = "16 /
   };
 
   return (
-    <Field label={label} hint={hint}>
+    <Field label={label} hint={hint} group>
       <Box
         role="button"
         tabIndex={0}

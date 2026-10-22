@@ -63,7 +63,7 @@ export default async function GoalPage({ params }: { params: Params }) {
       <FreeClasses videos={page.videos} channelUrl={config.social.youtube} avatars={impact.avatars} />
       <BatchesSection batches={page.batches} />
       <CourseToppers banners={toppers} />
-      <AboutExam name={page.name} title={page.aboutTitle} about={page.about} highlights={page.highlights} faqs={page.faqs} />
+      <AboutExam name={page.name} title={page.aboutTitle} about={page.about} aboutHtml={page.aboutHtml} highlights={page.highlights} faqs={page.faqs} />
       <CounsellingForm name={page.name} examOptions={page.examOptions} />
       <AppDownloadSection title="Join 100K+ students on the app today!" />
     </>

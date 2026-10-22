@@ -15,6 +15,7 @@ import { adminRequest } from "@/lib/adminClient";
 import { PageHeader } from "../ui";
 import BannerGallery from "./BannerGallery";
 import ImageField from "./ImageField";
+import RichTextEditor from "./RichTextEditor";
 import { buttonSx, Field, FieldGrid, inputSx, ListEditor, NumberInput, primaryButtonSx, SectionCard, StatusToggle, TextArea, TextInput } from "./formKit";
 import { cleanInput, discountPercent, newBatch, newFreeClass, newSubCategory, toInput, toYoutubeId, validateSubCategory } from "./examForm";
 
@@ -346,16 +347,9 @@ export default function ExamEditor({ subCategory, categories: initialCategories,
             )}
           />
 
-          <Typography sx={{ fontWeight: 800, color: COLORS.heading, fontSize: "0.9rem", mt: 1 }}>Paragraphs</Typography>
-          <ListEditor
-            items={details.aboutExam.paragraphs}
-            onChange={(paragraphs) => updateDetails({ aboutExam: { ...details.aboutExam, paragraphs } })}
-            createItem={() => ""}
-            addLabel="Add paragraph"
-            emptyText="No text yet."
-            itemLabel={(_paragraph, index) => `Paragraph ${index + 1}`}
-            renderItem={(paragraph, update) => <TextArea value={paragraph} onChange={update} rows={4} />}
-          />
+          <Field label="Description" group hint="Write it like a blog post — headings, bold, lists, tables and links all show on the exam page.">
+            <RichTextEditor value={details.aboutExam.content} onChange={(content) => updateDetails({ aboutExam: { ...details.aboutExam, content } })} placeholder="Everything a student should know about this exam…" />
+          </Field>
         </SectionCard>
 
         {/* 7 · FAQs */}

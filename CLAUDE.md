@@ -26,4 +26,7 @@
 - **Error screens:** every admin section folder gets its own `error.tsx` (and `not-found.tsx` when it has `[id]` pages), using `AdminErrorState`. Admin-wide fallbacks: `(admin)/admin/error.tsx` (panel can't load), `(panel)/error.tsx`, `(panel)/not-found.tsx`; whole site: `app/global-error.tsx`.
 - **No browser pop-ups:** never use `window.prompt`, `window.confirm` or `window.alert` — edit inline with fields (e.g. `CategoryNameForm`), with Enter to save and Esc to cancel.
 - **Nothing is deleted in All Exams** — categories and sub categories are switched active / inactive, and the admin list shows active and inactive separately.
-
+- **Access (RBAC):** every admin section lists the roles that may open it in `ACCESS` (`src/lib/adminAccess.ts`), gives its nav item that `access`, and wraps its pages in `<AccessGate access={ACCESS.x}>`. Hidden in the menu is not enough — the gate and the backend's `requireAccess` are what block access.
+- **Admin users:** Team → Admin users (Super Admin only). People are switched active / inactive, never deleted.
+- **Long text:** use `RichTextEditor` (TipTap) for content writers; it saves HTML that the backend sanitises. On the site render it inside `richTextSx` (`src/theme/richText.ts`).
+- **Fields containing buttons** (editors, pickers, uploads) use `<Field group>` — a `<label>` would re-click the first button inside it.
