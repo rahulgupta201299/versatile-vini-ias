@@ -30,3 +30,12 @@
 - **Admin users:** Team → Admin users (Super Admin only). People are switched active / inactive, never deleted.
 - **Long text:** use `RichTextEditor` (TipTap) for content writers; it saves HTML that the backend sanitises. On the site render it inside `richTextSx` (`src/theme/richText.ts`).
 - **Fields containing buttons** (editors, pickers, uploads) use `<Field group>` — a `<label>` would re-click the first button inside it.
+
+## Coding best practices (always follow — same as the Backend, see ../CLAUDE.md)
+- **`if` + `return`, never `else if`**; no `else` after `return`.
+- **Destructuring with defaults** for props, objects and arguments: `({ isPreview = false, banner })`.
+- **No `??` / `??=`** in new or changed code — use a default value, `||`, or an `if` when `0` / `false` matter.
+- **No nested ternaries** in logic or JSX — move the choice into a small helper or component with early returns.
+- **Chain for readability**: `list.filter(…).map(…)`, one step per line when long.
+- Truthy checks (`if (!banner)`), named conditions (`const isLive = …`), small named helpers.
+

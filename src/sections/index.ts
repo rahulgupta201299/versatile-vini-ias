@@ -1,5 +1,5 @@
 export { default as HeroSlider } from "./Hero/HeroSlider";
-export { default as CelebrationBanner } from "./Celebration/CelebrationBanner";
+export { default as CelebrationArea } from "./Celebration/CelebrationArea";
 export { default as FreeResourcesSection } from "./Resources/FreeResourcesSection";
 export { default as MarketAdBanner } from "./PromotionalBanner/MarketAdBanner";
 export { default as SmallPromoBanner } from "./PromotionalBanner/SmallPromoBanner";

@@ -165,8 +165,9 @@ export default function Header({ onOpenAuth }: HeaderProps) {
           left: 0,
           right: 0,
           zIndex: 1200,
-          backgroundColor: "#FFFFFF",
-          borderBottom: `1px solid ${COLORS.borderLight}`,
+          // White, or the festive colour while a celebration banner is live (set by CelebrationArea)
+          backgroundColor: "var(--site-header-bg, #FFFFFF)",
+          borderBottom: `1px solid var(--site-header-border, ${COLORS.borderLight})`,
           boxShadow: megaMenuOpen ? "none" : "0 1px 3px rgba(0,0,0,0.05)",
         }}
       >

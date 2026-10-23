@@ -1,6 +1,6 @@
 import {
   HeroSlider,
-  CelebrationBanner,
+  CelebrationArea,
   FreeResourcesSection,
   MarketAdBanner,
   ExamGoalSection,
@@ -27,8 +27,13 @@ export default async function HomePage() {
 
   return (
     <>
-      <HeroSlider banners={heroBanners} />
-      {celebration && <CelebrationBanner banner={celebration} />}
+      {celebration ? (
+        <CelebrationArea banner={celebration}>
+          <HeroSlider banners={heroBanners} />
+        </CelebrationArea>
+      ) : (
+        <HeroSlider banners={heroBanners} />
+      )}
       <FreeResourcesSection resources={resources} />
       <MarketAdBanner />
       <ExamGoalSection />

@@ -36,7 +36,8 @@ export default function HeroSlider({ banners }: HeroSliderProps) {
       sx={{
         pt: { xs: 1.5, md: 2 },
         pb: { xs: 1, md: 1.5 },
-        backgroundColor: "#FFFFFF",
+        // Transparent so a festive page background (celebration banner) shows through
+        backgroundColor: "transparent",
       }}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
