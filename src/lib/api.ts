@@ -14,8 +14,7 @@ import { API_BASE_URL } from "@/lib/apiBase";
  *   /site-config                   SiteConfig
  *   /homepage                      HomepageData (hero slider, free resources, marketing banners — services/homepage.ts)
  *   /select-your-goal              ExamGoalCategory[] ("Select Your Goal")
- *   /banners/results               ResultBannerTab[]
- *   /home/ranker-stats             StatItem[]
+ *   /top-rankers                   TopRankersData (headline boxes + result banner tabs — services/topRankers.ts)
  *   /home/impact                   ImpactData
  *   /exams                         AllExamsMenuCategory[] (header "All Exams" menu — see services/exams.ts)
  *   /celebration-banner            { banner: CelebrationBanner | null } (festival banner under the hero)
@@ -47,6 +46,7 @@ export const CACHE_TAGS = {
   /** "Select Your Goal" — refreshed on every admin save */
   exams: "exam-categories",
   siteConfig: "site-config",
+  /** Homepage → Top rankers (boxes + result banners) — refreshed on every admin save */
   results: "result-banners",
   /** Homepage → hero slider, free resources, marketing banners — refreshed on every admin save */
   homepage: "homepage",

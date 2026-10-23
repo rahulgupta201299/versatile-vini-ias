@@ -124,7 +124,7 @@ export default function ResultBannerSlider({ banners: allBanners, eager = false 
                 {banner.mobileImageUrl && <source media="(max-width: 768px)" srcSet={banner.mobileImageUrl} />}
                 {banner.webImageUrl && <source media="(min-width: 769px)" srcSet={banner.webImageUrl} />}
                 <img
-                  src={banner.webImageUrl ?? banner.mobileImageUrl}
+                  src={banner.webImageUrl || banner.mobileImageUrl}
                   alt={banner.alt || banner.title}
                   loading={eager && i === 0 ? "eager" : "lazy"}
                   decoding="async"

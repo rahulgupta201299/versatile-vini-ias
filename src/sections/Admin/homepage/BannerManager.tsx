@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import { Smartphone } from "lucide-react";
 import { COLORS } from "@/theme/colors";
 import { adminRequest } from "@/lib/adminClient";
-import { AdminHomepageBanner, HomepageBannerInput, MarketingPlacement } from "@/types";
+import { AdminHomepageBanner, HomepageBannerInput } from "@/types";
 import ImageField from "../allExams/ImageField";
 import { Field, FieldGrid, TextInput } from "../allExams/formKit";
 import ItemManager from "../common/ItemManager";
@@ -24,43 +24,56 @@ type BannerManagerProps = {
   banners: AdminHomepageBanner[];
   /** e.g. "homepage/hero-banners" */
   apiPath: string;
-  /** Marketing banners only: which one (1st / 2nd). */
-  placement?: MarketingPlacement;
+  /** Sent with every add / save / reorder, e.g. { placement: "first" } or { category: "<tab id>" }. */
+  extraBody?: Record<string, string>;
+  /** Off for banners that may have only phone art (Top rankers). */
+  requireWebImage?: boolean;
   shape: BannerShape;
   /** e.g. "slide" */
   itemName: string;
   itemsName: string;
   orderDescription: string;
+  /** Hint under "Active …" (defaults to how sliders use phone art). */
+  activeHint?: string;
+};
+
+/** "Web + phone images", "Phone image only", … */
+const imageSizesText = (webImageUrl: string, mobileImageUrl: string) => {
+  if (!webImageUrl) return "Phone image only";
+  if (!mobileImageUrl) return "No phone image";
+
+  return "Web + phone images";
 };
 
 const newBanner = (): HomepageBannerInput => ({ title: "", webImageUrl: "", mobileImageUrl: "", link: "", isActive: true });
 
 const toInput = ({ title, webImageUrl, mobileImageUrl, link, isActive }: AdminHomepageBanner): HomepageBannerInput => ({ title, webImageUrl, mobileImageUrl, link, isActive });
 
-const validate = ({ title, webImageUrl }: HomepageBannerInput) => {
+const validateBanner = ({ title, webImageUrl, mobileImageUrl }: HomepageBannerInput, requireWebImage: boolean) => {
   const problems: string[] = [];
 
   if (!title.trim()) problems.push("Add a title (it also describes the image for search engines).");
-  if (!webImageUrl) problems.push("Upload the web image.");
+  if (requireWebImage && !webImageUrl) problems.push("Upload the web image.");
+  if (!requireWebImage && !webImageUrl && !mobileImageUrl) problems.push("Upload a web image, a phone image, or both.");
 
   return problems;
 };
 
 /** Hero slides and marketing banners: image(s), title and link, switched on / off and reordered. */
-export default function BannerManager({ banners, apiPath, placement, shape, itemName, itemsName, orderDescription }: BannerManagerProps) {
+export default function BannerManager({ banners, apiPath, extraBody = {}, requireWebImage = true, shape, itemName, itemsName, orderDescription, activeHint = "Shown on the website in this order. Phones use the phone images when every active one has one." }: BannerManagerProps) {
   const { webAspect, webHint, mobileAspect, mobileHint } = shape;
 
   const renderPreview = ({ title, webImageUrl, mobileImageUrl, link }: AdminHomepageBanner) => (
     <Box sx={{ display: "flex", alignItems: "center", gap: 1.75, minWidth: 0 }}>
       <Box sx={{ width: { xs: 120, sm: 180 }, aspectRatio: webAspect, flexShrink: 0, borderRadius: "10px", overflow: "hidden", bgcolor: COLORS.surface, border: `1px solid ${COLORS.border}` }}>
         {/* eslint-disable-next-line @next/next/no-img-element -- admin preview of an uploaded image */}
-        <img src={webImageUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+        <img src={webImageUrl || mobileImageUrl} alt="" style={{ width: "100%", height: "100%", objectFit: webImageUrl ? "cover" : "contain", display: "block" }} />
       </Box>
       <Box sx={{ minWidth: 0 }}>
         <Typography sx={{ fontWeight: 800, color: COLORS.ink, fontSize: "0.92rem", lineHeight: 1.35 }}>{title}</Typography>
         <Typography noWrap sx={{ color: COLORS.muted, fontSize: "0.8rem" }}>{link || "No link"}</Typography>
         <Typography sx={{ mt: 0.5, display: "flex", alignItems: "center", gap: 0.5, color: mobileImageUrl ? COLORS.success : COLORS.muted, fontSize: "0.74rem", fontWeight: 700 }}>
-          <Smartphone size={13} /> {mobileImageUrl ? "Has phone image" : "No phone image"}
+          <Smartphone size={13} /> {imageSizesText(webImageUrl, mobileImageUrl)}
         </Typography>
       </Box>
     </Box>
@@ -77,16 +90,16 @@ export default function BannerManager({ banners, apiPath, placement, shape, item
         </Field>
       </FieldGrid>
       <FieldGrid>
-        <ImageField label="Web image" hint={webHint} aspectRatio={webAspect} maxHeight={260} value={input.webImageUrl} onChange={(webImageUrl) => update({ webImageUrl })} />
+        <ImageField label={requireWebImage ? "Web image" : "Web image (optional if there's a phone image)"} hint={webHint} aspectRatio={webAspect} maxHeight={260} value={input.webImageUrl} onChange={(webImageUrl) => update({ webImageUrl })} />
         <ImageField label="Phone image (optional)" hint={mobileHint} aspectRatio={mobileAspect} maxHeight={260} value={input.mobileImageUrl} onChange={(mobileImageUrl) => update({ mobileImageUrl })} />
       </FieldGrid>
     </>
   );
 
-  const create = (input: HomepageBannerInput) => adminRequest(apiPath, { method: "POST", body: { ...input, placement } });
-  const update = (id: string, input: HomepageBannerInput) => adminRequest(`${apiPath}/${id}`, { method: "PUT", body: input });
+  const create = (input: HomepageBannerInput) => adminRequest(apiPath, { method: "POST", body: { ...input, ...extraBody } });
+  const update = (id: string, input: HomepageBannerInput) => adminRequest(`${apiPath}/${id}`, { method: "PUT", body: { ...input, ...extraBody } });
   const setStatus = (id: string, isActive: boolean) => adminRequest(`${apiPath}/${id}`, { method: "PATCH", body: { isActive } });
-  const reorder = (ids: string[]) => adminRequest(`${apiPath}/order`, { method: "PUT", body: { ids, placement } });
+  const reorder = (ids: string[]) => adminRequest(`${apiPath}/order`, { method: "PUT", body: { ids, ...extraBody } });
 
   return (
     <ItemManager
@@ -97,14 +110,14 @@ export default function BannerManager({ banners, apiPath, placement, shape, item
       getName={({ title }) => title}
       newInput={newBanner}
       toInput={toInput}
-      validate={validate}
+      validate={(input) => validateBanner(input, requireWebImage)}
       renderPreview={renderPreview}
       renderForm={renderForm}
       onCreate={create}
       onUpdate={update}
       onStatus={setStatus}
       onReorder={reorder}
-      activeHint="Shown on the website in this order. Phones use the phone images when every active one has one."
+      activeHint={activeHint}
       inactiveHint="Hidden on the website. Switch one on to show it again."
     />
   );

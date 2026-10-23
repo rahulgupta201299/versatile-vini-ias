@@ -13,6 +13,7 @@ const REFRESH_TAGS: Record<string, string> = {
   "free-resources": CACHE_TAGS.homepage,
   "marketing-banners": CACHE_TAGS.homepage,
   "select-your-goal": CACHE_TAGS.exams,
+  "top-rankers": CACHE_TAGS.results,
 };
 
 /** /api/admin/homepage/<section>/<path> → backend. Changes refresh that section on the website. */

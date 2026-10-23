@@ -1,6 +1,6 @@
 export * from "./site";
 export * from "./homepage";
-export * from "./resultBanners";
+export * from "./topRankers";
 export * from "./home";
 export * from "./goals";
 export * from "./exams";

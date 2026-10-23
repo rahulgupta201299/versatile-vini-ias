@@ -14,7 +14,7 @@ export default async function SecondMarketingBannerPage() {
   return (
     <>
       <PageHeader eyebrow="Web / Homepage / 2nd marketing banner" title="2nd marketing banner" subtitle="The promo slider under “Select Your Goal”." />
-      <BannerManager banners={banners} apiPath="homepage/marketing-banners" placement="second" shape={MARKETING_SHAPE} itemName="banner" itemsName="banners" orderDescription="Several active banners here turn into a slider, in this order." />
+      <BannerManager banners={banners} apiPath="homepage/marketing-banners" extraBody={{ placement: "second" }} shape={MARKETING_SHAPE} itemName="banner" itemsName="banners" orderDescription="Several active banners here turn into a slider, in this order." />
     </>
   );
 }

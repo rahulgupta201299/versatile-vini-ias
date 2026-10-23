@@ -188,7 +188,7 @@ export interface CoursePageData {
   topRankers?: ResultBanner[];
   /** Heading of the "All About" section; empty → "All About <name> Exam". */
   aboutTitle?: string;
-  /** Results tab shown in the Toppers section when the page has no own toppers (see data/resultBanners.ts). */
+  /** Results tab shown in the Toppers section when the page has no own toppers (a Top rankers tab id, e.g. "upsc"). */
   resultTabId: string;
   /** Options for the "Exam" dropdown in the counselling form. */
   examOptions: string[];
@@ -988,4 +988,55 @@ export interface HomepageSummary {
   firstMarketing: ItemCount;
   secondMarketing: ItemCount;
   selectYourGoal: { categories: ItemCount; exams: ItemCount };
+  topRankers: { stats: ItemCount; banners: ItemCount };
+}
+
+/* ---------- Homepage → Top rankers ---------- */
+
+export interface TopRankersStatData {
+  value: string;
+  label: string;
+  sublabel: string;
+  icon: string;
+}
+
+export interface TopRankersBannerData {
+  title: string;
+  webImageUrl: string;
+  mobileImageUrl: string;
+  link: string;
+}
+
+/** GET /top-rankers — active only, in order. */
+export interface TopRankersData {
+  stats: TopRankersStatData[];
+  tabs: { id: string; label: string; banners: TopRankersBannerData[] }[];
+}
+
+export interface AdminRankerStat extends TopRankersStatData {
+  _id: string;
+  isActive: boolean;
+  order: number;
+}
+
+export type RankerStatInput = TopRankersStatData & { isActive: boolean };
+
+export interface AdminRankerBanner extends TopRankersBannerData {
+  _id: string;
+  isActive: boolean;
+  order: number;
+}
+
+export interface AdminRankerCategory {
+  _id: string;
+  name: string;
+  isActive: boolean;
+  order: number;
+  banners: AdminRankerBanner[];
+}
+
+/** GET /admin/homepage/top-rankers */
+export interface AdminTopRankers {
+  stats: AdminRankerStat[];
+  categories: AdminRankerCategory[];
 }

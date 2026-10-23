@@ -22,7 +22,11 @@ interface TopRankersSectionProps {
 export default function TopRankersSection({ tabs, stats, hideStats = false }: TopRankersSectionProps) {
   const visibleTabs = tabs.filter((t) => t.banners.length > 0);
   const [activeTabId, setActiveTabId] = useState(visibleTabs[0]?.id);
-  const activeTab = visibleTabs.find((t) => t.id === activeTabId) ?? visibleTabs[0];
+  const activeTab = visibleTabs.find((t) => t.id === activeTabId) || visibleTabs[0];
+  const showStats = !hideStats && stats.length > 0;
+
+  // Nothing switched on in the admin (Web → Homepage → Top rankers) → no section
+  if (!visibleTabs.length && !showStats) return null;
 
   return (
     <Box
@@ -113,7 +117,7 @@ export default function TopRankersSection({ tabs, stats, hideStats = false }: To
         </Box>
 
         {/* 4 stat boxes (hidden on blog pages) */}
-        {!hideStats && (
+        {showStats && (
         <Box
           sx={{
             display: "grid",

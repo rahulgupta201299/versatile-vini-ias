@@ -15,3 +15,11 @@ export const MARKETING_SHAPE: BannerShape = {
   mobileAspect: "2 / 1",
   mobileHint: "Phone art, 2 : 1 (e.g. 1080 × 540 px). Used on phones when every active banner here has one.",
 };
+
+/** Top rankers result banners: wide ≈ 2.9 : 1, phones tall ≈ 0.73 : 1 (shown up to 768 px wide). */
+export const RANKERS_SHAPE: BannerShape = {
+  webAspect: "2.886 / 1",
+  webHint: "Wide art ≈ 2.9 : 1 (e.g. 3821 × 1324 px)",
+  mobileAspect: "0.729 / 1",
+  mobileHint: "Tall phone art ≈ 0.73 : 1 (e.g. 1203 × 1650 px). A banner with only one image shows only on that screen size.",
+};
