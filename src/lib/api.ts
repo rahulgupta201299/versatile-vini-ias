@@ -11,14 +11,12 @@ import { API_BASE_URL } from "@/lib/apiBase";
  *
  * Endpoints (all GET, JSON — shapes are in src/types/index.ts):
  *   /navigation                    NavigationData
- *   /exam-categories               ExamGoalCategory[]
  *   /site-config                   SiteConfig
- *   /banners/hero?course=<slug>    HeroBanner[]
+ *   /homepage                      HomepageData (hero slider, free resources, marketing banners — services/homepage.ts)
+ *   /select-your-goal              ExamGoalCategory[] ("Select Your Goal")
  *   /banners/results               ResultBannerTab[]
- *   /banners/promo                 HeroBanner[]
  *   /home/ranker-stats             StatItem[]
  *   /home/impact                   ImpactData
- *   /home/resources                ResourceItem[]
  *   /exams                         AllExamsMenuCategory[] (header "All Exams" menu — see services/exams.ts)
  *   /celebration-banner            { banner: CelebrationBanner | null } (festival banner under the hero)
  *   /exams/<slug>                  AllExam               (exam page; 404 → generated page for "Select Your Goal" exams)
@@ -46,11 +44,12 @@ export const REVALIDATE = {
 /** Cache tags — pass one to POST /api/revalidate to refresh that data immediately. */
 export const CACHE_TAGS = {
   navigation: "navigation",
+  /** "Select Your Goal" — refreshed on every admin save */
   exams: "exam-categories",
   siteConfig: "site-config",
-  heroBanners: "hero-banners",
   results: "result-banners",
-  promo: "promo-banners",
+  /** Homepage → hero slider, free resources, marketing banners — refreshed on every admin save */
+  homepage: "homepage",
   home: "home",
   goals: "goals",
   /** Homepage → All Exams (header menu + exam pages) — refreshed on every admin save */

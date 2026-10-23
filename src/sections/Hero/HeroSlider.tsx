@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { HeroBanner } from "@/types";
+import BannerImage, { hasMobileArt } from "@/components/BannerImage";
 
 import { COLORS } from "@/theme/colors";
 interface HeroSliderProps {
@@ -30,6 +30,11 @@ export default function HeroSlider({ banners }: HeroSliderProps) {
     const interval = setInterval(nextSlide, 5000);
     return () => clearInterval(interval);
   }, [nextSlide, isPaused, banners.length]);
+
+  if (!banners.length) return null;
+
+  // Phones use the 16 : 9 artwork when every slide has one, otherwise the wide artwork
+  const useMobileArt = hasMobileArt(banners);
 
   return (
     <Box
@@ -76,21 +81,11 @@ export default function HeroSlider({ banners }: HeroSliderProps) {
                   textDecoration: "none",
                   // Fixed aspect ratio (~3:1) so the banner scales with width
                   // instead of being cropped at fixed heights on small screens
-                  aspectRatio: "2.9 / 1", // matches banner artwork (e.g. 2137 × 736) so nothing is cropped
+                  aspectRatio: { xs: useMobileArt ? "16 / 9" : "2.9 / 1", sm: "2.9 / 1" }, // matches the artwork, so nothing is cropped
                   cursor: "pointer",
                 }}
               >
-                <Image
-                  src={banner.imageUrl}
-                  alt={banner.alt || banner.title}
-                  fill
-                  sizes="(max-width: 600px) 100vw, (max-width: 1200px) 95vw, 1200px"
-                  style={{
-                    objectFit: "cover",
-                    objectPosition: "center",
-                  }}
-                  priority={index === 0}
-                />
+                <BannerImage banner={banner} useMobileArt={useMobileArt} priority={index === 0} />
               </Box>
             ))}
           </Box>

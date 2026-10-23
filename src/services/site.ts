@@ -3,7 +3,6 @@ import { fetchApi, CACHE_TAGS, REVALIDATE } from "@/lib/api";
 import { ExamGoalCategory, NavigationData, SiteConfig, SiteData } from "@/types";
 import { MOBILE_MENU_SECTIONS, NAV_ITEMS, SEARCH_TRENDING, STORE_HREF } from "@/data/navigation";
 import { getExamMenu, toMegaMenu } from "./exams";
-import { EXAM_CATEGORIES } from "@/data/exams";
 import { SITE_CONFIG } from "@/data/siteConfig";
 import { slugify } from "@/utils/slug";
 
@@ -26,8 +25,9 @@ const getNavigation = cache(async (): Promise<NavigationData> => {
   return { ...navigation, megaMenu: toMegaMenu(examMenu) };
 });
 
+/** "Select Your Goal" categories and exams (Web → Homepage → Select Your Goal in the admin). Active only. */
 const getExamCategories = cache(() =>
-  fetchApi<ExamGoalCategory[]>("exam-categories", { fallback: EXAM_CATEGORIES, revalidate: REVALIDATE.slow, tags: [CACHE_TAGS.exams] })
+  fetchApi<ExamGoalCategory[]>("select-your-goal", { fallback: [], revalidate: REVALIDATE.slow, tags: [CACHE_TAGS.exams], isValid: Array.isArray })
 );
 
 export const getSiteConfig = cache(() =>

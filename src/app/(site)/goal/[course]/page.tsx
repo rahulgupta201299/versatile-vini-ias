@@ -41,7 +41,7 @@ export default async function GoalPage({ params }: { params: Params }) {
 
   const [heroBanners, resultTabs, impact, config] = await Promise.all([
     // All Exams pages have their own banners; generated pages use the shared hero banners
-    page.banners.length ? Promise.resolve(page.banners) : getHeroBanners(course),
+    page.banners.length ? Promise.resolve(page.banners) : getHeroBanners(),
     getResultBanners(),
     getImpactData(),
     getSiteConfig(),

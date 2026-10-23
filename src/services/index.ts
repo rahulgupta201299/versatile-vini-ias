@@ -1,5 +1,5 @@
 export * from "./site";
-export * from "./heroBanners";
+export * from "./homepage";
 export * from "./resultBanners";
 export * from "./home";
 export * from "./goals";

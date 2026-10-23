@@ -9,7 +9,10 @@ import { IconRenderer } from "@/components";
 
 import { COLORS } from "@/theme/colors";
 import { externalLinkProps } from "@/utils/links";
+/** "Browse Our Free Resources" tiles (Web → Homepage → Free resources in the admin). */
 export default function FreeResourcesSection({ resources }: { resources: ResourceItem[] }) {
+  if (!resources.length) return null;
+
   return (
     <Box
       id="resources"

@@ -94,18 +94,16 @@ const gridSx = {
 
 export default function ExamGoalSection() {
   const EXAM_CATEGORIES = useSiteData().examCategories;
-  const [activeCategoryName, setActiveCategoryName] = useState<string>(
-    EXAM_CATEGORIES[0].category
-  );
+  const [firstCategory] = EXAM_CATEGORIES;
+  const [activeCategoryName, setActiveCategoryName] = useState<string>(firstCategory?.category || "");
   const [showAll, setShowAll] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
-  const activeCategory: ExamGoalCategory =
-    EXAM_CATEGORIES.find((cat) => cat.category === activeCategoryName) ||
-    EXAM_CATEGORIES[0];
+  const activeCategory: ExamGoalCategory | undefined =
+    EXAM_CATEGORIES.find((cat) => cat.category === activeCategoryName) || firstCategory;
 
   // Auto-detect scroll positions for left/right scroll arrows
   const checkScrollState = () => {
@@ -134,6 +132,9 @@ export default function ExamGoalSection() {
       scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
+
+  // Every category switched off in the admin → no section
+  if (!activeCategory) return null;
 
   const visibleExams = activeCategory.subcategories.slice(0, INITIAL_VISIBLE);
   const extraExams = activeCategory.subcategories.slice(INITIAL_VISIBLE);

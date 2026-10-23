@@ -9,6 +9,10 @@ type Context = { params: Promise<{ path: string[] }> };
 const REFRESH_TAGS: Record<string, string> = {
   "all-exams": CACHE_TAGS.allExams,
   "celebration-banners": CACHE_TAGS.celebration,
+  "hero-banners": CACHE_TAGS.homepage,
+  "free-resources": CACHE_TAGS.homepage,
+  "marketing-banners": CACHE_TAGS.homepage,
+  "select-your-goal": CACHE_TAGS.exams,
 };
 
 /** /api/admin/homepage/<section>/<path> → backend. Changes refresh that section on the website. */

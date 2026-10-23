@@ -1,20 +1,27 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { HeroBanner } from "@/types";
 import { externalLinkProps } from "@/utils/links";
+import BannerImage, { hasMobileArt } from "@/components/BannerImage";
 
 interface SmallPromoBannerProps {
   banners: HeroBanner[];
+  /** Section id, e.g. "market-ad" (the header Store button links to /#market-ad). */
+  id?: string;
 }
 
+/**
+ * Marketing banner slider (Web → Homepage → 1st / 2nd marketing banner in the admin).
+ * Wide 4 : 1 artwork; phones use the 2 : 1 artwork when every banner has one. One banner → no arrows.
+ */
 export default function SmallPromoBanner({
   banners,
+  id = "promo-slider",
 }: SmallPromoBannerProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -33,11 +40,13 @@ export default function SmallPromoBanner({
     return () => clearInterval(interval);
   }, [nextSlide, isPaused, banners.length]);
 
-  if (!banners || banners.length === 0) return null;
+  if (!banners.length) return null;
+
+  const useMobileArt = hasMobileArt(banners);
 
   return (
     <Box
-      id="promo-slider"
+      id={id}
       component="section"
       sx={{
         py: { xs: 1.5, sm: 2, md: 2.5 },
@@ -79,20 +88,11 @@ export default function SmallPromoBanner({
                   position: "relative",
                   display: "block",
                   textDecoration: "none",
-                  height: { xs: 140, sm: 190, md: 240, lg: 260 },
+                  aspectRatio: { xs: useMobileArt ? "2 / 1" : "4 / 1", sm: "4 / 1" },
                   cursor: "pointer",
                 }}
               >
-                <Image
-                  src={banner.imageUrl}
-                  alt={banner.alt || banner.title}
-                  fill
-                  style={{
-                    objectFit: "cover",
-                    objectPosition: "center",
-                  }}
-                  priority={index === 0}
-                />
+                <BannerImage banner={banner} useMobileArt={useMobileArt} priority={index === 0} />
               </Box>
             ))}
           </Box>

@@ -915,3 +915,77 @@ export type CelebrationBannerInput = Omit<CelebrationBanner, "alt" | "tagline"> 
   isActive: boolean;
   // [S3 SNAPSHOT] snapshotUrl?: string; — the whole banner as one final image (see src/lib/bannerSnapshot.ts)
 };
+
+/* ---------- Homepage sections edited in the admin (Web → Homepage) ---------- */
+
+/** A banner as the website receives it (hero slider and marketing banners). */
+export interface HomepageBannerData {
+  title: string;
+  webImageUrl: string;
+  mobileImageUrl: string;
+  link: string;
+}
+
+export interface HomepageResourceData {
+  title: string;
+  icon: string;
+  color: string;
+  link: string;
+}
+
+/** GET /homepage — active items only, in order. */
+export interface HomepageData {
+  heroBanners: HomepageBannerData[];
+  freeResources: HomepageResourceData[];
+  marketingBanners: { first: HomepageBannerData[]; second: HomepageBannerData[] };
+}
+
+export type MarketingPlacement = "first" | "second";
+
+export interface AdminHomepageBanner extends HomepageBannerData {
+  _id: string;
+  isActive: boolean;
+  order: number;
+  placement?: MarketingPlacement;
+}
+
+export type HomepageBannerInput = HomepageBannerData & { isActive: boolean };
+
+export interface AdminFreeResource extends HomepageResourceData {
+  _id: string;
+  isActive: boolean;
+  order: number;
+}
+
+export type FreeResourceInput = HomepageResourceData & { isActive: boolean };
+
+export interface AdminGoalExam {
+  _id: string;
+  name: string;
+  logo: string;
+  link: string;
+  isActive: boolean;
+  order: number;
+}
+
+export interface AdminGoalCategory {
+  _id: string;
+  name: string;
+  isActive: boolean;
+  order: number;
+  exams: AdminGoalExam[];
+}
+
+export type GoalExamInput = Omit<AdminGoalExam, "_id" | "order"> & { category: string };
+
+type ItemCount = { active: number; total: number };
+
+/** GET /admin/homepage/summary — counts for the Homepage screen. */
+export interface HomepageSummary {
+  heroBanners: ItemCount;
+  celebration: { title: string; endsAt: string } | null;
+  freeResources: ItemCount;
+  firstMarketing: ItemCount;
+  secondMarketing: ItemCount;
+  selectYourGoal: { categories: ItemCount; exams: ItemCount };
+}

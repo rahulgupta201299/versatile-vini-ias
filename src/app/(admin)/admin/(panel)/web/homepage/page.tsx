@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
-import HomepageManager from "@/sections/Admin/web/HomepageManager";
+import { loadAdminData } from "@/lib/adminData";
+import { HomepageSummary } from "@/types";
+import HomepageOverview from "@/sections/Admin/homepage/HomepageOverview";
 
 export const metadata: Metadata = { title: "Homepage" };
+export const dynamic = "force-dynamic";
 
-export default function HomepagePage() {
-  return <HomepageManager />;
+export default async function HomepagePage() {
+  const summary = await loadAdminData<HomepageSummary>("admin/homepage/summary");
+
+  return <HomepageOverview summary={summary} />;
 }
