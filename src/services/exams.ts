@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { fetchApi, CACHE_TAGS, REVALIDATE } from "@/lib/api";
-import { AllExam, AllExamsMenuCategory, CoursePageData, MegaMenuCategory } from "@/types";
+import { AllExam, AllExamsMenuCategory, CoursePageData, GoalExamPage, MegaMenuCategory } from "@/types";
 import { slugify } from "@/utils/slug";
 
 /*
@@ -18,6 +18,15 @@ export const getExamMenu = cache(() =>
 /** GET /exams/<slug> — one exam, or null when there is no such exam. */
 export const getExam = cache((slug: string) =>
   fetchApi<AllExam | null>(`exams/${encodeURIComponent(slug)}`, { fallback: null, revalidate: REVALIDATE.slow, tags: [CACHE_TAGS.allExams] })
+);
+
+/**
+ * GET /select-your-goal/<slug> — a Select Your Goal exam's page saved in the admin (`details` null until saved),
+ * or null when there is no such exam. Refreshed with "Select Your Goal" saves.
+ */
+// Also tagged allExams: a goal exam linked to an All Exams page refreshes when that page is edited
+export const getGoalExam = cache((slug: string) =>
+  fetchApi<GoalExamPage | null>(`select-your-goal/${encodeURIComponent(slug)}`, { fallback: null, revalidate: REVALIDATE.slow, tags: [CACHE_TAGS.exams, CACHE_TAGS.allExams] })
 );
 
 /** "UPSC CSE 2026/27, 71st BPSC Foundation, UPPSC PCS Special & more" */

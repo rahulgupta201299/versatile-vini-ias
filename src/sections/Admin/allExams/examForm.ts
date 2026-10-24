@@ -1,4 +1,4 @@
-import { AdminSubCategory, AdminSubCategoryInput, ExamBanner, ExamBatch, ExamFreeClass } from "@/types";
+import { AdminSubCategory, AdminSubCategoryInput, ExamBanner, ExamBatch, ExamDetails, ExamFreeClass } from "@/types";
 import { slugify } from "@/utils/slug";
 
 /** Blank values for a new exam and for each list item. */
@@ -47,12 +47,9 @@ export function toYoutubeId(input: string): string {
 
 export const discountPercent = ({ price, mrp }: Pick<ExamBatch, "price" | "mrp">) => (mrp > price && mrp > 0 ? Math.round(((mrp - price) / mrp) * 100) : 0);
 
-/** Checks the form before saving. Returns a list of problems (empty = OK). */
-export function validateSubCategory({ name, details }: AdminSubCategoryInput, { hasCategory }: { hasCategory: boolean }): string[] {
+/** Checks an exam page's details before saving. Returns a list of problems (empty = OK). */
+export function validateDetails(details: ExamDetails): string[] {
   const problems: string[] = [];
-
-  if (!hasCategory) problems.push("Choose a category, or type a new category name.");
-  if (!slugify(name)) problems.push("Type a sub category name (it needs letters or numbers).");
 
   details.freeClasses.forEach(({ title, youtubeId }, index) => {
     if (!title.trim()) problems.push(`Free class ${index + 1}: title is required.`);
@@ -74,15 +71,31 @@ export function validateSubCategory({ name, details }: AdminSubCategoryInput, { 
   return problems;
 }
 
+/** Checks the form before saving. Returns a list of problems (empty = OK). */
+export function validateSubCategory({ name, details }: AdminSubCategoryInput, { hasCategory }: { hasCategory: boolean }): string[] {
+  const problems: string[] = [];
+
+  if (!hasCategory) problems.push("Choose a category, or type a new category name.");
+  if (!slugify(name)) problems.push("Type a sub category name (it needs letters or numbers).");
+
+  return [...problems, ...validateDetails(details)];
+}
+
 /** True when rich text has no words, e.g. "<p></p>". */
 const isEmptyHtml = (html = "") => !html.replace(/<[^>]*>|&nbsp;/g, "").trim() && !/<(table|hr)\b/i.test(html);
+
+/** Drops an empty description (e.g. "<p></p>") before saving. */
+export const cleanDetails = (details: ExamDetails): ExamDetails => {
+  const { content } = details.aboutExam;
+
+  if (!isEmptyHtml(content)) return details;
+
+  return { ...details, aboutExam: { ...details.aboutExam, content: "" } };
+};
 
 /** Trims the name and drops an empty description before saving. */
 export const cleanInput = (input: AdminSubCategoryInput): AdminSubCategoryInput => ({
   ...input,
   name: input.name.trim(),
-  details: {
-    ...input.details,
-    aboutExam: { ...input.details.aboutExam, content: isEmptyHtml(input.details.aboutExam.content) ? "" : input.details.aboutExam.content },
-  },
+  details: cleanDetails(input.details),
 });

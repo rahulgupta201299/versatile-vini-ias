@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { fetchApi, CACHE_TAGS, REVALIDATE } from "@/lib/api";
-import { ExamGoalCategory, NavigationData, SiteConfig, SiteData } from "@/types";
+import { ExamGoalCategory, FooterData, FooterLinkData, FooterSectionsData, NavigationData, SiteConfig, SiteData } from "@/types";
 import { MOBILE_MENU_SECTIONS, NAV_ITEMS, SEARCH_TRENDING, STORE_HREF } from "@/data/navigation";
 import { getExamMenu, toMegaMenu } from "./exams";
 import { SITE_CONFIG } from "@/data/siteConfig";
@@ -34,6 +34,31 @@ export const getSiteConfig = cache(() =>
   fetchApi<SiteConfig>("site-config", { fallback: SITE_CONFIG, revalidate: REVALIDATE.slow, tags: [CACHE_TAGS.siteConfig] })
 );
 
+const NO_FOOTER_SECTIONS: FooterSectionsData = { company: null, freeLearningResources: null, ecosystemBrands: null };
+
+/** Footer → Company, Free Learning Resources, Our Ecosystem Brands (admin → Footer). A switched-off section is null. */
+const getFooterSections = cache(() =>
+  fetchApi<FooterSectionsData>("footer", {
+    fallback: NO_FOOTER_SECTIONS,
+    revalidate: REVALIDATE.slow,
+    tags: [CACHE_TAGS.siteConfig],
+    isValid: (data) => typeof data === "object" && data !== null && "company" in data,
+  })
+);
+
+const toLinkItems = (links: FooterLinkData[]) => links.map(({ text, link }) => ({ name: text, href: link }));
+
+/** The footer: fixed columns from the site config + the three sections managed in the admin. */
+const withFooterSections = (footer: FooterData, { company, freeLearningResources, ecosystemBrands }: FooterSectionsData): FooterData => ({
+  ...footer,
+  companyTitle: company?.title || "",
+  companyLinks: company ? toLinkItems(company.links) : [],
+  learningResourcesTitle: freeLearningResources?.title || "",
+  learningResources: freeLearningResources ? freeLearningResources.columns.map(({ title, links }) => ({ title, links: toLinkItems(links) })) : [],
+  brandsTitle: ecosystemBrands?.title || "",
+  brands: ecosystemBrands ? toLinkItems(ecosystemBrands.links) : [],
+});
+
 /** Display names for route segments, so breadcrumbs can label any URL. */
 function buildRouteLabels(navigation: NavigationData, examCategories: ExamGoalCategory[]) {
   const labels: Record<string, string> = { goal: "Goal", courses: "Courses", "free-resources": "Free Resources", "current-affairs": "Current Affairs", "ethics-essay": "Ethics & Essay", "monthly-magazine": "Monthly Magazine", "prism-simplified": "PRISM Simplified" };
@@ -54,6 +79,8 @@ function buildRouteLabels(navigation: NavigationData, examCategories: ExamGoalCa
 
 /** Everything the root layout needs, fetched in parallel. */
 export const getSiteData = cache(async (): Promise<SiteData> => {
-  const [navigation, examCategories, config] = await Promise.all([getNavigation(), getExamCategories(), getSiteConfig()]);
+  const [navigation, examCategories, siteConfig, footerSections] = await Promise.all([getNavigation(), getExamCategories(), getSiteConfig(), getFooterSections()]);
+  const config = { ...siteConfig, footer: withFooterSections(siteConfig.footer, footerSections) };
+
   return { navigation, examCategories, config, routeLabels: buildRouteLabels(navigation, examCategories) };
 });

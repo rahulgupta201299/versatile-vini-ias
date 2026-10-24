@@ -26,11 +26,14 @@ import { externalLinkProps } from "@/utils/links";
 export default function Footer() {
   const { contact: CONTACT, social: SOCIAL_LINKS, footer } = useSiteData().config;
   const {
+    companyTitle,
     companyLinks: COMPANY_LINKS,
     upcomingCentres: UPCOMING_CENTRES,
     quickLinks: QUICK_LINKS,
     products: OUR_PRODUCTS,
+    brandsTitle,
     brands: OUR_BRANDS,
+    learningResourcesTitle,
     learningResources: FREE_LEARNING_RESOURCES,
   } = footer;
   return (
@@ -112,10 +115,11 @@ export default function Footer() {
             </Box>
           </Box>
 
-          {/* Col 2: Company */}
+          {/* Col 2: Company (admin → Footer) */}
+          {COMPANY_LINKS.length > 0 && (
           <Box>
             <Typography variant="subtitle2" sx={{ fontWeight: 800, color: COLORS.heading, fontSize: "0.95rem", mb: 2 }}>
-              Company
+              {companyTitle}
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
               {COMPANY_LINKS.map((link, idx) => (
@@ -136,6 +140,7 @@ export default function Footer() {
               ))}
             </Box>
           </Box>
+          )}
 
           {/* Col 3: Upcoming Centres */}
           <Box>
@@ -304,7 +309,8 @@ export default function Footer() {
 
         <Divider sx={{ my: 4, borderColor: COLORS.border }} />
 
-        {/* TIER 2: Free Learning Resources (PDF Pages 4 & 5 & Screenshot 18.06.55) */}
+        {/* TIER 2: Free Learning Resources (admin → Footer) */}
+        {FREE_LEARNING_RESOURCES.length > 0 && (
         <Box sx={{ mb: 6 }}>
           <Typography
             variant="h5"
@@ -315,7 +321,7 @@ export default function Footer() {
               mb: 3,
             }}
           >
-            Free Learning Resources
+            {learningResourcesTitle}
           </Typography>
 
           <Box
@@ -366,10 +372,12 @@ export default function Footer() {
             ))}
           </Box>
         </Box>
+        )}
 
         <Divider sx={{ my: 4, borderColor: COLORS.border }} />
 
-        {/* TIER 3: Our Brands (PDF Page 6) */}
+        {/* TIER 3: Our Ecosystem Brands (admin → Footer) */}
+        {OUR_BRANDS.length > 0 && (
         <Box sx={{ mb: 5 }}>
           <Typography
             variant="subtitle2"
@@ -380,7 +388,7 @@ export default function Footer() {
               mb: 1.5,
             }}
           >
-            Our Ecosystem Brands
+            {brandsTitle}
           </Typography>
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.25 }}>
             {OUR_BRANDS.map((brand, idx) => (
@@ -411,6 +419,7 @@ export default function Footer() {
             ))}
           </Box>
         </Box>
+        )}
 
         {/* TIER 4: Know about VINI IAS & We Stand Out (PDF Page 6 & Screenshot 18.07.01 SEO block) */}
         <Box sx={{ mb: 5, p: { xs: 2.5, md: 3.5 }, borderRadius: "16px", backgroundColor: "#FFFFFF", border: `1px solid ${COLORS.border}` }}>

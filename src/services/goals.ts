@@ -1,14 +1,18 @@
 import { cache } from "react";
 import { CoursePageData } from "@/types";
 import { buildCoursePage, buildGoalEntries } from "@/data/coursePages";
-import { getExam, getExamMenu, toCoursePage } from "./exams";
+import { getExam, getExamMenu, getGoalExam, toCoursePage } from "./exams";
 import { getSiteData } from "./site";
 
 /**
  * Goal (exam) pages — /goal/<slug>:
  *   - "All Exams" exams come from the database (Homepage → All Exams in the admin panel).
- *   - "Select Your Goal" exams that are not in All Exams get a generated page (src/data/coursePages.ts).
+ *   - "Select Your Goal" exams that are not in All Exams use the page saved in the admin
+ *     (Select Your Goal → exam → Page), or a generated page until one is saved (src/data/coursePages.ts).
  */
+
+/** Select Your Goal exams have no menu icon of their own. */
+const GOAL_MENU_ICON = { name: "GraduationCap", color: "", background: "" };
 
 /** Every exam with a goal page. */
 export const getGoalEntries = cache(async () => {
@@ -45,5 +49,16 @@ export const getGoalPage = cache(async (slug: string): Promise<CoursePageData | 
   const entries = await getGoalEntries();
   const entry = entries.find((e) => e.slug === slug);
 
-  return entry ? buildCoursePage(entry, entries) : null;
+  if (!entry) return null;
+
+  const goalExam = await getGoalExam(slug);
+
+  if (!goalExam?.details) return buildCoursePage(entry, entries);
+
+  // A page saved in the admin: same layout as All Exams pages
+  const sameCategory = entries.filter(({ category }) => category === entry.category).map(({ name }) => name);
+  const examOptions = [entry.name, ...sameCategory.filter((name) => name !== entry.name)].slice(0, 12);
+  const { category, name, details } = goalExam;
+
+  return toCoursePage({ category, subCategory: name, slug, menuIcon: GOAL_MENU_ICON, details }, examOptions);
 });

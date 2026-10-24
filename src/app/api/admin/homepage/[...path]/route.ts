@@ -14,6 +14,7 @@ const REFRESH_TAGS: Record<string, string> = {
   "marketing-banners": CACHE_TAGS.homepage,
   "select-your-goal": CACHE_TAGS.exams,
   "top-rankers": CACHE_TAGS.results,
+  footer: CACHE_TAGS.siteConfig,
 };
 
 /** /api/admin/homepage/<section>/<path> → backend. Changes refresh that section on the website. */

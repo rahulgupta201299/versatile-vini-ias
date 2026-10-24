@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { ArrowUpDown, EyeOff, FolderPlus, GraduationCap, Pencil } from "lucide-react";
+import Link from "next/link";
+import { ArrowUpDown, EyeOff, FileText, FolderPlus, GraduationCap, Pencil } from "lucide-react";
 import { COLORS } from "@/theme/colors";
 import { adminRequest } from "@/lib/adminClient";
 import { goalPath } from "@/utils/slug";
@@ -249,7 +250,12 @@ export default function SelectYourGoalManager({ categories }: { categories: Admi
             onUpdate={(id, input) => adminRequest(`${API_PATH}/exams/${id}`, { method: "PUT", body: input })}
             onStatus={(id, isActive) => adminRequest(`${API_PATH}/exams/${id}`, { method: "PATCH", body: { isActive } })}
             onReorder={(ids) => adminRequest(`${API_PATH}/exams/order`, { method: "PUT", body: { category: selected._id, ids } })}
-            activeHint="Shown in this tab on the homepage, in this order."
+            renderActions={({ _id, name }) => (
+              <Box component={Link} href={`/admin/web/homepage/select-your-goal/exams/${_id}`} aria-label={`${name} page`} sx={smallButtonSx}>
+                <FileText size={14} /> Page
+              </Box>
+            )}
+            activeHint="Shown in this tab on the homepage, in this order. “Page” edits the exam's page (banners, classes, batches, about, FAQs)."
             inactiveHint="Hidden on the homepage. Switch one on to show it again."
           />
         </Box>

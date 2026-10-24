@@ -36,6 +36,8 @@ export type ItemManagerProps<T extends ManagedItem, Input> = {
   onReorder: (ids: string[]) => Promise<unknown>;
   activeHint: string;
   inactiveHint: string;
+  /** Extra buttons on each row, e.g. a link to the item's own page editor. */
+  renderActions?: (item: T) => React.ReactNode;
 };
 
 const errorBoxSx = { px: 1.5, py: 1.25, borderRadius: "10px", bgcolor: COLORS.redTint, border: `1px solid ${COLORS.redBorder}`, color: COLORS.redDark, fontSize: "0.85rem", fontWeight: 600 } as const;
@@ -104,7 +106,7 @@ function ItemForm<Input>({ initial, isNew, itemName, validate, renderForm, onSav
  * free resources and Select Your Goal exams.
  */
 export default function ItemManager<T extends ManagedItem, Input>(props: ItemManagerProps<T, Input>) {
-  const { items, itemName, itemsName, orderDescription, getName, newInput, toInput, validate, renderPreview, renderForm, onCreate, onUpdate, onStatus, onReorder, activeHint, inactiveHint } = props;
+  const { items, itemName, itemsName, orderDescription, getName, newInput, toInput, validate, renderPreview, renderForm, onCreate, onUpdate, onStatus, onReorder, activeHint, inactiveHint, renderActions } = props;
   const router = useRouter();
   const [editingId, setEditingId] = useState("");
   const [isReordering, setIsReordering] = useState(false);
@@ -158,6 +160,7 @@ export default function ItemManager<T extends ManagedItem, Input>(props: ItemMan
         <Box sx={{ px: { xs: 2, md: 2.5 }, py: 1.5, display: "flex", alignItems: "center", gap: 1.5, flexWrap: "wrap", opacity: isActive ? 1 : 0.75 }}>
           <Box sx={{ flex: 1, minWidth: 220 }}>{renderPreview(item)}</Box>
           <StatusToggle isActive={isActive} disabled={busyId === _id} onChange={(next) => setStatus(_id, next)} label={`${getName(item)} status`} />
+          {renderActions && renderActions(item)}
           {!isEditing && (
             <Box component="button" type="button" onClick={() => setEditingId(_id)} sx={{ ...buttonSx, height: 34, px: 1.5 }}>
               <Pencil size={14} /> Edit

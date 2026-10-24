@@ -7,6 +7,7 @@ import {
   ChevronRight,
   GalleryHorizontal,
   LayoutGrid,
+  PanelBottom,
   Library,
   type LucideIcon,
   Megaphone,
@@ -149,9 +150,20 @@ export default function HomepageOverview({ summary }: { summary: HomepageSummary
         }
       />
 
-      <Typography component="h2" sx={{ mb: 1, color: COLORS.muted, fontSize: "0.72rem", fontWeight: 800, letterSpacing: ".08em" }}>MENUS & EXAM PAGES</Typography>
+      <Typography component="h2" sx={{ mb: 1, color: COLORS.muted, fontSize: "0.72rem", fontWeight: 800, letterSpacing: ".08em" }}>MENUS, FOOTER & EXAM PAGES</Typography>
       <Box component="ul" sx={panelSx}>
         <SectionRow number={1} section={{ title: "All Exams", description: "Header “All Exams” menu and each exam's page — banners, classes, batches, about & FAQs.", icon: LayoutGrid, href: `${BASE}/all-exams` }} />
+        <SectionRow
+          number={2}
+          section={{
+            title: "Footer",
+            description: "Company links, Free Learning Resources columns and Our Ecosystem Brands — on every page.",
+            icon: PanelBottom,
+            href: `${BASE}/footer`,
+            status: countText(summary.footer, "section"),
+            isLive: summary.footer.active > 0,
+          }}
+        />
       </Box>
       <Typography component="h2" sx={{ mt: 3.5, mb: 1, color: COLORS.muted, fontSize: "0.72rem", fontWeight: 800, letterSpacing: ".08em" }}>PAGE SECTIONS</Typography>
       <Box component="ol" sx={panelSx}>

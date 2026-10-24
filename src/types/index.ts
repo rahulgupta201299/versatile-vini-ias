@@ -231,11 +231,15 @@ export interface SocialLinks {
 }
 
 export interface FooterData {
+  /** Company, Free Learning Resources and Our Ecosystem Brands come from the admin (GET /footer); empty → hidden. */
+  companyTitle: string;
   companyLinks: LinkItem[];
   upcomingCentres: LinkItem[];
   quickLinks: LinkItem[];
   products: LinkItem[];
+  brandsTitle: string;
   brands: LinkItem[];
+  learningResourcesTitle: string;
   learningResources: FooterResourceColumn[];
 }
 
@@ -989,6 +993,7 @@ export interface HomepageSummary {
   secondMarketing: ItemCount;
   selectYourGoal: { categories: ItemCount; exams: ItemCount };
   topRankers: { stats: ItemCount; banners: ItemCount };
+  footer: ItemCount;
 }
 
 /* ---------- Homepage → Top rankers ---------- */
@@ -1039,4 +1044,65 @@ export interface AdminRankerCategory {
 export interface AdminTopRankers {
   stats: AdminRankerStat[];
   categories: AdminRankerCategory[];
+}
+
+/* ---------- Select Your Goal exam pages (details saved in adminExamDetails) ---------- */
+
+/** GET /admin/homepage/select-your-goal/exams/:id */
+export interface AdminGoalExamWithDetails extends AdminGoalExam {
+  category: { _id: string; name: string; isActive: boolean };
+  /** False until the page is saved or linked — the website shows a generated page until then. */
+  hasDetails: boolean;
+  /** The All Exams sub category whose page this exam shows (null when it has its own content or none yet). */
+  linkedTo: GoalLinkedSubCategory | null;
+  details: ExamDetails;
+}
+
+/** An All Exams sub category a Select Your Goal exam's page is linked to. */
+export interface GoalLinkedSubCategory {
+  _id: string;
+  name: string;
+  slug: string;
+  isActive: boolean;
+  category: { _id: string; name: string };
+}
+
+/** GET /select-your-goal/:slug — `details` is null until an admin saves the page. */
+export interface GoalExamPage {
+  category: string;
+  name: string;
+  slug: string;
+  details: ExamDetails | null;
+}
+
+/* ---------- Footer (Company, Free Learning Resources, Our Ecosystem Brands) ---------- */
+
+export interface FooterLinkData {
+  text: string;
+  link: string;
+}
+
+export interface FooterColumnData {
+  title: string;
+  links: FooterLinkData[];
+}
+
+export type FooterSectionKey = "company" | "freeLearningResources" | "ecosystemBrands";
+
+/** GET /footer — a switched-off section is null. */
+export interface FooterSectionsData {
+  company: { title: string; links: FooterLinkData[] } | null;
+  freeLearningResources: { title: string; columns: FooterColumnData[] } | null;
+  ecosystemBrands: { title: string; links: FooterLinkData[] } | null;
+}
+
+/** GET /admin/homepage/footer */
+export interface AdminFooterSection {
+  _id: string;
+  key: FooterSectionKey;
+  title: string;
+  isActive: boolean;
+  links: FooterLinkData[];
+  columns: FooterColumnData[];
+  updatedAt?: string;
 }
