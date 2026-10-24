@@ -1,7 +1,6 @@
-import { ACCESS } from "@/lib/adminAccess";
 import AccessGate from "@/sections/Admin/AccessGate";
 
-/** Web → Footer: Web Managers and Editors. */
+/** Web → Footer: admins with Footer access. */
 export default function FooterLayout({ children }: { children: React.ReactNode }) {
-  return <AccessGate access={ACCESS.footer}>{children}</AccessGate>;
+  return <AccessGate sections={["footer"]}>{children}</AccessGate>;
 }

@@ -3,7 +3,7 @@
  *   offline / server unreachable, session ended (→ sign-in page), server problems (5xx) and validation messages.
  * Throws an Error whose message can be shown to the admin as is.
  */
-type AdminRequestOptions = { method?: "GET" | "POST" | "PUT" | "PATCH"; body?: unknown };
+type AdminRequestOptions = { method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE"; body?: unknown };
 
 const OFFLINE = "Can't reach the server — check your internet connection and try again.";
 const SERVER_PROBLEM = "The server ran into a problem. Please try again in a minute.";

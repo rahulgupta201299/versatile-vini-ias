@@ -11,10 +11,21 @@ import { COLORS } from "@/theme/colors";
 import { adminRequest } from "@/lib/adminClient";
 import { AdminFooterSection, FooterColumnData, FooterLinkData, FooterSectionKey } from "@/types";
 import { buttonSx, Field, FieldGrid, ListEditor, primaryButtonSx, StatusToggle, TextInput } from "../allExams/formKit";
+import { useSectionAccess } from "../AdminAccessContext";
+import ViewOnlyNotice from "../common/ViewOnlyNotice";
+import DeleteButton from "../common/DeleteButton";
 
 const API_PATH = "footer";
 
 /** What each section is, for its card. */
+/** The footer's sections, in footer order, with the heading a deleted one starts with when created again. */
+const FOOTER_KEYS: FooterSectionKey[] = ["company", "freeLearningResources", "ecosystemBrands"];
+
+const DEFAULT_TITLES: Record<FooterSectionKey, string> = { company: "Company", freeLearningResources: "Free Learning Resources", ecosystemBrands: "Our Ecosystem Brands" };
+
+/** A deleted section, ready to be created again (no `_id` until it's saved). */
+const blankSection = (key: FooterSectionKey): AdminFooterSection => ({ _id: "", key, title: DEFAULT_TITLES[key], isActive: true, links: [], columns: [] });
+
 const SECTION_INFO: Record<FooterSectionKey, { description: string; itemsLabel: string }> = {
   company: {
     description: "The “Company” column next to the logo — links to About Us, Contact Us, Careers…",
@@ -145,7 +156,10 @@ type FooterSectionCardProps = {
  */
 function FooterSectionCard({ section, step, isOpen, onToggle }: FooterSectionCardProps) {
   const router = useRouter();
+  const { canEdit, canDelete } = useSectionAccess("footer");
   const { key } = section;
+  // Deleted: not in the database (and not on the website) until it's saved again
+  const isDeleted = !section._id;
   const hasColumns = key === "freeLearningResources";
   const { description, itemsLabel } = SECTION_INFO[key];
   const [input, setInput] = useState<SectionInput>(() => toInput(section));
@@ -247,7 +261,8 @@ function FooterSectionCard({ section, step, isOpen, onToggle }: FooterSectionCar
             <Typography component="h2" sx={{ color: COLORS.ink, fontWeight: 800, fontSize: "1.05rem" }}>
               {input.title || "Untitled section"}
             </Typography>
-            <Badge tone={input.isActive ? "success" : "muted"}>{input.isActive ? "Active" : "Inactive"}</Badge>
+            {isDeleted && <Badge tone="warning">Deleted — not on the website</Badge>}
+            {!isDeleted && <Badge tone={input.isActive ? "success" : "muted"}>{input.isActive ? "Active" : "Inactive"}</Badge>}
             <Badge>{`${count} ${itemsLabel.toLowerCase()}`}</Badge>
             {isDirty && <Badge tone="warning">Unsaved changes</Badge>}
           </Box>
@@ -277,6 +292,11 @@ function FooterSectionCard({ section, step, isOpen, onToggle }: FooterSectionCar
             borderTop: `1px solid ${COLORS.border}`,
           }}
         >
+          {isDeleted && (
+            <Typography sx={{ p: 1.25, borderRadius: "10px", bgcolor: COLORS.redTint, color: COLORS.redDark, fontSize: "0.84rem", fontWeight: 600 }}>
+              This section was deleted, so the website leaves it out. Fill it in and create it to add it back.
+            </Typography>
+          )}
           <FieldGrid>
             <Field label="Heading" required hint="Shown above the links on the website.">
               <TextInput value={input.title} onChange={(title) => update({ title })} placeholder="Company" />
@@ -351,9 +371,17 @@ function FooterSectionCard({ section, step, isOpen, onToggle }: FooterSectionCar
               flexWrap: "wrap",
             }}
           >
-            <Box component="button" type="button" disabled={status === "saving" || !isDirty} onClick={save} sx={primaryButtonSx}>
-              {status === "saving" ? <CircularProgress size={16} sx={{ color: "#FFFFFF" }} /> : <Save size={16} />} Save {input.title || "section"}
+            <Box component="button" type="button" disabled={!canEdit || status === "saving" || (!isDirty && !isDeleted)} onClick={save} sx={primaryButtonSx}>
+              {status === "saving" ? <CircularProgress size={16} sx={{ color: "#FFFFFF" }} /> : <Save size={16} />} {isDeleted ? "Create" : "Save"} {input.title || "section"}
             </Box>
+            {canDelete && !isDeleted && (
+              <DeleteButton
+                name={input.title || DEFAULT_TITLES[key]}
+                label="Delete section"
+                onDelete={() => adminRequest(`${API_PATH}/${key}`, { method: "DELETE" })}
+                onDeleted={() => router.refresh()}
+              />
+            )}
             <Typography
               sx={{
                 color: isDirty ? COLORS.redDark : COLORS.success,
@@ -374,8 +402,11 @@ function FooterSectionCard({ section, step, isOpen, onToggle }: FooterSectionCar
 }
 
 /** Footer → Company, Free Learning Resources and Our Ecosystem Brands. */
-export default function FooterManager({ sections }: { sections: AdminFooterSection[] }) {
+export default function FooterManager({ sections: savedSections }: { sections: AdminFooterSection[] }) {
+  // Every section, also deleted ones (shown so they can be created again)
+  const sections = FOOTER_KEYS.map((key) => savedSections.find((section) => section.key === key) || blankSection(key));
   const [openKeys, setOpenKeys] = useState<FooterSectionKey[]>([]);
+  const { canEdit } = useSectionAccess("footer");
   const allOpen = openKeys.length === sections.length;
 
   const toggle = (key: FooterSectionKey) =>
@@ -393,13 +424,14 @@ export default function FooterManager({ sections }: { sections: AdminFooterSecti
 
   return (
     <Box sx={{ display: "grid", gap: 1.5 }}>
+      {!canEdit && <ViewOnlyNotice what="the footer" />}
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Box component="button" type="button" onClick={toggleAll} sx={{ ...buttonSx, height: 36, fontSize: "0.82rem", gap: 0.75 }}>
           {allOpen ? <ChevronsDownUp size={16} /> : <ChevronsUpDown size={16} />} {allOpen ? "Collapse all" : "Expand all"}
         </Box>
       </Box>
       {sections.map((section, index) => (
-        <FooterSectionCard key={section.key} section={section} step={index + 1} isOpen={openKeys.includes(section.key)} onToggle={() => toggle(section.key)} />
+        <FooterSectionCard key={`${section.key}-${section._id}`} section={section} step={index + 1} isOpen={openKeys.includes(section.key)} onToggle={() => toggle(section.key)} />
       ))}
     </Box>
   );

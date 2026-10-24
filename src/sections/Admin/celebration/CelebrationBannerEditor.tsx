@@ -18,6 +18,9 @@ import ColorField from "./ColorField";
 // [S3 SNAPSHOT] import { captureBannerSnapshot } from "@/lib/bannerSnapshot";
 // [S3 SNAPSHOT] import { slugify } from "@/utils/slug";
 import { API_PATH, BASE_PATH, cleanInput, countdownText, fromLocalInput, getBannerStatus, newBanner, toInput, toLocalInput, validateBanner } from "./celebrationForm";
+import { useSectionAccess } from "../AdminAccessContext";
+import DeleteButton from "../common/DeleteButton";
+import ViewOnlyNotice from "../common/ViewOnlyNotice";
 
 function DateTimeInput({ value, onChange }: { value: string; onChange: (iso: string) => void }) {
   return <Box component="input" type="datetime-local" value={toLocalInput(value)} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(fromLocalInput(e.target.value))} sx={inputSx} />;
@@ -26,6 +29,7 @@ function DateTimeInput({ value, onChange }: { value: string; onChange: (iso: str
 /** Create or edit a celebration banner, with a live phone preview of how it looks on the homepage. */
 export default function CelebrationBannerEditor({ banner }: { banner?: AdminCelebrationBanner }) {
   const router = useRouter();
+  const { canEdit, canDelete } = useSectionAccess("homepage");
   const isNew = !banner;
   const [form, setForm] = useState<CelebrationBannerInput>(() => (banner ? toInput(banner) : newBanner()));
   const [savedSnapshot, setSavedSnapshot] = useState(() => (banner ? JSON.stringify(toInput(banner)) : ""));
@@ -108,9 +112,26 @@ export default function CelebrationBannerEditor({ banner }: { banner?: AdminCele
                 View on homepage <ExternalLink size={15} />
               </Box>
             )}
+            {banner && canDelete && (
+              <DeleteButton
+                size="normal"
+                name={banner.title}
+                onDelete={() => adminRequest(`${API_PATH}/${banner._id}`, { method: "DELETE" })}
+                onDeleted={() => {
+                  router.push(BASE_PATH);
+                  router.refresh();
+                }}
+              />
+            )}
           </>
         }
       />
+
+      {!canEdit && (
+        <Box sx={{ mb: 2 }}>
+          <ViewOnlyNotice what="this banner" />
+        </Box>
+      )}
 
       <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", lg: "minmax(0, 1fr) 400px" }, gap: 3, alignItems: "start" }}>
         <Box sx={{ display: "grid", gap: 2.5, minWidth: 0 }}>
@@ -200,7 +221,7 @@ export default function CelebrationBannerEditor({ banner }: { banner?: AdminCele
           <Typography sx={{ color: isDirty ? COLORS.redDark : COLORS.success, fontSize: "0.85rem", fontWeight: 600, display: "flex", alignItems: "center", gap: 0.5 }}>
             {isDirty ? "Unsaved changes" : status === "saved" ? (<><Check size={16} /> Saved{savedMessage}</>) : "No changes"}
           </Typography>
-          <Box component="button" type="button" disabled={status === "saving" || (!isDirty && !isNew)} onClick={save} sx={primaryButtonSx}>
+          <Box component="button" type="button" disabled={!canEdit || status === "saving" || (!isDirty && !isNew)} onClick={save} sx={primaryButtonSx}>
             {status === "saving" ? <CircularProgress size={18} sx={{ color: "#FFFFFF" }} /> : <Save size={16} />}
             {isNew ? "Create banner" : "Save changes"}
           </Box>

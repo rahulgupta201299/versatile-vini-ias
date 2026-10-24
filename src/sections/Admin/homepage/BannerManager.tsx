@@ -117,6 +117,7 @@ export default function BannerManager({ banners, apiPath, extraBody = {}, requir
       onUpdate={update}
       onStatus={setStatus}
       onReorder={reorder}
+      onDelete={(id) => adminRequest(`${apiPath}/${id}`, { method: "DELETE" })}
       activeHint={activeHint}
       inactiveHint="Hidden on the website. Switch one on to show it again."
     />

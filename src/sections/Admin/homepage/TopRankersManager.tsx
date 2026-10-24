@@ -16,6 +16,8 @@ import ItemManager from "../common/ItemManager";
 import ReorderPanel from "../common/ReorderPanel";
 import BannerManager from "./BannerManager";
 import { RANKERS_SHAPE } from "./bannerShapes";
+import { useSectionAccess } from "../AdminAccessContext";
+import DeleteButton from "../common/DeleteButton";
 
 const API_PATH = "homepage/top-rankers";
 
@@ -137,6 +139,7 @@ function TabPill({ category, isSelected, onSelect }: { category: AdminRankerCate
 export default function TopRankersManager({ data }: { data: AdminTopRankers }) {
   const { stats, categories } = data;
   const router = useRouter();
+  const { canEdit, canDelete } = useSectionAccess("homepage");
   const [selectedId, setSelectedId] = useState(categories[0]?._id || "");
   const [isCreating, setIsCreating] = useState(false);
   const [isRenaming, setIsRenaming] = useState(false);
@@ -207,6 +210,7 @@ export default function TopRankersManager({ data }: { data: AdminTopRankers }) {
           onUpdate={(id, input) => adminRequest(`${API_PATH}/stats/${id}`, { method: "PUT", body: input })}
           onStatus={(id, isActive) => adminRequest(`${API_PATH}/stats/${id}`, { method: "PATCH", body: { isActive } })}
           onReorder={(ids) => adminRequest(`${API_PATH}/stats/order`, { method: "PUT", body: { ids } })}
+          onDelete={(id) => adminRequest(`${API_PATH}/stats/${id}`, { method: "DELETE" })}
           activeHint="Shown on the website in this order."
           inactiveHint="Hidden on the website. Switch one on to show it again."
         />
@@ -225,12 +229,16 @@ export default function TopRankersManager({ data }: { data: AdminTopRankers }) {
             <TabPill key={category._id} category={category} isSelected={category._id === selected?._id} onSelect={() => select(category._id)} />
           ))}
           <Box sx={{ flex: 1 }} />
-          <Box component="button" type="button" disabled={isCreating} onClick={() => setIsCreating(true)} sx={smallButtonSx}>
-            <FolderPlus size={15} /> New tab
-          </Box>
-          <Box component="button" type="button" disabled={isReordering || categories.length < 2} onClick={() => setIsReordering(true)} sx={smallButtonSx}>
-            <ArrowUpDown size={15} /> Reorder tabs
-          </Box>
+          {canEdit && (
+            <>
+              <Box component="button" type="button" disabled={isCreating} onClick={() => setIsCreating(true)} sx={smallButtonSx}>
+                <FolderPlus size={15} /> New tab
+              </Box>
+              <Box component="button" type="button" disabled={isReordering || categories.length < 2} onClick={() => setIsReordering(true)} sx={smallButtonSx}>
+                <ArrowUpDown size={15} /> Reorder tabs
+              </Box>
+            </>
+          )}
         </Box>
 
         {isCreating && (
@@ -256,8 +264,18 @@ export default function TopRankersManager({ data }: { data: AdminTopRankers }) {
                 </Box>
               )}
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <StatusToggle isActive={selected.isActive} disabled={busy} onChange={setTabStatus} label={`${selected.name} tab status`} />
-                {!isRenaming && (
+                <StatusToggle isActive={selected.isActive} disabled={!canEdit || busy} onChange={setTabStatus} label={`${selected.name} tab status`} />
+                {canDelete && !isRenaming && (
+                  <DeleteButton
+                    name={`${selected.name} tab`}
+                    onDelete={() => adminRequest(`${API_PATH}/categories/${selected._id}`, { method: "DELETE" })}
+                    onDeleted={() => {
+                      setSelectedId("");
+                      router.refresh();
+                    }}
+                  />
+                )}
+                {canEdit && !isRenaming && (
                   <Box component="button" type="button" onClick={() => setIsRenaming(true)} sx={smallButtonSx}>
                     <Pencil size={14} /> Rename
                   </Box>

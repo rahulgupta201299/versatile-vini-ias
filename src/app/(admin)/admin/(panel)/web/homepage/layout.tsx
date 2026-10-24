@@ -1,7 +1,6 @@
-import { ACCESS } from "@/lib/adminAccess";
 import AccessGate from "@/sections/Admin/AccessGate";
 
-/** Web → Homepage (and All Exams): Web Managers and Editors. */
+/** Web → Homepage: admins with Homepage or All Exams access (each part checks its own section below). */
 export default function HomepageLayout({ children }: { children: React.ReactNode }) {
-  return <AccessGate access={ACCESS.homepage}>{children}</AccessGate>;
+  return <AccessGate sections={["homepage", "allExams"]}>{children}</AccessGate>;
 }

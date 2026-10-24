@@ -12,4 +12,4 @@ async function forward(req: Request, { params }: Context) {
   return proxyToBackend(req, "footer", path, { refreshTag: CACHE_TAGS.siteConfig });
 }
 
-export { forward as GET, forward as PUT };
+export { forward as GET, forward as PUT, forward as DELETE };

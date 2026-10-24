@@ -16,6 +16,9 @@ import { PageHeader } from "../ui";
 import ExamDetailsSections, { DETAIL_SECTIONS } from "./ExamDetailsSections";
 import { buttonSx, Field, FieldGrid, inputSx, primaryButtonSx, SectionCard, StatusToggle, TextInput } from "./formKit";
 import { cleanInput, newSubCategory, toInput, validateSubCategory } from "./examForm";
+import { useSectionAccess } from "../AdminAccessContext";
+import DeleteButton from "../common/DeleteButton";
+import ViewOnlyNotice from "../common/ViewOnlyNotice";
 
 const LIST_PATH = "/admin/web/homepage/all-exams";
 const API_PATH = "homepage/all-exams";
@@ -34,6 +37,7 @@ type ExamEditorProps = {
 /** Create / edit one sub category (exam) of Homepage → All Exams. */
 export default function ExamEditor({ subCategory, categories: initialCategories, defaultCategoryId = "" }: ExamEditorProps) {
   const router = useRouter();
+  const { canEdit, canDelete } = useSectionAccess("allExams");
   const isNew = !subCategory;
 
   const [categories, setCategories] = useState(initialCategories);
@@ -122,9 +126,26 @@ export default function ExamEditor({ subCategory, categories: initialCategories,
                 View page <ExternalLink size={15} />
               </Box>
             )}
+            {subCategory && canDelete && (
+              <DeleteButton
+                size="normal"
+                name={subCategory.name}
+                onDelete={() => adminRequest(`${API_PATH}/sub-categories/${subCategory._id}`, { method: "DELETE" })}
+                onDeleted={() => {
+                  router.push(LIST_PATH);
+                  router.refresh();
+                }}
+              />
+            )}
           </>
         }
       />
+
+      {!canEdit && (
+        <Box sx={{ mb: 2 }}>
+          <ViewOnlyNotice what="this exam" />
+        </Box>
+      )}
 
       {/* Jump links */}
       <Box sx={{ position: "sticky", top: 68, zIndex: 5, mx: { xs: -2, md: -4 }, px: { xs: 2, md: 4 }, py: 1.25, mb: 2, bgcolor: "rgba(248,250,252,.95)", backdropFilter: "blur(8px)", display: "flex", gap: 1, overflowX: "auto" }}>
@@ -186,6 +207,10 @@ export default function ExamEditor({ subCategory, categories: initialCategories,
             </Typography>
           </Box>
 
+          <Field label="Link (optional)" hint={`Where the header menu item goes — a page or a full URL. Leave empty to open this exam's page${slug ? ` (/goal/${slug})` : ""}.`}>
+            <TextInput value={form.link} onChange={(link) => setForm({ ...form, link })} placeholder={slug ? `/goal/${slug}` : "/goal/upsc-cse"} />
+          </Field>
+
           <FieldGrid columns={3}>
             <Field label="Menu icon">
               <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
@@ -227,7 +252,7 @@ export default function ExamEditor({ subCategory, categories: initialCategories,
           <Typography sx={{ color: isDirty ? COLORS.redDark : COLORS.success, fontSize: "0.85rem", fontWeight: 600, display: "flex", alignItems: "center", gap: 0.5 }}>
             {isDirty ? "Unsaved changes" : status === "saved" ? (<><Check size={16} /> Saved{isLive ? " — live on the site" : " (inactive — hidden on the site)"}</>) : "No changes"}
           </Typography>
-          <Box component="button" type="button" disabled={status === "saving" || (!isDirty && !isNew)} onClick={save} sx={primaryButtonSx}>
+          <Box component="button" type="button" disabled={!canEdit || status === "saving" || (!isDirty && !isNew)} onClick={save} sx={primaryButtonSx}>
             {status === "saving" ? <CircularProgress size={18} sx={{ color: "#FFFFFF" }} /> : <Save size={16} />}
             {isNew ? "Create sub category" : "Save changes"}
           </Box>

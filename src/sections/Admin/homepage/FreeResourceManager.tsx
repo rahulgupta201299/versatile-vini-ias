@@ -92,6 +92,7 @@ export default function FreeResourceManager({ resources }: { resources: AdminFre
       onUpdate={(id, input) => adminRequest(`${API_PATH}/${id}`, { method: "PUT", body: input })}
       onStatus={(id, isActive) => adminRequest(`${API_PATH}/${id}`, { method: "PATCH", body: { isActive } })}
       onReorder={(ids) => adminRequest(`${API_PATH}/order`, { method: "PUT", body: { ids } })}
+      onDelete={(id) => adminRequest(`${API_PATH}/${id}`, { method: "DELETE" })}
       activeHint="Shown on the homepage in this order."
       inactiveHint="Hidden on the homepage. Switch one on to show it again."
     />

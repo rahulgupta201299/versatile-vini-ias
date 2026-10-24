@@ -38,10 +38,10 @@ export const toMegaMenu = (menu: AllExamsMenuCategory[]): MegaMenuCategory[] =>
     id: slugify(category),
     title: category,
     subtitle: describeCategory(subCategories.map(({ subCategory }) => subCategory)),
-    courses: subCategories.map(({ subCategory, slug, menuIcon }) => ({
+    courses: subCategories.map(({ subCategory, slug, link, menuIcon }) => ({
       id: slug,
       title: subCategory,
-      href: `/goal/${slug}`,
+      href: link || `/goal/${slug}`,
       icon: menuIcon.name,
       iconColor: menuIcon.color || undefined,
       iconBg: menuIcon.background || undefined,

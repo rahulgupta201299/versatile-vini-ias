@@ -23,4 +23,4 @@ async function forward(req: Request, { params }: Context) {
   return proxyToBackend(req, "homepage", path, { refreshTag: REFRESH_TAGS[path[0]] });
 }
 
-export { forward as GET, forward as POST, forward as PUT, forward as PATCH };
+export { forward as GET, forward as POST, forward as PUT, forward as PATCH, forward as DELETE };

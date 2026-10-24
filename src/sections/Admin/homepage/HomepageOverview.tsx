@@ -133,8 +133,9 @@ function SectionRow({ section, number }: { section: Section; number: number }) {
 const panelSx = { listStyle: "none", m: 0, p: 0, borderRadius: "16px", bgcolor: "#FFFFFF", border: `1px solid ${COLORS.border}`, overflow: "hidden" } as const;
 
 /** Web → Homepage: the menus and homepage sections managed in the admin, with what is live and a link to each editor. */
-export default function HomepageOverview({ summary }: { summary: HomepageSummary }) {
-  const sections = buildSections(summary);
+/** `summary` is null for admins without Homepage access (they only see All Exams); `showAllExams` for All Exams access. */
+export default function HomepageOverview({ summary, showAllExams }: { summary: HomepageSummary | null; showAllExams: boolean }) {
+  const sections = summary ? buildSections(summary) : [];
 
   return (
     <>
@@ -149,16 +150,24 @@ export default function HomepageOverview({ summary }: { summary: HomepageSummary
         }
       />
 
+      {showAllExams && (
+        <>
       <Typography component="h2" sx={{ mb: 1, color: COLORS.muted, fontSize: "0.72rem", fontWeight: 800, letterSpacing: ".08em" }}>MENUS & EXAM PAGES</Typography>
       <Box component="ul" sx={panelSx}>
         <SectionRow number={1} section={{ title: "All Exams", description: "Header “All Exams” menu and each exam's page — banners, classes, batches, about & FAQs.", icon: LayoutGrid, href: `${BASE}/all-exams` }} />
       </Box>
+        </>
+      )}
+      {!!sections.length && (
+        <>
       <Typography component="h2" sx={{ mt: 3.5, mb: 1, color: COLORS.muted, fontSize: "0.72rem", fontWeight: 800, letterSpacing: ".08em" }}>PAGE SECTIONS</Typography>
       <Box component="ol" sx={panelSx}>
         {sections.map((section, index) => (
           <SectionRow key={section.title} section={section} number={index + 1} />
         ))}
       </Box>
+        </>
+      )}
 
     </>
   );

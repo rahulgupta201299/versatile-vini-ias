@@ -8,8 +8,12 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { ArrowUpDown, Pencil, Plus } from "lucide-react";
 import { COLORS } from "@/theme/colors";
 import { buttonSx, primaryButtonSx, StatusToggle } from "../allExams/formKit";
+import type { SectionKey } from "@/lib/adminAccess";
+import { useSectionAccess } from "../AdminAccessContext";
+import DeleteButton from "./DeleteButton";
 import ListGroup from "./ListGroup";
 import ReorderPanel from "./ReorderPanel";
+import ViewOnlyNotice from "./ViewOnlyNotice";
 
 type ManagedItem = { _id: string; isActive: boolean };
 
@@ -38,6 +42,10 @@ export type ItemManagerProps<T extends ManagedItem, Input> = {
   inactiveHint: string;
   /** Extra buttons on each row, e.g. a link to the item's own page editor. */
   renderActions?: (item: T) => React.ReactNode;
+  /** Deletes an item for good. Shown only to admins with Delete access in `section`. */
+  onDelete?: (id: string) => Promise<unknown>;
+  /** The admin section the list belongs to (for View / Edit / Delete access). Default: Homepage. */
+  section?: SectionKey;
 };
 
 const errorBoxSx = { px: 1.5, py: 1.25, borderRadius: "10px", bgcolor: COLORS.redTint, border: `1px solid ${COLORS.redBorder}`, color: COLORS.redDark, fontSize: "0.85rem", fontWeight: 600 } as const;
@@ -101,12 +109,13 @@ function ItemForm<Input>({ initial, isNew, itemName, validate, renderForm, onSav
 }
 
 /**
- * A list the admin manages: active and inactive items shown separately, switch on / off,
- * edit inline, add, and reorder. Nothing is deleted. Used by hero slides, marketing banners,
- * free resources and Select Your Goal exams.
+ * A list the admin manages: active and inactive items shown separately, switch on / off, edit inline, add,
+ * reorder and (with Delete access) delete. View-only admins see the list without the controls.
+ * Used by hero slides, marketing banners, free resources, Select Your Goal exams and top rankers.
  */
 export default function ItemManager<T extends ManagedItem, Input>(props: ItemManagerProps<T, Input>) {
-  const { items, itemName, itemsName, orderDescription, getName, newInput, toInput, validate, renderPreview, renderForm, onCreate, onUpdate, onStatus, onReorder, activeHint, inactiveHint, renderActions } = props;
+  const { items, itemName, itemsName, orderDescription, getName, newInput, toInput, validate, renderPreview, renderForm, onCreate, onUpdate, onStatus, onReorder, activeHint, inactiveHint, renderActions, onDelete, section = "homepage" } = props;
+  const { canEdit, canDelete } = useSectionAccess(section);
   const router = useRouter();
   const [editingId, setEditingId] = useState("");
   const [isReordering, setIsReordering] = useState(false);
@@ -159,9 +168,10 @@ export default function ItemManager<T extends ManagedItem, Input>(props: ItemMan
       <Box key={_id} sx={{ borderTop: index ? `1px solid ${COLORS.borderLight}` : "none" }}>
         <Box sx={{ px: { xs: 2, md: 2.5 }, py: 1.5, display: "flex", alignItems: "center", gap: 1.5, flexWrap: "wrap", opacity: isActive ? 1 : 0.75 }}>
           <Box sx={{ flex: 1, minWidth: 220 }}>{renderPreview(item)}</Box>
-          <StatusToggle isActive={isActive} disabled={busyId === _id} onChange={(next) => setStatus(_id, next)} label={`${getName(item)} status`} />
+          <StatusToggle isActive={isActive} disabled={!canEdit || busyId === _id} onChange={(next) => setStatus(_id, next)} label={`${getName(item)} status`} />
           {renderActions && renderActions(item)}
-          {!isEditing && (
+          {canDelete && onDelete && <DeleteButton name={getName(item)} onDelete={() => onDelete(_id)} onDeleted={() => router.refresh()} />}
+          {canEdit && !isEditing && (
             <Box component="button" type="button" onClick={() => setEditingId(_id)} sx={{ ...buttonSx, height: 34, px: 1.5 }}>
               <Pencil size={14} /> Edit
             </Box>
@@ -184,15 +194,17 @@ export default function ItemManager<T extends ManagedItem, Input>(props: ItemMan
         <Typography sx={{ color: COLORS.muted, fontSize: "0.86rem", fontWeight: 600 }}>
           {activeItems.length} active · {inactiveItems.length} inactive
         </Typography>
-        <Box sx={{ display: "flex", gap: 1 }}>
+        {canEdit && <Box sx={{ display: "flex", gap: 1 }}>
           <Box component="button" type="button" disabled={isReordering || items.length < 2} onClick={() => setIsReordering(true)} sx={buttonSx}>
             <ArrowUpDown size={16} /> Reorder
           </Box>
           <Box component="button" type="button" disabled={editingId === NEW} onClick={() => setEditingId(NEW)} sx={primaryButtonSx}>
             <Plus size={16} /> Add {itemName}
           </Box>
-        </Box>
+        </Box>}
       </Box>
+
+      {!canEdit && <ViewOnlyNotice what={itemsName} />}
 
       {actionError && <Box role="alert" sx={errorBoxSx}>{actionError}</Box>}
 

@@ -11,7 +11,8 @@ import { ChevronRight, Menu, X } from "lucide-react";
 import { COLORS } from "@/theme/colors";
 import type { AdminUser } from "@/lib/adminAuth";
 import AdminSignOut from "./AdminSignOut";
-import { roleLabel } from "@/lib/adminAccess";
+import { roleLabel, roleOf } from "@/lib/adminAccess";
+import { AdminAccessProvider } from "./AdminAccessContext";
 import { TEAM_NAV, WORKSPACES, isActive, visibleNav, visibleTeamNav, visibleWorkspaces, workspaceFromPath, type AdminNavItem } from "./adminNav";
 
 const SIDEBAR_W = 264;
@@ -24,7 +25,7 @@ const initials = (admin: AdminUser) =>
     .map((p) => p[0]!.toUpperCase())
     .join("");
 
-type NavLinkProps = { item: AdminNavItem; active: boolean; onNavigate?: () => void };
+type NavLinkProps = { item: Omit<AdminNavItem, "sections">; active: boolean; onNavigate?: () => void };
 
 function NavLink({ item, active, onNavigate }: NavLinkProps) {
   const Icon = item.icon;
@@ -199,7 +200,7 @@ export default function AdminShell({ admin, children }: { admin: AdminUser; chil
               <Box sx={{ width: 38, height: 38, flexShrink: 0, borderRadius: "50%", bgcolor: COLORS.yellow, color: COLORS.ink, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "0.82rem" }}>{initials(admin)}</Box>
               <Box sx={{ display: { xs: "none", md: "block" }, minWidth: 0 }}>
                 <Typography noWrap sx={{ fontWeight: 700, color: COLORS.ink, fontSize: "0.88rem", lineHeight: 1.25 }}>{admin.name || "Admin"}</Typography>
-                <Typography noWrap title={admin.email} sx={{ color: COLORS.muted, fontSize: "0.76rem", maxWidth: 240 }}>{admin.roles.map(roleLabel).join(" · ") || admin.email}</Typography>
+                <Typography noWrap title={admin.email} sx={{ color: COLORS.muted, fontSize: "0.76rem", maxWidth: 240 }}>{roleLabel(roleOf(admin))}</Typography>
               </Box>
             </Box>
             <Box sx={{ display: { xs: "none", sm: "block" } }}><AdminSignOut variant="light" /></Box>
@@ -207,7 +208,9 @@ export default function AdminShell({ admin, children }: { admin: AdminUser; chil
           </Box>
         </Box>
 
-        <Box component="div" sx={{ px: { xs: 2, md: 4 }, py: { xs: 3, md: 4 }, maxWidth: 1360, mx: "auto" }}>{children}</Box>
+        <Box component="div" sx={{ px: { xs: 2, md: 4 }, py: { xs: 3, md: 4 }, maxWidth: 1360, mx: "auto" }}>
+          <AdminAccessProvider admin={admin}>{children}</AdminAccessProvider>
+        </Box>
       </Box>
     </Box>
   );

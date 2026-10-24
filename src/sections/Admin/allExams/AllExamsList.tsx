@@ -14,6 +14,8 @@ import { adminRequest } from "@/lib/adminClient";
 import CategoryNameForm from "./CategoryNameForm";
 import CategoryOrder from "./CategoryOrder";
 import { buttonSx, inputSx, primaryButtonSx, StatusToggle } from "./formKit";
+import { useSectionAccess } from "../AdminAccessContext";
+import DeleteButton from "../common/DeleteButton";
 
 const BASE_PATH = "/admin/web/homepage/all-exams";
 const API_PATH = "homepage/all-exams";
@@ -34,10 +36,19 @@ function SectionTitle({ title, count, hint }: { title: string; count: number; hi
   );
 }
 
-type RowProps = { subCategory: AdminSubCategorySummary; busy: boolean; onToggle: (isActive: boolean) => void; isLive: boolean };
+type RowProps = {
+  subCategory: AdminSubCategorySummary;
+  busy: boolean;
+  onToggle: (isActive: boolean) => void;
+  isLive: boolean;
+  canEdit: boolean;
+  /** Set when the admin has Delete access */
+  onDelete?: () => Promise<unknown>;
+};
 
-function SubCategoryRow({ subCategory, busy, onToggle, isLive }: RowProps) {
-  const { _id, name, slug, menuIcon = { name: "BookOpen", color: "", background: "" }, isActive, updatedAt } = subCategory;
+function SubCategoryRow({ subCategory, busy, onToggle, isLive, canEdit, onDelete }: RowProps) {
+  const router = useRouter();
+  const { _id, name, slug, link, menuIcon = { name: "BookOpen", color: "", background: "" }, isActive, updatedAt } = subCategory;
 
   return (
     <Box sx={{ px: { xs: 2, md: 2.5 }, py: 1.25, display: "flex", alignItems: "center", gap: 1.5, borderTop: `1px solid ${COLORS.borderLight}`, opacity: isActive ? 1 : 0.75, "&:hover": { bgcolor: COLORS.redTintSoft } }}>
@@ -47,18 +58,19 @@ function SubCategoryRow({ subCategory, busy, onToggle, isLive }: RowProps) {
       <Box component={Link} href={`${BASE_PATH}/${_id}`} sx={{ flex: 1, minWidth: 0 }}>
         <Typography noWrap sx={{ fontWeight: 700, color: COLORS.ink, fontSize: "0.9rem" }}>{name}</Typography>
         <Typography noWrap sx={{ color: COLORS.muted, fontSize: "0.75rem" }}>
-          /goal/{slug}
+          {link ? `/goal/${slug} · menu → ${link}` : `/goal/${slug}`}
           {updatedAt && ` · updated ${formatDate(updatedAt)}`}
         </Typography>
       </Box>
-      <StatusToggle isActive={isActive} disabled={busy} onChange={onToggle} label={`${name} status`} />
+      <StatusToggle isActive={isActive} disabled={!canEdit || busy} onChange={onToggle} label={`${name} status`} />
+      {onDelete && <DeleteButton name={name} onDelete={onDelete} onDeleted={() => router.refresh()} />}
       {isLive && (
         <Box component="a" href={`/goal/${slug}`} target="_blank" rel="noopener" aria-label={`View ${name}`} sx={{ ...smallButtonSx, display: { xs: "none", sm: "inline-flex" } }}>
           <ExternalLink size={14} />
         </Box>
       )}
       <Box component={Link} href={`${BASE_PATH}/${_id}`} sx={smallButtonSx}>
-        <Pencil size={14} /> Edit
+        <Pencil size={14} /> {canEdit ? "Edit" : "Open"}
       </Box>
     </Box>
   );
@@ -67,6 +79,7 @@ function SubCategoryRow({ subCategory, busy, onToggle, isLive }: RowProps) {
 /** Web → Homepage → All Exams: categories and their sub categories, active and inactive shown separately. */
 export default function AllExamsList({ categories }: { categories: AdminExamCategoryWithSubCategories[] }) {
   const router = useRouter();
+  const { canEdit, canDelete } = useSectionAccess("allExams");
   const [query, setQuery] = useState("");
   const [busyId, setBusyId] = useState("");
   const [actionError, setActionError] = useState("");
@@ -108,6 +121,7 @@ export default function AllExamsList({ categories }: { categories: AdminExamCate
 
   const toggleCategory = (id: string, isActive: boolean) => run(id, () => adminRequest(`${API_PATH}/categories/${id}`, { method: "PATCH", body: { isActive } }));
   const toggleSubCategory = (id: string, isActive: boolean) => run(id, () => adminRequest(`${API_PATH}/sub-categories/${id}`, { method: "PATCH", body: { isActive } }));
+  const deleteSubCategory = (id: string) => adminRequest(`${API_PATH}/sub-categories/${id}`, { method: "DELETE" });
 
   /** Inline forms throw on failure so the message shows next to the field. */
   const renameCategory = async (id: string, name: string) => {
@@ -145,15 +159,20 @@ export default function AllExamsList({ categories }: { categories: AdminExamCate
             </Box>
           )}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
-            <StatusToggle isActive={isActive} disabled={busyId === _id} onChange={(next) => toggleCategory(_id, next)} label={`${name} category status`} />
-            {renamingId !== _id && (
+            <StatusToggle isActive={isActive} disabled={!canEdit || busyId === _id} onChange={(next) => toggleCategory(_id, next)} label={`${name} category status`} />
+            {canDelete && renamingId !== _id && (
+              <DeleteButton name={name} onDelete={() => adminRequest(`${API_PATH}/categories/${_id}`, { method: "DELETE" })} onDeleted={() => router.refresh()} />
+            )}
+            {canEdit && renamingId !== _id && (
               <Box component="button" type="button" onClick={() => setRenamingId(_id)} sx={smallButtonSx}>
                 <Pencil size={14} /> Rename
               </Box>
             )}
-            <Box component={Link} href={`${BASE_PATH}/new?category=${_id}`} sx={smallButtonSx}>
-              <Plus size={14} /> Add sub category
-            </Box>
+            {canEdit && (
+              <Box component={Link} href={`${BASE_PATH}/new?category=${_id}`} sx={smallButtonSx}>
+                <Plus size={14} /> Add sub category
+              </Box>
+            )}
           </Box>
         </Box>
 
@@ -165,13 +184,13 @@ export default function AllExamsList({ categories }: { categories: AdminExamCate
 
         <Typography sx={{ px: { xs: 2, md: 2.5 }, pt: 1.5, pb: 0.75, color: COLORS.success, fontSize: "0.72rem", fontWeight: 800, letterSpacing: ".08em" }}>ACTIVE SUB CATEGORIES ({activeSubCategories.length})</Typography>
         {activeSubCategories.map((subCategory) => (
-          <SubCategoryRow key={subCategory._id} subCategory={subCategory} busy={busyId === subCategory._id} onToggle={(next) => toggleSubCategory(subCategory._id, next)} isLive={isActive} />
+          <SubCategoryRow key={subCategory._id} subCategory={subCategory} busy={busyId === subCategory._id} onToggle={(next) => toggleSubCategory(subCategory._id, next)} isLive={isActive} canEdit={canEdit} onDelete={canDelete ? () => deleteSubCategory(subCategory._id) : undefined} />
         ))}
         {!activeSubCategories.length && <Typography sx={{ px: { xs: 2, md: 2.5 }, pb: 1.5, color: COLORS.muted, fontSize: "0.84rem" }}>None.</Typography>}
 
         <Typography sx={{ px: { xs: 2, md: 2.5 }, pt: 1.5, pb: 0.75, color: COLORS.muted, fontSize: "0.72rem", fontWeight: 800, letterSpacing: ".08em", borderTop: `1px dashed ${COLORS.border}` }}>INACTIVE SUB CATEGORIES ({inactiveSubCategories.length})</Typography>
         {inactiveSubCategories.map((subCategory) => (
-          <SubCategoryRow key={subCategory._id} subCategory={subCategory} busy={busyId === subCategory._id} onToggle={(next) => toggleSubCategory(subCategory._id, next)} isLive={false} />
+          <SubCategoryRow key={subCategory._id} subCategory={subCategory} busy={busyId === subCategory._id} onToggle={(next) => toggleSubCategory(subCategory._id, next)} isLive={false} canEdit={canEdit} onDelete={canDelete ? () => deleteSubCategory(subCategory._id) : undefined} />
         ))}
         {!inactiveSubCategories.length && <Typography sx={{ px: { xs: 2, md: 2.5 }, pb: 1.5, color: COLORS.muted, fontSize: "0.84rem" }}>None.</Typography>}
       </Box>
@@ -183,19 +202,21 @@ export default function AllExamsList({ categories }: { categories: AdminExamCate
       <PageHeader
         eyebrow="Web / Homepage / All Exams"
         title="All Exams"
-        subtitle={`${categories.length} categories · ${subCategoryCount} sub categories. Switch anything off instead of deleting it — inactive items are hidden on the website.`}
+        subtitle={`${categories.length} categories · ${subCategoryCount} sub categories. Inactive items are hidden on the website.`}
         actions={
-          <>
-            <Box component="button" type="button" disabled={isReordering || categories.length < 2} onClick={() => setIsReordering(true)} sx={buttonSx}>
-              <ArrowUpDown size={16} /> Reorder categories
-            </Box>
-            <Box component="button" type="button" disabled={isCreatingCategory} onClick={() => setIsCreatingCategory(true)} sx={buttonSx}>
-              <FolderPlus size={16} /> New category
-            </Box>
-            <Box component={Link} href={`${BASE_PATH}/new`} sx={primaryButtonSx}>
-              <Plus size={16} /> New sub category
-            </Box>
-          </>
+          canEdit && (
+            <>
+              <Box component="button" type="button" disabled={isReordering || categories.length < 2} onClick={() => setIsReordering(true)} sx={buttonSx}>
+                <ArrowUpDown size={16} /> Reorder categories
+              </Box>
+              <Box component="button" type="button" disabled={isCreatingCategory} onClick={() => setIsCreatingCategory(true)} sx={buttonSx}>
+                <FolderPlus size={16} /> New category
+              </Box>
+              <Box component={Link} href={`${BASE_PATH}/new`} sx={primaryButtonSx}>
+                <Plus size={16} /> New sub category
+              </Box>
+            </>
+          )
         }
       />
 

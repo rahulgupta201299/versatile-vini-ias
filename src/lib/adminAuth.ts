@@ -2,6 +2,7 @@ import { createHmac, randomInt, timingSafeEqual } from "crypto";
 import { cache } from "react";
 import { cookies } from "next/headers";
 import { API_BASE_URL } from "@/lib/apiBase";
+import type { Permissions } from "./adminAccess";
 
 /**
  * Admin authentication (server only): email + password → 6-digit email OTP → 48h session cookie.
@@ -36,7 +37,8 @@ export const DEMO_OTP = "123456";
 const API_BASE = API_BASE_URL;
 const SECRET = process.env.ADMIN_SESSION_SECRET || (process.env.NODE_ENV === "production" ? "" : "vini-admin-dev-secret");
 
-export type AdminUser = { id?: string; email: string; name?: string; roles: string[] };
+/** The signed-in admin: role and per-section permissions (see lib/adminAccess.ts). `roles` only on demo sessions. */
+export type AdminUser = { id?: string; email: string; name?: string; role?: string; permissions?: Partial<Permissions>; workspaces?: string[]; roles?: string[] };
 
 export const isEmail = (v: unknown): v is string => typeof v === "string" && v.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
 
@@ -170,7 +172,7 @@ export async function verifyOtp(challengeId: string, code: string): Promise<Step
     if (!r.ok || typeof r.json.token !== "string") return { ok: false, status: r.status === 429 ? 429 : 401, error: backendMessage(r.json, "Incorrect or expired code.") };
     await setSessionCookie(r.json.token, toTime(r.json.expiresAt, SESSION_TTL_MS));
     if (typeof r.json.trustToken === "string") await setTrustCookie(r.json.trustToken, toTime(r.json.trustExpiresAt, TRUST_TTL_MS));
-    return { ok: true, admin: (r.json.admin as AdminUser) ?? { email: "", roles: [] } };
+    return { ok: true, admin: (r.json.admin as AdminUser) ?? { email: "" } };
   }
 
   const c = unseal<Challenge>(challengeId);
@@ -184,7 +186,7 @@ export async function verifyOtp(challengeId: string, code: string): Promise<Step
   await setSessionCookie(seal({ email: c.email, exp }), exp);
   const trustExp = Date.now() + TRUST_TTL_MS;
   await setTrustCookie(seal({ email: c.email, exp: trustExp, typ: "trust" }), trustExp);
-  return { ok: true, admin: { email: c.email, name: "Admin", roles: ["superAdmin"] } };
+  return { ok: true, admin: { email: c.email, name: "Admin", role: "superAdmin" } };
 }
 
 /**
@@ -204,7 +206,7 @@ export const getAdminSession = cache(async (): Promise<AdminUser | null> => {
   }
   const s = unseal<{ email: string; exp: number; typ?: string }>(token);
   // Demo mode (local testing only) signs in as a Super Admin
-  return s && !s.typ && s.exp > Date.now() ? { email: s.email, name: "Admin", roles: ["superAdmin"] } : null;
+  return s && !s.typ && s.exp > Date.now() ? { email: s.email, name: "Admin", role: "superAdmin" } : null;
 });
 
 /** Signs out. The trusted-device cookie is kept, so the OTP stays skipped until its 48h run out. */

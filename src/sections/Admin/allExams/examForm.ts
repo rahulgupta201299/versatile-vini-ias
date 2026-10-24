@@ -14,6 +14,7 @@ export const newSubCategory = (categoryId = ""): AdminSubCategoryInput => ({
   category: categoryId,
   name: "",
   isActive: true,
+  link: "",
   menuIcon: { name: "BookOpen", color: "", background: "" },
   details: {
     subTitle: "",
@@ -27,10 +28,11 @@ export const newSubCategory = (categoryId = ""): AdminSubCategoryInput => ({
 });
 
 /** Form values from a saved sub category. */
-export const toInput = ({ category, name, isActive, menuIcon, details }: AdminSubCategory): AdminSubCategoryInput => ({
+export const toInput = ({ category, name, isActive, link = "", menuIcon, details }: AdminSubCategory): AdminSubCategoryInput => ({
   category: category._id,
   name,
   isActive,
+  link,
   menuIcon,
   details,
 });
@@ -97,5 +99,6 @@ export const cleanDetails = (details: ExamDetails): ExamDetails => {
 export const cleanInput = (input: AdminSubCategoryInput): AdminSubCategoryInput => ({
   ...input,
   name: input.name.trim(),
+  link: input.link.trim(),
   details: cleanDetails(input.details),
 });

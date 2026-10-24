@@ -15,6 +15,8 @@ import { PageHeader } from "../ui";
 import { buttonSx, Field, FieldGrid, inputSx, primaryButtonSx } from "../allExams/formKit";
 import ExamDetailsSections, { DETAIL_SECTIONS } from "../allExams/ExamDetailsSections";
 import { cleanDetails, validateDetails } from "../allExams/examForm";
+import { useSectionAccess } from "../AdminAccessContext";
+import ViewOnlyNotice from "../common/ViewOnlyNotice";
 
 const LIST_PATH = "/admin/web/homepage/select-your-goal";
 const ALL_EXAMS_PATH = "/admin/web/homepage/all-exams";
@@ -89,6 +91,7 @@ const cardSx = { p: { xs: 2.25, md: 3 }, borderRadius: "18px", bgcolor: "#FFFFFF
  */
 export default function GoalExamEditor({ exam: initialExam }: { exam: AdminGoalExamWithDetails }) {
   const router = useRouter();
+  const { canEdit } = useSectionAccess("homepage");
   const [exam, setExam] = useState(initialExam);
   const { _id, name, category, isActive, hasDetails, linkedTo } = exam;
   const [mode, setMode] = useState<Mode>(linkedTo ? "linked" : "manual");
@@ -193,7 +196,7 @@ export default function GoalExamEditor({ exam: initialExam }: { exam: AdminGoalE
 
   const savedText = isLive ? " — live on the site" : " (hidden on the site — the exam or its category is switched off)";
   const isLinkedNow = Boolean(linkedTo);
-  const canSave = !isWorking && (isDirty || !hasDetails || isLinkedNow);
+  const canSave = canEdit && !isWorking && (isDirty || !hasDetails || isLinkedNow);
 
   return (
     <Box sx={{ pb: mode === "manual" ? 12 : 4 }}>
@@ -221,6 +224,12 @@ export default function GoalExamEditor({ exam: initialExam }: { exam: AdminGoalE
           <Typography sx={{ color: "#92400E", fontSize: "0.86rem", lineHeight: 1.5 }}>
             This exam&apos;s page is generated automatically for now. Link it to an All Exams page, or fill in the sections and save — from then on the page shows that content.
           </Typography>
+        </Box>
+      )}
+
+      {!canEdit && (
+        <Box sx={{ mb: 2 }}>
+          <ViewOnlyNotice what="this exam's page" />
         </Box>
       )}
 
@@ -273,7 +282,7 @@ export default function GoalExamEditor({ exam: initialExam }: { exam: AdminGoalE
             )}
             <AllExamsPicker categories={categories} subCategoryId={linkChoice} onChange={setLinkChoice} />
             <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, flexWrap: "wrap" }}>
-              <Box component="button" type="button" disabled={isWorking || !linkChoice || linkChoice === linkedTo?._id} onClick={linkPage} sx={primaryButtonSx}>
+              <Box component="button" type="button" disabled={!canEdit || isWorking || !linkChoice || linkChoice === linkedTo?._id} onClick={linkPage} sx={primaryButtonSx}>
                 {isWorking ? <CircularProgress size={16} sx={{ color: "#FFFFFF" }} /> : <Link2 size={16} />} {linkedTo ? "Change link" : "Link page"}
               </Box>
               {status === "saved" && linkedTo && (

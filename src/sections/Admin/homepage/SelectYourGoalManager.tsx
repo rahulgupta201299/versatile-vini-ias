@@ -16,6 +16,8 @@ import ImageField from "../allExams/ImageField";
 import { buttonSx, Field, FieldGrid, inputSx, StatusToggle, TextInput } from "../allExams/formKit";
 import ItemManager from "../common/ItemManager";
 import ReorderPanel from "../common/ReorderPanel";
+import { useSectionAccess } from "../AdminAccessContext";
+import DeleteButton from "../common/DeleteButton";
 
 const API_PATH = "homepage/select-your-goal";
 
@@ -65,6 +67,7 @@ function CategoryButton({ category, isSelected, onSelect }: { category: AdminGoa
 /** Homepage → "Select Your Goal": categories (tabs) on the left, the chosen category's exam cards on the right. */
 export default function SelectYourGoalManager({ categories }: { categories: AdminGoalCategory[] }) {
   const router = useRouter();
+  const { canEdit, canDelete } = useSectionAccess("homepage");
   const [selectedId, setSelectedId] = useState(categories[0]?._id || "");
   const [isCreating, setIsCreating] = useState(false);
   const [isRenaming, setIsRenaming] = useState(false);
@@ -165,7 +168,7 @@ export default function SelectYourGoalManager({ categories }: { categories: Admi
     return (
       <Box sx={{ p: 3, borderRadius: "16px", bgcolor: "#FFFFFF", border: `1px solid ${COLORS.border}` }}>
         <Typography sx={{ mb: 2, color: COLORS.muted }}>No categories yet.</Typography>
-        <CategoryNameForm submitLabel="Create" placeholder="e.g. UPSC" onSubmit={createCategory} onCancel={() => {}} />
+        {canEdit && <CategoryNameForm submitLabel="Create" placeholder="e.g. UPSC" onSubmit={createCategory} onCancel={() => {}} />}
       </Box>
     );
   }
@@ -181,14 +184,16 @@ export default function SelectYourGoalManager({ categories }: { categories: Admi
       <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", lg: "280px minmax(0, 1fr)" }, gap: 2.5, alignItems: "start" }}>
         {/* Categories */}
         <Box component="aside" aria-label="Categories" sx={{ position: { lg: "sticky" }, top: { lg: 88 }, maxHeight: { lg: "calc(100vh - 110px)" }, overflowY: { lg: "auto" }, p: 1.5, borderRadius: "16px", bgcolor: "#FFFFFF", border: `1px solid ${COLORS.border}` }}>
-          <Box sx={{ display: "flex", gap: 1, mb: 1.5 }}>
-            <Box component="button" type="button" disabled={isCreating} onClick={() => setIsCreating(true)} sx={{ ...smallButtonSx, flex: 1 }}>
-              <FolderPlus size={15} /> New
+          {canEdit && (
+            <Box sx={{ display: "flex", gap: 1, mb: 1.5 }}>
+              <Box component="button" type="button" disabled={isCreating} onClick={() => setIsCreating(true)} sx={{ ...smallButtonSx, flex: 1 }}>
+                <FolderPlus size={15} /> New
+              </Box>
+              <Box component="button" type="button" disabled={isReordering || categories.length < 2} onClick={() => setIsReordering(true)} sx={{ ...smallButtonSx, flex: 1 }}>
+                <ArrowUpDown size={15} /> Reorder
+              </Box>
             </Box>
-            <Box component="button" type="button" disabled={isReordering || categories.length < 2} onClick={() => setIsReordering(true)} sx={{ ...smallButtonSx, flex: 1 }}>
-              <ArrowUpDown size={15} /> Reorder
-            </Box>
-          </Box>
+          )}
 
           {isCreating && (
             <Box sx={{ mb: 1.5, p: 1.25, borderRadius: "12px", bgcolor: COLORS.surface }}>
@@ -225,8 +230,18 @@ export default function SelectYourGoalManager({ categories }: { categories: Admi
               </Box>
             )}
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <StatusToggle isActive={selected.isActive} disabled={busy} onChange={setCategoryStatus} label={`${selected.name} category status`} />
-              {!isRenaming && (
+              <StatusToggle isActive={selected.isActive} disabled={!canEdit || busy} onChange={setCategoryStatus} label={`${selected.name} category status`} />
+              {canDelete && !isRenaming && (
+                <DeleteButton
+                  name={selected.name}
+                  onDelete={() => adminRequest(`${API_PATH}/categories/${selected._id}`, { method: "DELETE" })}
+                  onDeleted={() => {
+                    setSelectedId("");
+                    router.refresh();
+                  }}
+                />
+              )}
+              {canEdit && !isRenaming && (
                 <Box component="button" type="button" onClick={() => setIsRenaming(true)} sx={smallButtonSx}>
                   <Pencil size={14} /> Rename
                 </Box>
@@ -250,6 +265,7 @@ export default function SelectYourGoalManager({ categories }: { categories: Admi
             onUpdate={(id, input) => adminRequest(`${API_PATH}/exams/${id}`, { method: "PUT", body: input })}
             onStatus={(id, isActive) => adminRequest(`${API_PATH}/exams/${id}`, { method: "PATCH", body: { isActive } })}
             onReorder={(ids) => adminRequest(`${API_PATH}/exams/order`, { method: "PUT", body: { category: selected._id, ids } })}
+            onDelete={(id) => adminRequest(`${API_PATH}/exams/${id}`, { method: "DELETE" })}
             renderActions={({ _id, name }) => (
               <Box component={Link} href={`/admin/web/homepage/select-your-goal/exams/${_id}`} aria-label={`${name} page`} sx={smallButtonSx}>
                 <FileText size={14} /> Page

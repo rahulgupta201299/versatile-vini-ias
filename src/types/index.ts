@@ -1,3 +1,5 @@
+import type { Level, Permissions, RoleKey, SectionKey } from "@/lib/adminAccess";
+
 export interface NavLink {
   label: string;
   href: string;
@@ -806,7 +808,7 @@ export interface AllExam {
 /** GET /exams — the header "All Exams" menu. */
 export interface AllExamsMenuCategory {
   category: string;
-  subCategories: Pick<AllExam, "subCategory" | "slug" | "menuIcon">[];
+  subCategories: (Pick<AllExam, "subCategory" | "slug" | "menuIcon"> & { link?: string })[];
 }
 
 /* ---------- All Exams in the admin panel (categories and sub categories are separate, joined by category id) ---------- */
@@ -823,6 +825,8 @@ export interface AdminSubCategorySummary {
   name: string;
   slug: string;
   isActive: boolean;
+  /** Optional menu link; empty → /goal/<slug> */
+  link?: string;
   menuIcon: ExamMenuIcon;
   updatedAt?: string;
 }
@@ -839,6 +843,7 @@ export interface AdminSubCategory {
   name: string;
   slug: string;
   isActive: boolean;
+  link?: string;
   menuIcon: ExamMenuIcon;
   details: ExamDetails;
   updatedAt?: string;
@@ -849,6 +854,8 @@ export interface AdminSubCategoryInput {
   category: string; // category id
   name: string;
   isActive: boolean;
+  /** Optional menu link; empty → /goal/<slug> */
+  link: string;
   menuIcon: ExamMenuIcon;
   details: ExamDetails;
 }
@@ -859,19 +866,24 @@ export interface AdminAccount {
   id: string;
   email: string;
   name: string;
-  roles: string[];
+  role: RoleKey;
+  /** Per section: none / view / edit, and canDelete (see lib/adminAccess.ts) */
+  permissions: Permissions;
+  /** Workspaces it works in (adminRoles): web / app / store */
+  workspaces?: string[];
   isActive: boolean;
   lastLoginAt?: string;
   createdAt?: string;
 }
 
-/** GET /admin/admins/roles */
-export interface AdminRoleInfo {
-  key: string;
-  label: string;
-  access: string;
+/** GET /admin/admins/access-options — what the users screen offers. */
+export interface AdminAccessOptions {
+  roles: { key: RoleKey; label: string; description: string }[];
+  sections: { key: SectionKey; label: string; workspace: string; description?: string; deletable: boolean }[];
+  /** Ready-made sets (the old fixed roles): edit access to these sections */
+  presets: { key: string; label: string; sections: SectionKey[] }[];
+  levels: Level[];
 }
-
 
 /* ---------- Homepage → Celebration banner (festival sale banner under the hero) ---------- */
 

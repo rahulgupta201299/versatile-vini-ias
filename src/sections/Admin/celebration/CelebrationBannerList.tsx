@@ -12,10 +12,13 @@ import { AdminCelebrationBanner } from "@/types";
 import { Chip, PageHeader } from "../ui";
 import { buttonSx, primaryButtonSx, StatusToggle } from "../allExams/formKit";
 import { API_PATH, BASE_PATH, formatDateTime, getBannerStatus } from "./celebrationForm";
+import { useSectionAccess } from "../AdminAccessContext";
+import DeleteButton from "../common/DeleteButton";
 
 /** Web → Homepage → Celebration banner: every festival banner, active and inactive shown separately. */
 export default function CelebrationBannerList({ banners }: { banners: AdminCelebrationBanner[] }) {
   const router = useRouter();
+  const { canEdit, canDelete } = useSectionAccess("homepage");
   const [busyId, setBusyId] = useState("");
   const [actionError, setActionError] = useState("");
 
@@ -59,9 +62,10 @@ export default function CelebrationBannerList({ banners }: { banners: AdminCeleb
             ))}
           </Box>
         </Box>
-        <StatusToggle isActive={isActive} disabled={busyId === _id} onChange={(next) => setStatus(_id, next)} label={`${title} status`} />
+        <StatusToggle isActive={isActive} disabled={!canEdit || busyId === _id} onChange={(next) => setStatus(_id, next)} label={`${title} status`} />
+        {canDelete && <DeleteButton name={title} onDelete={() => adminRequest(`${API_PATH}/${_id}`, { method: "DELETE" })} onDeleted={() => router.refresh()} />}
         <Box component={Link} href={`${BASE_PATH}/${_id}`} sx={{ ...buttonSx, height: 34, px: 1.5 }}>
-          <Pencil size={14} /> Edit
+          <Pencil size={14} /> {canEdit ? "Edit" : "Open"}
         </Box>
       </Box>
     );
@@ -87,9 +91,11 @@ export default function CelebrationBannerList({ banners }: { banners: AdminCeleb
         title="Celebration banner"
         subtitle="Festival sale banners shown under the hero slider. Each one goes live on its start date and switches off by itself after its end date."
         actions={
-          <Box component={Link} href={`${BASE_PATH}/new`} sx={primaryButtonSx}>
-            <Plus size={16} /> New banner
-          </Box>
+          canEdit && (
+            <Box component={Link} href={`${BASE_PATH}/new`} sx={primaryButtonSx}>
+              <Plus size={16} /> New banner
+            </Box>
+          )
         }
       />
 

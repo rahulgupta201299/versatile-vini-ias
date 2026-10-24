@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 
 type Context = { params: Promise<{ path?: string[] }> };
 
-/** /api/admin/admins[/<path>] → backend (admin users — the backend allows Super Admin only). */
+/** /api/admin/admins[/<path>] → backend (admin users — Super Admins and Admins; the backend checks). */
 async function forward(req: Request, { params }: Context) {
   const { path } = await params;
 
