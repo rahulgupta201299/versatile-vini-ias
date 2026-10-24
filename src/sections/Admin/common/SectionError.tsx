@@ -4,10 +4,10 @@ import { startTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import AdminErrorState from "../AdminErrorState";
 
-type SectionErrorProps = { error: Error & { digest?: string }; reset: () => void; title: string; what: string };
+type SectionErrorProps = { error: Error & { digest?: string }; reset: () => void; title: string; what: string; backHref?: string; backLabel?: string };
 
-/** Error screen for one Homepage section: "Try again" reloads it, "Back to Homepage" leaves. */
-export default function SectionError({ error, reset, title, what }: SectionErrorProps) {
+/** Error screen for one admin section: "Try again" reloads it, the back link (Homepage by default) leaves. */
+export default function SectionError({ error, reset, title, what, backHref = "/admin/web/homepage", backLabel = "Back to Homepage" }: SectionErrorProps) {
   const router = useRouter();
 
   useEffect(() => {
@@ -26,8 +26,8 @@ export default function SectionError({ error, reset, title, what }: SectionError
       message={`We couldn't get the ${what} from the server. It may be busy or temporarily down — please try again. Nothing you saved earlier is lost.`}
       digest={error.digest}
       onRetry={retry}
-      backHref="/admin/web/homepage"
-      backLabel="Back to Homepage"
+      backHref={backHref}
+      backLabel={backLabel}
     />
   );
 }

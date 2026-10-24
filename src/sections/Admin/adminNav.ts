@@ -1,4 +1,4 @@
-import { BarChart3, Globe, Home, LayoutDashboard, Search, ShoppingBag, Smartphone, UserCog, Users, type LucideIcon } from "lucide-react";
+import { BarChart3, Globe, Home, LayoutDashboard, PanelBottom, Search, ShoppingBag, Smartphone, UserCog, Users, type LucideIcon } from "lucide-react";
 import { ACCESS, hasAccess, type AccessList } from "@/lib/adminAccess";
 
 /**
@@ -19,6 +19,7 @@ export const WORKSPACES: Record<AdminWorkspace, Workspace> = {
     nav: [
       { label: "Dashboard", href: "/admin/web", icon: LayoutDashboard, exact: true, access: ACCESS.webDashboard },
       { label: "Homepage", href: "/admin/web/homepage", icon: Home, access: ACCESS.homepage },
+      { label: "Footer", href: "/admin/web/footer", icon: PanelBottom, access: ACCESS.footer },
       { label: "SEO", href: "/admin/web/seo", icon: Search, access: ACCESS.seo },
       { label: "Sales", href: "/admin/web/sales", icon: BarChart3, access: ACCESS.sales },
       { label: "HR & Careers", href: "/admin/web/hr", icon: Users, access: ACCESS.hr },

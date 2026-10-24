@@ -12,7 +12,7 @@ import { adminRequest } from "@/lib/adminClient";
 import { AdminFooterSection, FooterColumnData, FooterLinkData, FooterSectionKey } from "@/types";
 import { buttonSx, Field, FieldGrid, ListEditor, primaryButtonSx, StatusToggle, TextInput } from "../allExams/formKit";
 
-const API_PATH = "homepage/footer";
+const API_PATH = "footer";
 
 /** What each section is, for its card. */
 const SECTION_INFO: Record<FooterSectionKey, { description: string; itemsLabel: string }> = {

@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { fetchApi, CACHE_TAGS, REVALIDATE } from "@/lib/api";
-import { AllExam, AllExamsMenuCategory, CoursePageData, GoalExamPage, MegaMenuCategory } from "@/types";
+import { AllExam, AllExamsMenuCategory, CoursePageData, ExamDetails, GoalExamPage, MegaMenuCategory } from "@/types";
 import { slugify } from "@/utils/slug";
 
 /*
@@ -48,12 +48,25 @@ export const toMegaMenu = (menu: AllExamsMenuCategory[]): MegaMenuCategory[] =>
     })),
   }));
 
+/** True when the API sent real page content (not null, nor an id from a backend that doesn't join the details). */
+export const hasPageDetails = (details: unknown): details is Partial<ExamDetails> => Boolean(details) && typeof details === "object";
+
+/** The page content with every field present, so a missing or partial `details` never breaks a page. */
+const toPageDetails = (details: unknown): ExamDetails => {
+  if (!hasPageDetails(details)) return toPageDetails({});
+
+  const { subTitle = "", banners = [], freeClasses = [], batches = [], topRankers = [], aboutExam, faqs = [] } = details;
+  const { title = "", highlights = [], content = "" } = aboutExam || {};
+
+  return { subTitle, banners, freeClasses, batches, topRankers, aboutExam: { title, highlights, content }, faqs };
+};
+
 const hasImage = ({ webImageUrl, mobileImageUrl }: { webImageUrl: string; mobileImageUrl: string }) => Boolean(webImageUrl || mobileImageUrl);
 
 /** An exam from the database in the shape the goal page sections use. */
 export function toCoursePage(exam: AllExam, examOptions: string[]): CoursePageData {
   const { slug, subCategory, category, details } = exam;
-  const { subTitle, banners, freeClasses, batches, topRankers, aboutExam, faqs } = details;
+  const { subTitle, banners, freeClasses, batches, topRankers, aboutExam, faqs } = toPageDetails(details);
 
   return {
     slug,

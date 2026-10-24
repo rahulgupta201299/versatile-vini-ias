@@ -21,6 +21,7 @@ export const SUPER_ADMIN: RoleKey = "superAdmin";
 export const ACCESS = {
   webDashboard: ["webManager"],
   homepage: ["webManager", "editor"],
+  footer: ["webManager", "editor"],
   seo: ["seoManager"],
   sales: ["salesManager"],
   hr: ["hrManager"],

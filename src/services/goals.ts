@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { CoursePageData } from "@/types";
 import { buildCoursePage, buildGoalEntries } from "@/data/coursePages";
-import { getExam, getExamMenu, getGoalExam, toCoursePage } from "./exams";
+import { getExam, getExamMenu, getGoalExam, hasPageDetails, toCoursePage } from "./exams";
 import { getSiteData } from "./site";
 
 /**
@@ -53,7 +53,7 @@ export const getGoalPage = cache(async (slug: string): Promise<CoursePageData | 
 
   const goalExam = await getGoalExam(slug);
 
-  if (!goalExam?.details) return buildCoursePage(entry, entries);
+  if (!goalExam || !hasPageDetails(goalExam.details)) return buildCoursePage(entry, entries);
 
   // A page saved in the admin: same layout as All Exams pages
   const sameCategory = entries.filter(({ category }) => category === entry.category).map(({ name }) => name);

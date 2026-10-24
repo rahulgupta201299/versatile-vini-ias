@@ -993,7 +993,6 @@ export interface HomepageSummary {
   secondMarketing: ItemCount;
   selectYourGoal: { categories: ItemCount; exams: ItemCount };
   topRankers: { stats: ItemCount; banners: ItemCount };
-  footer: ItemCount;
 }
 
 /* ---------- Homepage → Top rankers ---------- */
@@ -1096,7 +1095,7 @@ export interface FooterSectionsData {
   ecosystemBrands: { title: string; links: FooterLinkData[] } | null;
 }
 
-/** GET /admin/homepage/footer */
+/** GET /admin/footer */
 export interface AdminFooterSection {
   _id: string;
   key: FooterSectionKey;
