@@ -3,10 +3,9 @@
  *   e.g. /courses/gs-foundation/beginners-kit-for-upsc
  *
  * FALLBACK content — used when the API (GET /courses/gs-foundation/:slug) is not configured or fails.
- * One entry per item in the "GS Foundation" menu (data/navigation.ts).
+ * One entry per item in the "GS Foundation" menu (admin → Web → Header).
  */
 import { FreeResourcePage } from "@/types";
-import { NAV_ITEMS } from "./navigation";
 
 const SYLLABUS_URL = "/#resources";
 
@@ -306,9 +305,11 @@ const PAGES: Omit<FreeResourcePage, "label">[] = [
   },
 ];
 
-/* Labels come from the GS Foundation menu, keyed by the slug at the end of each menu link. */
-const MENU_LABELS = new Map(
-  (NAV_ITEMS.find((n) => n.id === "gs-foundation")?.children ?? []).map((c) => [c.href.split("/").pop() ?? "", c.label])
-);
+/* Short names (as in the GS Foundation menu), keyed by page slug. */
+const MENU_LABELS = new Map([
+  ["beginners-kit-for-upsc", "Beginner's Kit For UPSC"],
+  ["ncert-foundation-batch", "NCERT Foundation Batch"],
+  ["foundation-batch-2027-29", "Foundation Batch 2027/29"],
+]);
 
 export const FREE_RESOURCES: FreeResourcePage[] = PAGES.map((p) => ({ ...p, label: MENU_LABELS.get(p.slug) ?? p.title }));

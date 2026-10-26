@@ -299,6 +299,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
               <Button
                 component={Link}
                 href={STORE_HREF}
+                {...externalLinkProps({ href: STORE_HREF })}
                 startIcon={<ShoppingCart size={18} />}
                 aria-label="Store"
                 sx={{

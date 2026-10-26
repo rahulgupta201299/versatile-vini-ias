@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Box from "@mui/material/Box";
@@ -9,7 +9,6 @@ import IconButton from "@mui/material/IconButton";
 import {
   X as CloseIcon,
   ChevronRight,
-  ChevronDown,
   Plus,
   Search,
   Smartphone,
@@ -49,11 +48,9 @@ interface MobileMenuProps {
 }
 
 export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenExams }: MobileMenuProps) {
-  const [openTile, setOpenTile] = useState<string | null>(null);
   const { navigation, config } = useSiteData();
   const { navItems: NAV_ITEMS, mobileMenu: MOBILE_MENU_SECTIONS, storeHref: STORE_HREF } = navigation;
   const ALL_EXAMS_LABEL = NAV_ITEMS.find((n) => n.isMegaMenu)?.label ?? "All Exams";
-  const childrenOf = (id?: string) => (id ? NAV_ITEMS.find((n) => n.id === id)?.children ?? [] : []);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
@@ -65,6 +62,7 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
         <Box
           component={Link}
           href={STORE_HREF}
+          {...externalLinkProps({ href: STORE_HREF })}
           onClick={onClose}
           sx={{
             display: "inline-flex",
@@ -215,100 +213,22 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
                 backgroundRepeat: "no-repeat",
               }}
             >
-              {section.items.map((item, i) => {
-                const kids = childrenOf(item.dropdownId);
-                const key = `${section.id}-${item.label}`;
-                const isOpen = openTile === key;
-                const rowEnd = Math.min(i - (i % 2) + 1, section.items.length - 1);
-                const openInRow = section.items
-                  .slice(i - (i % 2), rowEnd + 1)
-                  .map((it) => `${section.id}-${it.label}`)
-                  .find((k) => k === openTile);
-                const openItem = openInRow ? section.items.find((it) => `${section.id}-${it.label}` === openInRow) : undefined;
-                const tileSx = {
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  py: 1,
-                  minWidth: 0,
-                  width: "100%",
-                  border: "none",
-                  background: "none",
-                  textAlign: "left" as const,
-                  fontFamily: "inherit",
-                  cursor: "pointer",
-                  textDecoration: "none",
-                  color: isOpen ? RED : INK,
-                  "&:hover": { color: RED },
-                };
-                const content = (
-                  <>
-                    <IconRenderer name={item.icon} size={17} color={isOpen ? RED : "#374151"} />
-                    <Typography component="span" sx={{ flex: 1, minWidth: 0, fontSize: "0.84rem", lineHeight: 1.3, fontWeight: isOpen ? 600 : 400 }}>
-                      {item.label}
-                    </Typography>
-                    {kids.length ? (
-                      <ChevronDown size={15} color={isOpen ? RED : "#9CA3AF"} style={{ flexShrink: 0, transform: isOpen ? "rotate(180deg)" : "none", transition: "transform .2s ease" }} />
-                    ) : (
-                      <ChevronRight size={15} color="#9CA3AF" style={{ flexShrink: 0 }} />
-                    )}
-                  </>
-                );
-                return (
-                  <React.Fragment key={key}>
-                    {kids.length ? (
-                      <Box component="button" type="button" aria-expanded={isOpen} onClick={() => setOpenTile(isOpen ? null : key)} sx={tileSx}>
-                        {content}
-                      </Box>
-                    ) : (
-                      <Box component={Link} href={item.href} {...externalLinkProps(item)} onClick={onClose} sx={tileSx}>
-                        {content}
-                      </Box>
-                    )}
-                    {/* Dropdown details open full-width right under the tile's row */}
-                    {i === rowEnd && openItem && (
-                      <Box
-                        sx={{
-                          gridColumn: "1 / -1",
-                          mb: 1,
-                          p: 1.25,
-                          borderRadius: "10px",
-                          backgroundColor: COLORS.redTintSoft,
-                          border: `1px solid ${COLORS.redTintHover}`,
-                          position: "relative",
-                          zIndex: 1,
-                        }}
-                      >
-                        <Box component="ul" sx={{ listStyle: "none", m: 0, p: 0, display: "grid", gap: 0.25 }}>
-                          {childrenOf(openItem.dropdownId).map((child) => (
-                            <Box component="li" key={child.label}>
-                              <Box
-                                component={Link}
-                                href={child.href}
-                                {...externalLinkProps(child)}
-                                onClick={onClose}
-                                sx={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 1,
-                                  py: 0.75,
-                                  color: "#374151",
-                                  fontSize: "0.85rem",
-                                  textDecoration: "none",
-                                  "&::before": { content: '""', width: 5, height: 5, borderRadius: "50%", backgroundColor: RED, flexShrink: 0 },
-                                  "&:hover": { color: RED },
-                                }}
-                              >
-                                {child.label}
-                              </Box>
-                            </Box>
-                          ))}
-                        </Box>
-                      </Box>
-                    )}
-                  </React.Fragment>
-                );
-              })}
+              {section.items.map((item) => (
+                <Box
+                  key={`${section.id}-${item.label}`}
+                  component={Link}
+                  href={item.href}
+                  {...externalLinkProps(item)}
+                  onClick={onClose}
+                  sx={{ display: "flex", alignItems: "center", gap: 1, py: 1, minWidth: 0, width: "100%", textDecoration: "none", color: INK, "&:hover": { color: RED } }}
+                >
+                  <IconRenderer name={item.icon} size={17} color="#374151" />
+                  <Typography component="span" sx={{ flex: 1, minWidth: 0, fontSize: "0.84rem", lineHeight: 1.3 }}>
+                    {item.label}
+                  </Typography>
+                  <ChevronRight size={15} color="#9CA3AF" style={{ flexShrink: 0 }} />
+                </Box>
+              ))}
             </Box>
           </Box>
         ))}

@@ -22,8 +22,6 @@ export interface MenuTile {
   label: string;
   href: string;
   icon: string; // IconRenderer name
-  /** NAV_ITEMS id whose children open inline under this tile. */
-  dropdownId?: string;
 }
 
 export interface MenuSection {
@@ -1111,6 +1109,48 @@ export interface FooterColumnData {
   /** Company footer columns only; Free Learning Resources columns are plain links */
   style?: FooterColumnStyle;
   links: FooterLinkData[];
+}
+
+/* ---------- Header (admin → Web → Header) ---------- */
+
+export type HeaderSectionKey = "menus" | "mobileMenu" | "settings";
+
+export interface HeaderLinkData {
+  label: string;
+  link: string;
+}
+
+/** A desktop menu item (after "All Exams") with its dropdown. */
+export interface HeaderMenuData {
+  _id?: string;
+  label: string;
+  link: string;
+  badge: string;
+  items: HeaderLinkData[];
+}
+
+/** A mobile menu tile: icon, text and link. */
+export interface HeaderMobileItemData {
+  label: string;
+  link: string;
+  icon: string;
+}
+
+export interface HeaderMobileSectionData {
+  _id?: string;
+  title: string;
+  items: HeaderMobileItemData[];
+}
+
+/** GET /admin/header — the saved parts (a part not saved yet is missing). */
+export interface AdminHeaderSection {
+  _id: string;
+  key: HeaderSectionKey;
+  menus?: HeaderMenuData[];
+  mobileSections?: HeaderMobileSectionData[];
+  storeLink?: string;
+  searchTrending?: string[];
+  updatedAt?: string;
 }
 
 /** company = the columns next to the logo ("Company footer" in the admin). */

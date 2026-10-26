@@ -1,7 +1,6 @@
 import { cache } from "react";
 import { fetchApi, CACHE_TAGS, REVALIDATE } from "@/lib/api";
-import { ExamGoalCategory, FooterData, FooterLinkData, FooterSectionsData, NavigationData, SiteConfig, SiteData } from "@/types";
-import { MOBILE_MENU_SECTIONS, NAV_ITEMS, SEARCH_TRENDING, STORE_HREF } from "@/data/navigation";
+import { ExamGoalCategory, FooterData, FooterLinkData, FooterSectionsData, NavigationData, NavItem, SiteConfig, SiteData } from "@/types";
 import { getExamMenu, toMegaMenu } from "./exams";
 import { SITE_CONFIG } from "@/data/siteConfig";
 import { slugify } from "@/utils/slug";
@@ -11,18 +10,27 @@ import { slugify } from "@/utils/slug";
  * request, and fetchApi's ISR cache shares the result across requests.
  */
 
-/** Header menus. The "All Exams" mega menu comes from the All Exams API (managed in the admin panel). */
+/** "All Exams" always comes first in the menu; its mega menu is Homepage → All Exams in the admin. */
+const ALL_EXAMS_ITEM: NavItem = { id: "all-exams", label: "All Exams", href: "/#goals", isMegaMenu: true };
+
+const NO_NAVIGATION: Omit<NavigationData, "megaMenu"> = { navItems: [], mobileMenu: [], searchTrending: [], storeHref: "" };
+
+const isNavigationData = (data: unknown): data is Omit<NavigationData, "megaMenu"> =>
+  typeof data === "object" && data !== null && Array.isArray((data as NavigationData).navItems) && Array.isArray((data as NavigationData).mobileMenu);
+
+/** Header menus, mobile menu, Store link and trending searches (admin → Web → Header), plus the All Exams mega menu. */
 const getNavigation = cache(async (): Promise<NavigationData> => {
   const [navigation, examMenu] = await Promise.all([
     fetchApi<Omit<NavigationData, "megaMenu">>("navigation", {
-      fallback: { navItems: NAV_ITEMS, mobileMenu: MOBILE_MENU_SECTIONS, searchTrending: SEARCH_TRENDING, storeHref: STORE_HREF },
+      fallback: NO_NAVIGATION,
       revalidate: REVALIDATE.slow,
       tags: [CACHE_TAGS.navigation],
+      isValid: isNavigationData,
     }),
     getExamMenu(),
   ]);
 
-  return { ...navigation, megaMenu: toMegaMenu(examMenu) };
+  return { ...navigation, navItems: [ALL_EXAMS_ITEM, ...navigation.navItems], megaMenu: toMegaMenu(examMenu) };
 });
 
 /** "Select Your Goal" categories and exams (Web → Homepage → Select Your Goal in the admin). Active only. */

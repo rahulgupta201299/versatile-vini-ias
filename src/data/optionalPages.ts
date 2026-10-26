@@ -3,7 +3,7 @@
  * Route: /courses/optional/[optional]   e.g. /courses/optional/history, /courses/optional/psir
  *
  * FALLBACK content — used when GET /courses/optional/:slug is not configured or fails.
- * Add a subject by adding an entry to SUBJECTS (and the menu in data/navigation.ts).
+ * Add a subject by adding an entry to SUBJECTS (and to the Optional menu in admin → Web → Header).
  * Prices / dates are placeholders.
  */
 import { FreeResourcePage } from "@/types";
