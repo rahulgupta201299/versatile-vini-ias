@@ -19,7 +19,7 @@ export const SECTIONS = {
   webDashboard: { label: "Web dashboard", workspace: "Web", deletable: false },
   homepage: { label: "Homepage", workspace: "Web", deletable: true },
   allExams: { label: "All Exams", workspace: "Web", deletable: true },
-  header: { label: "Header", workspace: "Web", deletable: false },
+  header: { label: "Header & Menu", workspace: "Web", deletable: false },
   footer: { label: "Footer", workspace: "Web", deletable: true },
   seo: { label: "SEO", workspace: "Web", deletable: true },
   sales: { label: "Sales", workspace: "Web", deletable: true },

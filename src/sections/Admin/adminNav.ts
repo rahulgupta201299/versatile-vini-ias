@@ -20,7 +20,7 @@ export const WORKSPACES: Record<AdminWorkspace, Workspace> = {
       { label: "Dashboard", href: "/admin/web", icon: LayoutDashboard, exact: true, sections: ["webDashboard"] },
       // Homepage also holds All Exams
       { label: "Homepage", href: "/admin/web/homepage", icon: Home, sections: ["homepage", "allExams"] },
-      { label: "Header", href: "/admin/web/header", icon: PanelTop, sections: ["header"] },
+      { label: "Header & Menu", href: "/admin/web/header", icon: PanelTop, sections: ["header"] },
       { label: "Footer", href: "/admin/web/footer", icon: PanelBottom, sections: ["footer"] },
       { label: "SEO", href: "/admin/web/seo", icon: Search, sections: ["seo"] },
       { label: "Sales", href: "/admin/web/sales", icon: BarChart3, sections: ["sales"] },
