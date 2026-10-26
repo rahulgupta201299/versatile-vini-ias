@@ -23,14 +23,85 @@ import { useSiteData } from "@/context/SiteDataContext";
 
 import { COLORS } from "@/theme/colors";
 import { externalLinkProps } from "@/utils/links";
+import { FooterLinkColumn } from "@/types";
+
+type LinkItem = FooterLinkColumn["links"][number];
+
+const headingSx = { fontWeight: 800, color: COLORS.heading, fontSize: "0.95rem", mb: 2 } as const;
+
+const linkSx = { color: COLORS.muted, textDecoration: "none", fontSize: "0.85rem", "&:hover": { color: COLORS.red } } as const;
+
+/** How a contact-style row looks, from its link: mailto: → email, wa.me → WhatsApp, tel: → Call, else chat. */
+const contactKind = (href: string) => {
+  if (href.startsWith("mailto:")) return "email";
+  if (/wa\.me|whatsapp/i.test(href)) return "whatsapp";
+  if (href.startsWith("tel:")) return "call";
+
+  return "chat";
+};
+
+const CALL_BUTTONS = {
+  whatsapp: { label: "WhatsApp", icon: <WhatsAppLogo size={16} color="#FFFFFF" />, iconBg: "#25D366", color: "#128C4A" },
+  call: { label: "Call", icon: <Phone size={15} color="#FFFFFF" />, iconBg: COLORS.red, color: COLORS.red },
+};
+
+/** A "Connect with us" row: email / chat as an icon + text, WhatsApp / Call as a round button + number. */
+function ContactLink({ link }: { link: LinkItem }) {
+  const { name, href } = link;
+  const kind = contactKind(href);
+
+  if (kind === "email" || kind === "chat") {
+    const Icon = kind === "email" ? Mail : MessageCircle;
+
+    return (
+      <Typography component="a" href={href} {...externalLinkProps(link)} variant="body2" sx={{ ...linkSx, fontSize: { xs: "0.8rem", sm: "0.85rem" }, display: "flex", alignItems: "center", gap: 0.75, overflowWrap: "anywhere" }}>
+        <Icon size={15} color={COLORS.red} style={{ flexShrink: 0 }} />
+        {name}
+      </Typography>
+    );
+  }
+
+  const { label, icon, iconBg, color } = CALL_BUTTONS[kind];
+  const isExternal = kind === "whatsapp";
+
+  return (
+    <Box component="a" href={href} {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})} aria-label={`${label}: ${name}`} sx={{ display: "flex", alignItems: "center", gap: 1, textDecoration: "none", "&:hover .num": { textDecoration: "underline" } }}>
+      <Box sx={{ width: { xs: 26, sm: 30 }, height: { xs: 26, sm: 30 }, flexShrink: 0, borderRadius: "50%", backgroundColor: iconBg, display: "flex", alignItems: "center", justifyContent: "center" }}>{icon}</Box>
+      <Box sx={{ lineHeight: 1.2, minWidth: 0 }}>
+        <Box component="span" sx={{ display: "block", fontSize: "0.7rem", fontWeight: 700, color: COLORS.muted, textTransform: "uppercase", letterSpacing: "0.04em" }}>{label}</Box>
+        <Box className="num" component="span" sx={{ display: "block", fontSize: { xs: "0.78rem", sm: "0.9rem" }, fontWeight: 800, color, whiteSpace: "nowrap" }}>{name}</Box>
+      </Box>
+    </Box>
+  );
+}
+
+/** One footer column: heading + links, styled by the column's style (locations with pins, contact with buttons). */
+function FooterColumn({ column }: { column: FooterLinkColumn }) {
+  const { style, title, links } = column;
+
+  return (
+    <Box>
+      <Typography variant="subtitle2" sx={headingSx}>{title}</Typography>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: style === "contact" ? 1.25 : 1 }}>
+        {links.map((link, index) => {
+          if (style === "contact") return <ContactLink key={index} link={link} />;
+
+          return (
+            <Typography key={index} component="a" href={link.href} {...externalLinkProps(link)} variant="body2" sx={{ ...linkSx, ...(style === "locations" && { display: "flex", alignItems: "center", gap: 0.5 }) }}>
+              {style === "locations" && <MapPin size={13} color={COLORS.red} style={{ flexShrink: 0 }} />}
+              {link.name}
+            </Typography>
+          );
+        })}
+      </Box>
+    </Box>
+  );
+}
+
 export default function Footer() {
-  const { contact: CONTACT, social: SOCIAL_LINKS, footer } = useSiteData().config;
+  const { social: SOCIAL_LINKS, footer } = useSiteData().config;
   const {
-    companyTitle,
-    companyLinks: COMPANY_LINKS,
-    upcomingCentres: UPCOMING_CENTRES,
-    quickLinks: QUICK_LINKS,
-    products: OUR_PRODUCTS,
+    columns,
     brandsTitle,
     brands: OUR_BRANDS,
     learningResourcesTitle,
@@ -48,22 +119,19 @@ export default function Footer() {
       }}
     >
       <Container>
-        {/* TIER 1: Company, App Buttons, Socials & Core Directories (PDF Page 4 & Screenshot 18.06.48) */}
+        {/* TIER 1: brand (logo, app buttons, socials) + the columns managed in admin → Footer → Company footer */}
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: {
-              xs: "repeat(2, minmax(0, 1fr))",
-              md: "repeat(3, minmax(0, 1fr))",
-              lg: "2fr 1fr 1fr 1fr 1fr 1fr",
-            },
-            columnGap: { xs: 2, sm: 4 },
-            rowGap: { xs: 3.5, sm: 4 },
+            // Desktop: logo, apps and socials on the left; the columns on the right. Smaller screens: one above the other.
+            gridTemplateColumns: { xs: "minmax(0, 1fr)", lg: "minmax(0, 1fr) minmax(0, 2.4fr)" },
+            columnGap: 6,
+            rowGap: { xs: 4, sm: 5 },
             mb: 6,
           }}
         >
-          {/* Brand Col */}
-          <Box sx={{ gridColumn: { xs: "span 2", md: "span 1" } }}>
+          {/* Brand: logo, text, app buttons, socials */}
+          <Box>
             <Box sx={{ position: "relative", width: 140, height: 46, mb: 2 }}>
               <Image src="/images/logo.png" alt="Vini IAS" fill style={{ objectFit: "contain", objectPosition: "left center" }} />
             </Box>
@@ -74,6 +142,7 @@ export default function Footer() {
             >
               We understand that every student has unique needs and abilities, that&#39;s why our curriculum is designed to adapt to your needs and help you grow!
             </Typography>
+
 
             {/* App store badges (side by side) */}
             <Box sx={{ mb: 3 }}>
@@ -115,196 +184,14 @@ export default function Footer() {
             </Box>
           </Box>
 
-          {/* Col 2: Company (admin → Footer) */}
-          {COMPANY_LINKS.length > 0 && (
-          <Box>
-            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: COLORS.heading, fontSize: "0.95rem", mb: 2 }}>
-              {companyTitle}
-            </Typography>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-              {COMPANY_LINKS.map((link, idx) => (
-                <Typography
-                  key={idx}
-                  component="a"
-                  href={link.href}
-                  variant="body2"
-                  sx={{
-                    color: COLORS.muted,
-                    textDecoration: "none",
-                    fontSize: "0.85rem",
-                    "&:hover": { color: COLORS.red },
-                  }}
-                >
-                  {link.name}
-                </Typography>
+          {/* The columns next to the logo (admin → Footer → Company footer): three per row on wider screens, two on phones */}
+          {columns.length > 0 && (
+            <Box sx={{ display: "grid", gridTemplateColumns: { xs: "repeat(2, minmax(0, 1fr))", md: "repeat(3, minmax(0, 1fr))" }, columnGap: { xs: 2, sm: 4 }, rowGap: { xs: 3.5, sm: 4 } }}>
+              {columns.map((column, index) => (
+                <FooterColumn key={`${column.title}-${index}`} column={column} />
               ))}
             </Box>
-          </Box>
           )}
-
-          {/* Col 3: Upcoming Centres */}
-          <Box>
-            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: COLORS.heading, fontSize: "0.95rem", mb: 2 }}>
-              Upcoming Centres
-            </Typography>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-              {UPCOMING_CENTRES.map((centre, idx) => (
-                <Typography
-                  key={idx}
-                  component="a"
-                  href={centre.href}
-                  variant="body2"
-                  sx={{
-                    color: COLORS.muted,
-                    textDecoration: "none",
-                    fontSize: "0.85rem",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 0.5,
-                    "&:hover": { color: COLORS.red },
-                  }}
-                >
-                  <MapPin size={13} color={COLORS.red} />
-                  {centre.name}
-                </Typography>
-              ))}
-            </Box>
-          </Box>
-
-          {/* Col 4: Connect With Us */}
-          <Box>
-            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: COLORS.heading, fontSize: "0.95rem", mb: 2 }}>
-              Connect with us
-            </Typography>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.25 }}>
-              <Typography
-                component="a"
-                href={`mailto:${CONTACT.email}`}
-                variant="body2"
-                sx={{ color: COLORS.muted, textDecoration: "none", fontSize: { xs: "0.8rem", sm: "0.85rem" }, display: "flex", alignItems: "center", gap: 0.75, overflowWrap: "anywhere", "&:hover": { color: COLORS.red } }}
-              >
-                <Mail size={15} color={COLORS.red} style={{ flexShrink: 0 }} />
-                {CONTACT.email}
-              </Typography>
-
-              <Typography
-                component="a"
-                href="/#enquiry"
-                variant="body2"
-                sx={{ color: COLORS.muted, textDecoration: "none", fontSize: "0.85rem", display: "flex", alignItems: "center", gap: 0.75, "&:hover": { color: COLORS.red } }}
-              >
-                <MessageCircle size={15} color={COLORS.red} />
-                Talk to counsellor
-              </Typography>
-
-              {/* WhatsApp + Call — same number */}
-              {[
-                {
-                  key: "whatsapp",
-                  href: CONTACT.whatsappUrl,
-                  label: "WhatsApp",
-                  icon: <WhatsAppLogo size={16} color="#FFFFFF" />,
-                  iconBg: "#25D366",
-                  color: "#128C4A",
-                  external: true,
-                },
-                {
-                  key: "call",
-                  href: CONTACT.tel,
-                  label: "Call",
-                  icon: <Phone size={15} color="#FFFFFF" />,
-                  iconBg: COLORS.red,
-                  color: COLORS.red,
-                  external: false,
-                },
-              ].map((c) => (
-                <Box
-                  key={c.key}
-                  component="a"
-                  href={c.href}
-                  {...(c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  aria-label={`${c.label}: ${CONTACT.phoneDisplay}`}
-                  sx={{ display: "flex", alignItems: "center", gap: 1, textDecoration: "none", "&:hover .num": { textDecoration: "underline" } }}
-                >
-                  <Box
-                    sx={{
-                      width: { xs: 26, sm: 30 },
-                      height: { xs: 26, sm: 30 },
-                      flexShrink: 0,
-                      borderRadius: "50%",
-                      backgroundColor: c.iconBg,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {c.icon}
-                  </Box>
-                  <Box sx={{ lineHeight: 1.2 }}>
-                    <Box
-                      component="span"
-                      sx={{ display: "flex", alignItems: "center", gap: 0.5, fontSize: "0.7rem", fontWeight: 700, color: COLORS.muted, textTransform: "uppercase", letterSpacing: "0.04em" }}
-                    >
-                      {c.label}
-                    </Box>
-                    <Box className="num" component="span" sx={{ display: "block", fontSize: { xs: "0.78rem", sm: "0.92rem" }, fontWeight: 800, color: c.color, whiteSpace: "nowrap" }}>
-                      {CONTACT.phoneDisplay}
-                    </Box>
-                  </Box>
-                </Box>
-              ))}
-            </Box>
-          </Box>
-
-          {/* Col 5: Quick Links & Our Courses */}
-          <Box>
-            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: COLORS.heading, fontSize: "0.95rem", mb: 2 }}>
-              Quick Links
-            </Typography>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-              {QUICK_LINKS.slice(0, 5).map((item, idx) => (
-                <Typography
-                  key={idx}
-                  component="a"
-                  href={item.href}
-                  variant="body2"
-                  sx={{
-                    color: COLORS.muted,
-                    textDecoration: "none",
-                    fontSize: "0.85rem",
-                    "&:hover": { color: COLORS.red },
-                  }}
-                >
-                  {item.name}
-                </Typography>
-              ))}
-            </Box>
-          </Box>
-
-          {/* Col 6: Our Products */}
-          <Box>
-            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: COLORS.heading, fontSize: "0.95rem", mb: 2 }}>
-              Our Products
-            </Typography>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-              {OUR_PRODUCTS.map((prod, idx) => (
-                <Typography
-                  key={idx}
-                  component="a"
-                  href={prod.href}
-                  variant="body2"
-                  sx={{
-                    color: COLORS.muted,
-                    textDecoration: "none",
-                    fontSize: "0.85rem",
-                    "&:hover": { color: COLORS.red },
-                  }}
-                >
-                  {prod.name}
-                </Typography>
-              ))}
-            </Box>
-          </Box>
         </Box>
 
         <Divider sx={{ my: 4, borderColor: COLORS.border }} />

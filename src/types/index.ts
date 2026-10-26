@@ -232,13 +232,16 @@ export interface SocialLinks {
   telegram: string;
 }
 
+/** One of the footer columns next to the logo (admin → Footer → Company footer). */
+export interface FooterLinkColumn {
+  title: string;
+  style: FooterColumnStyle;
+  links: LinkItem[];
+}
+
 export interface FooterData {
-  /** Company, Free Learning Resources and Our Ecosystem Brands come from the admin (GET /footer); empty → hidden. */
-  companyTitle: string;
-  companyLinks: LinkItem[];
-  upcomingCentres: LinkItem[];
-  quickLinks: LinkItem[];
-  products: LinkItem[];
+  /** Everything here comes from the admin (GET /footer); a missing / switched-off section is left out. */
+  columns: FooterLinkColumn[];
   brandsTitle: string;
   brands: LinkItem[];
   learningResourcesTitle: string;
@@ -1093,16 +1096,25 @@ export interface FooterLinkData {
   link: string;
 }
 
+/**
+ * How a column's links look (columns next to the logo): plain links, locations (with a pin), or contact
+ * (by link: mailto: email, tel: Call button, wa.me WhatsApp button, anything else chat).
+ */
+export type FooterColumnStyle = "links" | "locations" | "contact";
+
 export interface FooterColumnData {
   title: string;
+  /** Company footer columns only; Free Learning Resources columns are plain links */
+  style?: FooterColumnStyle;
   links: FooterLinkData[];
 }
 
+/** company = the columns next to the logo ("Company footer" in the admin). */
 export type FooterSectionKey = "company" | "freeLearningResources" | "ecosystemBrands";
 
-/** GET /footer — a switched-off section is null. */
+/** GET /footer — a switched-off or deleted section is null. */
 export interface FooterSectionsData {
-  company: { title: string; links: FooterLinkData[] } | null;
+  company: { title: string; columns: FooterColumnData[] } | null;
   freeLearningResources: { title: string; columns: FooterColumnData[] } | null;
   ecosystemBrands: { title: string; links: FooterLinkData[] } | null;
 }

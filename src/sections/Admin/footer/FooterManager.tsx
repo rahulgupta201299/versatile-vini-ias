@@ -9,41 +9,51 @@ import Collapse from "@mui/material/Collapse";
 import { Check, ChevronDown, ChevronsDownUp, ChevronsUpDown, Save } from "lucide-react";
 import { COLORS } from "@/theme/colors";
 import { adminRequest } from "@/lib/adminClient";
-import { AdminFooterSection, FooterColumnData, FooterLinkData, FooterSectionKey } from "@/types";
-import { buttonSx, Field, FieldGrid, ListEditor, primaryButtonSx, StatusToggle, TextInput } from "../allExams/formKit";
+import { AdminFooterSection, FooterColumnData, FooterColumnStyle, FooterLinkData, FooterSectionKey } from "@/types";
+import { buttonSx, Field, FieldGrid, inputSx, ListEditor, primaryButtonSx, StatusToggle, TextInput } from "../allExams/formKit";
 import { useSectionAccess } from "../AdminAccessContext";
 import ViewOnlyNotice from "../common/ViewOnlyNotice";
 import DeleteButton from "../common/DeleteButton";
 
 const API_PATH = "footer";
 
-/** What each section is, for its card. */
 /** The footer's sections, in footer order, with the heading a deleted one starts with when created again. */
 const FOOTER_KEYS: FooterSectionKey[] = ["company", "freeLearningResources", "ecosystemBrands"];
 
-const DEFAULT_TITLES: Record<FooterSectionKey, string> = { company: "Company", freeLearningResources: "Free Learning Resources", ecosystemBrands: "Our Ecosystem Brands" };
+const DEFAULT_TITLES: Record<FooterSectionKey, string> = { company: "Company footer", freeLearningResources: "Free Learning Resources", ecosystemBrands: "Our Ecosystem Brands" };
 
 /** A deleted section, ready to be created again (no `_id` until it's saved). */
 const blankSection = (key: FooterSectionKey): AdminFooterSection => ({ _id: "", key, title: DEFAULT_TITLES[key], isActive: true, links: [], columns: [] });
 
-const SECTION_INFO: Record<FooterSectionKey, { description: string; itemsLabel: string }> = {
+const DEFAULT_LINK_HINT = "Page or URL, e.g. /about-us";
+
+/** Company footer columns: how their links look on the website. */
+const COLUMN_STYLES: { value: FooterColumnStyle; label: string; linkHint: string }[] = [
+  { value: "links", label: "Plain links", linkHint: DEFAULT_LINK_HINT },
+  { value: "locations", label: "Locations — with a pin (e.g. Upcoming Centres)", linkHint: DEFAULT_LINK_HINT },
+  {
+    value: "contact",
+    label: "Contact — email, chat, WhatsApp, call (e.g. Connect with us)",
+    linkHint: "mailto:… → email · tel:+91… → Call button · https://wa.me/91… → WhatsApp button · anything else → chat icon. For Call / WhatsApp, the text is the number shown.",
+  },
+];
+
+const linkHintFor = (style: FooterColumnStyle = "links") => COLUMN_STYLES.find(({ value }) => value === style)?.linkHint || DEFAULT_LINK_HINT;
+
+/** What each section is, for its card. */
+const SECTION_INFO: Record<FooterSectionKey, { description: string; itemsLabel: string; headingHint: string }> = {
   company: {
-    description: "The “Company” column next to the logo — links to About Us, Contact Us, Careers…",
-    itemsLabel: "Links",
-  },
-  freeLearningResources: {
-    description: "The wide “Free Learning Resources” block — titled columns (Study Material, Books…), each with its links.",
+    description: "The columns next to the logo — Company, Upcoming Centres, Connect with us, Quick Links, Our Products, Prep Resources… Three per row on computers, two on phones.",
     itemsLabel: "Columns",
+    headingHint: "For the admin only — each column shows its own title on the website.",
   },
-  ecosystemBrands: {
-    description: "The “Our Ecosystem Brands” row of brand chips at the bottom of the footer.",
-    itemsLabel: "Brands",
-  },
+  freeLearningResources: { description: "The wide block of titled columns (Study Material, Books…), each with its links.", itemsLabel: "Columns", headingHint: "Shown above the columns on the website." },
+  ecosystemBrands: { description: "The row of brand chips at the bottom of the footer.", itemsLabel: "Brands", headingHint: "Shown above the brands on the website." },
 };
 
 const newLink = (): FooterLinkData => ({ text: "", link: "" });
 
-const newColumn = (): FooterColumnData => ({ title: "", links: [newLink()] });
+const newColumn = (): FooterColumnData => ({ title: "", style: "links", links: [newLink()] });
 
 type SectionInput = Pick<AdminFooterSection, "title" | "isActive" | "links" | "columns">;
 
@@ -73,20 +83,20 @@ const validateSection = ({ title, links, columns }: SectionInput, hasColumns: bo
 };
 
 /** A text + link pair, used for every footer link. */
-function LinkFields({ value, onChange }: { value: FooterLinkData; onChange: (value: FooterLinkData) => void }) {
+function LinkFields({ value, onChange, linkHint = DEFAULT_LINK_HINT }: { value: FooterLinkData; onChange: (value: FooterLinkData) => void; linkHint?: string }) {
   return (
     <FieldGrid>
       <Field label="Text" required>
         <TextInput value={value.text} onChange={(text) => onChange({ ...value, text })} placeholder="About Us" />
       </Field>
-      <Field label="Link" required hint="Page or URL, e.g. /about-us">
+      <Field label="Link" required hint={linkHint}>
         <TextInput value={value.link} onChange={(link) => onChange({ ...value, link })} placeholder="/about-us" />
       </Field>
     </FieldGrid>
   );
 }
 
-function LinksEditor({ links, onChange, addLabel }: { links: FooterLinkData[]; onChange: (links: FooterLinkData[]) => void; addLabel: string }) {
+function LinksEditor({ links, onChange, addLabel, linkHint }: { links: FooterLinkData[]; onChange: (links: FooterLinkData[]) => void; addLabel: string; linkHint?: string }) {
   return (
     <ListEditor
       items={links}
@@ -95,7 +105,7 @@ function LinksEditor({ links, onChange, addLabel }: { links: FooterLinkData[]; o
       addLabel={addLabel}
       emptyText="No links yet."
       itemLabel={({ text }, index) => text || `Link ${index + 1}`}
-      renderItem={(link, update) => <LinkFields value={link} onChange={update} />}
+      renderItem={(link, update) => <LinkFields value={link} onChange={update} linkHint={linkHint} />}
     />
   );
 }
@@ -160,8 +170,9 @@ function FooterSectionCard({ section, step, isOpen, onToggle }: FooterSectionCar
   const { key } = section;
   // Deleted: not in the database (and not on the website) until it's saved again
   const isDeleted = !section._id;
-  const hasColumns = key === "freeLearningResources";
-  const { description, itemsLabel } = SECTION_INFO[key];
+  const hasColumns = key !== "ecosystemBrands";
+  const hasStyles = key === "company";
+  const { description, itemsLabel, headingHint } = SECTION_INFO[key];
   const [input, setInput] = useState<SectionInput>(() => toInput(section));
   const [savedSnapshot, setSavedSnapshot] = useState(() => JSON.stringify(toInput(section)));
   const [problems, setProblems] = useState<string[]>([]);
@@ -298,8 +309,8 @@ function FooterSectionCard({ section, step, isOpen, onToggle }: FooterSectionCar
             </Typography>
           )}
           <FieldGrid>
-            <Field label="Heading" required hint="Shown above the links on the website.">
-              <TextInput value={input.title} onChange={(title) => update({ title })} placeholder="Company" />
+            <Field label="Heading" required hint={headingHint}>
+              <TextInput value={input.title} onChange={(title) => update({ title })} placeholder={DEFAULT_TITLES[key]} />
             </Field>
             <Field label="Status" group>
               <Box
@@ -333,15 +344,26 @@ function FooterSectionCard({ section, step, isOpen, onToggle }: FooterSectionCar
               itemLabel={({ title, links }, index) => `${title || `Column ${index + 1}`} · ${links.length} links`}
               renderItem={(column, updateColumn) => (
                 <Box sx={{ display: "grid", gap: 1.5 }}>
-                  <Field label="Column title" required>
-                    <TextInput value={column.title} onChange={(title) => updateColumn({ ...column, title })} placeholder="Study Material" />
-                  </Field>
-                  <LinksEditor links={column.links} onChange={(links) => updateColumn({ ...column, links })} addLabel="Add link" />
+                  <FieldGrid columns={hasStyles ? 2 : 1}>
+                    <Field label="Column title" required>
+                      <TextInput value={column.title} onChange={(title) => updateColumn({ ...column, title })} placeholder={hasStyles ? "Upcoming Centres" : "Study Material"} />
+                    </Field>
+                    {hasStyles && (
+                      <Field label="Style" hint="How its links look on the website.">
+                        <Box component="select" value={column.style || "links"} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => updateColumn({ ...column, style: e.target.value as FooterColumnStyle })} sx={inputSx}>
+                          {COLUMN_STYLES.map(({ value, label }) => (
+                            <option key={value} value={value}>{label}</option>
+                          ))}
+                        </Box>
+                      </Field>
+                    )}
+                  </FieldGrid>
+                  <LinksEditor links={column.links} onChange={(links) => updateColumn({ ...column, links })} addLabel="Add link" linkHint={linkHintFor(column.style)} />
                 </Box>
               )}
             />
           ) : (
-            <LinksEditor links={input.links} onChange={(links) => update({ links })} addLabel={key === "ecosystemBrands" ? "Add brand" : "Add link"} />
+            <LinksEditor links={input.links} onChange={(links) => update({ links })} addLabel="Add brand" />
           )}
 
           {!!problems.length && (
@@ -401,7 +423,7 @@ function FooterSectionCard({ section, step, isOpen, onToggle }: FooterSectionCar
   );
 }
 
-/** Footer → Company, Free Learning Resources and Our Ecosystem Brands. */
+/** Footer → Company footer (the columns next to the logo), Free Learning Resources and Our Ecosystem Brands. */
 export default function FooterManager({ sections: savedSections }: { sections: AdminFooterSection[] }) {
   // Every section, also deleted ones (shown so they can be created again)
   const sections = FOOTER_KEYS.map((key) => savedSections.find((section) => section.key === key) || blankSection(key));

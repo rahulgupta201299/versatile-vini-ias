@@ -12,7 +12,7 @@ export default async function FooterPage() {
 
   return (
     <>
-      <PageHeader eyebrow="Web / Footer" title="Footer" subtitle="The footer sections on every page. Centres, contact details, quick links and products stay as they are." />
+      <PageHeader eyebrow="Web / Footer" title="Footer" subtitle="Everything in the footer on every page: the Company footer columns next to the logo, Free Learning Resources and Our Ecosystem Brands. The logo, app buttons and social links stay as they are." />
       <FooterManager sections={sections} />
     </>
   );

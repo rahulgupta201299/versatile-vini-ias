@@ -36,23 +36,39 @@ export const getSiteConfig = cache(() =>
 
 const NO_FOOTER_SECTIONS: FooterSectionsData = { company: null, freeLearningResources: null, ecosystemBrands: null };
 
-/** Footer → Company, Free Learning Resources, Our Ecosystem Brands (admin → Footer). A switched-off section is null. */
+/** Footer sections (admin → Footer). A switched-off or deleted section is null. */
+/**
+ * Bump when the shape of GET /footer changes: the version is part of the cached request, so a deploy never
+ * shows a cached response in the old shape (the cache can outlive a deploy for up to an hour otherwise).
+ */
+const FOOTER_DATA_VERSION = 2;
+
+/** GET /footer in the current shape (company as titled columns); an old-shape response counts as invalid → fallback. */
+const isFooterData = (data: unknown): data is FooterSectionsData => {
+  if (typeof data !== "object" || data === null || !("company" in data)) return false;
+
+  const { company } = data as { company: { columns?: unknown } | null };
+
+  return !company || Array.isArray(company.columns);
+};
+
 const getFooterSections = cache(() =>
-  fetchApi<FooterSectionsData>("footer", {
+  fetchApi<FooterSectionsData>(`footer?v=${FOOTER_DATA_VERSION}`, {
     fallback: NO_FOOTER_SECTIONS,
     revalidate: REVALIDATE.slow,
     tags: [CACHE_TAGS.siteConfig],
-    isValid: (data) => typeof data === "object" && data !== null && "company" in data,
+    isValid: isFooterData,
   })
 );
 
 const toLinkItems = (links: FooterLinkData[]) => links.map(({ text, link }) => ({ name: text, href: link }));
 
-/** The footer: fixed columns from the site config + the three sections managed in the admin. */
+/** The footer from the sections managed in the admin; empty columns are left out. */
 const withFooterSections = (footer: FooterData, { company, freeLearningResources, ecosystemBrands }: FooterSectionsData): FooterData => ({
   ...footer,
-  companyTitle: company?.title || "",
-  companyLinks: company ? toLinkItems(company.links) : [],
+  columns: (company?.columns || [])
+    .filter(({ links }) => links.length)
+    .map(({ title, style = "links", links }) => ({ title, style, links: toLinkItems(links) })),
   learningResourcesTitle: freeLearningResources?.title || "",
   learningResources: freeLearningResources ? freeLearningResources.columns.map(({ title, links }) => ({ title, links: toLinkItems(links) })) : [],
   brandsTitle: ecosystemBrands?.title || "",
