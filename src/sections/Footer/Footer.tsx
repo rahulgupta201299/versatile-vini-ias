@@ -75,6 +75,59 @@ function ContactLink({ link }: { link: LinkItem }) {
   );
 }
 
+/**
+ * Small animated tag next to a footer link (e.g. "We are hiring" beside Careers): a blue label with a punched
+ * hole, a gentle pulse and a light sweeping across. Motion stops for visitors who prefer reduced motion.
+ */
+function LinkBadge({ text }: { text: string }) {
+  return (
+    <Box
+      component="span"
+      sx={{
+        position: "relative",
+        display: "inline-flex",
+        alignItems: "center",
+        flexShrink: 0,
+        height: 16,
+        pl: "11px",
+        pr: "6px",
+        overflow: "hidden",
+        backgroundColor: "#245A9C",
+        color: "#FFFFFF",
+        fontSize: "0.56rem",
+        fontWeight: 800,
+        letterSpacing: "0.06em",
+        lineHeight: 1,
+        textTransform: "uppercase",
+        whiteSpace: "nowrap",
+        borderRadius: "0 3px 3px 0",
+        clipPath: "polygon(7px 0, 100% 0, 100% 100%, 7px 100%, 0 50%)",
+        animation: "footerBadgePulse 1.8s ease-in-out infinite",
+        transformOrigin: "left center",
+        // the tag's hole
+        "&::before": { content: '""', position: "absolute", left: 5, top: "50%", width: 3, height: 3, mt: "-1.5px", borderRadius: "50%", backgroundColor: COLORS.surface },
+        // the light sweeping across
+        "&::after": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+          left: "-40%",
+          width: "35%",
+          background: "linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent)",
+          transform: "skewX(-20deg)",
+          animation: "footerBadgeShine 2.6s ease-in-out infinite",
+        },
+        "@keyframes footerBadgePulse": { "0%, 100%": { transform: "scale(1)" }, "50%": { transform: "scale(1.08)" } },
+        "@keyframes footerBadgeShine": { "0%": { left: "-40%" }, "60%, 100%": { left: "120%" } },
+        "@media (prefers-reduced-motion: reduce)": { animation: "none", "&::after": { animation: "none", display: "none" } },
+      }}
+    >
+      {text}
+    </Box>
+  );
+}
+
 /** One footer column: heading + links, styled by the column's style (locations with pins, contact with buttons). */
 function FooterColumn({ column }: { column: FooterLinkColumn }) {
   const { style, title, links } = column;
@@ -87,9 +140,10 @@ function FooterColumn({ column }: { column: FooterLinkColumn }) {
           if (style === "contact") return <ContactLink key={index} link={link} />;
 
           return (
-            <Typography key={index} component="a" href={link.href} {...externalLinkProps(link)} variant="body2" sx={{ ...linkSx, ...(style === "locations" && { display: "flex", alignItems: "center", gap: 0.5 }) }}>
+            <Typography key={index} component="a" href={link.href} {...externalLinkProps(link)} variant="body2" sx={{ ...linkSx, ...((style === "locations" || link.badge) && { display: "flex", alignItems: "center", gap: 0.75 }) }}>
               {style === "locations" && <MapPin size={13} color={COLORS.red} style={{ flexShrink: 0 }} />}
-              {link.name}
+              <Box component="span" sx={{ whiteSpace: link.badge ? "nowrap" : "normal" }}>{link.name}</Box>
+              {link.badge && <LinkBadge text={link.badge} />}
             </Typography>
           );
         })}

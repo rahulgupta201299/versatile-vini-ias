@@ -51,7 +51,7 @@ const SECTION_INFO: Record<FooterSectionKey, { description: string; itemsLabel: 
   ecosystemBrands: { description: "The row of brand chips at the bottom of the footer.", itemsLabel: "Brands", headingHint: "Shown above the brands on the website." },
 };
 
-const newLink = (): FooterLinkData => ({ text: "", link: "" });
+const newLink = (): FooterLinkData => ({ text: "", link: "", badge: "" });
 
 const newColumn = (): FooterColumnData => ({ title: "", style: "links", links: [newLink()] });
 
@@ -83,20 +83,25 @@ const validateSection = ({ title, links, columns }: SectionInput, hasColumns: bo
 };
 
 /** A text + link pair, used for every footer link. */
-function LinkFields({ value, onChange, linkHint = DEFAULT_LINK_HINT }: { value: FooterLinkData; onChange: (value: FooterLinkData) => void; linkHint?: string }) {
+function LinkFields({ value, onChange, linkHint = DEFAULT_LINK_HINT, withBadge = false }: { value: FooterLinkData; onChange: (value: FooterLinkData) => void; linkHint?: string; withBadge?: boolean }) {
   return (
-    <FieldGrid>
+    <FieldGrid columns={withBadge ? 3 : 2}>
       <Field label="Text" required>
         <TextInput value={value.text} onChange={(text) => onChange({ ...value, text })} placeholder="About Us" />
       </Field>
       <Field label="Link" required hint={linkHint}>
         <TextInput value={value.link} onChange={(link) => onChange({ ...value, link })} placeholder="/about-us" />
       </Field>
+      {withBadge && (
+        <Field label="Badge (optional)" hint="A small animated tag beside the link, e.g. “We are hiring”. Keep it short.">
+          <TextInput value={value.badge || ""} onChange={(badge) => onChange({ ...value, badge })} placeholder="We are hiring" />
+        </Field>
+      )}
     </FieldGrid>
   );
 }
 
-function LinksEditor({ links, onChange, addLabel, linkHint }: { links: FooterLinkData[]; onChange: (links: FooterLinkData[]) => void; addLabel: string; linkHint?: string }) {
+function LinksEditor({ links, onChange, addLabel, linkHint, withBadge }: { links: FooterLinkData[]; onChange: (links: FooterLinkData[]) => void; addLabel: string; linkHint?: string; withBadge?: boolean }) {
   return (
     <ListEditor
       items={links}
@@ -105,7 +110,7 @@ function LinksEditor({ links, onChange, addLabel, linkHint }: { links: FooterLin
       addLabel={addLabel}
       emptyText="No links yet."
       itemLabel={({ text }, index) => text || `Link ${index + 1}`}
-      renderItem={(link, update) => <LinkFields value={link} onChange={update} linkHint={linkHint} />}
+      renderItem={(link, update) => <LinkFields value={link} onChange={update} linkHint={linkHint} withBadge={withBadge} />}
     />
   );
 }
@@ -358,7 +363,7 @@ function FooterSectionCard({ section, step, isOpen, onToggle }: FooterSectionCar
                       </Field>
                     )}
                   </FieldGrid>
-                  <LinksEditor links={column.links} onChange={(links) => updateColumn({ ...column, links })} addLabel="Add link" linkHint={linkHintFor(column.style)} />
+                  <LinksEditor links={column.links} onChange={(links) => updateColumn({ ...column, links })} addLabel="Add link" linkHint={linkHintFor(column.style)} withBadge={hasStyles} />
                 </Box>
               )}
             />

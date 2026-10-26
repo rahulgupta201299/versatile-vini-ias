@@ -72,7 +72,7 @@ function CallbackCard({ course }: { course: string }) {
           >
             Get Free Mentorship
           </Box>
-          <Typography sx={{ fontSize: "0.72rem", color: COLORS.disabled, textAlign: "center" }}>By continuing, you agree to our terms and conditions.</Typography>
+          <Typography sx={{ fontSize: "0.72rem", color: COLORS.disabled, textAlign: "center" }}>By continuing, you agree to our <Box component="a" href="/terms-and-conditions" sx={{ color: "#2563EB", textDecoration: "underline" }}>terms and conditions</Box>.</Typography>
         </Box>
       )}
     </Box>

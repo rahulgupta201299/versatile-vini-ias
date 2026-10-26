@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
-import { User, CheckCircle2 } from "lucide-react";
+import { User, CheckCircle2, ArrowRight } from "lucide-react";
 import {
   useFormValidation,
   validateName,
@@ -17,6 +17,63 @@ import {
 } from "@/utils/validation";
 
 import { COLORS } from "@/theme/colors";
+const TERMS_PATH = "/terms-and-conditions";
+
+/**
+ * "Get Free Mentorship": a light sweeping across, a soft glowing pulse, a small wiggle every few seconds and a
+ * nudging arrow — to draw the eye. Everything stops for visitors who prefer reduced motion.
+ */
+const CTA_SX = {
+  position: "relative",
+  overflow: "hidden",
+  gridColumn: { xs: "auto", sm: "1 / -1", lg: "auto" },
+  // extra space above the button when it sits under the inputs (phones / tablets); in one row on computers
+  mt: { xs: 1.25, sm: 1, lg: 0 },
+  height: { xs: 48, md: 50 },
+  px: 3.5,
+  gap: 1,
+  background: `linear-gradient(135deg, ${COLORS.yellow} 0%, #FFE55C 50%, ${COLORS.yellow} 100%)`,
+  color: "#000000",
+  fontWeight: 800,
+  fontSize: { xs: "1rem", md: "1.02rem" },
+  letterSpacing: "0.01em",
+  borderRadius: "12px",
+  boxShadow: "0 6px 18px rgba(242, 213, 0, 0.45)",
+  textTransform: "none",
+  whiteSpace: "nowrap",
+  animation: "ctaGlow 2.2s ease-in-out infinite, ctaWiggle 5s ease-in-out infinite",
+  "& .cta-arrow": { animation: "ctaArrow 1.2s ease-in-out infinite" },
+  // the light sweeping across
+  "&::after": {
+    content: '""',
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: "-60%",
+    width: "45%",
+    background: "linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent)",
+    transform: "skewX(-20deg)",
+    animation: "ctaShine 2.8s ease-in-out infinite",
+    pointerEvents: "none",
+  },
+  "&:hover": { background: COLORS.yellowDark, boxShadow: "0 8px 22px rgba(242, 213, 0, 0.55)", animationPlayState: "paused" },
+  "&:active": { transform: "scale(0.98)" },
+  "@keyframes ctaGlow": {
+    "0%, 100%": { boxShadow: "0 6px 18px rgba(242, 213, 0, 0.45)" },
+    "50%": { boxShadow: "0 6px 26px rgba(242, 213, 0, 0.85), 0 0 0 4px rgba(242, 213, 0, 0.25)" },
+  },
+  "@keyframes ctaWiggle": {
+    "0%, 84%, 100%": { transform: "rotate(0deg) scale(1)" },
+    "87%": { transform: "rotate(-2deg) scale(1.03)" },
+    "90%": { transform: "rotate(2deg) scale(1.03)" },
+    "93%": { transform: "rotate(-1deg) scale(1.02)" },
+    "96%": { transform: "rotate(0deg) scale(1)" },
+  },
+  "@keyframes ctaShine": { "0%": { left: "-60%" }, "55%, 100%": { left: "130%" } },
+  "@keyframes ctaArrow": { "0%, 100%": { transform: "translateX(0)" }, "50%": { transform: "translateX(4px)" } },
+  "@media (prefers-reduced-motion: reduce)": { animation: "none", "&::after": { display: "none" }, "& .cta-arrow": { animation: "none" } },
+} as const;
+
 const FIELD_SX = {
   backgroundColor: "#FFFFFF",
   borderRadius: "10px",
@@ -60,8 +117,8 @@ export default function MentorshipCallbackSection() {
             gap: { xs: 2, md: 4 },
           }}
         >
-          {/* Heading */}
-          <Box>
+          {/* Heading — centred on phones / tablets, left beside the form on computers */}
+          <Box sx={{ textAlign: { xs: "center", md: "left" } }}>
             <Typography
               component="h2"
               sx={{
@@ -77,6 +134,13 @@ export default function MentorshipCallbackSection() {
             </Typography>
             <Typography sx={{ fontWeight: 600, fontSize: { xs: "0.92rem", md: "1rem" }, color: "#2563EB" }}>
               Get a Callback by our UPSC Expert!
+            </Typography>
+            <Typography sx={{ color: COLORS.muted, fontSize: "0.75rem", mt: 0.75 }}>
+              By continuing, you agree to the{" "}
+              <Box component="a" href={TERMS_PATH} sx={{ color: "#2563EB", textDecoration: "underline", "&:hover": { color: "#1E3A8A" } }}>
+                terms and conditions
+              </Box>
+              .
             </Typography>
           </Box>
 
@@ -164,35 +228,11 @@ export default function MentorshipCallbackSection() {
                     }}
                   />
 
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{
-                      gridColumn: { xs: "auto", sm: "1 / -1", lg: "auto" },
-                      height: { xs: 44, md: 48 },
-                      px: 3,
-                      background: COLORS.yellow,
-                      color: "#000000",
-                      fontWeight: 700,
-                      fontSize: { xs: "0.95rem", md: "1rem" },
-                      borderRadius: "10px",
-                      boxShadow: "none",
-                      textTransform: "none",
-                      whiteSpace: "nowrap",
-                      "&:hover": { background: COLORS.yellowDark, boxShadow: "0 4px 12px rgba(242, 213, 0, 0.35)" },
-                    }}
-                  >
+                  <Button type="submit" variant="contained" sx={CTA_SX}>
                     Get Free Mentorship
+                    <ArrowRight className="cta-arrow" size={18} strokeWidth={2.5} />
                   </Button>
                 </Box>
-
-                <Typography sx={{ color: COLORS.muted, fontSize: "0.75rem", mt: 1.25 }}>
-                  By continuing, you agree to the{" "}
-                  <Box component="a" href="#" sx={{ color: "#2563EB", textDecoration: "underline" }}>
-                    terms and conditions
-                  </Box>
-                  .
-                </Typography>
               </Box>
             )}
           </Box>

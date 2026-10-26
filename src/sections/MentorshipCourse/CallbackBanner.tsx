@@ -46,7 +46,7 @@ export default function CallbackBanner({ data = DEFAULT }: { data?: CallbackCont
                 ))}
               </Box>
             )}
-            <Typography sx={{ mt: 0.5, fontSize: "0.75rem", color: COLORS.muted }}>By continuing, you agree to the terms and conditions.</Typography>
+            <Typography sx={{ mt: 0.5, fontSize: "0.75rem", color: COLORS.muted }}>By continuing, you agree to the <Box component="a" href="/terms-and-conditions" sx={{ color: "#2563EB", textDecoration: "underline" }}>terms and conditions</Box>.</Typography>
 
             {sent ? (
               <Box sx={{ mt: 2, display: "flex", gap: 1.25, alignItems: "center", p: 1.5, borderRadius: "12px", backgroundColor: "#F0FDF4", border: "1px solid #BBF7D0" }}>

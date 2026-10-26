@@ -204,6 +204,8 @@ export interface CoursePageData {
 interface LinkItem {
   name: string;
   href: string;
+  /** Optional small animated tag next to the link (footer), e.g. "We are hiring" */
+  badge?: string;
 }
 
 /** GET /navigation */
@@ -1094,6 +1096,8 @@ export interface GoalExamPage {
 export interface FooterLinkData {
   text: string;
   link: string;
+  /** Optional small animated tag next to the link, e.g. "We are hiring" */
+  badge?: string;
 }
 
 /**
