@@ -10,8 +10,6 @@ export function AdminAccessProvider({ admin, children }: { admin: AccessViewer; 
   return <AdminAccessContext.Provider value={admin}>{children}</AdminAccessContext.Provider>;
 }
 
-export const useAdminViewer = () => useContext(AdminAccessContext);
-
 /** What the signed-in admin may do in a section. The backend checks every request too. */
 export function useSectionAccess(section: SectionKey) {
   const viewer = useContext(AdminAccessContext);

@@ -20,8 +20,6 @@ export const getBlogPosts = cache(async () => {
 
 export const getBlogCategory = cache(async (slug: string) => (await getBlogCategories()).find((c) => c.slug === slug) || null);
 
-export const getCategoryPosts = cache(async (category: string) => (await getBlogPosts()).filter((p) => p.category === category));
-
 /** One post: GET /blogs/<category>/<slug> (falls back to the local sample). */
 export const getBlogPost = cache((category: string, slug: string) =>
   fetchApi<BlogPost | null>(`blogs/${encodeURIComponent(category)}/${encodeURIComponent(slug)}`, {

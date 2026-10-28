@@ -13,11 +13,6 @@ export function slugify(name: string): string {
 /** Goal (exam) landing page — only for "All Exams" and "Select Your Goal": /goal/<slug>. */
 export const goalPath = (name: string) => `/goal/${slugify(name)}`;
 
-/** Separate (non-goal) section pages, e.g. pagePath("GS Foundation", "NCERT Foundation Batch") → /gs-foundation/ncert-foundation-batch. */
-/** GS Foundation free-resource pages: /courses/gs-foundation/<resource>. */
-export const FREE_RESOURCE_BASE = "/courses/gs-foundation";
-export const freeResourcePath = (name: string) => `${FREE_RESOURCE_BASE}/${slugify(name)}`;
-
 /** Course pages are grouped by menu section: /courses/<section>/<page>. */
 export const COURSE_SECTIONS = {
   gsFoundation: "gs-foundation",

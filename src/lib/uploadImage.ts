@@ -40,6 +40,3 @@ export async function uploadImageOrPdf(file: File): Promise<string> {
 
   return readAsDataUrl(file);
 }
-
-/** True for images uploaded with uploadImage() (stored inline until S3 is connected). */
-export const isInlineImage = (url: string) => url.startsWith("data:");
