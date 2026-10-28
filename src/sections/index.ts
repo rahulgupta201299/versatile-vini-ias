@@ -4,8 +4,11 @@ export { default as FreeResourcesSection } from "./Resources/FreeResourcesSectio
 export { default as MarketAdBanner } from "./PromotionalBanner/MarketAdBanner";
 export { default as SmallPromoBanner } from "./PromotionalBanner/SmallPromoBanner";
 export { default as ExamGoalSection } from "./ExamCategories/ExamGoalSection";
+export { default as KidsCoursesSection } from "./KidsCourses/KidsCoursesSection";
 export { default as TopRankersSection } from "./Rankers/TopRankersSection";
 export { default as MentorshipCallbackSection } from "./Mentorship/MentorshipCallbackSection";
 export { default as ImpactStatsSection } from "./Impact/ImpactStatsSection";
 export { default as EnquirySection } from "./Enquiry/EnquirySection";
 export { default as AppDownloadSection } from "./AppDownload/AppDownloadSection";
+export { default as PopularProgramsSection } from "./Programs/PopularProgramsSection";
+export { default as OfflineCentreSection } from "./Programs/OfflineCentreSection";
