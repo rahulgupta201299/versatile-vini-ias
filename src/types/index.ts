@@ -22,6 +22,8 @@ export interface MenuTile {
   label: string;
   href: string;
   icon: string; // IconRenderer name
+  /** A navItems id: the tile opens that desktop menu's dropdown instead of being a link. */
+  dropdownId?: string;
 }
 
 export interface MenuSection {
@@ -1149,6 +1151,8 @@ export interface HeaderMobileItemData {
   label: string;
   link: string;
   icon: string;
+  /** _id of a desktop menu whose dropdown opens under the tile (null → the tile is a link). */
+  menu?: string | null;
 }
 
 export interface HeaderMobileSectionData {

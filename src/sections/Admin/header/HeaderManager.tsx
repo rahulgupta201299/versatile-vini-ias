@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import { COLORS } from "@/theme/colors";
 import { adminRequest } from "@/lib/adminClient";
 import { AdminHeaderSection, HeaderLinkData, HeaderMenuData, HeaderMobileItemData, HeaderMobileSectionData, HeaderSectionKey } from "@/types";
-import { Field, FieldGrid, ListEditor, TextInput } from "../allExams/formKit";
+import { Field, FieldGrid, inputSx, ListEditor, TextInput } from "../allExams/formKit";
 import IconSelect from "../common/IconSelect";
 import { ExpandAllButton, PartCard, useOpenParts, usePart } from "../common/PartAccordion";
 import { useSectionAccess } from "../AdminAccessContext";
@@ -19,7 +19,7 @@ const LINK_HINT = "Page or URL, e.g. /courses/csat or https://…";
 
 const newLink = (): HeaderLinkData => ({ label: "", link: "" });
 const newMenu = (): HeaderMenuData => ({ label: "", link: "", badge: "", items: [] });
-const newTile = (): HeaderMobileItemData => ({ label: "", link: "", icon: "FileText" });
+const newTile = (): HeaderMobileItemData => ({ label: "", link: "", icon: "FileText", menu: null });
 const newMobileSection = (): HeaderMobileSectionData => ({ title: "", items: [newTile()] });
 
 /* ---------- checks ---------- */
@@ -93,6 +93,8 @@ export default function HeaderManager({ sections }: { sections: AdminHeaderSecti
     fromSaved: (section) => ({ storeLink: section.storeLink || "", searchTrending: section.searchTrending || [] }),
   });
 
+  // Saved desktop menus with dropdown items — the ones a mobile tile can open
+  const dropdownMenus = (saved("menus")?.menus || []).filter(({ _id: id, items }) => id && items.length);
   const tileCount = mobile.input.reduce((total, { items }) => total + items.length, 0);
 
   return (
@@ -138,7 +140,7 @@ export default function HeaderManager({ sections }: { sections: AdminHeaderSecti
       </PartCard>
 
       {/* 2. Mobile menu */}
-      <PartCard id="mobileMenu" step={2} title="Mobile menu" description="The slide-in menu on phones: titled sections of tiles (Free Resources, Study Material, Featured), each with an icon and a link." summary={`${mobile.input.length} sections · ${tileCount} tiles`} isOpen={isOpen("mobileMenu")} onToggle={() => toggle("mobileMenu")} part={mobile} canEdit={canEdit} savedText="Saved — live in the header">
+      <PartCard id="mobileMenu" step={2} title="Mobile menu" description="The slide-in menu on phones: titled sections of tiles (Free Resources, Study Material, Featured), each with an icon and a link or a desktop menu’s dropdown." summary={`${mobile.input.length} sections · ${tileCount} tiles`} isOpen={isOpen("mobileMenu")} onToggle={() => toggle("mobileMenu")} part={mobile} canEdit={canEdit} savedText="Saved — live in the header">
         <ListEditor
           items={mobile.input}
           onChange={mobile.update}
@@ -161,11 +163,19 @@ export default function HeaderManager({ sections }: { sections: AdminHeaderSecti
                 renderItem={(tile, updateTile) => (
                   <Box sx={{ display: "grid", gap: 1.5 }}>
                     <LinkFields value={tile} onChange={(value) => updateTile({ ...tile, ...value })} textPlaceholder="Current Affairs" />
-                    <Box sx={{ maxWidth: { md: "50%" } }}>
+                    <FieldGrid>
                       <Field label="Icon">
                         <IconSelect value={tile.icon} onChange={(icon) => updateTile({ ...tile, icon })} />
                       </Field>
-                    </Box>
+                      <Field label="Dropdown (optional)" hint="Opens that desktop menu's dropdown items under the tile; the link is then not used. Save a new desktop menu first.">
+                        <Box component="select" value={tile.menu || ""} onChange={(event: React.ChangeEvent<HTMLSelectElement>) => updateTile({ ...tile, menu: event.target.value || null })} sx={inputSx}>
+                          <option value="">None — the tile is a link</option>
+                          {dropdownMenus.map(({ _id: id, label }) => (
+                            <option key={id} value={id}>{label}</option>
+                          ))}
+                        </Box>
+                      </Field>
+                    </FieldGrid>
                   </Box>
                 )}
               />

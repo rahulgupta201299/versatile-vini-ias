@@ -16,12 +16,12 @@ import {
   ShoppingCart,
   Download,
 } from "lucide-react";
-import { IconRenderer } from "@/components";
 import { useSiteData } from "@/context/SiteDataContext";
 import { externalLinkProps } from "@/utils/links";
 
 import { COLORS } from "@/theme/colors";
 import { openAuth } from "@/utils/events";
+import MobileMenuSection from "./MobileMenuSection";
 const RED = COLORS.red;
 const INK = "#1F2937";
 const MUTED = "#6B7280";
@@ -37,12 +37,6 @@ function appInstallHref(links: { googlePlay: string; appStore: string }) {
 
   return "/#download";
 }
-
-const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-  <Typography sx={{ fontSize: "0.82rem", fontWeight: 800, letterSpacing: "0.06em", color: "#374151", textTransform: "uppercase", mb: 1 }}>
-    {children}
-  </Typography>
-);
 
 interface MobileMenuProps {
   onClose: () => void;
@@ -200,42 +194,10 @@ export default function MobileMenu({ onClose, onOpenSearch, onOpenExams }: Mobil
           <Plus size={20} color={INK} />
         </Box>
 
-        {/* 2-column sections */}
+        {/* 2-column sections; tiles linked to a desktop menu open its dropdown */}
         {mobileMenu.map((section) => (
-          <Box key={section.id} sx={{ pt: 1.5, pb: 1, borderBottom: `1px solid ${LINE}` }}>
-            <SectionTitle>{section.title}</SectionTitle>
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                columnGap: 1.5,
-                // vertical divider between the two columns
-                backgroundImage: `linear-gradient(${LINE}, ${LINE})`,
-                backgroundSize: "1px 100%",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-              }}
-            >
-              {section.items.map((item) => (
-                <Box
-                  key={`${section.id}-${item.label}`}
-                  component={Link}
-                  href={item.href}
-                  {...externalLinkProps(item)}
-                  onClick={onClose}
-                  sx={{ display: "flex", alignItems: "center", gap: 1, py: 1, minWidth: 0, width: "100%", textDecoration: "none", color: INK, "&:hover": { color: RED } }}
-                >
-                  <IconRenderer name={item.icon} size={17} color="#374151" />
-                  <Typography component="span" sx={{ flex: 1, minWidth: 0, fontSize: "0.84rem", lineHeight: 1.3 }}>
-                    {item.label}
-                  </Typography>
-                  <ChevronRight size={15} color="#9CA3AF" style={{ flexShrink: 0 }} />
-                </Box>
-              ))}
-            </Box>
-          </Box>
+          <MobileMenuSection key={section.id} section={section} navItems={navItems} onClose={onClose} />
         ))}
-
       </Box>
 
       {/* Yellow "Download app" bar */}
