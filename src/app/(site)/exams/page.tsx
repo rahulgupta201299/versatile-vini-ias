@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 /** /exams — lead story + latest list, category blocks and sidebar (newspaper-style). */
 export default async function ExamsBlogHome() {
   const [{ categories, posts, names, counts }, updates] = await Promise.all([getBlogIndex(), getExamUpdates()]);
-  const lead = posts.find((p) => p.featured) ?? posts[0];
+  const lead = posts.find((p) => p.featured) || posts[0];
   const side = posts.filter((p) => p !== lead).slice(0, 4);
   const withPosts = categories.filter((c) => counts[c.slug]);
 
@@ -46,6 +46,7 @@ export default async function ExamsBlogHome() {
             {withPosts.map((c) => {
               const list = posts.filter((p) => p.category === c.slug);
               const [first, ...rest] = list;
+
               return (
                 <Box component="section" key={c.slug} aria-label={`${c.name} news`}>
                   <SectionTitle title={`${c.name} News`} href={`/exams/${c.slug}`} />

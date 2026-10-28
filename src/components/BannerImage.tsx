@@ -1,5 +1,5 @@
-import React from "react";
 import { HeroBanner } from "@/types";
+import ArtDirectedImage from "./ArtDirectedImage";
 
 type BannerImageProps = {
   banner: HeroBanner;
@@ -8,20 +8,11 @@ type BannerImageProps = {
   priority?: boolean;
 };
 
-/**
- * A banner image that fills its slide. Phones get the mobile artwork through <picture>, so each
- * screen downloads only the image it shows. Works with uploaded images (data URLs today, S3 later).
- */
+/** A banner image that fills its slide; phones get the mobile artwork. */
 export default function BannerImage({ banner, useMobileArt, priority = false }: BannerImageProps) {
   const { imageUrl, mobileImageUrl, alt, title } = banner;
 
-  return (
-    <picture>
-      {useMobileArt && mobileImageUrl && <source media="(max-width: 599px)" srcSet={mobileImageUrl} />}
-      {/* Admin-uploaded artwork (data URL today, S3 later), so a plain <img> instead of next/image */}
-      <img src={imageUrl} alt={alt || title} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }} />
-    </picture>
-  );
+  return <ArtDirectedImage src={imageUrl} mobileSrc={useMobileArt ? mobileImageUrl : undefined} alt={alt || title} priority={priority} />;
 }
 
 /** True when every banner has phone artwork, so the slider can switch to the phone shape. */

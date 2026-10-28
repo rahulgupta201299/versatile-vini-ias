@@ -161,7 +161,7 @@ export default function TopRankersSection({ tabs, stats, hideStats = false }: To
                     mb: 1.25,
                   }}
                 >
-                  <IconRenderer name={stat.icon ?? "Trophy"} size={26} color={idx % 2 === 0 ? COLORS.red : "#D97706"} />
+                  <IconRenderer name={stat.icon || "Trophy"} size={26} color={idx % 2 === 0 ? COLORS.red : "#D97706"} />
                 </Box>
                 <Typography
                   variant="h3"
@@ -215,6 +215,7 @@ export default function TopRankersSection({ tabs, stats, hideStats = false }: To
           >
             {visibleTabs.map((tab) => {
               const selected = tab.id === activeTab?.id;
+
               return (
                 <Box
                   key={tab.id}

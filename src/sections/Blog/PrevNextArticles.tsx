@@ -11,6 +11,7 @@ type Item = Pick<BlogPost, "category" | "slug" | "title"> | undefined;
 /** Previous (older) / Next (newer) article links. */
 export default function PrevNextArticles({ prev, next }: { prev: Item; next: Item }) {
   if (!prev && !next) return null;
+
   const cell = (label: string, post: Item, align: "left" | "right") =>
     post ? (
       <Box component={Link} href={blogPath(post)} sx={{ display: "block", textAlign: align, textDecoration: "none", "&:hover .t": { textDecoration: "underline" } }}>
@@ -20,6 +21,7 @@ export default function PrevNextArticles({ prev, next }: { prev: Item; next: Ite
     ) : (
       <Box />
     );
+
   return (
     <Box component="nav" aria-label="More articles" sx={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: { xs: 2, md: 4 }, py: 2.5, borderTop: `1px solid ${COLORS.border}`, borderBottom: `1px solid ${COLORS.border}` }}>
       {cell("Previous Article", prev, "left")}

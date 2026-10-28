@@ -1,19 +1,19 @@
 "use client";
 
+import SaveBar from "../common/SaveBar";
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import CircularProgress from "@mui/material/CircularProgress";
-import { ArrowLeft, Check, ExternalLink, Save } from "lucide-react";
+import { ArrowLeft, ExternalLink } from "lucide-react";
 import { COLORS } from "@/theme/colors";
 import { adminRequest } from "@/lib/adminClient";
 import { AdminCelebrationBanner, CelebrationBannerInput, CelebrationOffer } from "@/types";
 import CelebrationBanner from "@/sections/Celebration/CelebrationBanner";
 import { Chip, PageHeader } from "../ui";
 import ImageField from "../allExams/ImageField";
-import { buttonSx, Field, FieldGrid, inputSx, NumberInput, primaryButtonSx, SectionCard, StatusToggle, TextInput } from "../allExams/formKit";
+import { buttonSx, Field, FieldGrid, inputSx, NumberInput, SectionCard, StatusToggle, TextInput } from "../allExams/formKit";
 import ColorField from "./ColorField";
 // [S3 SNAPSHOT] import { captureBannerSnapshot } from "@/lib/bannerSnapshot";
 // [S3 SNAPSHOT] import { slugify } from "@/utils/slug";
@@ -207,26 +207,16 @@ export default function CelebrationBannerEditor({ banner }: { banner?: AdminCele
       </Box>
 
       {/* Save bar */}
-      <Box sx={{ position: "fixed", left: { xs: 0, lg: 264 }, right: 0, bottom: 0, zIndex: 20, borderTop: `1px solid ${COLORS.border}`, bgcolor: "rgba(255,255,255,.96)", backdropFilter: "blur(8px)" }}>
-        {!!problems.length && (
-          <Box role="alert" sx={{ maxWidth: 1360, mx: "auto", px: { xs: 2, md: 4 }, pt: 1.5 }}>
-            <Box sx={{ p: 1.5, borderRadius: "10px", bgcolor: COLORS.redTint, border: `1px solid ${COLORS.redBorder}`, color: COLORS.redDark, fontSize: "0.84rem", fontWeight: 600, maxHeight: 120, overflowY: "auto" }}>
-              {problems.map((problem) => (
-                <div key={problem}>• {problem}</div>
-              ))}
-            </Box>
-          </Box>
-        )}
-        <Box sx={{ maxWidth: 1360, mx: "auto", px: { xs: 2, md: 4 }, py: 1.5, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 1.5 }}>
-          <Typography sx={{ color: isDirty ? COLORS.redDark : COLORS.success, fontSize: "0.85rem", fontWeight: 600, display: "flex", alignItems: "center", gap: 0.5 }}>
-            {isDirty ? "Unsaved changes" : status === "saved" ? (<><Check size={16} /> Saved{savedMessage}</>) : "No changes"}
-          </Typography>
-          <Box component="button" type="button" disabled={!canEdit || status === "saving" || (!isDirty && !isNew)} onClick={save} sx={primaryButtonSx}>
-            {status === "saving" ? <CircularProgress size={18} sx={{ color: "#FFFFFF" }} /> : <Save size={16} />}
-            {isNew ? "Create banner" : "Save changes"}
-          </Box>
-        </Box>
-      </Box>
+      <SaveBar
+        problems={problems}
+        isDirty={isDirty}
+        isSaved={status === "saved"}
+        isSaving={status === "saving"}
+        isDisabled={!canEdit || status === "saving" || (!isDirty && !isNew)}
+        savedText={savedMessage}
+        label={isNew ? "Create banner" : "Save changes"}
+        onSave={save}
+      />
     </Box>
   );
 }

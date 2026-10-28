@@ -21,16 +21,28 @@ const HIGHLIGHT_TONES = [
 const fmtDate = (iso: string) => new Date(`${iso}T00:00:00+05:30`).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Kolkata" });
 
 /** Turns emails and URLs inside plain text into links. */
+/** An email or web address in legal text → its link. */
+const toContactHref = (part: string, isEmail: boolean) => {
+  if (isEmail) return `mailto:${part}`;
+
+  return part.startsWith("http") ? part : `https://${part}`;
+};
+
 function Linkify({ text }: { text: string }) {
   const parts = text.split(/(\b[\w.+-]+@[\w-]+\.[\w.]+\b|https?:\/\/[^\s,)]+|www\.[^\s,)]+)/g);
+
   return (
     <>
       {parts.map((part, i) => {
         if (!part) return null;
+
         const isEmail = /^[\w.+-]+@[\w-]+\.[\w.]+$/.test(part);
         const isUrl = /^(https?:\/\/|www\.)/.test(part);
+
         if (!isEmail && !isUrl) return <React.Fragment key={i}>{part}</React.Fragment>;
-        const href = isEmail ? `mailto:${part}` : part.startsWith("http") ? part : `https://${part}`;
+
+        const href = toContactHref(part, isEmail);
+
         return (
           <Box key={i} component="a" href={href} {...(isUrl ? { target: "_blank", rel: "noopener noreferrer" } : {})} sx={{ color: COLORS.red, fontWeight: 600, textDecoration: "none", wordBreak: "break-word", "&:hover": { textDecoration: "underline" } }}>
             {part}
@@ -44,7 +56,9 @@ function Linkify({ text }: { text: string }) {
 /** "Label: rest" list items get a bold label. */
 function ListItemText({ text }: { text: string }) {
   const m = text.match(/^([^:]{3,60}):\s(.+)$/);
+
   if (!m) return <Linkify text={text} />;
+
   return (
     <>
       <Box component="strong" sx={{ color: COLORS.navy }}>{m[1]}:</Box> <Linkify text={m[2]} />
@@ -54,6 +68,7 @@ function ListItemText({ text }: { text: string }) {
 
 function Block({ b }: { b: LegalBlock }) {
   const body = { color: COLORS.body, fontSize: { xs: "0.97rem", md: "1.02rem" }, lineHeight: 1.75 };
+
   switch (b.kind) {
     case "p":
       return <Typography sx={{ ...body, mb: 1.75 }}><Linkify text={b.text} /></Typography>;
@@ -128,6 +143,7 @@ export default function LegalPage({ doc, docs }: { doc: LegalDoc; docs: LegalDoc
           <Box component="nav" aria-label="Legal documents" sx={{ mt: { xs: 2.25, md: 2.5 }, display: "flex", justifyContent: { xs: "center", md: "flex-start" }, gap: 0.75, overflowX: "auto", pb: 0.5, "&::-webkit-scrollbar": { display: "none" } }}>
             {docs.map((d) => {
               const on = d.slug === doc.slug;
+
               return (
                 <Box key={d.slug} component={Link} href={`/${d.slug}`} aria-current={on ? "page" : undefined} aria-label={d.title} sx={{ flexShrink: 0, px: { xs: 1.25, md: 1.5 }, py: 0.45, borderRadius: 999, textDecoration: "none", fontWeight: 700, fontSize: { xs: "0.74rem", md: "0.78rem" }, whiteSpace: "nowrap", color: on ? COLORS.navy : "#FFFFFF", bgcolor: on ? COLORS.yellow : "rgba(255,255,255,.08)", border: `1px solid ${on ? COLORS.yellow : "rgba(255,255,255,.22)"}`, transition: "all .2s", "&:hover": { bgcolor: on ? COLORS.yellow : "rgba(255,255,255,.16)" } }}>
                   <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>{d.label}</Box>
@@ -144,6 +160,7 @@ export default function LegalPage({ doc, docs }: { doc: LegalDoc; docs: LegalDoc
         <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "repeat(3, 1fr)" }, gap: { xs: 1.25, md: 2 } }}>
           {doc.highlights.map((hl, i) => {
             const t = HIGHLIGHT_TONES[i % HIGHLIGHT_TONES.length];
+
             return (
               <Box key={hl.title} sx={{ display: "flex", gap: 1.5, p: { xs: 1.75, md: 2.25 }, borderRadius: "16px", bgcolor: "#FFFFFF", border: `1px solid ${COLORS.border}`, boxShadow: "0 14px 34px rgba(15,23,42,.1)" }}>
                 <Box sx={{ flexShrink: 0, width: 38, height: 38, borderRadius: "10px", bgcolor: t.bg, color: t.fg, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800 }}>{i + 1}</Box>
@@ -192,7 +209,8 @@ export default function LegalPage({ doc, docs }: { doc: LegalDoc; docs: LegalDoc
           <Typography sx={{ mt: 5, mb: 1.5, fontWeight: 800, color: COLORS.navy, fontSize: "1.05rem" }}>Related policies</Typography>
           <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, gap: 1.5 }}>
             {others.map((o) => {
-              const OIcon = DOC_ICON[o.slug] ?? FileText;
+              const OIcon = DOC_ICON[o.slug] || FileText;
+
               return (
                 <Box key={o.slug} component={Link} href={`/${o.slug}`} sx={{ display: "flex", alignItems: "center", gap: 1.5, p: 2, borderRadius: "14px", border: `1px solid ${COLORS.border}`, textDecoration: "none", transition: "border-color .2s, transform .2s", "&:hover": { borderColor: COLORS.redBorder, transform: "translateY(-2px)" } }}>
                   <Box sx={{ flexShrink: 0, width: 42, height: 42, borderRadius: "12px", bgcolor: COLORS.redTint, color: COLORS.red, display: "flex", alignItems: "center", justifyContent: "center" }}><OIcon size={20} /></Box>

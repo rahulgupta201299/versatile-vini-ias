@@ -11,7 +11,6 @@ import { COLORS } from "@/theme/colors";
 
 type Params = Promise<{ category: string }>;
 
-export const dynamicParams = true;
 export async function generateStaticParams() {
   return (await getBlogCategories()).map((c) => ({ category: c.slug }));
 }
@@ -19,7 +18,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { category } = await params;
   const c = await getBlogCategory(category);
+
   if (!c) return {};
+
   return { title: `${c.name} Exam News & Preparation Blogs | Vini IAS`, description: c.description, alternates: { canonical: `/exams/${c.slug}` } };
 }
 
@@ -27,7 +28,9 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 export default async function ExamCategoryPage({ params }: { params: Params }) {
   const { category } = await params;
   const c = await getBlogCategory(category);
+
   if (!c) notFound();
+
   const { posts, names } = await getBlogIndex();
   const list = posts.filter((p) => p.category === c.slug);
 

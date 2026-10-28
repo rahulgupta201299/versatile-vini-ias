@@ -1,16 +1,11 @@
-"use client";
-
-import React, { useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
-import { CheckCircle2, BadgeCheck } from "lucide-react";
+import { BadgeCheck } from "lucide-react";
 import CounsellorIllustration from "@/components/illustrations/CounsellorIllustration";
-import { useFormValidation, validateMobile, sanitizeMobile } from "@/utils/validation";
 import { COLORS } from "@/theme/colors";
 import { CallbackContent } from "@/types";
+import MobileCallbackForm from "@/components/MobileCallbackForm";
 
 const DEFAULT: CallbackContent = {
   title: "Crack UPSC with our Expert Guidance",
@@ -21,9 +16,6 @@ const DEFAULT: CallbackContent = {
 /** Callback card — "Crack UPSC with our Expert Guidance" by default; wording can come from the page data. */
 export default function CallbackBanner({ data = DEFAULT }: { data?: CallbackContent }) {
   const [before, after] = data.highlight ? data.title.split(data.highlight) : [data.title, ""];
-  const formRef = useRef<HTMLFormElement>(null);
-  const [sent, setSent] = useState(false);
-  const form = useFormValidation({ mobile: "" }, { mobile: (v) => validateMobile(v) }, { mobile: sanitizeMobile });
 
   return (
     <Box component="section" id="callback" sx={{ py: { xs: 3, md: 5 } }}>
@@ -48,46 +40,9 @@ export default function CallbackBanner({ data = DEFAULT }: { data?: CallbackCont
             )}
             <Typography sx={{ mt: 0.5, fontSize: "0.75rem", color: COLORS.muted }}>By continuing, you agree to the <Box component="a" href="/terms-and-conditions" sx={{ color: "#2563EB", textDecoration: "underline" }}>terms and conditions</Box>.</Typography>
 
-            {sent ? (
-              <Box sx={{ mt: 2, display: "flex", gap: 1.25, alignItems: "center", p: 1.5, borderRadius: "12px", backgroundColor: "#F0FDF4", border: "1px solid #BBF7D0" }}>
-                <CheckCircle2 size={22} color={COLORS.success} />
-                <Typography sx={{ fontSize: "0.92rem", color: COLORS.body }}>
-                  Thanks! Our mentor will call you at <b>+91 {form.values.mobile}</b> shortly.
-                </Typography>
-              </Box>
-            ) : (
-              <Box
-                component="form"
-                ref={formRef}
-                noValidate
-                onSubmit={(e: React.FormEvent) => {
-                  e.preventDefault();
-                  if (form.validateAll(formRef.current)) setSent(true);
-                }}
-                sx={{ mt: 2, display: "grid", gap: 1.25, maxWidth: 440 }}
-              >
-                <TextField
-                  placeholder="Your mobile number"
-                  {...form.fieldProps("mobile")}
-                  helperText={form.visibleError("mobile") || undefined}
-                  required
-                  type="tel"
-                  autoComplete="tel-national"
-                  inputProps={{ inputMode: "numeric", "aria-label": "Mobile number" }}
-                  InputProps={{
-                    startAdornment: <InputAdornment position="start"><Box component="span" sx={{ fontWeight: 700, color: COLORS.ink }}>+91</Box></InputAdornment>,
-                    sx: { height: 48, borderRadius: "10px", backgroundColor: "#FFFFFF" },
-                  }}
-                />
-                <Box
-                  component="button"
-                  type="submit"
-                  sx={{ justifySelf: "start", height: 44, px: 3, border: "none", borderRadius: "10px", backgroundColor: COLORS.red, color: "#FFFFFF", fontFamily: "inherit", fontWeight: 700, fontSize: "0.92rem", cursor: "pointer", "&:hover": { backgroundColor: COLORS.redDark } }}
-                >
-                  {data.ctaLabel}
-                </Box>
-              </Box>
-            )}
+            <Box sx={{ mt: 2 }}>
+              <MobileCallbackForm ctaLabel={data.ctaLabel} layout="stack" />
+            </Box>
           </Box>
           <Box sx={{ display: { xs: "none", md: "flex" }, justifyContent: "center", p: 2, borderRadius: "16px", backgroundColor: "#FFFFFF" }}>
             <CounsellorIllustration width={260} />

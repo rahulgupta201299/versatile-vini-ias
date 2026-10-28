@@ -21,6 +21,7 @@ import { useSiteData } from "@/context/SiteDataContext";
 import { externalLinkProps } from "@/utils/links";
 
 import { COLORS } from "@/theme/colors";
+import { openAuth } from "@/utils/events";
 const RED = COLORS.red;
 const INK = "#1F2937";
 const MUTED = "#6B7280";
@@ -29,8 +30,11 @@ const LINE = "#EEF0F3";
 /** Store link for the visitor's phone: App Store on iOS (when published), otherwise Google Play; falls back to the app section. */
 function appInstallHref(links: { googlePlay: string; appStore: string }) {
   const ios = typeof navigator !== "undefined" && /iphone|ipad|ipod/i.test(navigator.userAgent);
+
   if (ios && links.appStore !== "#") return links.appStore;
+
   if (links.googlePlay !== "#") return links.googlePlay;
+
   return "/#download";
 }
 
@@ -42,15 +46,14 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
 
 interface MobileMenuProps {
   onClose: () => void;
-  onOpenAuth: () => void;
   onOpenSearch: () => void;
   onOpenExams: () => void;
 }
 
-export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenExams }: MobileMenuProps) {
+export default function MobileMenu({ onClose, onOpenSearch, onOpenExams }: MobileMenuProps) {
   const { navigation, config } = useSiteData();
-  const { navItems: NAV_ITEMS, mobileMenu: MOBILE_MENU_SECTIONS, storeHref: STORE_HREF } = navigation;
-  const ALL_EXAMS_LABEL = NAV_ITEMS.find((n) => n.isMegaMenu)?.label ?? "All Exams";
+  const { navItems, mobileMenu, storeHref } = navigation;
+  const allExamsLabel = navItems.find((n) => n.isMegaMenu)?.label || "All Exams";
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
@@ -61,8 +64,8 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
         </Box>
         <Box
           component={Link}
-          href={STORE_HREF}
-          {...externalLinkProps({ href: STORE_HREF })}
+          href={storeHref}
+          {...externalLinkProps({ href: storeHref })}
           onClick={onClose}
           sx={{
             display: "inline-flex",
@@ -87,7 +90,7 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
           type="button"
           onClick={() => {
             onClose();
-            onOpenAuth();
+            openAuth();
           }}
           sx={{
             display: "inline-flex",
@@ -192,13 +195,13 @@ export default function MobileMenu({ onClose, onOpenAuth, onOpenSearch, onOpenEx
           }}
         >
           <Typography sx={{ fontSize: "0.82rem", fontWeight: 800, letterSpacing: "0.06em", color: "#374151", textTransform: "uppercase" }}>
-            {ALL_EXAMS_LABEL}
+            {allExamsLabel}
           </Typography>
           <Plus size={20} color={INK} />
         </Box>
 
         {/* 2-column sections */}
-        {MOBILE_MENU_SECTIONS.map((section) => (
+        {mobileMenu.map((section) => (
           <Box key={section.id} sx={{ pt: 1.5, pb: 1, borderBottom: `1px solid ${LINE}` }}>
             <SectionTitle>{section.title}</SectionTitle>
             <Box

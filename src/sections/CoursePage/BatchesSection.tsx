@@ -14,6 +14,7 @@ import { anchorSx, formatINR, INK, MUTED, RED, RED_DARK, RED_TINT, sectionSx, ti
 import { COLORS } from "@/theme/colors";
 function BatchCard({ batch }: { batch: CourseBatch }) {
   const off = Math.round((1 - batch.price / batch.mrp) * 100);
+
   return (
     <Box
       sx={{
@@ -69,8 +70,8 @@ function BatchCard({ batch }: { batch: CourseBatch }) {
           </Box>
           <Box
             component="a"
-            href={batch.href ?? "#counselling"}
-            {...externalLinkProps({ href: batch.href ?? "#counselling" })}
+            href={batch.href || "#counselling"}
+            {...externalLinkProps({ href: batch.href || "#counselling" })}
             sx={{ px: 1.75, height: 38, display: "inline-flex", alignItems: "center", borderRadius: "10px", border: `1.5px solid ${RED}`, color: RED, backgroundColor: RED_TINT, fontWeight: 700, fontSize: "0.88rem", textDecoration: "none", "&:hover": { backgroundColor: RED, color: "#FFF" } }}
           >
             Explore

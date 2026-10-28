@@ -49,6 +49,7 @@ export const roleOf = (viewer: AccessViewer): RoleKey => {
   const { role = "", roles = [] } = viewer || {};
 
   if (role in ROLE_LABELS) return role as RoleKey;
+
   if (roles.includes(SUPER_ADMIN)) return SUPER_ADMIN;
 
   return MEMBER;
@@ -57,6 +58,7 @@ export const roleOf = (viewer: AccessViewer): RoleKey => {
 /** True when the viewer may do `action` in `section`. Super Admin always may. */
 export const can = (viewer: AccessViewer, section: SectionKey, action: Action = "view") => {
   if (!viewer) return false;
+
   if (roleOf(viewer) === SUPER_ADMIN) return true;
 
   const { level = "none", canDelete = false } = viewer.permissions?.[section] || {};

@@ -13,20 +13,31 @@ const MOBILE_PATTERN = /^[6-9]\d{9}$/; // Indian mobile: 10 digits starting 6–
 
 export function validateName(value: string): string {
   const v = value.trim();
+
   if (!v) return "Name is required";
+
   if (v.length < NAME_MIN) return `Name must be at least ${NAME_MIN} characters`;
+
   if (v.length > NAME_MAX) return `Name must be under ${NAME_MAX} characters`;
+
   if (/\d/.test(v)) return "Name cannot contain numbers";
+
   if (!NAME_PATTERN.test(v)) return "Use letters and spaces only";
+
   return "";
 }
 
 export function validateMobile(value: string): string {
   if (!value) return "Mobile number is required";
+
   if (value.length < 10) return `Enter all 10 digits (${value.length}/10)`;
+
   if (!/^[6-9]/.test(value)) return "Mobile number must start with 6, 7, 8 or 9";
+
   if (/^(\d)\1{9}$/.test(value)) return "Enter a valid mobile number";
+
   if (!MOBILE_PATTERN.test(value)) return "Enter a valid 10-digit mobile number";
+
   return "";
 }
 
@@ -35,7 +46,9 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 /** Optional e-mail: empty is fine, otherwise it must look like name@domain.tld. */
 export function validateOptionalEmail(value: string): string {
   const v = value.trim();
+
   if (!v) return "";
+
   return EMAIL_PATTERN.test(v) ? "" : "Enter a valid email address";
 }
 
@@ -54,8 +67,10 @@ export function validateConsent(value: boolean): string {
 /** Keeps digits only, drops a pasted +91 / 0 prefix, caps at 10 digits. */
 export function sanitizeMobile(raw: string): string {
   let d = raw.replace(/\D/g, "");
+
   if (d.length > 10 && d.startsWith("91")) d = d.slice(2);
   else if (d.length > 10 && d.startsWith("0")) d = d.slice(1);
+
   return d.slice(0, 10);
 }
 
@@ -81,12 +96,13 @@ export function useFormValidation<T extends Record<string, unknown>>(
   const [submitAttempted, setSubmitAttempted] = useState(false);
 
   const errorOf = useCallback(
-    (key: keyof T, all: T = values) => validators[key]?.(all[key], all) ?? "",
+    (key: keyof T, all: T = values) => validators[key]?.(all[key], all) || "",
     [validators, values]
   );
 
   const setValue = <K extends keyof T>(key: K, raw: T[K]) => {
     const clean = sanitizers[key] ? sanitizers[key]!(raw) : raw;
+
     setValues((prev) => ({ ...prev, [key]: clean }));
   };
 
@@ -100,12 +116,15 @@ export function useFormValidation<T extends Record<string, unknown>>(
   const validateAll = (formEl?: HTMLElement | null) => {
     setSubmitAttempted(true);
     const invalid = (Object.keys(validators) as (keyof T)[]).filter((k) => errorOf(k));
+
     if (invalid.length && formEl) {
       setTimeout(() => {
         const el = formEl.querySelector<HTMLElement>('[aria-invalid="true"]');
+
         el?.focus();
       }, 0);
     }
+
     return invalid.length === 0;
   };
 
@@ -118,6 +137,7 @@ export function useFormValidation<T extends Record<string, unknown>>(
   /** Spread onto an MUI TextField: value, onChange, onBlur, error, helperText. */
   const fieldProps = (key: keyof T, hint?: string) => {
     const err = visibleError(key);
+
     return {
       name: String(key),
       value: values[key] as unknown as string,

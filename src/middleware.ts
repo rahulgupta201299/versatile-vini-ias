@@ -11,8 +11,10 @@ export function middleware(req: NextRequest) {
   const res = pathname.startsWith("/admin/login") || req.cookies.has(ADMIN_COOKIE)
     ? NextResponse.next()
     : NextResponse.redirect(new URL(`/admin/login?next=${encodeURIComponent(pathname + search)}`, req.url));
+
   res.headers.set("X-Robots-Tag", "noindex, nofollow");
   res.headers.set("Cache-Control", "no-store");
+
   return res;
 }
 

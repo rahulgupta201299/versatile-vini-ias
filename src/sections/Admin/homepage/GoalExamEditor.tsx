@@ -6,12 +6,13 @@ import { useRouter } from "next/navigation";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
-import { ArrowLeft, Check, Download, ExternalLink, Link2, PencilLine, Save, Sparkles } from "lucide-react";
+import { ArrowLeft, Check, Download, ExternalLink, Link2, PencilLine, Sparkles } from "lucide-react";
 import { COLORS } from "@/theme/colors";
 import { adminRequest } from "@/lib/adminClient";
 import { goalPath } from "@/utils/slug";
 import { AdminExamCategoryWithSubCategories, AdminGoalExamWithDetails, AdminSubCategory, ExamDetails } from "@/types";
 import { PageHeader } from "../ui";
+import SaveBar from "../common/SaveBar";
 import { buttonSx, Field, FieldGrid, inputSx, primaryButtonSx } from "../allExams/formKit";
 import ExamDetailsSections, { DETAIL_SECTIONS } from "../allExams/ExamDetailsSections";
 import { cleanDetails, validateDetails } from "../allExams/examForm";
@@ -31,15 +32,6 @@ const MODES: { id: Mode; title: string; description: string; Icon: typeof Link2 
 ];
 
 const errorText = (error: unknown, fallback: string) => (error instanceof Error ? error.message : fallback);
-
-/** The line next to the Save button. */
-const saveMessage = (isDirty: boolean, status: Status, savedText: string) => {
-  if (isDirty) return "Unsaved changes";
-
-  if (status === "saved") return (<><Check size={16} /> Saved{savedText}</>);
-
-  return "No changes";
-};
 
 type PickerProps = {
   categories: AdminExamCategoryWithSubCategories[];
@@ -342,26 +334,16 @@ export default function GoalExamEditor({ exam: initialExam }: { exam: AdminGoalE
           </Box>
 
           {/* Save bar */}
-          <Box sx={{ position: "fixed", left: { xs: 0, lg: 264 }, right: 0, bottom: 0, zIndex: 20, borderTop: `1px solid ${COLORS.border}`, bgcolor: "rgba(255,255,255,.96)", backdropFilter: "blur(8px)" }}>
-            {!!problems.length && (
-              <Box role="alert" sx={{ maxWidth: 1360, mx: "auto", px: { xs: 2, md: 4 }, pt: 1.5 }}>
-                <Box sx={{ p: 1.5, borderRadius: "10px", bgcolor: COLORS.redTint, border: `1px solid ${COLORS.redBorder}`, color: COLORS.redDark, fontSize: "0.84rem", fontWeight: 600, maxHeight: 120, overflowY: "auto" }}>
-                  {problems.map((problem) => (
-                    <div key={problem}>• {problem}</div>
-                  ))}
-                </Box>
-              </Box>
-            )}
-            <Box sx={{ maxWidth: 1360, mx: "auto", px: { xs: 2, md: 4 }, py: 1.5, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 1.5 }}>
-              <Typography sx={{ color: isDirty ? COLORS.redDark : COLORS.success, fontSize: "0.85rem", fontWeight: 600, display: "flex", alignItems: "center", gap: 0.5 }}>
-                {saveMessage(isDirty, status, savedText)}
-              </Typography>
-              <Box component="button" type="button" disabled={!canSave} onClick={save} sx={primaryButtonSx}>
-                {isWorking ? <CircularProgress size={18} sx={{ color: "#FFFFFF" }} /> : <Save size={16} />}
-                {isLinkedNow ? "Save as own page" : "Save page"}
-              </Box>
-            </Box>
-          </Box>
+          <SaveBar
+            problems={problems}
+            isDirty={isDirty}
+            isSaved={status === "saved"}
+            isSaving={isWorking}
+            isDisabled={!canSave}
+            savedText={savedText}
+            label={isLinkedNow ? "Save as own page" : "Save page"}
+            onSave={save}
+          />
         </>
       )}
     </Box>

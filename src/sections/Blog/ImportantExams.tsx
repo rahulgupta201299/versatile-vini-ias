@@ -9,6 +9,7 @@ import { COLORS } from "@/theme/colors";
 /** "IMPORTANT EXAMS" link grid above the footer — same pink background as the app section. */
 export default function ImportantExams({ columns }: { columns: ExamUpdates["importantExams"] }) {
   if (!columns.length) return null;
+
   return (
     <Box component="section" aria-label="Important exams" sx={{ py: { xs: 4, md: 6 }, background: "linear-gradient(180deg, #FFF3F5 0%, #FFDDE3 100%)" }}>
       <Container>

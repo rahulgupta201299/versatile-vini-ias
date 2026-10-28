@@ -8,6 +8,7 @@ import { COLORS } from "@/theme/colors";
 import { LANDING_ICONS } from "@/sections/CourseLanding/icons";
 import BuyButton from "./BuyButton";
 import PlanHighlighter from "./PlanHighlighter";
+import HighlightTitle from "@/components/HighlightTitle";
 
 const formatINR = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 const ROW_BORDER = `1px solid ${COLORS.border}`;
@@ -33,9 +34,7 @@ export default function BatchPlans({ data }: { data: Pick<BatchCourseContent, "p
     <Box component="section" id="plans" sx={{ py: { xs: 5, md: 7 }, backgroundColor: COLORS.surface }}>
       <Container>
         <Box sx={{ textAlign: "center", mb: { xs: 3, md: 4 } }}>
-          <Typography component="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.6rem", md: "2.4rem" }, color: COLORS.navy, lineHeight: 1.2 }}>
-            {plansTitle.before} <Box component="span" sx={{ color: COLORS.red }}>{plansTitle.highlight}</Box> {plansTitle.after}
-          </Typography>
+          <HighlightTitle before={`${plansTitle.before} `} highlight={plansTitle.highlight} after={` ${plansTitle.after}`} />
           <Typography sx={{ mt: 1, color: COLORS.textSecondary, fontSize: { xs: "0.92rem", md: "1.02rem" } }}>{plansTitle.subtitle}</Typography>
         </Box>
 
@@ -77,6 +76,7 @@ export default function BatchPlans({ data }: { data: Pick<BatchCourseContent, "p
           {/* feature rows */}
           {features.map((f) => {
             const Icon = LANDING_ICONS[f.icon];
+
             return (
               <Box key={f.label} role="row" sx={{ display: "grid", gridTemplateColumns: cols, borderTop: ROW_BORDER }}>
                 <Box role="cell" sx={{ display: "flex", alignItems: "center", gap: { xs: 1, md: 1.5 }, px: { xs: 1.25, md: 2.25 }, py: { xs: 1.25, md: 1.5 } }}>
@@ -105,7 +105,7 @@ export default function BatchPlans({ data }: { data: Pick<BatchCourseContent, "p
             {plans.map((p) => (
               <Box key={p.id} role="cell" data-plan-price={p.id} sx={{ textAlign: "center", py: 2, px: 0.5, backgroundColor: p.tint }}>
                 <Typography sx={{ fontWeight: 900, color: COLORS.ink, fontSize: { xs: "1.05rem", md: "1.6rem" }, lineHeight: 1.1 }}>{formatINR(p.price)}</Typography>
-                <Typography sx={{ fontSize: { xs: "0.55rem", md: "0.65rem" }, color: COLORS.muted, fontWeight: 600 }}>{p.priceNote ?? "(TAXES INCLUDED)"}</Typography>
+                <Typography sx={{ fontSize: { xs: "0.55rem", md: "0.65rem" }, color: COLORS.muted, fontWeight: 600 }}>{p.priceNote || "(TAXES INCLUDED)"}</Typography>
                 <BuyButton color={p.color} />
               </Box>
             ))}

@@ -21,8 +21,11 @@ export default function LatestTicker({ items }: { items: { title: string; href: 
   const pathname = usePathname();
   // article pages (/exams/<category>/<post>) don't show the ticker
   const isArticle = pathname.split("/").filter(Boolean).length > 2;
+
   if (!open || !items.length || isArticle) return null;
+
   const loop = [...items, ...items]; // duplicated for a seamless loop
+
   return (
     <Container sx={{ mt: { xs: 1.5, md: 2 } }}>
       <Box role="region" aria-label="Latest news" sx={{ display: "flex", alignItems: "center", height: { xs: 34, md: 36 }, borderRadius: "8px", overflow: "hidden", backgroundColor: COLORS.red, color: "#FFFFFF" }}>

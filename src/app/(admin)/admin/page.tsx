@@ -10,5 +10,5 @@ export default async function AdminIndex() {
 
   if (!admin) redirect("/admin/login");
 
-  redirect(firstAllowedPath(admin) ?? "/admin/web");
+  redirect(firstAllowedPath(admin) || "/admin/web");
 }

@@ -26,6 +26,7 @@ const store = {
   get<T>(kind: "local" | "session", key: string): T | null {
     try {
       const raw = (kind === "local" ? localStorage : sessionStorage).getItem(key);
+
       return raw ? (JSON.parse(raw) as T) : null;
     } catch {
       return null;
@@ -50,6 +51,7 @@ const store = {
 async function post<T>(url: string, body: BodyInit, json = true): Promise<T & { ok: boolean; error?: string }> {
   try {
     const res = await fetch(url, { method: "POST", body, headers: json ? { "Content-Type": "application/json" } : undefined });
+
     return await res.json();
   } catch {
     return { ok: false, error: "Network error — please check your connection." } as T & { ok: boolean; error?: string };
@@ -65,10 +67,40 @@ function Label({ children, required }: { children: React.ReactNode; required?: b
   );
 }
 
+/** Under the code boxes: "Verifying…", the resend countdown, or the "Resend code" link. */
+function ResendCode({ isVerifying, cooldown, onResend }: { isVerifying: boolean; cooldown: number; onResend: () => void }) {
+  if (isVerifying) {
+    return (
+      <Box sx={{ display: "inline-flex", alignItems: "center", gap: 1, color: COLORS.body }}>
+        <CircularProgress size={14} /> Verifying…
+      </Box>
+    );
+  }
+
+  if (cooldown) return <Typography sx={{ color: COLORS.muted, fontSize: "0.82rem" }}>Resend code in {cooldown}s</Typography>;
+
+  return (
+    <Box component="button" type="button" onClick={onResend} sx={{ border: "none", bgcolor: "transparent", p: 0, color: COLORS.red, fontFamily: "inherit", fontWeight: 700, fontSize: "0.82rem", cursor: "pointer" }}>
+      Resend code
+    </Box>
+  );
+}
+
+/** A step bubble's colours: green when done, red when current, white otherwise. */
+const stepColors = ({ done, active }: { done: boolean; active: boolean }) => {
+  if (done) return { bgcolor: COLORS.success, borderColor: COLORS.success };
+
+  if (active) return { bgcolor: COLORS.red, borderColor: COLORS.red };
+
+  return { bgcolor: "#FFFFFF", borderColor: COLORS.border };
+};
+
 function Step({ n, label, done, active }: { n: number; label: string; done: boolean; active: boolean }) {
+  const { bgcolor, borderColor } = stepColors({ done, active });
+
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-      <Box sx={{ width: 26, height: 26, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.8rem", fontWeight: 800, bgcolor: done ? COLORS.success : active ? COLORS.red : "#FFFFFF", color: done || active ? "#FFFFFF" : COLORS.muted, border: `1.5px solid ${done ? COLORS.success : active ? COLORS.red : COLORS.border}` }}>
+      <Box sx={{ width: 26, height: 26, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.8rem", fontWeight: 800, bgcolor, color: done || active ? "#FFFFFF" : COLORS.muted, border: `1.5px solid ${borderColor}` }}>
         {done ? <Check size={15} strokeWidth={3} /> : n}
       </Box>
       <Typography sx={{ fontWeight: 700, fontSize: "0.88rem", color: done || active ? COLORS.navy : COLORS.muted }}>{label}</Typography>
@@ -101,28 +133,39 @@ export default function JobApplyForm({ job }: { job: CareerJob }) {
   // Restore a verified phone (this session) and saved details (this device).
   useEffect(() => {
     const v = store.get<{ phone: string; token: string; exp: number }>("session", VERIFIED_KEY);
+
     if (v && v.exp > Date.now()) {
       setPhone(v.phone);
       setToken(v.token);
     }
+
     const p = store.get<Profile>("local", PROFILE_KEY);
+
     if (p) setProfile({ ...EMPTY, ...p });
   }, []);
 
   useEffect(() => {
     if (!cooldown) return;
+
     const t = window.setTimeout(() => setCooldown((c) => c - 1), 1000);
+
     return () => window.clearTimeout(t);
   }, [cooldown]);
 
   const sendOtp = async () => {
     const err = validateMobile(phone);
+
     setPhoneErr(err);
+
     if (err) return;
+
     setBusy("send");
     const r = await post<{ demo?: boolean }>("/api/careers/otp", JSON.stringify({ action: "send", phone }));
+
     setBusy("");
+
     if (!r.ok) return setPhoneErr(r.error || "Couldn't send the code");
+
     setOtpSent(true);
     setDemo(!!r.demo);
     setOtp(["", "", "", "", "", ""]);
@@ -134,26 +177,35 @@ export default function JobApplyForm({ job }: { job: CareerJob }) {
   const verifyOtp = async (code: string) => {
     setBusy("verify");
     const r = await post<{ token?: string }>("/api/careers/otp", JSON.stringify({ action: "verify", phone, code }));
+
     setBusy("");
+
     if (!r.ok || !r.token) {
       setOtpErr(r.error || "Incorrect code");
       setOtp(["", "", "", "", "", ""]);
       otpRefs.current[0]?.focus();
+
       return;
     }
+
     setToken(r.token);
     store.set("session", VERIFIED_KEY, { phone, token: r.token, exp: Date.now() + 2 * 60 * 60 * 1000 });
   };
 
   const setDigits = (start: number, raw: string) => {
     const digits = raw.replace(/\D/g, "");
+
     if (!digits && raw !== "") return;
+
     const next = [...otp];
+
     if (!digits) next[start] = "";
+
     digits.split("").slice(0, 6 - start).forEach((d, k) => (next[start + k] = d));
     setOtp(next);
     setOtpErr("");
     const filled = next.join("");
+
     if (filled.length === 6 && !next.includes("")) verifyOtp(filled);
     else otpRefs.current[Math.min(start + Math.max(digits.length, 1), 5)]?.focus();
   };
@@ -167,27 +219,40 @@ export default function JobApplyForm({ job }: { job: CareerJob }) {
 
   const pickFile = (f: File | undefined | null) => {
     if (!f) return;
+
     const okType = /\.(pdf|docx?)$/i.test(f.name);
+
     if (!okType) return setErrors((e) => ({ ...e, resume: "Upload a PDF or Word file" }));
+
     if (f.size > MAX_RESUME) return setErrors((e) => ({ ...e, resume: "File must be under 5 MB" }));
+
     setResume(f);
     setErrors((e) => ({ ...e, resume: "" }));
   };
 
   const validate = () => {
     const e: typeof errors = {};
+
     if (profile.name.trim().length < 2) e.name = "Enter your full name";
+
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(profile.email.trim())) e.email = "Enter a valid email";
+
     if (!profile.experience) e.experience = "Select your experience";
+
     if (useLink ? !/^https?:\/\/\S+$/.test(profile.link.trim()) : !resume) e.resume = useLink ? "Paste a valid link (https://…)" : "Upload your resume";
+
     setErrors(e);
+
     return !Object.values(e).some(Boolean);
   };
 
   const submit = async (ev: React.FormEvent) => {
     ev.preventDefault();
+
     if (!verified || !validate()) return;
+
     const fd = new FormData();
+
     fd.set("token", token);
     fd.set("job", job.id);
     fd.set("name", profile.name.trim());
@@ -195,15 +260,21 @@ export default function JobApplyForm({ job }: { job: CareerJob }) {
     fd.set("experience", profile.experience);
     fd.set("city", profile.city.trim());
     fd.set("note", note.trim());
+
     if (useLink) fd.set("link", profile.link.trim());
     else if (resume) fd.set("resume", resume);
+
     setBusy("submit");
     const r = await post("/api/careers/apply", fd, false);
+
     setBusy("");
+
     if (!r.ok) {
       if (r.error?.includes("verify")) changeNumber();
+
       return setErrors({ form: r.error || "Couldn't submit — please try again." });
     }
+
     store.set("local", PROFILE_KEY, { ...profile, link: useLink ? profile.link : "" });
     setDone(true);
   };
@@ -312,13 +383,7 @@ export default function JobApplyForm({ job }: { job: CareerJob }) {
               </Box>
               {errText(otpErr)}
               <Box sx={{ mt: 1.25, display: "flex", alignItems: "center", gap: 1.5, flexWrap: "wrap", fontSize: "0.82rem" }}>
-                {busy === "verify" ? (
-                  <Box sx={{ display: "inline-flex", alignItems: "center", gap: 1, color: COLORS.body }}><CircularProgress size={14} /> Verifying…</Box>
-                ) : cooldown ? (
-                  <Typography sx={{ color: COLORS.muted, fontSize: "0.82rem" }}>Resend code in {cooldown}s</Typography>
-                ) : (
-                  <Box component="button" type="button" onClick={sendOtp} sx={{ border: "none", bgcolor: "transparent", p: 0, color: COLORS.red, fontFamily: "inherit", fontWeight: 700, fontSize: "0.82rem", cursor: "pointer" }}>Resend code</Box>
-                )}
+                <ResendCode isVerifying={busy === "verify"} cooldown={cooldown} onResend={sendOtp} />
                 {demo && <Box component="span" sx={{ ml: "auto", px: 1, py: 0.25, borderRadius: "6px", bgcolor: "#FFF7CC", color: "#8A6D00", fontWeight: 700, fontSize: "0.74rem" }}>Demo mode · code 123456</Box>}
               </Box>
             </Box>
@@ -366,22 +431,24 @@ export default function JobApplyForm({ job }: { job: CareerJob }) {
                 {useLink ? <><FileUp size={14} /> Upload a file instead</> : <><Link2 size={14} /> Paste a link instead</>}
               </Box>
             </Box>
-            {useLink ? (
+            {useLink && (
               <Box component="input" type="url" value={profile.link} onChange={set("link")} placeholder="https://drive.google.com/… or LinkedIn" sx={{ ...fieldSx, ...errBorder(errors.resume) }} />
-            ) : resume ? (
+            )}
+            {!useLink && resume && (
               <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, px: 1.75, height: 52, borderRadius: "12px", border: "1.5px solid #BBF7D0", bgcolor: "#F0FDF4" }}>
                 <CheckCircle2 size={18} color={COLORS.success} />
                 <Typography noWrap sx={{ flex: 1, minWidth: 0, fontWeight: 600, color: COLORS.navy, fontSize: "0.9rem" }}>{resume.name}</Typography>
                 <Typography sx={{ color: COLORS.muted, fontSize: "0.78rem" }}>{(resume.size / 1024 / 1024).toFixed(1)} MB</Typography>
                 <Box component="button" type="button" aria-label="Remove file" onClick={() => setResume(null)} sx={{ border: "none", bgcolor: "transparent", color: COLORS.muted, cursor: "pointer", display: "flex", "&:hover": { color: COLORS.red } }}><X size={18} /></Box>
               </Box>
-            ) : (
+            )}
+            {!useLink && !resume && (
               <Box
                 component="label"
                 onDragOver={(e: React.DragEvent) => { e.preventDefault(); setDrag(true); }}
                 onDragLeave={() => setDrag(false)}
                 onDrop={(e: React.DragEvent) => { e.preventDefault(); setDrag(false); pickFile(e.dataTransfer.files?.[0]); }}
-                sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0.5, py: 2.25, px: 2, borderRadius: "12px", border: `1.5px dashed ${errors.resume ? COLORS.red : drag ? COLORS.red : COLORS.border}`, bgcolor: drag ? COLORS.redTint : COLORS.surface, cursor: "pointer", textAlign: "center", transition: "all .2s", "&:hover": { borderColor: COLORS.red, bgcolor: COLORS.redTintSoft } }}
+                sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0.5, py: 2.25, px: 2, borderRadius: "12px", border: `1.5px dashed ${errors.resume || drag ? COLORS.red : COLORS.border}`, bgcolor: drag ? COLORS.redTint : COLORS.surface, cursor: "pointer", textAlign: "center", transition: "all .2s", "&:hover": { borderColor: COLORS.red, bgcolor: COLORS.redTintSoft } }}
               >
                 <FileUp size={22} color={COLORS.red} />
                 <Typography sx={{ fontWeight: 700, color: COLORS.navy, fontSize: "0.9rem" }}>Tap to upload or drag &amp; drop</Typography>

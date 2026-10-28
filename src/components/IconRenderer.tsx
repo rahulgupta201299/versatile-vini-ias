@@ -105,6 +105,7 @@ interface IconRendererProps {
 }
 
 export default function IconRenderer({ name, size = 22, color = "currentColor" }: IconRendererProps) {
-  const Component = ICONS[name] ?? BookOpen;
+  const Component = ICONS[name] || BookOpen;
+
   return <Component size={size} color={color} />;
 }

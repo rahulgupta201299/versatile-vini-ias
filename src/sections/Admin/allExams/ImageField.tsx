@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -21,6 +22,15 @@ type ImageFieldProps = {
 };
 
 /** Shows the current image. Upload by clicking the box, the Upload button, or dropping a file on it. */
+/** The drop zone's border and background: highlighted while dragging, quiet once it holds an image. */
+const dropZoneColors = ({ isDragOver, hasImage }: { isDragOver: boolean; hasImage: boolean }) => {
+  if (isDragOver) return { border: `2px dashed ${COLORS.red}`, bgcolor: COLORS.redTintSoft };
+
+  if (hasImage) return { border: "2px dashed transparent", bgcolor: "#0F172A0A" };
+
+  return { border: `2px dashed ${COLORS.border}`, bgcolor: "#FFFFFF" };
+};
+
 export default function ImageField({ label, value, onChange, aspectRatio = "16 / 9", hint, maxHeight = 260 }: ImageFieldProps) {
   const fileInput = useRef<HTMLInputElement>(null);
   const [error, setError] = useState("");
@@ -39,6 +49,7 @@ export default function ImageField({ label, value, onChange, aspectRatio = "16 /
       setError(uploadError instanceof Error ? uploadError.message : "Upload failed.");
     } finally {
       setBusy(false);
+
       if (fileInput.current) fileInput.current.value = "";
     }
   };
@@ -69,8 +80,7 @@ export default function ImageField({ label, value, onChange, aspectRatio = "16 /
           maxHeight,
           borderRadius: "12px",
           overflow: "hidden",
-          border: `2px dashed ${isDragOver ? COLORS.red : value ? "transparent" : COLORS.border}`,
-          bgcolor: isDragOver ? COLORS.redTintSoft : value ? "#0F172A0A" : "#FFFFFF",
+          ...dropZoneColors({ isDragOver, hasImage: Boolean(value) }),
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -81,8 +91,7 @@ export default function ImageField({ label, value, onChange, aspectRatio = "16 /
         }}
       >
         {value ? (
-          // eslint-disable-next-line @next/next/no-img-element -- previews uploads that aren't saved yet
-          <img src={value} alt={label} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+          <Image src={value} alt={label} fill sizes="320px" style={{ objectFit: "contain" }} />
         ) : (
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0.75, px: 2, textAlign: "center", color: COLORS.muted, fontSize: "0.82rem" }}>
             <ImagePlus size={26} color={COLORS.red} />

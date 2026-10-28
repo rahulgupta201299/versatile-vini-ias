@@ -24,7 +24,9 @@ const validate = ({ title, link, color }: FreeResourceInput) => {
   const problems: string[] = [];
 
   if (!title.trim()) problems.push("Add a title, e.g. “Current Affairs”.");
+
   if (!link.trim()) problems.push("Add the link the tile opens, e.g. /exams.");
+
   if (!/^#[\da-f]{6}$/i.test(color)) problems.push("Choose a colour like #0284C7.");
 
   return problems;

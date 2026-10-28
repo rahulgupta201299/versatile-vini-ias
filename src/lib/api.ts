@@ -85,10 +85,12 @@ export async function fetchApi<T>(path: string, { fallback, query, revalidate = 
   if (!BASE_URL) return fallback;
 
   const url = new URL(`${BASE_URL}/${path.replace(/^\/+/, "")}`);
-  for (const [key, value] of Object.entries(query ?? {})) if (value) url.searchParams.set(key, value);
+
+  for (const [key, value] of Object.entries(query || {})) if (value) url.searchParams.set(key, value);
 
   const key = url.toString();
-  if ((unavailableUntil.get(key) ?? 0) > Date.now()) return fallback;
+
+  if ((unavailableUntil.get(key) || 0) > Date.now()) return fallback;
 
   try {
     const res = await fetch(url, {
@@ -96,18 +98,24 @@ export async function fetchApi<T>(path: string, { fallback, query, revalidate = 
       signal: AbortSignal.timeout(TIMEOUT_MS),
       next: { revalidate, tags },
     });
+
     if (res.status === 404) {
       unavailableUntil.set(key, Date.now() + FAILURE_COOLDOWN_MS);
+
       return fallback;
     }
+
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const data: unknown = await res.json();
+
     if (!isValid(data)) throw new Error("empty or invalid response");
+
     return data as T;
   } catch (err) {
     unavailableUntil.set(key, Date.now() + FAILURE_COOLDOWN_MS);
     console.error(`[api] GET ${url.pathname}${url.search} failed, using local data —`, err instanceof Error ? err.message : err);
+
     return fallback;
   }
 }

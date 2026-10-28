@@ -20,6 +20,7 @@ const Tag = ({ level, label }: { level: OverlapLevel; label: string }) => (
 /** UPSC CSE ↔ exam syllabus overlap explorer (table on desktop, cards on mobile). */
 export default function OverlapTable({ data }: { data: SyllabusOverlap }) {
   const cell = { px: 2, py: 1.5, fontSize: "0.9rem", color: COLORS.body, borderBottom: `1px solid ${COLORS.border}`, textAlign: "left" as const, verticalAlign: "top" as const };
+
   return (
     <Box component="section" sx={{ py: { xs: 3.5, md: 6 } }}>
       <Container>

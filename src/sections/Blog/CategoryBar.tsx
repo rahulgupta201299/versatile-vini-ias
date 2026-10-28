@@ -13,7 +13,7 @@ import { categoryIcon } from "./blogUtils";
 /** Exam categories under the header (blog home + category pages) — sticky, scrolls sideways on small screens, active tab highlighted. */
 export default function CategoryBar({ categories }: { categories: BlogCategory[] }) {
   const pathname = usePathname();
-  const active = pathname.split("/")[2] ?? "";
+  const active = pathname.split("/")[2] || "";
   const rowRef = useRef<HTMLDivElement>(null);
 
   // keep the active tab in view on phones
@@ -25,6 +25,7 @@ export default function CategoryBar({ categories }: { categories: BlogCategory[]
   if (pathname.split("/").filter(Boolean).length > 2) return null;
 
   const items = [{ slug: "", name: "All Exams" }, ...categories];
+
   return (
     <Box component="nav" aria-label="Exam categories" sx={{ position: "sticky", top: { xs: 64, lg: 72 }, zIndex: 1100, backgroundColor: "#FFFFFF", borderBottom: `1px solid ${COLORS.border}`, boxShadow: "0 4px 12px rgba(15,23,42,.04)" }}>
       <Container>
@@ -35,6 +36,7 @@ export default function CategoryBar({ categories }: { categories: BlogCategory[]
           {items.map((c) => {
             const isActive = c.slug === active;
             const Icon = c.slug ? categoryIcon(c.slug) : LayoutGrid;
+
             return (
               <Box
                 key={c.slug || "all"}

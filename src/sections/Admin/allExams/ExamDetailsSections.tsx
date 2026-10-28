@@ -12,6 +12,13 @@ import { Field, FieldGrid, ListEditor, NumberInput, SectionCard, TextArea, TextI
 import { discountPercent, newBatch, newFreeClass, toYoutubeId } from "./examForm";
 
 /** Jump links for the page sections below (ids match each SectionCard). */
+/** The hint under a free class's YouTube field. */
+const youtubeHint = (youtubeId: string, isValid: boolean) => {
+  if (!isValid) return "Not a valid YouTube link or ID";
+
+  return youtubeId ? `Video ID: ${youtubeId}` : "Paste a YouTube link — the video plays on the page";
+};
+
 export const DETAIL_SECTIONS = [
   { id: "sub-title", label: "1 · Sub title" },
   { id: "banners", label: "2 · Banners" },
@@ -66,7 +73,7 @@ export default function ExamDetailsSections({ details, examName, onChange }: Exa
                 <Field label="Educator">
                   <TextInput value={video.educator} onChange={(educator) => update({ ...video, educator })} placeholder="Vini IAS Faculty" />
                 </Field>
-                <Field label="YouTube link or video ID" hint={youtubeIsValid ? (video.youtubeId ? `Video ID: ${video.youtubeId}` : "Paste a YouTube link — the video plays on the page") : "Not a valid YouTube link or ID"}>
+                <Field label="YouTube link or video ID" hint={youtubeHint(video.youtubeId, youtubeIsValid)}>
                   <TextInput value={video.youtubeId} onChange={(value) => update({ ...video, youtubeId: toYoutubeId(value) || value.trim() })} placeholder="https://www.youtube.com/watch?v=…" />
                 </Field>
                 <Field label="Duration">

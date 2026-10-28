@@ -3,8 +3,8 @@ import "./globals.css";
 import ThemeRegistry from "@/theme/ThemeRegistry";
 import { SiteDataProvider } from "@/context/SiteDataContext";
 import { getSiteData } from "@/services/site";
-
 import { COLORS } from "@/theme/colors";
+
 export const viewport: Viewport = {
   themeColor: COLORS.red,
   width: "device-width",
@@ -43,8 +43,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/images/logo.png",
-        width: 1200,
-        height: 630,
+        width: 320,
+        height: 132,
         alt: "Vini IAS EdTech Platform",
       },
     ],

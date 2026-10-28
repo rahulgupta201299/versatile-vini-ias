@@ -7,26 +7,24 @@ import { Download } from "lucide-react";
 import { MagazineContent } from "@/types";
 import { externalLinkProps } from "@/utils/links";
 import { COLORS } from "@/theme/colors";
+import HighlightTitle from "@/components/HighlightTitle";
 
 /** "Download The Magazines" — issue cards (cover, month, download button), grouped by language. */
 export default function MagazineDownloads({ data, theme }: { data: MagazineContent["downloads"]; theme: MagazineContent["theme"] }) {
   const dark = theme === "prism";
   const [before, after] = data.title.split(data.highlight);
+
   return (
     <Box component="section" id="course-details" sx={{ py: { xs: 4.5, md: 7 }, backgroundColor: "#FFFFFF" }}>
       <Container>
         <Box sx={{ textAlign: "center", mb: 1.25 }}>
           <Box component="span" sx={{ display: "inline-block", px: 1.5, py: 0.5, borderRadius: "9999px", backgroundColor: "#FCEBCB", color: "#7C4A03", fontWeight: 800, letterSpacing: ".08em", fontSize: "0.7rem" }}>FREE DOWNLOAD</Box>
         </Box>
-        <Typography component="h2" sx={{ textAlign: "center", fontWeight: 900, fontSize: { xs: "1.8rem", md: "2.5rem" }, color: COLORS.navy }}>
-          {before}
-          <Box component="span" sx={{ color: COLORS.red }}>{data.highlight}</Box>
-          {after}
-        </Typography>
+        <HighlightTitle before={before} highlight={data.highlight} after={after} align="center" />
         <Box sx={{ width: 120, height: 4, borderRadius: 2, mx: "auto", mt: 1, mb: { xs: 3, md: 4 }, backgroundColor: COLORS.red }} />
 
         {data.groups.map((g, gi) => (
-          <Box key={g.title ?? gi} sx={{ mt: gi ? { xs: 4, md: 5 } : 0 }}>
+          <Box key={g.title || gi} sx={{ mt: gi ? { xs: 4, md: 5 } : 0 }}>
             {g.title && <Typography component="h3" sx={{ mb: 2.5, textAlign: "center", fontWeight: 900, fontSize: { xs: "1.25rem", md: "1.5rem" }, color: COLORS.navy }}>{g.title}</Typography>}
             <Box sx={{ display: "grid", gridTemplateColumns: { xs: "minmax(0, 1fr)", sm: `repeat(${Math.min(g.issues.length, 2)}, minmax(0, 300px))`, md: `repeat(${Math.min(g.issues.length, 3)}, minmax(0, 340px))` }, justifyContent: "center", gap: { xs: 2.5, md: 4 } }}>
               {g.issues.map((issue) => (

@@ -69,6 +69,7 @@ export const countdownText = (endsAt: string, now = Date.now()) => {
   const days = Math.round((startOfDay(new Date(endsAt).getTime()) - startOfDay(now)) / DAY_MS);
 
   if (days <= 0) return "Sale ending today";
+
   if (days === 1) return "Sale ends tomorrow";
 
   return `Sale ends in ${days} days`;
@@ -82,7 +83,9 @@ export const getBannerStatus = ({ isActive, startsAt, endsAt }: Pick<Celebration
   const ends = new Date(endsAt).getTime();
 
   if (ends <= now) return { label: "Expired", tone: "neutral", hint: `Ended ${formatDateTime(endsAt)}` };
+
   if (!isActive) return { label: "Switched off", tone: "neutral", hint: "Hidden on the website" };
+
   if (starts > now) return { label: "Scheduled", tone: "yellow", hint: `Goes live ${formatDateTime(startsAt)}` };
 
   return { label: "Live now", tone: "success", hint: `Until ${formatDateTime(endsAt)}` };
@@ -96,6 +99,7 @@ export const validateBanner = ({ title, offers, startsAt, endsAt, isActive }: Ce
 
   offers.forEach(({ title: offerTitle, price }, index) => {
     if (!offerTitle.trim()) problems.push(`Offer ${index + 1}: add the text.`);
+
     if (!Number.isFinite(price) || price < 0) problems.push(`Offer ${index + 1}: the price can't be negative.`);
   });
 

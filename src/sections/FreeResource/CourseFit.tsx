@@ -13,6 +13,7 @@ export default function CourseFit({ page }: { page: FreeResourcePage }) {
     { title: `Why should you join The ${page.title}?`, items: page.whyJoin, icon: Sparkles },
     { title: `Who is The ${page.title} best for?`, items: page.bestFor, icon: UserCheck },
   ];
+
   return (
     <Box component="section" sx={{ py: { xs: 4, md: 6 } }}>
       <Container sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(2, minmax(0, 1fr))" }, gap: { xs: 2, md: 3 } }}>

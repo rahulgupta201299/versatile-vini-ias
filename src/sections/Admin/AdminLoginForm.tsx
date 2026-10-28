@@ -53,6 +53,7 @@ const primarySx = {
 async function post(url: string, body: object) {
   try {
     const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), credentials: "same-origin" });
+
     return (await res.json()) as { ok: boolean; error?: string; challengeId?: string; signedIn?: boolean; demo?: boolean };
   } catch {
     return { ok: false, error: "Network error — check your connection." };
@@ -89,20 +90,28 @@ export default function AdminLoginForm({ next, demo }: { next: string | null; de
 
   const submitCredentials = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) return setError("Enter a valid email address.");
+
     if (!password) return setError("Enter your password.");
+
     setBusy(true);
     setError("");
     const r = await post("/api/admin/auth/login", { email: email.trim(), password });
+
     if (r.ok && r.signedIn) {
       // signed in (2FA disabled in the backend, or a device trusted in the last 48h)
       router.replace(safeNext(next));
       router.refresh();
+
       return;
     }
+
     setBusy(false);
+
     // 2FA is temporarily disabled: the backend (ADMIN_2FA_ENABLED=false) signs in with email + password only.
     if (!r.ok) return setError(r.error || "Sign-in failed.");
+
     setError("Email verification is switched on in the backend. Turn it off (ADMIN_2FA_ENABLED=false) or restore the OTP step in this form.");
     // [2FA OFF] if (!r.ok || !r.challengeId) return setError(r.error || "Sign-in failed.");
     // [2FA OFF] setChallengeId(r.challengeId);

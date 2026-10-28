@@ -26,7 +26,7 @@ const formatINR = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 
 export default function BatchHero({ hero, plans }: { hero: BatchCourseContent["hero"]; plans: CoursePlan[] }) {
   const [planId, setPlanId] = useState(plans[0]?.id);
-  const plan = plans.find((p) => p.id === planId) ?? plans[0];
+  const plan = plans.find((p) => p.id === planId) || plans[0];
   const [before, after] = hero.title.split(hero.highlight);
 
   return (
@@ -55,6 +55,7 @@ export default function BatchHero({ hero, plans }: { hero: BatchCourseContent["h
               {hero.highlights.map((h, i) => {
                 const Icon = LANDING_ICONS[h.icon];
                 const tone = TILE_TONES[i % TILE_TONES.length];
+
                 return (
                   <Box key={h.title} sx={{ display: "flex", alignItems: "center", gap: 1, p: { xs: 1, md: 1.25 }, borderRadius: "10px", backgroundColor: tone.bg, border: "1px solid rgba(15,23,42,.05)" }}>
                     <Icon size={18} color={tone.color} style={{ flexShrink: 0 }} />
@@ -76,6 +77,7 @@ export default function BatchHero({ hero, plans }: { hero: BatchCourseContent["h
             <Box role="radiogroup" aria-label="Choose a plan" sx={{ mt: 1.75, display: "flex", flexWrap: "wrap", gap: 1 }}>
               {plans.map((p) => {
                 const active = p.id === plan?.id;
+
                 return (
                   <Box
                     key={p.id}

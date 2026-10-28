@@ -34,16 +34,22 @@ function useDictation(onText: (t: string) => void) {
   const recRef = useRef<SpeechRec | null>(null);
   const [listening, setListening] = useState(false);
   const [supported, setSupported] = useState(false);
+
   useEffect(() => {
     const w = window as unknown as { SpeechRecognition?: new () => SpeechRec; webkitSpeechRecognition?: new () => SpeechRec };
+
     setSupported(!!(w.SpeechRecognition || w.webkitSpeechRecognition));
   }, []);
   const toggle = () => {
     if (listening) return recRef.current?.stop();
+
     const w = window as unknown as { SpeechRecognition?: new () => SpeechRec; webkitSpeechRecognition?: new () => SpeechRec };
     const Ctor = w.SpeechRecognition || w.webkitSpeechRecognition;
+
     if (!Ctor) return;
+
     const rec = new Ctor();
+
     rec.lang = "en-IN";
     rec.interimResults = false;
     rec.onresult = (e) => onText(e.results[0][0].transcript);
@@ -53,12 +59,15 @@ function useDictation(onText: (t: string) => void) {
     setListening(true);
     rec.start();
   };
+
   return { listening, supported, toggle };
 }
 
 function MicButton({ onText }: { onText: (t: string) => void }) {
   const { listening, supported, toggle } = useDictation(onText);
+
   if (!supported) return null;
+
   return (
     <IconButton aria-label={listening ? "Stop voice input" : "Ask by voice"} onClick={toggle} sx={{ color: listening ? AI.orange : AI.ink, bgcolor: listening ? AI.soft : "transparent", animation: listening ? "aiPulse 1.2s ease-in-out infinite" : "none", "@keyframes aiPulse": { "0%,100%": { boxShadow: `0 0 0 0 ${AI.orange}55` }, "50%": { boxShadow: `0 0 0 8px ${AI.orange}00` } } }}>
       {listening ? <MicOff size={22} /> : <Mic size={22} />}
@@ -81,6 +90,7 @@ export default function ViniAiTutor() {
   useEffect(() => {
     try {
       const t = JSON.parse(localStorage.getItem(TARGET_KEY) || "null");
+
       if (t?.exam && t?.year) {
         setTarget(t);
         setDraft(t);
@@ -95,17 +105,21 @@ export default function ViniAiTutor() {
   /** Back to the previous page; straight to the VINI IAS home when VINI AI was opened directly. */
   const goBack = () => {
     const fromSite = typeof document !== "undefined" && document.referrer.startsWith(window.location.origin);
+
     if (fromSite && window.history.length > 1) router.back();
     else router.push("/");
   };
-  const exam = target?.exam.split(" ")[0] ?? "UPSC";
+  const exam = target?.exam.split(" ")[0] || "UPSC";
   const submit = (text: string) => {
     const t = text.trim();
+
     if (!t && !photo) return askRef.current?.focus();
+
     setHandoff(t || "Solve the doubt in my photo");
   };
   const pickPhoto = (f?: File | null) => {
     if (!f || !f.type.startsWith("image/")) return;
+
     setPhoto({ name: f.name, url: URL.createObjectURL(f) });
     askRef.current?.focus();
   };
@@ -119,11 +133,13 @@ export default function ViniAiTutor() {
   };
   const saveTarget = () => {
     setTarget(draft);
+
     try {
       localStorage.setItem(TARGET_KEY, JSON.stringify(draft));
     } catch {
       /* ignore */
     }
+
     setTargetOpen(false);
   };
 
@@ -178,6 +194,7 @@ export default function ViniAiTutor() {
           {TASKS.map((t) => {
             const Icon = t.icon;
             const pink = t.tone === "pink";
+
             return (
               <Box key={t.title} component="button" type="button" onClick={() => applyTask(t.prompt)} sx={{ position: "relative", overflow: "hidden", textAlign: "left", p: { xs: 1.75, md: 2 }, pb: { xs: 2.25, md: 2.5 }, borderRadius: "18px", border: `1px solid ${pink ? "#F8D5E2" : AI.line}`, bgcolor: pink ? "#FFF8FB" : AI.softer, fontFamily: "inherit", cursor: "pointer", transition: "transform .2s, box-shadow .2s, border-color .2s", "&:hover": { transform: "translateY(-3px)", boxShadow: `0 14px 28px ${pink ? AI.pink : AI.orange}22`, borderColor: pink ? AI.pink : AI.orange }, "&::after": { content: '""', position: "absolute", right: -30, bottom: -40, width: 120, height: 70, borderRadius: "50%", bgcolor: pink ? AI.pinkSoft : "#FDE6DB", opacity: 0.8 } }}>
                 <Box sx={{ width: { xs: 50, md: 56 }, height: { xs: 50, md: 56 }, borderRadius: "50%", bgcolor: pink ? AI.pinkSoft : "#FDE6DB", color: pink ? AI.pink : AI.orange, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -212,7 +229,7 @@ export default function ViniAiTutor() {
         <Container sx={{ maxWidth: "820px !important" }}>
           {photo && (
             <Box sx={{ mb: 1, display: "inline-flex", alignItems: "center", gap: 1, p: 0.75, pr: 1, borderRadius: "12px", bgcolor: "#FFFFFF", border: `1px solid ${AI.line}`, boxShadow: "0 6px 16px rgba(0,0,0,.06)" }}>
-              <Box component="img" src={photo.url} alt="" sx={{ width: 40, height: 40, borderRadius: "8px", objectFit: "cover" }} />
+              <Image src={photo.url} alt="" width={40} height={40} style={{ borderRadius: 8, objectFit: "cover" }} />
               <Typography noWrap sx={{ maxWidth: 180, fontSize: "0.82rem", color: AI.body }}>{photo.name}</Typography>
               <IconButton size="small" aria-label="Remove photo" onClick={() => setPhoto(null)}><X size={16} /></IconButton>
             </Box>
@@ -279,6 +296,7 @@ export default function ViniAiTutor() {
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
             {EXAMS.map((x) => {
               const on = draft.exam === x;
+
               return <Box key={x} component="button" type="button" onClick={() => setDraft((d) => ({ ...d, exam: x }))} sx={{ px: 1.75, py: 0.75, borderRadius: 999, border: `1.5px solid ${on ? AI.orange : "#E5E7EB"}`, bgcolor: on ? AI.soft : "#FFFFFF", color: on ? AI.orange : AI.body, fontFamily: "inherit", fontWeight: 700, fontSize: "0.88rem", cursor: "pointer" }}>{x}</Box>;
             })}
           </Box>
@@ -286,6 +304,7 @@ export default function ViniAiTutor() {
           <Box sx={{ display: "flex", gap: 1 }}>
             {YEARS.map((y) => {
               const on = draft.year === y;
+
               return <Box key={y} component="button" type="button" onClick={() => setDraft((d) => ({ ...d, year: y }))} sx={{ flex: 1, py: 1, borderRadius: "12px", border: `1.5px solid ${on ? AI.orange : "#E5E7EB"}`, bgcolor: on ? AI.soft : "#FFFFFF", color: on ? AI.orange : AI.body, fontFamily: "inherit", fontWeight: 800, cursor: "pointer" }}>{y}</Box>;
             })}
           </Box>

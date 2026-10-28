@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -48,13 +49,9 @@ function ExamCard({ sub }: { sub: SubCategory }) {
       }}
     >
       {sub.logo ? (
-        <Box
-          component="img"
-          src={sub.logo}
-          alt={`${sub.name} logo`}
-          loading="lazy"
-          sx={{ width: { xs: 32, sm: 40 }, height: { xs: 32, sm: 40 }, objectFit: "contain", flexShrink: 0 }}
-        />
+        <Box sx={{ position: "relative", width: { xs: 32, sm: 40 }, height: { xs: 32, sm: 40 }, flexShrink: 0 }}>
+          <Image src={sub.logo} alt={`${sub.name} logo`} fill sizes="40px" style={{ objectFit: "contain" }} />
+        </Box>
       ) : (
         <Box
           sx={{
@@ -108,7 +105,9 @@ export default function ExamGoalSection() {
   // Auto-detect scroll positions for left/right scroll arrows
   const checkScrollState = () => {
     if (!scrollRef.current) return;
+
     const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+
     setCanScrollLeft(scrollLeft > 10);
     setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 10);
   };
@@ -116,9 +115,11 @@ export default function ExamGoalSection() {
   useEffect(() => {
     checkScrollState();
     const el = scrollRef.current;
+
     if (el) {
       el.addEventListener("scroll", checkScrollState);
       window.addEventListener("resize", checkScrollState);
+
       return () => {
         el.removeEventListener("scroll", checkScrollState);
         window.removeEventListener("resize", checkScrollState);
@@ -129,6 +130,7 @@ export default function ExamGoalSection() {
   const handleScroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
       const scrollAmount = direction === "left" ? -280 : 280;
+
       scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
@@ -143,8 +145,10 @@ export default function ExamGoalSection() {
     if (showAll && sectionRef.current) {
       // When collapsing, bring the section heading back into view
       const top = sectionRef.current.getBoundingClientRect().top;
+
       if (top < 0) sectionRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
+
     setShowAll((prev) => !prev);
   };
 
@@ -226,6 +230,7 @@ export default function ExamGoalSection() {
           >
             {EXAM_CATEGORIES.map((cat) => {
               const isSelected = activeCategoryName === cat.category;
+
               return (
                 <Box
                   key={cat.category}

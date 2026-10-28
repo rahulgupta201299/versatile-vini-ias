@@ -30,6 +30,7 @@ export default function CategoryNameForm({ initialName = "", submitLabel, placeh
     event?.preventDefault();
 
     if (!trimmed) return setError("Type a category name.");
+
     if (isUnchanged) return onCancel();
 
     setBusy(true);

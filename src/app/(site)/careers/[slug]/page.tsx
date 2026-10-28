@@ -19,14 +19,18 @@ export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const { jobs } = await getCareersContent();
+
   return jobs.map((j) => ({ slug: j.id }));
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const job = (await getCareersContent()).jobs.find((j) => j.id === slug);
+
   if (!job) return {};
+
   const title = `${job.title} — ${job.location} | Careers at Vini IAS`;
+
   return { title, description: job.summary, alternates: { canonical: jobPath(job.id) }, openGraph: { title, description: job.summary, url: jobUrl(job.id), type: "website" } };
 }
 
@@ -34,6 +38,7 @@ const EMPLOYMENT: Record<string, string> = { "Full-time": "FULL_TIME", "Part-tim
 
 function JdList({ title, items }: { title: string; items: string[] }) {
   if (!items.length) return null;
+
   return (
     <Box sx={{ mt: 3.5 }}>
       <Typography component="h2" sx={{ fontWeight: 800, color: COLORS.navy, fontSize: "1.2rem", mb: 1.5 }}>{title}</Typography>
@@ -52,7 +57,9 @@ export default async function CareerJobPage({ params }: Params) {
   const { slug } = await params;
   const careers = await getCareersContent();
   const job = careers.jobs.find((j) => j.id === slug);
+
   if (!job) notFound();
+
   const others = careers.jobs.filter((j) => j.id !== job.id).sort(byNewest).slice(0, 3);
   const remote = /remote/i.test(job.location);
 
@@ -62,7 +69,7 @@ export default async function CareerJobPage({ params }: Params) {
     title: job.title,
     description: `<p>${job.summary}</p><ul>${[...job.responsibilities, ...job.requirements].map((x) => `<li>${x}</li>`).join("")}</ul>`,
     datePosted: job.postedAt,
-    employmentType: EMPLOYMENT[job.type] ?? "OTHER",
+    employmentType: EMPLOYMENT[job.type] || "OTHER",
     hiringOrganization: { "@type": "Organization", name: "Vini Eduventure Pvt. Ltd. (VINI IAS)", sameAs: SITE_URL, logo: `${SITE_URL}/images/logo.png` },
     ...(remote ? { jobLocationType: "TELECOMMUTE", applicantLocationRequirements: { "@type": "Country", name: "India" } } : {}),
     jobLocation: { "@type": "Place", address: { "@type": "PostalAddress", addressLocality: job.location.replace(/\s*\/\s*Remote/i, ""), addressCountry: "IN" } },

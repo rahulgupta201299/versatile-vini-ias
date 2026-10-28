@@ -19,18 +19,22 @@ import { FreeResourcePage } from "@/types";
 
 export function courseMetadata(page: FreeResourcePage | null, section: string): Metadata {
   if (!page) return {};
+
   const title = `${page.title} | Vini IAS`;
   const url = `/courses/${section}/${page.slug}`;
+
   return { title, description: page.summary, alternates: { canonical: url }, openGraph: { title, description: page.summary, url, images: ["/images/logo.png"] } };
 }
 
 function FaqJsonLd({ page }: { page: FreeResourcePage }) {
   if (!page.faqs.length) return null;
+
   const json = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     mainEntity: page.faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
   };
+
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }} />;
 }
 
@@ -39,6 +43,7 @@ export async function CoursePageView({ page }: { page: FreeResourcePage }) {
   if (page.batch) {
     const { batch } = page;
     const [resultTabs, rankerStats] = await Promise.all([getResultBanners(), getRankerStats()]);
+
     return (
       <>
         <FaqJsonLd page={page} />
@@ -56,6 +61,7 @@ export async function CoursePageView({ page }: { page: FreeResourcePage }) {
   if (page.ethics) {
     const { ethics } = page;
     const [resultTabs, rankerStats] = await Promise.all([getResultBanners(), getRankerStats()]);
+
     return (
       <>
         <FaqJsonLd page={page} />
@@ -73,6 +79,7 @@ export async function CoursePageView({ page }: { page: FreeResourcePage }) {
   // Current Affairs "Shortlist" landing
   if (page.shortlist) {
     const { shortlist } = page;
+
     return (
       <>
         <FaqJsonLd page={page} />
@@ -91,6 +98,7 @@ export async function CoursePageView({ page }: { page: FreeResourcePage }) {
   // Free magazine pages (Monthly Magazine, PRISM Simplified)
   if (page.magazine) {
     const { magazine } = page;
+
     return (
       <>
         <FaqJsonLd page={page} />
@@ -105,6 +113,7 @@ export async function CoursePageView({ page }: { page: FreeResourcePage }) {
   // Designed landing layout (e.g. NCERT Foundation Batch)
   if (page.landing) {
     const { landing } = page;
+
     return (
       <>
         <LandingHero hero={landing.hero} />
@@ -124,6 +133,7 @@ export async function CoursePageView({ page }: { page: FreeResourcePage }) {
     const toppers = resultTabs && rankerStats ? <TopRankersSection tabs={resultTabs} stats={rankerStats} /> : null;
     const story = Boolean(m.problem || m.solution); // Mains Mentorship style
     const syllabus = m.syllabus ? <SyllabusStrip title={m.syllabus.title} url={m.syllabus.url} /> : null;
+
     return (
       <>
         <FaqJsonLd page={page} />
@@ -162,6 +172,7 @@ export async function CoursePageView({ page }: { page: FreeResourcePage }) {
 
   // Standard course layout (e.g. Beginner's Kit) — same order as the reference, educators left out
   const [resultTabs, rankerStats] = await Promise.all([getResultBanners(), getRankerStats()]);
+
   return (
     <>
       <FaqJsonLd page={page} />

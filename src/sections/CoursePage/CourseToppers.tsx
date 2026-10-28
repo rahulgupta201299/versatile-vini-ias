@@ -10,6 +10,7 @@ import { anchorSx, MUTED, sectionSx, titleSx } from "./theme";
 
 export default function CourseToppers({ banners }: { banners: ResultBanner[] }) {
   if (!banners.length) return null;
+
   return (
     <Box component="section" id="toppers" sx={{ ...anchorSx, ...sectionSx }}>
       <Container>

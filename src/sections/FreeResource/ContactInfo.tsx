@@ -9,13 +9,14 @@ import { h2Sx } from "./CourseOverview";
 
 /** Contact Information block at the end of the course details (server component). */
 export default async function ContactInfo() {
-  const { contact: CONTACT } = await getSiteConfig();
-  const SITE = CONTACT.website;
+  const { contact } = await getSiteConfig();
+  const { website } = contact;
   const rows = [
-    { label: "Phone", value: CONTACT.phoneDisplay, href: CONTACT.tel, icon: <Phone size={18} color={COLORS.red} /> },
-    { label: "Email", value: CONTACT.email, href: `mailto:${CONTACT.email}`, icon: <Mail size={18} color={COLORS.red} /> },
-    { label: "Website", value: SITE.label, href: SITE.href, icon: <Globe size={18} color={COLORS.red} /> },
+    { label: "Phone", value: contact.phoneDisplay, href: contact.tel, icon: <Phone size={18} color={COLORS.red} /> },
+    { label: "Email", value: contact.email, href: `mailto:${contact.email}`, icon: <Mail size={18} color={COLORS.red} /> },
+    { label: "Website", value: website.label, href: website.href, icon: <Globe size={18} color={COLORS.red} /> },
   ];
+
   return (
     <Box component="section" id="contact-information" sx={{ pt: { xs: 1, md: 2 }, pb: { xs: 4, md: 6 } }}>
       <Container>

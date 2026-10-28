@@ -6,6 +6,7 @@ import { Check, X, Landmark, Building2 } from "lucide-react";
 import { CompareCell, ExamCompareContent } from "@/types";
 import { LANDING_ICONS, CHIP_TONES } from "@/sections/CourseLanding/icons";
 import { COLORS } from "@/theme/colors";
+import HighlightTitle from "@/components/HighlightTitle";
 
 function Cell({ value, tone }: { value: CompareCell; tone: "exam" | "other" }) {
   if (value === true || value === false) {
@@ -15,6 +16,7 @@ function Cell({ value, tone }: { value: CompareCell; tone: "exam" | "other" }) {
       </Box>
     );
   }
+
   return (
     <Box sx={{ px: { xs: 1, md: 2 }, py: { xs: 0.75, md: 1 }, borderRadius: "10px", fontWeight: 700, fontSize: { xs: "0.72rem", md: "0.95rem" }, lineHeight: 1.3, textAlign: "center", border: `1px solid ${tone === "exam" ? "#C7D2FE" : COLORS.redBorder}`, backgroundColor: tone === "exam" ? "#EEF2FF" : COLORS.redTint, color: tone === "exam" ? COLORS.navy : COLORS.redDark }}>
       {value}
@@ -27,14 +29,11 @@ export default function ExamCompare({ data }: { data: ExamCompareContent }) {
   const [before, after] = data.title.split(data.highlight);
   const grid = { display: "grid", gridTemplateColumns: { xs: "minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr)", md: "minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1fr)" } };
   const head = { display: "flex", alignItems: "center", justifyContent: "center", gap: 1, py: { xs: 1.5, md: 2 }, px: 1, color: "#FFFFFF", fontWeight: 800, fontSize: { xs: "0.82rem", md: "1.35rem" }, textAlign: "center" as const };
+
   return (
     <Box component="section" sx={{ py: { xs: 3.5, md: 5 } }}>
       <Container>
-        <Typography component="h2" sx={{ textAlign: "center", fontWeight: 900, fontSize: { xs: "1.6rem", md: "2.6rem" }, color: COLORS.navy, mb: { xs: 2.5, md: 4 }, lineHeight: 1.2 }}>
-          {before}
-          <Box component="span" sx={{ color: COLORS.red }}>{data.highlight}</Box>
-          {after}
-        </Typography>
+        <HighlightTitle before={before} highlight={data.highlight} after={after} align="center" sx={{ mb: { xs: 2.5, md: 4 } }} />
         <Box role="table" aria-label={data.title} sx={{ maxWidth: 1100, mx: "auto", borderRadius: "16px", overflow: "hidden", border: `1px solid ${COLORS.border}`, backgroundColor: "#FFFFFF", boxShadow: "0 14px 32px rgba(15,23,42,.07)" }}>
           <Box role="row" sx={grid}>
             <Box role="columnheader" sx={{ ...head, background: "linear-gradient(120deg, #1E40AF 0%, #2563EB 100%)" }}>{data.columns.topic}</Box>
@@ -51,6 +50,7 @@ export default function ExamCompare({ data }: { data: ExamCompareContent }) {
             const Icon = LANDING_ICONS[r.icon];
             const tone = CHIP_TONES[i % CHIP_TONES.length];
             const note = typeof r.exam === "string" || typeof r.other === "string";
+
             return (
               <Box role="row" key={r.topic} sx={{ ...grid, borderTop: i ? `1px solid ${COLORS.border}` : "none", ...(note ? { borderBottom: `2px dashed ${COLORS.navy}55`, backgroundColor: COLORS.surface } : {}), "& > *": { py: { xs: 1.25, md: 1.75 }, px: { xs: 1, md: 2 } }, "& > *:not(:first-of-type)": { borderLeft: `1px solid ${COLORS.border}`, display: "flex", alignItems: "center", justifyContent: "center" } }}>
                 <Box role="cell" sx={{ display: "flex", alignItems: "center", gap: { xs: 1, md: 2 } }}>

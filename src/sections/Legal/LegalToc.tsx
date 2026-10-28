@@ -10,20 +10,25 @@ type Item = { id: string; title: string };
 
 /** Contents list with scroll-spy: sticky sidebar on desktop, collapsible "On this page" on phones. */
 export default function LegalToc({ items }: { items: Item[] }) {
-  const [active, setActive] = useState(items[0]?.id ?? "");
+  const [active, setActive] = useState(items[0]?.id || "");
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const els = items.map((i) => document.getElementById(i.id)).filter(Boolean) as HTMLElement[];
+
     if (!els.length || typeof IntersectionObserver === "undefined") return;
+
     const io = new IntersectionObserver(
       (entries) => {
         const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
         if (visible[0]) setActive(visible[0].target.id);
       },
       { rootMargin: "-96px 0px -65% 0px", threshold: 0 }
     );
+
     els.forEach((el) => io.observe(el));
+
     return () => io.disconnect();
   }, [items]);
 
@@ -31,6 +36,7 @@ export default function LegalToc({ items }: { items: Item[] }) {
     <Box component="ol" sx={{ listStyle: "none", m: 0, p: 0, display: "grid", gap: 0.25 }}>
       {items.map((it, i) => {
         const on = it.id === active;
+
         return (
           <Box component="li" key={it.id}>
             <Box

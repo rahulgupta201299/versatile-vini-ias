@@ -15,6 +15,7 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: P
   const admin = await getAdminSession().catch(() => null);
 
   if (admin) redirect("/admin");
+
   const { next } = await searchParams;
 
   return (
@@ -29,7 +30,7 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: P
           <Box component="span" sx={{ px: 1.25, py: 0.4, borderRadius: 999, bgcolor: "rgba(255,229,31,.15)", border: "1px solid rgba(255,229,31,.4)", color: COLORS.yellow, fontSize: "0.75rem", fontWeight: 800, letterSpacing: ".1em" }}>ADMIN</Box>
         </Box>
         <Box sx={{ p: { xs: 3, sm: 4 }, borderRadius: "22px", bgcolor: "#FFFFFF", boxShadow: "0 30px 70px rgba(0,0,0,.35)" }}>
-          <AdminLoginForm next={next ?? null} demo={ADMIN_MODE === "demo"} />
+          <AdminLoginForm next={next || null} demo={ADMIN_MODE === "demo"} />
         </Box>
         <Typography sx={{ mt: 2.5, textAlign: "center", color: "rgba(255,255,255,.55)", fontSize: "0.78rem" }}>
           © Vini Eduventure Pvt. Ltd. · Access is monitored

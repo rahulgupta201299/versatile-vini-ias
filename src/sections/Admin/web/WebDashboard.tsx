@@ -22,6 +22,7 @@ function TrafficChart() {
   const top = Math.ceil(max / 500) * 500;
   const ticks = [top, (top * 3) / 4, top / 2, top / 4, 0];
   const best = WEEKLY_TRAFFIC.reduce((a, b) => (b.visitors > a.visitors ? b : a));
+
   return (
     <Box sx={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: 1.5, height: 260 }}>
       <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", pb: 3.5, textAlign: "right" }}>
@@ -36,6 +37,7 @@ function TrafficChart() {
         <Box role="img" aria-label="Visitors per day this week" sx={{ position: "relative", flex: 1, display: "grid", gridTemplateColumns: `repeat(${WEEKLY_TRAFFIC.length}, 1fr)`, alignItems: "end", gap: { xs: 1, sm: 2 } }}>
           {WEEKLY_TRAFFIC.map((d) => {
             const isBest = d === best;
+
             return (
               <Box key={d.day} title={`${d.day}: ${fmt(d.visitors)} visitors`} sx={{ height: `${(d.visitors / top) * 100}%`, mx: "auto", width: "100%", maxWidth: 46, borderRadius: "10px 10px 4px 4px", bgcolor: isBest ? COLORS.red : "#FFB3C2", transition: "background-color .2s", "&:hover": { bgcolor: COLORS.red } }} />
             );
@@ -56,6 +58,7 @@ function LeadDonut() {
   const r = 54;
   const c = 2 * Math.PI * r;
   let offset = 0;
+
   return (
     <Box>
       <Box sx={{ position: "relative", width: 180, height: 180, mx: "auto" }}>
@@ -64,7 +67,9 @@ function LeadDonut() {
             {LEAD_SOURCES.map((s, i) => {
               const len = (s.value / total) * c;
               const el = <circle key={s.label} cx="70" cy="70" r={r} fill="none" stroke={DONUT_COLORS[i]} strokeWidth="18" strokeDasharray={`${Math.max(len - 2, 0)} ${c}`} strokeDashoffset={-offset} />;
+
               offset += len;
+
               return el;
             })}
           </g>

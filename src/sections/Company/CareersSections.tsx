@@ -42,6 +42,7 @@ export function CareersStats({ stats }: { stats: CareersContent["stats"] }) {
           {stats.map((s, i) => {
             const Icon = COMPANY_ICONS[s.icon];
             const tone = [COLORS.red, COLORS.navy, "#C99A00"][i % 3];
+
             return (
               <Box key={s.label} sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, alignItems: { xs: "flex-start", sm: "center" }, gap: { xs: 1.25, sm: 2 } }}>
                 <Box sx={{ flexShrink: 0, width: { xs: 48, md: 60 }, height: { xs: 48, md: 60 }, borderRadius: "50%", bgcolor: "#FFFFFF", color: tone, boxShadow: "0 6px 18px rgba(15,23,42,.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -76,6 +77,7 @@ export function CareersPillars({ pillars }: { pillars: CareersContent["pillars"]
         <Box sx={{ display: "grid", gridTemplateColumns: { xs: "repeat(2, 1fr)", md: "repeat(3, 1fr)" }, gap: { xs: 2, sm: 3, md: 4 }, maxWidth: 820, mx: "auto" }}>
           {pillars.map((p, i) => {
             const t = POSTER_TONES[p.tone];
+
             return (
               <Box key={p.text} sx={{ p: { xs: 0.9, md: 1.25 }, bgcolor: COLORS.navyDark, borderRadius: "4px", boxShadow: "0 14px 30px rgba(15,23,42,.18)", transition: "transform .25s", "&:hover": { transform: "translateY(-4px) rotate(-.6deg)" } }}>
                 <Box sx={{ p: { xs: 0.9, md: 1.5 }, bgcolor: "#FFFFFF" }}>
@@ -103,6 +105,7 @@ export function CareersBenefits({ benefits }: { benefits: CareersContent["benefi
         <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)" }, gap: { xs: 2, md: 3 }, maxWidth: 980, mx: "auto" }}>
           {benefits.map((b, i) => {
             const Icon = COMPANY_ICONS[b.icon];
+
             return (
               <Box key={b.title} sx={{ p: { xs: 2.5, md: 3 }, borderRadius: "16px", bgcolor: "#FFFFFF", border: `1px solid ${COLORS.border}`, borderTop: `4px solid ${i % 2 ? COLORS.yellowDark : COLORS.red}`, boxShadow: "0 10px 26px rgba(15,23,42,.05)" }}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1.5 }}>

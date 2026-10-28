@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 
 export default async function AboutUsPage() {
   const about = await getAboutContent();
+
   return (
     <>
       <AboutHero hero={about.hero} />

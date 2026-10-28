@@ -11,6 +11,7 @@ const redditSans = Reddit_Sans({ subsets: ["latin"], weight: ["400", "500", "600
 /** /exams (blogs): exam category bar + "Latest News" ticker on top, the homepage app section at the bottom of every blog page. */
 export default async function ExamsLayout({ children }: { children: React.ReactNode }) {
   const [{ categories, posts }, updates] = await Promise.all([getBlogIndex(), getExamUpdates()]);
+
   return (
     <Box className={redditSans.className} sx={{ "& .MuiTypography-root, & button, & input": { fontFamily: "inherit" } }}>
       <CategoryBar categories={categories} />

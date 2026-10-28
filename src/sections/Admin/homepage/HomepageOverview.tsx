@@ -83,6 +83,7 @@ const buildSections = ({ heroBanners, celebration, freeResources, firstMarketing
 
 function SectionRow({ section, number }: { section: Section; number: number }) {
   const { title, description, icon: Icon, href, status, isLive } = section;
+
   return (
     <Box
       component="li"

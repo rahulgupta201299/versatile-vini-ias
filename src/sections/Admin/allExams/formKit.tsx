@@ -186,8 +186,14 @@ export function ListEditor<T>({ items, onChange, createItem, renderItem, itemLab
         <Box
           key={index}
           data-list-card
-          onDragOver={(e: React.DragEvent) => { if (dragFromRef.current === null) return; e.preventDefault(); setDropAt(index); }}
-          onDrop={(e: React.DragEvent) => { e.preventDefault(); if (dragFromRef.current !== null) move(dragFromRef.current, index); endDrag(); }}
+          onDragOver={(e: React.DragEvent) => { if (dragFromRef.current === null) return;
+
+ e.preventDefault(); setDropAt(index); }}
+          onDrop={(e: React.DragEvent) => { e.preventDefault();
+
+ if (dragFromRef.current !== null) move(dragFromRef.current, index);
+
+ endDrag(); }}
           sx={{
             p: 2,
             borderRadius: "14px",
@@ -209,6 +215,7 @@ export function ListEditor<T>({ items, onChange, createItem, renderItem, itemLab
                   e.dataTransfer.effectAllowed = "move";
                   e.dataTransfer.setData("text/plain", String(index));
                   const card = (e.currentTarget as HTMLElement).closest<HTMLElement>("[data-list-card]");
+
                   if (card) e.dataTransfer.setDragImage(card, 20, 20);
                 }}
                 onDragEnd={endDrag}

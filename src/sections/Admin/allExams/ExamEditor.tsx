@@ -5,16 +5,16 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import CircularProgress from "@mui/material/CircularProgress";
-import { ArrowLeft, Check, ExternalLink, Save } from "lucide-react";
+import { ArrowLeft, ExternalLink } from "lucide-react";
 import { COLORS } from "@/theme/colors";
 import IconRenderer, { ICON_NAMES } from "@/components/IconRenderer";
 import { AdminExamCategory, AdminSubCategory, AdminSubCategoryInput, ExamDetails } from "@/types";
 import { slugify } from "@/utils/slug";
 import { adminRequest } from "@/lib/adminClient";
 import { PageHeader } from "../ui";
+import SaveBar from "../common/SaveBar";
 import ExamDetailsSections, { DETAIL_SECTIONS } from "./ExamDetailsSections";
-import { buttonSx, Field, FieldGrid, inputSx, primaryButtonSx, SectionCard, StatusToggle, TextInput } from "./formKit";
+import { buttonSx, Field, FieldGrid, inputSx, SectionCard, StatusToggle, TextInput } from "./formKit";
 import { cleanInput, newSubCategory, toInput, validateSubCategory } from "./examForm";
 import { useSectionAccess } from "../AdminAccessContext";
 import DeleteButton from "../common/DeleteButton";
@@ -43,7 +43,7 @@ export default function ExamEditor({ subCategory, categories: initialCategories,
   const [categories, setCategories] = useState(initialCategories);
   const [form, setForm] = useState<AdminSubCategoryInput>(() => (subCategory ? toInput(subCategory) : newSubCategory(defaultCategoryId)));
   const [savedSnapshot, setSavedSnapshot] = useState(() => JSON.stringify(form));
-  const [savedSlug, setSavedSlug] = useState(subCategory?.slug ?? "");
+  const [savedSlug, setSavedSlug] = useState(subCategory?.slug || "");
   const [isNewCategory, setIsNewCategory] = useState(!initialCategories.length);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [problems, setProblems] = useState<string[]>([]);
@@ -115,7 +115,7 @@ export default function ExamEditor({ subCategory, categories: initialCategories,
       <PageHeader
         eyebrow="Web / Homepage / All Exams"
         title={isNew ? "New sub category" : form.name || "Edit sub category"}
-        subtitle={isNew ? "Fill in the sections below and save — active sub categories appear in the header menu and get their own page." : `${category?.name ?? ""} · /goal/${savedSlug}`}
+        subtitle={isNew ? "Fill in the sections below and save — active sub categories appear in the header menu and get their own page." : `${category?.name || ""} · /goal/${savedSlug}`}
         actions={
           <>
             <Box component={Link} href={LIST_PATH} sx={buttonSx}>
@@ -238,26 +238,16 @@ export default function ExamEditor({ subCategory, categories: initialCategories,
       </Box>
 
       {/* Save bar */}
-      <Box sx={{ position: "fixed", left: { xs: 0, lg: 264 }, right: 0, bottom: 0, zIndex: 20, borderTop: `1px solid ${COLORS.border}`, bgcolor: "rgba(255,255,255,.96)", backdropFilter: "blur(8px)" }}>
-        {!!problems.length && (
-          <Box role="alert" sx={{ maxWidth: 1360, mx: "auto", px: { xs: 2, md: 4 }, pt: 1.5 }}>
-            <Box sx={{ p: 1.5, borderRadius: "10px", bgcolor: COLORS.redTint, border: `1px solid ${COLORS.redBorder}`, color: COLORS.redDark, fontSize: "0.84rem", fontWeight: 600, maxHeight: 120, overflowY: "auto" }}>
-              {problems.map((problem) => (
-                <div key={problem}>• {problem}</div>
-              ))}
-            </Box>
-          </Box>
-        )}
-        <Box sx={{ maxWidth: 1360, mx: "auto", px: { xs: 2, md: 4 }, py: 1.5, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 1.5 }}>
-          <Typography sx={{ color: isDirty ? COLORS.redDark : COLORS.success, fontSize: "0.85rem", fontWeight: 600, display: "flex", alignItems: "center", gap: 0.5 }}>
-            {isDirty ? "Unsaved changes" : status === "saved" ? (<><Check size={16} /> Saved{isLive ? " — live on the site" : " (inactive — hidden on the site)"}</>) : "No changes"}
-          </Typography>
-          <Box component="button" type="button" disabled={!canEdit || status === "saving" || (!isDirty && !isNew)} onClick={save} sx={primaryButtonSx}>
-            {status === "saving" ? <CircularProgress size={18} sx={{ color: "#FFFFFF" }} /> : <Save size={16} />}
-            {isNew ? "Create sub category" : "Save changes"}
-          </Box>
-        </Box>
-      </Box>
+      <SaveBar
+        problems={problems}
+        isDirty={isDirty}
+        isSaved={status === "saved"}
+        isSaving={status === "saving"}
+        isDisabled={!canEdit || status === "saving" || (!isDirty && !isNew)}
+        savedText={isLive ? " — live on the site" : " (inactive — hidden on the site)"}
+        label={isNew ? "Create sub category" : "Save changes"}
+        onSave={save}
+      />
     </Box>
   );
 }

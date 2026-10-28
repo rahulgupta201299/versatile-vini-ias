@@ -14,8 +14,9 @@ type Picker = NonNullable<MentorshipContent["planPicker"]>;
 /** "Enroll Now" band with plan tabs (Foundation / Foundation Plus), the fee of the chosen plan, Enroll and Course Details. */
 export default function EnrollPlanBand({ data }: { data: Picker }) {
   const plans = data.plans.filter((p) => p.price);
-  const [id, setId] = useState(data.defaultId ?? plans[0]?.id);
-  const plan = plans.find((p) => p.id === id) ?? plans[0];
+  const [id, setId] = useState(data.defaultId || plans[0]?.id);
+  const plan = plans.find((p) => p.id === id) || plans[0];
+
   if (!plan) return null;
 
   return (
@@ -28,6 +29,7 @@ export default function EnrollPlanBand({ data }: { data: Picker }) {
         <Box role="tablist" aria-label="Choose a plan" sx={{ mt: { xs: 2, md: 2.5 }, display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 1.25 }}>
           {plans.map((p) => {
             const active = p.id === plan.id;
+
             return (
               <Box
                 key={p.id}

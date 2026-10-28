@@ -14,6 +14,7 @@ export default function BatchStats({ stats }: { stats: BatchCourseContent["stats
         <Box sx={{ display: "grid", gridTemplateColumns: { xs: "repeat(2, minmax(0, 1fr))", md: `repeat(${stats.length}, minmax(0, 1fr))` }, gap: { xs: 1.5, md: 0 }, p: { xs: 2, md: 2.5 }, borderRadius: "16px", backgroundColor: "#FFFFFF", border: `1.5px solid ${COLORS.redBorder}`, boxShadow: "0 14px 34px rgba(15,23,42,.08)" }}>
           {stats.map((s) => {
             const Icon = LANDING_ICONS[s.icon];
+
             return (
               <Box key={s.label} sx={{ display: "flex", alignItems: "center", justifyContent: { md: "center" }, gap: 1.5 }}>
                 <Box sx={{ width: { xs: 40, md: 46 }, height: { xs: 40, md: 46 }, borderRadius: "12px", backgroundColor: COLORS.redTint, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>

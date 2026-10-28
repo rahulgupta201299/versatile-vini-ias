@@ -67,9 +67,13 @@ function UserForm({ options, viewer, initial, isNew, submitLabel, onSubmit, onCa
     event.preventDefault();
 
     if (!values.name.trim()) return setError("Type the person's name.");
+
     if (isNew && !values.email.trim()) return setError("Type their email address.");
+
     if (isNew && values.password.length < 8) return setError("Set a password of at least 8 characters.");
+
     if (!isNew && values.password && values.password.length < 8) return setError("A new password needs at least 8 characters.");
+
     if (values.role !== SUPER_ADMIN && !hasAnyAccess(values.permissions)) return setError("Give access to at least one section.");
 
     setBusy(true);

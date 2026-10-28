@@ -22,21 +22,29 @@ const sign = (payload: string) => createHmac("sha256", SECRET).update(payload).d
 export function issueVerifiedToken(phone: string): string {
   const exp = Date.now() + TOKEN_TTL_MS;
   const payload = `${phone}.${exp}`;
+
   return `${payload}.${sign(payload)}`;
 }
 
 export function readVerifiedToken(token: unknown): string | null {
   if (typeof token !== "string") return null;
+
   const [phone, exp, sig] = token.split(".");
+
   if (!phone || !exp || !sig || Number(exp) < Date.now()) return null;
+
   const expected = Buffer.from(sign(`${phone}.${exp}`));
   const given = Buffer.from(sig);
+
   return expected.length === given.length && timingSafeEqual(expected, given) ? phone : null;
 }
 
 export async function backendPost(path: string, body: BodyInit, json = true) {
   const headers: Record<string, string> = {};
+
   if (json) headers["Content-Type"] = "application/json";
+
   if (API_TOKEN) headers.Authorization = `Bearer ${API_TOKEN}`;
+
   return fetch(`${API_BASE}/${path}`, { method: "POST", headers, body, cache: "no-store" });
 }

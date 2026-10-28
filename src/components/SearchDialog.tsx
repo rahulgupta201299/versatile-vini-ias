@@ -22,19 +22,23 @@ interface SearchItem {
 
 /** Everything searchable on the site (menu courses, nav links, exams). */
 function buildIndex({ navigation, examCategories }: SiteData): SearchItem[] {
-  const { navItems: NAV_ITEMS, megaMenu: MEGA_MENU_CATEGORIES } = navigation;
+  const { navItems, megaMenu } = navigation;
   const EXAM_CATEGORIES = examCategories;
   const items: SearchItem[] = [
-    ...NAV_ITEMS.filter((n) => !n.isMegaMenu).map((n) => ({ label: n.label, group: "Menu", href: n.href })),
-    ...NAV_ITEMS.flatMap((n) => (n.children ?? []).map((ch) => ({ label: ch.label, group: n.label, href: ch.href }))),
-    ...MEGA_MENU_CATEGORIES.flatMap((c) => c.courses.map((co) => ({ label: co.title, group: c.title, href: goalPath(co.title) }))),
+    ...navItems.filter((n) => !n.isMegaMenu).map((n) => ({ label: n.label, group: "Menu", href: n.href })),
+    ...navItems.flatMap((n) => (n.children || []).map((ch) => ({ label: ch.label, group: n.label, href: ch.href }))),
+    ...megaMenu.flatMap((c) => c.courses.map((co) => ({ label: co.title, group: c.title, href: goalPath(co.title) }))),
     ...EXAM_CATEGORIES.flatMap((c) => c.subcategories.map((s) => ({ label: s.name, group: c.category, href: s.href || goalPath(s.name) }))),
   ];
   const seen = new Set<string>();
+
   return items.filter((i) => {
     const k = i.label.toLowerCase();
+
     if (seen.has(k)) return false;
+
     seen.add(k);
+
     return true;
   });
 }
@@ -76,7 +80,9 @@ export default function SearchDialog({ open, onClose }: SearchDialogProps) {
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
+
     if (!q) return [];
+
     return index
       .filter((i) => i.label.toLowerCase().includes(q) || i.group.toLowerCase().includes(q))
       .sort((a, b) => Number(!a.label.toLowerCase().startsWith(q)) - Number(!b.label.toLowerCase().startsWith(q)))
@@ -86,6 +92,7 @@ export default function SearchDialog({ open, onClose }: SearchDialogProps) {
   const go = (href: string) => {
     onClose();
     setQuery("");
+
     if (isExternalLink({ href })) window.open(href, "_blank", "noopener,noreferrer");
     else window.location.href = href;
   };
@@ -99,6 +106,7 @@ export default function SearchDialog({ open, onClose }: SearchDialogProps) {
       setActive((a) => Math.max(a - 1, 0));
     } else if (e.key === "Enter") {
       e.preventDefault();
+
       if (results[active]) go(results[active].href);
     }
   };

@@ -312,4 +312,4 @@ const MENU_LABELS = new Map([
   ["foundation-batch-2027-29", "Foundation Batch 2027/29"],
 ]);
 
-export const FREE_RESOURCES: FreeResourcePage[] = PAGES.map((p) => ({ ...p, label: MENU_LABELS.get(p.slug) ?? p.title }));
+export const FREE_RESOURCES: FreeResourcePage[] = PAGES.map((p) => ({ ...p, label: MENU_LABELS.get(p.slug) || p.title }));

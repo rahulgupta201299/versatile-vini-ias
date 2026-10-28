@@ -15,13 +15,18 @@ export default function TableOfContents({ items }: { items: { id: string; text: 
   // highlight the section being read
   useEffect(() => {
     const els = items.map((i) => document.getElementById(i.id)).filter(Boolean) as HTMLElement[];
+
     if (!els.length) return;
+
     const io = new IntersectionObserver((entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)), { rootMargin: "-180px 0px -60% 0px" });
+
     els.forEach((el) => io.observe(el));
+
     return () => io.disconnect();
   }, [items]);
 
   if (!items.length) return null;
+
   return (
     <Box component="nav" aria-label="Table of contents" sx={{ borderRadius: "12px", backgroundColor: "#FFFFFF", border: `1px solid ${COLORS.border}`, boxShadow: "0 6px 18px rgba(15,23,42,.08)" }}>
       <Box

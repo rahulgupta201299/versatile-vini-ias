@@ -24,12 +24,16 @@ const shade = (i: number) => STEP_COLORS[i % STEP_COLORS.length];
 function useReveal<T extends HTMLElement>() {
   const ref = useRef<T>(null);
   const [shown, setShown] = useState(false);
+
   useEffect(() => {
     const el = ref.current;
+
     if (!el || typeof IntersectionObserver === "undefined") {
       setShown(true);
+
       return;
     }
+
     // Huge top margin: rows already scrolled past (fast scroll / anchor jump) count as revealed, so nothing stays hidden.
     const io = new IntersectionObserver(
       ([e]) => {
@@ -40,9 +44,12 @@ function useReveal<T extends HTMLElement>() {
       },
       { threshold: 0.15, rootMargin: "100000px 0px -40px 0px" }
     );
+
     io.observe(el);
+
     return () => io.disconnect();
   }, []);
+
   return { ref, shown };
 }
 
@@ -50,6 +57,7 @@ function useReveal<T extends HTMLElement>() {
 function Milestone({ icon, color, side }: { icon: AboutContent["journey"]["steps"][number]["icon"]; color: string; side: "left" | "right" }) {
   const Icon = COMPANY_ICONS[icon];
   const id = `arrow-${color.slice(1)}-${side}`;
+
   return (
     <Box sx={{ position: "relative", width: { xs: 64, md: RING }, height: { xs: 64, md: RING }, flexShrink: 0 }}>
       {/* orbit arc (desktop) */}
@@ -88,6 +96,7 @@ function StepRow({ step, i, total }: { step: AboutContent["journey"]["steps"][nu
   const color = shade(i);
   const circleLeft = i % 2 === 0; // desktop: circle on the left of the track → text on the right
   const last = i === total - 1;
+
   return (
     <Box
       component="li"
@@ -134,7 +143,9 @@ function StepRow({ step, i, total }: { step: AboutContent["journey"]["steps"][nu
 /** "Our Journey" — zigzag milestone timeline (desktop) / vertical rail (mobile). */
 export default function JourneyTimeline({ journey }: { journey: AboutContent["journey"] }) {
   const steps = journey.steps;
+
   if (!steps.length) return null;
+
   const n = steps.length;
   const pts = steps.map((_, i) => ({ x: CX[i % 2], y: ROW * i + ROW / 2 }));
 

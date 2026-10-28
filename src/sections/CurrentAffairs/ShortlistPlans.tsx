@@ -8,18 +8,16 @@ import { ArrowRight, CalendarClock, Crown } from "lucide-react";
 import { ShortlistContent } from "@/types";
 import { openAuth } from "@/utils/events";
 import { COLORS } from "@/theme/colors";
+import HighlightTitle from "@/components/HighlightTitle";
 
 /** "Choose Your Plan" — same content in every plan, only validity differs. */
 export default function ShortlistPlans({ data }: { data: ShortlistContent["plans"] }) {
   const [first, rest] = data.title.split(data.highlight);
+
   return (
     <Box component="section" id="plans" sx={{ py: { xs: 4, md: 7 }, backgroundColor: COLORS.surface }}>
       <Container>
-        <Typography component="h2" sx={{ textAlign: "center", fontWeight: 900, fontSize: { xs: "1.7rem", md: "2.4rem" }, color: COLORS.navy }}>
-          {first}
-          <Box component="span" sx={{ color: COLORS.red }}>{data.highlight}</Box>
-          {rest}
-        </Typography>
+        <HighlightTitle before={first} highlight={data.highlight} after={rest} align="center" />
         <Typography sx={{ mt: 1.25, textAlign: "center", color: COLORS.body, maxWidth: 720, mx: "auto", fontSize: { xs: "0.92rem", md: "1rem" } }}>{data.intro}</Typography>
         <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 1 }}>
           {data.notes.map((n, i) => (
@@ -83,11 +81,18 @@ export default function ShortlistPlans({ data }: { data: ShortlistContent["plans
   );
 }
 
+/** A struck-out value is dimmed (lighter on the highlighted, dark card). */
+const rowValueColor = ({ popular = false, strike = false }: { popular?: boolean; strike?: boolean }) => {
+  if (!strike) return "inherit";
+
+  return popular ? "rgba(255,255,255,.6)" : COLORS.muted;
+};
+
 function Row({ label, value, popular, strike }: { label: string; value: string; popular?: boolean; strike?: boolean }) {
   return (
     <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1, fontSize: "0.9rem" }}>
       <Box component="span" sx={{ opacity: 0.75 }}>{label}</Box>
-      <Box component="span" sx={{ fontWeight: 700, textDecoration: strike ? "line-through" : "none", color: strike ? (popular ? "rgba(255,255,255,.6)" : COLORS.muted) : "inherit" }}>{value}</Box>
+      <Box component="span" sx={{ fontWeight: 700, textDecoration: strike ? "line-through" : "none", color: rowValueColor({ popular, strike }) }}>{value}</Box>
     </Box>
   );
 }

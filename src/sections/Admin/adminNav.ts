@@ -63,11 +63,11 @@ export const firstAllowedPath = (admin: Viewer) => {
 
   if (firstWorkspace) return visibleNav(admin, firstWorkspace)[0].href;
 
-  return visibleTeamNav(admin)[0]?.href ?? null;
+  return visibleTeamNav(admin)[0]?.href || null;
 };
 
 export const workspaceFromPath = (pathname: string): AdminWorkspace | null =>
-  WORKSPACE_KEYS.find((key) => pathname === `/admin/${key}` || pathname.startsWith(`/admin/${key}/`)) ?? null;
+  WORKSPACE_KEYS.find((key) => pathname === `/admin/${key}` || pathname.startsWith(`/admin/${key}/`)) || null;
 
 export const isActive = (pathname: string, item: Pick<AdminNavItem, "href" | "exact">) =>
   item.exact ? pathname === item.href : pathname === item.href || pathname.startsWith(`${item.href}/`);

@@ -27,7 +27,7 @@ export async function adminBackend<T>(path: string, { method = "GET", body }: { 
 
     const json = await res.json().catch(() => ({}));
 
-    if (!res.ok) return { ok: false, status: res.status, error: json.message ?? "Something went wrong. Please try again." };
+    if (!res.ok) return { ok: false, status: res.status, error: json.message || "Something went wrong. Please try again." };
 
     return { ok: true, status: res.status, data: json as T };
   } catch {
@@ -38,6 +38,7 @@ export async function adminBackend<T>(path: string, { method = "GET", body }: { 
 /** Sends a backend result to the browser as JSON ({ message } on errors). */
 export function toJsonResponse<T>(result: BackendResult<T>) {
   if (!result.ok) return NextResponse.json({ message: result.error }, { status: result.status });
+
   if (result.status === 204) return new NextResponse(null, { status: 204 });
 
   return NextResponse.json(result.data, { status: result.status });

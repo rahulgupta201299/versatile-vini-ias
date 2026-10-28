@@ -12,6 +12,8 @@ export function SiteDataProvider({ value, children }: { value: SiteData; childre
 
 export function useSiteData(): SiteData {
   const data = useContext(SiteDataContext);
+
   if (!data) throw new Error("useSiteData must be used inside <SiteDataProvider> (see app/layout.tsx)");
+
   return data;
 }

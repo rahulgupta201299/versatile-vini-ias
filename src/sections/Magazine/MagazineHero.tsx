@@ -12,6 +12,7 @@ import { COLORS } from "@/theme/colors";
 /** Magazine hero — same palette as the NCERT landing: warm light background, navy headings, red accents. */
 export default function MagazineHero({ data }: { data: MagazineContent }) {
   const { hero } = data;
+
   return (
     <Box
       component="section"
@@ -45,6 +46,7 @@ export default function MagazineHero({ data }: { data: MagazineContent }) {
               {hero.points.map((pt, i) => {
                 const Icon = LANDING_ICONS[pt.icon];
                 const tone = CHIP_TONES[i % CHIP_TONES.length];
+
                 return (
                   <Box key={pt.title} sx={{ display: "flex", alignItems: "center", gap: 1.5, p: 1.5, borderRadius: "14px", backgroundColor: "#FFFFFF", border: `1px solid ${COLORS.border}`, boxShadow: "0 8px 20px rgba(15,23,42,.06)" }}>
                     <Box sx={{ flexShrink: 0, width: 42, height: 42, borderRadius: "50%", backgroundColor: tone.bg, color: tone.color, display: "flex", alignItems: "center", justifyContent: "center" }}>

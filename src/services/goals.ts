@@ -40,7 +40,7 @@ export const getGoalPage = cache(async (slug: string): Promise<CoursePageData | 
 
   if (exam) {
     const menu = await getExamMenu();
-    const sameCategory = menu.find(({ category }) => category === exam.category)?.subCategories ?? [];
+    const sameCategory = menu.find(({ category }) => category === exam.category)?.subCategories || [];
     const examOptions = [exam.subCategory, ...sameCategory.map(({ subCategory }) => subCategory).filter((name) => name !== exam.subCategory)];
 
     return toCoursePage(exam, examOptions.slice(0, 12));

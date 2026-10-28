@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -33,6 +34,7 @@ type Sizes = <T>(mobile: T, desktop: T) => T | { xs: T; md: T };
 /** Makes the card a link: other sites open in a new tab, pages on this site use Next.js links. */
 const getLinkProps = (link: string, isPreview: boolean) => {
   if (!link || isPreview) return {};
+
   if (/^https?:\/\//.test(link)) return { component: "a", href: link, target: "_blank", rel: "noopener" };
 
   return { component: Link, href: link };
@@ -116,10 +118,9 @@ export default function CelebrationBanner({ banner, isPreview = false }: Celebra
       </Typography>
       <Typography sx={{ mt: 0.5, minHeight: "1.4em", color: accentColor, fontWeight: 700, fontSize: size("0.76rem", "0.92rem"), letterSpacing: ".2em", textAlign: "center", textTransform: "uppercase" }}>{tagline || subtitle}</Typography>
 
-      <Box sx={{ mx: "auto", mt: size(0.5, 1), mb: size(1.5, 2), height: size(110, 130), maxWidth: 400 }}>
+      <Box sx={{ position: "relative", mx: "auto", mt: size(0.5, 1), mb: size(1.5, 2), height: size(110, 130), maxWidth: 400 }}>
         {imageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element -- uploaded artwork (data URL until S3)
-          <img src={imageUrl} alt={alt || title} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+          <Image src={imageUrl} alt={alt || title} fill sizes="400px" style={{ objectFit: "contain" }} />
         ) : (
           <FestiveLamps accent={accentColor} />
         )}

@@ -52,6 +52,7 @@ export default function CourseOverview({ page }: { page: FreeResourcePage }) {
             {page.learn.map((item, i) => {
               const Icon = ICONS[item.icon];
               const tint = TINTS[i % TINTS.length];
+
               return (
                 <Box
                   key={item.title}

@@ -32,12 +32,12 @@ export default function ShareBlog({
 }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const camp = campaign ?? `blog_${id}`;
+  const camp = campaign || `blog_${id}`;
   const sep = url.includes("?") ? "&" : "?";
   const tagged = (source: string) => `${url}${sep}utm_source=${source}&utm_medium=social_share&utm_campaign=${camp}`;
   const link = useMemo(() => tagged("direct_copy"), [url, camp]); // eslint-disable-line react-hooks/exhaustive-deps
   const forApp = (source: string) => encodeURIComponent(tagged(source));
-  const t = encodeURIComponent(message ?? title);
+  const t = encodeURIComponent(message || title);
   const apps = [
     { label: "WhatsApp", icon: <WhatsAppLogo size={26} />, href: `https://wa.me/?text=${t}%20${forApp("whatsapp")}` },
     { label: "Facebook", icon: <FacebookLogo size={26} />, href: `https://www.facebook.com/sharer/sharer.php?u=${forApp("facebook")}` },
@@ -53,6 +53,7 @@ export default function ShareBlog({
     } catch {
       /* clipboard blocked — the link stays visible to copy manually */
     }
+
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
   };
@@ -106,7 +107,7 @@ export default function ShareBlog({
               </Box>
             ))}
             {canNativeShare && (
-              <Box component="button" type="button" onClick={() => navigator.share({ title, text: message ?? title, url: link }).catch(() => null)} sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0.5, border: "none", background: "none", p: 0, cursor: "pointer", fontFamily: "inherit", color: COLORS.body, fontSize: "0.72rem" }}>
+              <Box component="button" type="button" onClick={() => navigator.share({ title, text: message || title, url: link }).catch(() => null)} sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0.5, border: "none", background: "none", p: 0, cursor: "pointer", fontFamily: "inherit", color: COLORS.body, fontSize: "0.72rem" }}>
                 <Box sx={{ width: 46, height: 46, borderRadius: "50%", backgroundColor: COLORS.surface, border: `1px solid ${COLORS.border}`, color: COLORS.navy, display: "flex", alignItems: "center", justifyContent: "center" }}><MoreHorizontal size={22} /></Box>
                 More
               </Box>

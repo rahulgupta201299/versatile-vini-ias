@@ -97,6 +97,7 @@ export default function DownloadPdfButton({ href }: { href: string }) {
       </Box>
     </>
   );
+
   return (
     <Box component="a" href={href} download sx={sx}>
       {content}

@@ -18,7 +18,7 @@ const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ b
 /** Title + swoosh, description / price / date / buttons, and a media card (no educator photos). */
 export default function MentorshipHero({ page, data }: { page: FreeResourcePage; data: MentorshipContent }) {
   const youtube = useSiteData().config.social.youtube;
-  const videoHref = data.media.videoUrl ?? youtube;
+  const videoHref = data.media.videoUrl || youtube;
 
   return (
     <Box component="section" id="course-top" sx={{ pt: { xs: 1.5, md: 2 }, pb: { xs: 3.5, md: 5 }, background: `linear-gradient(180deg, ${COLORS.redTintSoft} 0%, #FFFFFF 100%)` }}>
@@ -78,7 +78,7 @@ export default function MentorshipHero({ page, data }: { page: FreeResourcePage;
                 onClick={data.primaryCta ? () => scrollTo(data.primaryCta!.targetId) : openAuth}
                 sx={{ display: "inline-flex", alignItems: "center", gap: 1, height: 48, px: { xs: 1.5, sm: 3.5 }, borderRadius: "12px", border: "none", backgroundColor: COLORS.red, color: "#FFFFFF", fontFamily: "inherit", fontWeight: 700, fontSize: "0.98rem", cursor: "pointer", boxShadow: "0 8px 20px rgba(254,0,52,.22)", "&:hover": { backgroundColor: COLORS.redDark } }}
               >
-                {data.primaryCta?.label ?? "Enroll Now"} <Zap size={16} fill="currentColor" />
+                {data.primaryCta?.label || "Enroll Now"} <Zap size={16} fill="currentColor" />
               </Box>
               {data.secondaryLink && (
                 <Box
@@ -102,7 +102,7 @@ export default function MentorshipHero({ page, data }: { page: FreeResourcePage;
               href={videoHref}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`${data.media.caption ?? "Watch video"} (opens YouTube)`}
+              aria-label={`${data.media.caption || "Watch video"} (opens YouTube)`}
               sx={{ position: "relative", display: "block", borderRadius: "16px", overflow: "hidden", aspectRatio: "2.9 / 1", boxShadow: "0 20px 44px rgba(15,23,42,.18)", "&:hover .play": { transform: "translate(-50%, -50%) scale(1.08)" } }}
             >
               <Image src={data.media.image} alt={data.media.alt} fill sizes="(max-width: 900px) 100vw, 540px" style={{ objectFit: "cover" }} priority />

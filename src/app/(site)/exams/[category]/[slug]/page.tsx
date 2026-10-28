@@ -31,10 +31,9 @@ import { blogPath } from "@/utils/slug";
 import { COLORS } from "@/theme/colors";
 
 const SITE_URL = "https://viniias.com";
+
 type Params = Promise<{ category: string; slug: string }>;
 
-/** Every post is built ahead of time (SSG); new posts render on first visit, then stay cached. */
-export const dynamicParams = true;
 export async function generateStaticParams() {
   return (await getBlogPosts()).map((p) => ({
     category: p.category,
@@ -49,8 +48,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { category, slug } = await params;
   const post = await getBlogPost(category, slug);
+
   if (!post) return {};
+
   const url = blogPath(post);
+
   return {
     title: `${post.title} | Vini IAS`,
     description: post.excerpt,
@@ -62,7 +64,7 @@ export async function generateMetadata({
       url,
       publishedTime: post.publishedAt,
       authors: [post.author],
-      images: [post.cover ?? "/images/logo.png"],
+      images: [post.cover || "/images/logo.png"],
     },
   };
 }
@@ -71,7 +73,9 @@ export async function generateMetadata({
 export default async function BlogPostPage({ params }: { params: Params }) {
   const { category, slug } = await params;
   const post = await getBlogPost(category, slug);
+
   if (!post) notFound();
+
   const [{ posts, names }, heroBanners, resultTabs] = await Promise.all([
     getBlogIndex(),
     getHeroBanners(),
@@ -80,7 +84,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
   // counselling form: exams of this post's category (first one pre-selected)
   const examOptions = (
     EXAM_CATEGORIES.find((c) => names[post.category] === c.category)
-      ?.subcategories ?? []
+      ?.subcategories || []
   )
     .map((e) => e.name)
     .slice(0, 12);
@@ -91,7 +95,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
   );
   const prev = index >= 0 ? posts[index + 1] : undefined;
   const next = index > 0 ? posts[index - 1] : undefined;
-  const categoryName = names[post.category] ?? post.category;
+  const categoryName = names[post.category] || post.category;
   // 5 related posts: same exam first, then the newest from other exams
   const others = posts.filter(
     (p) => !(p.slug === post.slug && p.category === post.category),
@@ -261,7 +265,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
               </Box>
             )}
             <Box sx={{ mt: 3.5, display: "grid", gap: 3 }}>
-              <DownloadPdfButton href={post.pdf ?? `${blogPath(post)}/pdf`} />
+              <DownloadPdfButton href={post.pdf || `${blogPath(post)}/pdf`} />
               <BlogFaqs faqs={post.faqs} />
               <PrevNextArticles prev={prev} next={next} />
             </Box>
@@ -277,7 +281,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
       <Box>
         <TopRankersSection tabs={resultTabs} stats={[]} hideStats />
         <CounsellingForm
-          name={examOptions[0] ?? categoryName}
+          name={examOptions[0] || categoryName}
           examOptions={examOptions.length ? examOptions : [categoryName]}
         />
       </Box>

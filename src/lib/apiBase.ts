@@ -14,6 +14,7 @@ const PROD_DEFAULT = "https://vini-backend.vercel.app/api";
 
 function normalize(url: string): string {
   const clean = url.trim().replace(/^["']|["']$/g, "").replace(/\/+$/, "");
+
   return /\/api$/.test(clean) ? clean : `${clean}/api`;
 }
 

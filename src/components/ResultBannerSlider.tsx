@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ResultBanner } from "@/types";
 
 import { COLORS } from "@/theme/colors";
+import ArtDirectedImage from "./ArtDirectedImage";
 /*
  * Sizes copied from pw.live "Academic Excellence : Results":
  *  - web   (> 768px): 3821 × 1324 art, rendered max 1120 × 388
@@ -45,7 +46,9 @@ export default function ResultBannerSlider({ banners: allBanners, eager = false 
   // Autoplay (paused on hover / touch)
   useEffect(() => {
     if (!hasMany || paused) return;
+
     const t = setTimeout(next, AUTOPLAY_MS);
+
     return () => clearTimeout(t);
   }, [hasMany, paused, next]);
 
@@ -56,9 +59,11 @@ export default function ResultBannerSlider({ banners: allBanners, eager = false 
   const onTouchEnd = (e: React.TouchEvent) => {
     if (touchStartX.current !== null) {
       const dx = e.changedTouches[0].clientX - touchStartX.current;
+
       if (dx > SWIPE_THRESHOLD) prev();
       else if (dx < -SWIPE_THRESHOLD) next();
     }
+
     touchStartX.current = null;
     setPaused(false);
   };
@@ -120,18 +125,13 @@ export default function ResultBannerSlider({ banners: allBanners, eager = false 
                 [MOBILE_QUERY]: { aspectRatio: MOBILE_RATIO },
               }}
             >
-              <picture>
-                {banner.mobileImageUrl && <source media="(max-width: 768px)" srcSet={banner.mobileImageUrl} />}
-                {banner.webImageUrl && <source media="(min-width: 769px)" srcSet={banner.webImageUrl} />}
-                <img
-                  src={banner.webImageUrl || banner.mobileImageUrl}
-                  alt={banner.alt || banner.title}
-                  loading={eager && i === 0 ? "eager" : "lazy"}
-                  decoding="async"
-                  draggable={false}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                />
-              </picture>
+              <ArtDirectedImage
+                src={banner.webImageUrl || banner.mobileImageUrl}
+                mobileSrc={banner.webImageUrl ? banner.mobileImageUrl : undefined}
+                mobileMaxWidth={768}
+                alt={banner.alt || banner.title}
+                priority={eager && i === 0}
+              />
             </Box>
           ))}
         </Box>

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -63,6 +64,7 @@ function ChartIllustration() {
 
 function FeatureChip({ chip, delay }: { chip: ImpactFeatureChip; delay: number }) {
   const [before, after] = chip.text.split(chip.highlight);
+
   return (
     <Box
       sx={{
@@ -95,7 +97,7 @@ function FeatureChip({ chip, delay }: { chip: ImpactFeatureChip; delay: number }
   );
 }
 
-function ImpactMap({ avatars: IMPACT_AVATARS, features: IMPACT_FEATURES, logoPosition: IMPACT_LOGO_POSITION }: ImpactData) {
+function ImpactMap({ avatars, features, logoPosition }: ImpactData) {
   return (
     <Box
       role="img"
@@ -112,31 +114,29 @@ function ImpactMap({ avatars: IMPACT_AVATARS, features: IMPACT_FEATURES, logoPos
         backgroundPosition: "center",
       }}
     >
-      {IMPACT_AVATARS.map((a) => (
+      {avatars.map((a) => (
         <Box
           key={`${a.x}-${a.y}`}
-          component="img"
-          src={a.src}
-          alt={a.alt}
-          loading="lazy"
           sx={{
+            overflow: "hidden",
             ...at(a.x, a.y),
             width: `${(a.size / MAP_W) * 100}%`,
             aspectRatio: "1",
-            objectFit: "cover",
             borderRadius: "50%",
             border: "3px solid #FFFFFF",
             boxShadow: "0 4px 14px rgba(15, 23, 42, 0.12)",
           }}
-        />
+        >
+          <Image src={a.src} alt={a.alt} fill sizes="96px" style={{ objectFit: "cover" }} />
+        </Box>
       ))}
 
-      {IMPACT_FEATURES.map((chip, i) => (
+      {features.map((chip, i) => (
         <FeatureChip key={chip.text} chip={chip} delay={i * 0.8} />
       ))}
 
       {/* Our logo replaces the reference "V" badge */}
-      <Box sx={{ ...at(IMPACT_LOGO_POSITION.x, IMPACT_LOGO_POSITION.y), width: "17%", zIndex: 3 }}>
+      <Box sx={{ ...at(logoPosition.x, logoPosition.y), width: "17%", zIndex: 3 }}>
         <Box
           aria-hidden
           sx={{
@@ -160,7 +160,7 @@ function ImpactMap({ avatars: IMPACT_AVATARS, features: IMPACT_FEATURES, logoPos
             lineHeight: 0,
           }}
         >
-          <Box component="img" src="/images/logo.png" alt="Vini IAS" sx={{ width: "100%", height: "auto" }} />
+          <Image src="/images/logo.png" alt="Vini IAS" width={320} height={132} sizes="160px" style={{ width: "100%", height: "auto" }} />
         </Box>
       </Box>
     </Box>
@@ -169,6 +169,7 @@ function ImpactMap({ avatars: IMPACT_AVATARS, features: IMPACT_FEATURES, logoPos
 
 export default function ImpactStatsSection({ data }: { data: ImpactData }) {
   const IMPACT_STATS = data.stats;
+
   return (
     <Box component="section" id="impact" sx={{ py: { xs: 4, md: 6 }, backgroundColor: "#FFFFFF" }}>
       <Container>

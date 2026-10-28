@@ -6,15 +6,26 @@ import { BlogPost } from "@/types";
 import { COLORS } from "@/theme/colors";
 import { categoryIcon, coverTone } from "./blogUtils";
 
-type Props = { post: BlogPost; categoryName: string; size?: "lg" | "md" | "sm"; priority?: boolean };
+type CoverSize = "lg" | "md" | "sm";
+
+type Props = { post: BlogPost; categoryName: string; size?: CoverSize; priority?: boolean };
+
+/** Image `sizes` and the fallback icon size for each cover size. */
+const COVER_SIZES: Record<CoverSize, { sizes: string; iconSize: number }> = {
+  lg: { sizes: "(max-width: 900px) 100vw, 760px", iconSize: 120 },
+  md: { sizes: "(max-width: 600px) 100vw, 400px", iconSize: 72 },
+  sm: { sizes: "120px", iconSize: 30 },
+};
 
 /** Post image — the real cover when set, otherwise a branded cover (gradient, exam icon, category). */
 export default function BlogCover({ post, categoryName, size = "md", priority }: Props) {
   if (post.cover) {
-    return <Image src={post.cover} alt={post.title} fill priority={priority} sizes={size === "lg" ? "(max-width: 900px) 100vw, 760px" : size === "md" ? "(max-width: 600px) 100vw, 400px" : "120px"} style={{ objectFit: "cover" }} />;
+    return <Image src={post.cover} alt={post.title} fill priority={priority} sizes={COVER_SIZES[size].sizes} style={{ objectFit: "cover" }} />;
   }
+
   const Icon = categoryIcon(post.category);
-  const iconSize = size === "lg" ? 120 : size === "md" ? 72 : 30;
+  const { iconSize } = COVER_SIZES[size];
+
   return (
     <Box role="img" aria-label={post.title} sx={{ position: "absolute", inset: 0, background: coverTone(post.slug), overflow: "hidden" }}>
       {/* dotted texture + glow */}

@@ -18,12 +18,15 @@ interface GoalEntry {
 /** Every "Select Your Goal" exam (first name wins). */
 export function buildGoalEntries(examCategories: ExamGoalCategory[]): GoalEntry[] {
   const entries = new Map<string, GoalEntry>();
+
   examCategories.forEach((cat) =>
     cat.subcategories.forEach((sub) => {
       const slug = slugify(sub.name);
+
       if (slug && !entries.has(slug)) entries.set(slug, { slug, name: sub.name, category: cat.category });
     })
   );
+
   return [...entries.values()];
 }
 
@@ -43,8 +46,11 @@ const UPSC_GROUPS = new Set([
 
 function resultTabFor(entry: GoalEntry) {
   const text = `${entry.category} ${entry.name}`;
+
   if (/PSC|PCS/i.test(text) && !/^UPSC/i.test(entry.name)) return "state-pcs";
+
   if (UPSC_GROUPS.has(entry.category) || /UPSC|IAS/i.test(entry.name)) return "upsc";
+
   return "other-exams";
 }
 
@@ -137,4 +143,3 @@ export function buildCoursePage(entry: GoalEntry, all: GoalEntry[]): CoursePageD
 
   return base;
 }
-

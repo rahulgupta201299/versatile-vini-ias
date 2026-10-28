@@ -20,6 +20,7 @@ function segment(i: number, n: number) {
   const a1 = -90 + i * step + 1.2;
   const a2 = -90 + (i + 1) * step - 1.2;
   const o1 = pt(R_OUT, a1), o2 = pt(R_OUT, a2), i2 = pt(R_IN, a2), i1 = pt(R_IN, a1);
+
   return `M ${o1.x} ${o1.y} A ${R_OUT} ${R_OUT} 0 0 1 ${o2.x} ${o2.y} L ${i2.x} ${i2.y} A ${R_IN} ${R_IN} 0 0 0 ${i1.x} ${i1.y} Z`;
 }
 
@@ -50,6 +51,7 @@ export default function HowItWorks({ data }: { data: NonNullable_HowItWorks }) {
               const m = mid(i);
               const num = pt((R_IN + R_OUT) / 2, m);
               const isActive = active === i;
+
               return (
                 <g key={s} onMouseEnter={() => setActive(i)} onMouseLeave={() => setActive(null)} style={{ cursor: "default" }}>
                   <path
@@ -75,6 +77,7 @@ export default function HowItWorks({ data }: { data: NonNullable_HowItWorks }) {
             const sin = Math.sin((m * Math.PI) / 180);
             const r = 172; // in 780 × 470 box units (wheel outer radius ≈ 146)
             const right = cos > 0;
+
             return (
               <Box
                 key={s}

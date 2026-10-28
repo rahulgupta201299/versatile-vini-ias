@@ -28,6 +28,7 @@ function BooksArt() {
     { bg: "linear-gradient(160deg, #F97316, #C2410C)", rot: 0, x: 38 },
     { bg: "linear-gradient(160deg, #16A34A, #166534)", rot: 8, x: 72 },
   ];
+
   return (
     <Box sx={{ position: "relative", width: 150, height: ART_H, mx: "auto" }}>
       {covers.map((c, i) => (
@@ -73,6 +74,7 @@ export default function LandingStudyMaterial({ data }: { data: CourseLandingCont
           <Box sx={{ mt: { xs: 3, md: 4 }, display: "grid", gridTemplateColumns: { xs: "1fr", sm: `repeat(${data.items.length}, minmax(0, 1fr))` }, rowGap: 3 }}>
             {data.items.map((item, i) => {
               const Art = ART[item.art];
+
               return (
                 <Box key={item.title} sx={{ px: 2, borderLeft: { sm: i ? "1px solid #EAD9BC" : "none" } }}>
                   <Art />

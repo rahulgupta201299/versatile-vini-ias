@@ -16,6 +16,7 @@ export async function uploadImage(file: File): Promise<string> {
 
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
+
     reader.onload = () => resolve(String(reader.result));
     reader.onerror = () => reject(new Error("Couldn't read the image. Please try another file."));
     reader.readAsDataURL(file);

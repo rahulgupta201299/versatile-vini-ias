@@ -20,6 +20,7 @@ const ACCENT = COLORS.red;
 /** Server component — reads the app points from the site config (cached). */
 export default async function AppDownloadSection({ title = "Study smarter with the Vini IAS app today!" }: { title?: string }) {
   const APP_POINTS = (await getSiteConfig()).app.points;
+
   return (
     <Box component="section" id="download" sx={{ pt: { xs: 4, md: 9 }, pb: { xs: 4, md: 5 }, backgroundColor: "#FFFFFF" }}>
       <Container>

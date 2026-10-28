@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Box from "@mui/material/Box";
@@ -131,8 +132,7 @@ export default function SelectYourGoalManager({ categories }: { categories: Admi
   const renderPreview = ({ name, logo, link }: AdminGoalExam) => (
     <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, minWidth: 0 }}>
       <Box sx={{ width: 40, height: 40, flexShrink: 0, borderRadius: "10px", border: `1px solid ${COLORS.borderLight}`, bgcolor: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", color: COLORS.red, overflow: "hidden" }}>
-        {/* eslint-disable-next-line @next/next/no-img-element -- admin preview of an uploaded logo */}
-        {logo ? <img src={logo} alt="" style={{ width: 32, height: 32, objectFit: "contain" }} /> : <GraduationCap size={20} />}
+        {logo ? <Image src={logo} alt="" width={32} height={32} style={{ objectFit: "contain" }} /> : <GraduationCap size={20} />}
       </Box>
       <Box sx={{ minWidth: 0 }}>
         <Typography sx={{ fontWeight: 800, color: COLORS.ink, fontSize: "0.9rem" }}>{name}</Typography>

@@ -27,6 +27,7 @@ function CallbackCard({ course }: { course: string }) {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (form.validateAll(formRef.current)) setSubmitted(true);
   };
 

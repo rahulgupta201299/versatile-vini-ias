@@ -23,6 +23,7 @@ export default function ProgramTimeline({ data }: { data: NonNullable_Timeline }
         <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: `repeat(${data.phases.length}, minmax(0, 1fr))` }, gap: { xs: 3, md: 4 }, maxWidth: 980, mx: "auto" }}>
           {data.phases.map((p, i) => {
             const tone = TONES[i % TONES.length];
+
             return (
               <Box key={p.title} sx={{ position: "relative", pt: 1, px: { xs: 3, md: 2.5 }, pb: { xs: 5, md: 6 } }}>
                 {/* pocket */}

@@ -17,7 +17,8 @@ const ICONS: Record<string, LucideIcon> = {
   engineering: Cpu,
   medical: HeartPulse,
 };
-export const categoryIcon = (slug: string) => ICONS[slug] ?? Newspaper;
+
+export const categoryIcon = (slug: string) => ICONS[slug] || Newspaper;
 
 /** Brand gradients for drawn covers, picked per post so neighbours differ. */
 const TONES = [
@@ -25,9 +26,12 @@ const TONES = [
   `linear-gradient(135deg, ${COLORS.red} 0%, ${COLORS.redDarker} 100%)`,
   `linear-gradient(135deg, ${COLORS.navyDark} 0%, ${COLORS.navy} 55%, ${COLORS.redDark} 100%)`,
 ];
+
 export function coverTone(seed: string) {
   let h = 0;
+
   for (const ch of seed) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+
   return TONES[h % TONES.length];
 }
 

@@ -42,6 +42,7 @@ function LevelLadder({ levels, progression }: { levels: { title: string; text: s
         {levels.map((level, i) => {
           const style = LEVEL_STYLES[i % LEVEL_STYLES.length];
           const Icon = style.icon;
+
           return (
             <Box
               key={level.title}
@@ -90,6 +91,7 @@ export default function LandingHighlights({ data }: { data: CourseLandingContent
             {data.subjects.map((s, i) => {
               const Icon = LANDING_ICONS[s.icon];
               const tone = CHIP_TONES[(i + 4) % CHIP_TONES.length];
+
               return (
                 <Box key={s.title} sx={{ textAlign: "center", borderLeft: i % 3 ? `1px solid ${COLORS.border}` : "none", px: 1 }}>
                   <Box sx={{ width: { xs: 50, md: 58 }, height: { xs: 50, md: 58 }, mx: "auto", borderRadius: "50%", backgroundColor: tone.bg, display: "flex", alignItems: "center", justifyContent: "center", "& svg": { width: { xs: 24, md: 28 }, height: { xs: 24, md: 28 } } }}>

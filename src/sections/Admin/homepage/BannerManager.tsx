@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -40,6 +41,7 @@ type BannerManagerProps = {
 /** "Web + phone images", "Phone image only", … */
 const imageSizesText = (webImageUrl: string, mobileImageUrl: string) => {
   if (!webImageUrl) return "Phone image only";
+
   if (!mobileImageUrl) return "No phone image";
 
   return "Web + phone images";
@@ -53,7 +55,9 @@ const validateBanner = ({ title, webImageUrl, mobileImageUrl }: HomepageBannerIn
   const problems: string[] = [];
 
   if (!title.trim()) problems.push("Add a title (it also describes the image for search engines).");
+
   if (requireWebImage && !webImageUrl) problems.push("Upload the web image.");
+
   if (!requireWebImage && !webImageUrl && !mobileImageUrl) problems.push("Upload a web image, a phone image, or both.");
 
   return problems;
@@ -65,9 +69,8 @@ export default function BannerManager({ banners, apiPath, extraBody = {}, requir
 
   const renderPreview = ({ title, webImageUrl, mobileImageUrl, link }: AdminHomepageBanner) => (
     <Box sx={{ display: "flex", alignItems: "center", gap: 1.75, minWidth: 0 }}>
-      <Box sx={{ width: { xs: 120, sm: 180 }, aspectRatio: webAspect, flexShrink: 0, borderRadius: "10px", overflow: "hidden", bgcolor: COLORS.surface, border: `1px solid ${COLORS.border}` }}>
-        {/* eslint-disable-next-line @next/next/no-img-element -- admin preview of an uploaded image */}
-        <img src={webImageUrl || mobileImageUrl} alt="" style={{ width: "100%", height: "100%", objectFit: webImageUrl ? "cover" : "contain", display: "block" }} />
+      <Box sx={{ position: "relative", width: { xs: 120, sm: 180 }, aspectRatio: webAspect, flexShrink: 0, borderRadius: "10px", overflow: "hidden", bgcolor: COLORS.surface, border: `1px solid ${COLORS.border}` }}>
+        {(webImageUrl || mobileImageUrl) && <Image src={webImageUrl || mobileImageUrl} alt="" fill sizes="180px" style={{ objectFit: webImageUrl ? "cover" : "contain" }} />}
       </Box>
       <Box sx={{ minWidth: 0 }}>
         <Typography sx={{ fontWeight: 800, color: COLORS.ink, fontSize: "0.92rem", lineHeight: 1.35 }}>{title}</Typography>

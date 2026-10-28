@@ -72,7 +72,7 @@ const Divider = () => <Box sx={{ width: "1px", height: 22, mx: 0.5, bgcolor: COL
 
 /** Inline "add link" bar (no browser pop-ups). */
 function LinkBar({ editor, onClose }: { editor: Editor; onClose: () => void }) {
-  const [href, setHref] = useState(editor.getAttributes("link").href ?? "");
+  const [href, setHref] = useState(editor.getAttributes("link").href || "");
 
   const apply = () => {
     const url = href.trim();

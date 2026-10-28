@@ -29,20 +29,20 @@ export const getCourseSectionSlugs = cache(async (section: string) => {
   const { navigation } = await getSiteData();
   const prefix = `/courses/${section}/`;
   const hrefs = [
-    ...navigation.navItems.flatMap((item) => item.children ?? []).map((child) => child.href),
+    ...navigation.navItems.flatMap((item) => item.children || []).map((child) => child.href),
     ...navigation.mobileMenu.flatMap((section) => section.items).map((item) => item.href),
   ];
   const slugs = hrefs
     .filter((href) => href.startsWith(prefix))
     .map((href) => href.slice(prefix.length).split(/[/?#]/)[0]);
+
   return [...new Set(slugs)];
 });
 
 /** One course page: GET /courses/<section>/<slug> (falls back to local content, else null → 404). */
 export const getCourseSectionPage = cache((section: string, slug: string) =>
   fetchApi<FreeResourcePage | null>(`courses/${section}/${encodeURIComponent(slug)}`, {
-    fallback: LOCAL_PAGES[section]?.find((p) => p.slug === slug) ?? null,
+    fallback: LOCAL_PAGES[section]?.find((p) => p.slug === slug) || null,
     tags: [CACHE_TAGS.freeResources],
   })
 );
-

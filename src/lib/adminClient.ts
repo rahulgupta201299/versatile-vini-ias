@@ -28,7 +28,7 @@ export async function adminRequest<T>(path: string, { method = "GET", body }: Ad
 
   const json = await response.json().catch(() => null);
 
-  if (!response.ok) throw new Error(json?.message ?? (response.status >= 500 ? SERVER_PROBLEM : "Something went wrong. Please try again."));
+  if (!response.ok) throw new Error(json?.message || (response.status >= 500 ? SERVER_PROBLEM : "Something went wrong. Please try again."));
 
   return json as T;
 }

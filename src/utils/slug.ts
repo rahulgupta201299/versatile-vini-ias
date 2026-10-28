@@ -31,6 +31,13 @@ export const COURSE_SECTIONS = {
 } as const;
 export const coursePagePath = (section: string, name: string) => `/courses/${section}/${slugify(name)}`;
 
+export type CourseSection = (typeof COURSE_SECTIONS)[keyof typeof COURSE_SECTIONS];
+
+/** Every course section slug, e.g. "csat", "gs-mains". */
+export const COURSE_SECTION_SLUGS = Object.values(COURSE_SECTIONS);
+
+export const isCourseSection = (value: string): value is CourseSection => (COURSE_SECTION_SLUGS as string[]).includes(value);
+
 /** External test-series site (replace with the real URL). */
 export const TEST_SERIES_URL = "https://test.viniias.com/upsc-test-series";
 

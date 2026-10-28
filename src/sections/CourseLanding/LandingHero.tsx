@@ -16,6 +16,7 @@ function BookStack({ books }: { books: string[] }) {
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "3px", width: "100%" }}>
       {books.map((subject, i) => {
         const color = SPINES[i % SPINES.length];
+
         return (
           <Box
             key={subject}

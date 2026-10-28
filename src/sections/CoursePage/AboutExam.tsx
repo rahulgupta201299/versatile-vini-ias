@@ -4,15 +4,12 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import { ChevronDown } from "lucide-react";
 import { CourseFaq } from "@/types";
-import { anchorSx, BODY, INK, MUTED, RED, RED_TINT, sectionSx, titleSx } from "./theme";
+import { anchorSx, BODY, INK, MUTED, RED, sectionSx, titleSx } from "./theme";
 
 import { COLORS } from "@/theme/colors";
 import { richTextSx } from "@/theme/richText";
+import FaqList from "@/components/FaqList";
 
 interface AboutExamProps {
   name: string;
@@ -27,7 +24,6 @@ interface AboutExamProps {
 
 export default function AboutExam({ name, title, about, aboutHtml, highlights, faqs }: AboutExamProps) {
   const [expanded, setExpanded] = useState(false);
-  const [openFaq, setOpenFaq] = useState<number | false>(0);
 
   return (
     <Box component="section" id="about-exam" sx={{ ...anchorSx, ...sectionSx, backgroundColor: COLORS.surface }}>
@@ -73,30 +69,7 @@ export default function AboutExam({ name, title, about, aboutHtml, highlights, f
         <Typography component="h3" sx={{ fontWeight: 800, fontSize: { xs: "1.1rem", md: "1.35rem" }, color: INK, mb: 1.5 }}>
           Frequently Asked Questions
         </Typography>
-        <Box sx={{ display: "grid", gap: 1 }}>
-          {faqs.map((f, i) => (
-            <Accordion
-              key={f.q}
-              disableGutters
-              elevation={0}
-              expanded={openFaq === i}
-              onChange={(_, open) => setOpenFaq(open ? i : false)}
-              sx={{
-                borderRadius: "12px !important",
-                border: `1px solid ${openFaq === i ? COLORS.redBorder : "#EEF0F3"}`,
-                backgroundColor: openFaq === i ? RED_TINT : "#FFFFFF",
-                "&::before": { display: "none" },
-              }}
-            >
-              <AccordionSummary expandIcon={<ChevronDown size={20} color={openFaq === i ? RED : COLORS.muted} />} sx={{ px: { xs: 1.75, md: 2.5 }, "& .MuiAccordionSummary-content": { my: 1.5 } }}>
-                <Typography sx={{ fontWeight: 700, fontSize: { xs: "0.92rem", md: "1rem" }, color: INK }}>{f.q}</Typography>
-              </AccordionSummary>
-              <AccordionDetails sx={{ px: { xs: 1.75, md: 2.5 }, pt: 0, pb: 2 }}>
-                <Typography sx={{ color: BODY, fontSize: { xs: "0.88rem", md: "0.95rem" }, lineHeight: 1.7 }}>{f.a}</Typography>
-              </AccordionDetails>
-            </Accordion>
-          ))}
-        </Box>
+        <FaqList faqs={faqs} />
       </Container>
     </Box>
   );

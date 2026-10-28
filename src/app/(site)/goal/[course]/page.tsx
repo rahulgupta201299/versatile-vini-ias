@@ -15,8 +15,6 @@ import { getGoalPage, getHeroBanners, getImpactData, getPrerenderedGoalSlugs, ge
 
 type Params = Promise<{ course: string }>;
 
-/** All Exams pages are built ahead of time; every other goal page renders on first visit (then cached). */
-export const dynamicParams = true;
 export async function generateStaticParams() {
   return (await getPrerenderedGoalSlugs()).map((course) => ({ course }));
 }
@@ -24,8 +22,11 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { course } = await params;
   const page = await getGoalPage(course);
+
   if (!page) return {};
+
   const title = `${page.name} — Live Classes, Free Lectures & Test Series | Vini IAS`;
+
   return {
     title,
     description: page.tagline,
@@ -37,6 +38,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 export default async function GoalPage({ params }: { params: Params }) {
   const { course } = await params;
   const page = await getGoalPage(course);
+
   if (!page) notFound();
 
   const [heroBanners, resultTabs, impact, config] = await Promise.all([
@@ -46,7 +48,7 @@ export default async function GoalPage({ params }: { params: Params }) {
     getImpactData(),
     getSiteConfig(),
   ]);
-  const toppers = page.topRankers?.length ? page.topRankers : ((resultTabs.find((t) => t.id === page.resultTabId) ?? resultTabs[0])?.banners ?? []);
+  const toppers = page.topRankers?.length ? page.topRankers : ((resultTabs.find((t) => t.id === page.resultTabId) || resultTabs[0])?.banners || []);
 
   const faqJsonLd = {
     "@context": "https://schema.org",

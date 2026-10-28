@@ -21,6 +21,7 @@ const MUTED = "#71717A";
 const LINE = "#E4E4E7";
 
 const FONT_DIR = path.join(process.cwd(), "src/lib/pdf-fonts");
+
 Font.register({
   family: "Reddit Sans",
   fonts: [
@@ -63,7 +64,9 @@ const s = StyleSheet.create({
 async function loadImage(publicPath: string) {
   try {
     const file = await fs.readFile(path.join(process.cwd(), "public", publicPath.replace(/^\//, "")));
+
     if (/\.(png|jpe?g)$/i.test(publicPath)) return file;
+
     return await sharp(file).jpeg({ quality: 85 }).toBuffer();
   } catch {
     return null;
@@ -78,6 +81,7 @@ export async function renderBlogPdf(post: BlogPost, categoryName: string, relate
   const [logo, cover] = await Promise.all([loadImage("/images/logo.png"), post.cover ? loadImage(post.cover) : Promise.resolve(null)]);
   const url = `${SITE_URL}/exams/${post.category}/${post.slug}`;
   const rows: Related[][] = [];
+
   for (let i = 0; i < related.length; i += 2) rows.push(related.slice(i, i + 2));
 
   const doc = (
@@ -105,8 +109,9 @@ export async function renderBlogPdf(post: BlogPost, categoryName: string, relate
 
         {post.content.map((b, i) => {
           if (b.type === "h2") return <Text key={i} style={s.h2} minPresenceAhead={40}>{b.text}</Text>;
+
           if (b.type === "ul")
-            return (
+            {return (
               <View key={i} style={{ marginTop: 4 }}>
                 {b.items.map((it) => (
                   <View key={it} style={s.li} wrap={false}>
@@ -115,8 +120,10 @@ export async function renderBlogPdf(post: BlogPost, categoryName: string, relate
                   </View>
                 ))}
               </View>
-            );
+            );}
+
           if (b.type === "quote") return <Text key={i} style={s.quote} wrap={false}>{b.text}</Text>;
+
           return <Text key={i} style={s.p}>{b.text}</Text>;
         })}
 
@@ -159,6 +166,7 @@ export async function renderBlogPdf(post: BlogPost, categoryName: string, relate
       </Page>
     </Document>
   );
+
   return addPageNumbers(await renderToBuffer(doc));
 }
 
@@ -167,10 +175,13 @@ async function addPageNumbers(buffer: Buffer) {
   const pdf = await PDFDocument.load(buffer);
   const font = await pdf.embedFont(StandardFonts.Helvetica);
   const pages = pdf.getPages();
+
   pages.forEach((page, i) => {
     const label = `Page ${i + 1} of ${pages.length}`;
     const size = 8.5;
+
     page.drawText(label, { x: page.getWidth() - 44 - font.widthOfTextAtSize(label, size), y: 33, size, font, color: rgb(0x71 / 255, 0x71 / 255, 0x7a / 255) });
   });
+
   return Buffer.from(await pdf.save());
 }

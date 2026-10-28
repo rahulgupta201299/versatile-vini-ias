@@ -55,6 +55,7 @@ export function validateDetails(details: ExamDetails): string[] {
 
   details.freeClasses.forEach(({ title, youtubeId }, index) => {
     if (!title.trim()) problems.push(`Free class ${index + 1}: title is required.`);
+
     if (youtubeId && !toYoutubeId(youtubeId)) problems.push(`Free class ${index + 1}: the YouTube link or video ID isn't valid.`);
   });
 
@@ -78,6 +79,7 @@ export function validateSubCategory({ name, details }: AdminSubCategoryInput, { 
   const problems: string[] = [];
 
   if (!hasCategory) problems.push("Choose a category, or type a new category name.");
+
   if (!slugify(name)) problems.push("Type a sub category name (it needs letters or numbers).");
 
   return [...problems, ...validateDetails(details)];

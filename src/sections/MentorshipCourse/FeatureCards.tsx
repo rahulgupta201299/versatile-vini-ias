@@ -45,6 +45,7 @@ export default function FeatureCards({ data, id }: { data: MentorshipContent["fe
           <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: { xs: 1.5, md: 2.5 }, maxWidth: 1000, mx: "auto", "& > *": { flex: { xs: "0 0 calc((100% - 12px) / 2)", sm: "0 0 calc((100% - 24px) / 3)", md: "0 0 calc((100% - 60px) / 4)" } } }}>
             {data.items.map((item, i) => {
               const color = RIBBONS[i % RIBBONS.length];
+
               return (
                 <Box key={item.title} sx={{ position: "relative", pt: 4.5, pb: 3, px: 1.5, borderRadius: "12px", border: `1.5px solid ${color}55`, backgroundColor: "#FFFFFF", textAlign: "center", boxShadow: "0 8px 18px rgba(15,23,42,.06)", transition: "transform .2s, box-shadow .2s", "&:hover": { transform: "translateY(-3px)", boxShadow: "0 14px 28px rgba(15,23,42,.10)" } }}>
                   {/* ribbon */}

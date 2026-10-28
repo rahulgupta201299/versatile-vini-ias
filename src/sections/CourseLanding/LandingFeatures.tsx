@@ -25,6 +25,7 @@ export default function LandingFeatures({ items }: { items: LandingIconItem[] })
           {items.map((item, i) => {
             const Icon = LANDING_ICONS[item.icon];
             const tone = CHIP_TONES[i % CHIP_TONES.length];
+
             return (
               <Box
                 key={item.title}

@@ -104,6 +104,7 @@ const BOTH = ["foundation", "foundation-plus"];
 
 function buildOptionalPage(s: OptionalSubject): FreeResourcePage {
   const title = `Live ${s.name} Optional Foundation Course 2027 – Batch 1`;
+
   return {
     ...EMPTY,
     slug: slugify(s.name),

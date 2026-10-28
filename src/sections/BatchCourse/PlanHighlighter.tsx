@@ -8,10 +8,14 @@ export default function PlanHighlighter({ tableId }: { tableId: string }) {
   useEffect(() => {
     const onSelect = (e: Event) => {
       const table = document.getElementById(tableId);
+
       if (table) table.dataset.activePlan = (e as CustomEvent<string>).detail;
     };
+
     window.addEventListener(SELECT_PLAN_EVENT, onSelect);
+
     return () => window.removeEventListener(SELECT_PLAN_EVENT, onSelect);
   }, [tableId]);
+
   return null;
 }

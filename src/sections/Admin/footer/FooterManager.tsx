@@ -149,11 +149,11 @@ const saveMessage = (isDirty: boolean, status: "idle" | "saving" | "saved") => {
   if (isDirty) return "Unsaved changes";
 
   if (status === "saved")
-    return (
+    {return (
       <>
         <Check size={15} /> Saved — live in the footer
       </>
-    );
+    );}
 
   return "";
 };

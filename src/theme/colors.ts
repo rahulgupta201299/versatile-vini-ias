@@ -39,4 +39,3 @@ export const COLORS = {
   /* Status */
   success: "#16A34A",
 } as const;
-

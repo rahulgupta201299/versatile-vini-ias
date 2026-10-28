@@ -14,6 +14,7 @@ export default function AdminSignOut({ variant = "dark", compact = false }: { va
     window.location.replace("/admin/login");
   };
   const light = variant === "light";
+
   return (
     <Box
       component="button"

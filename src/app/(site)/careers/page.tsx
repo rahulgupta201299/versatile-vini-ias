@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 
 export default async function CareersPage() {
   const careers = await getCareersContent();
+
   return (
     <>
       <CareersHero hero={careers.hero} />

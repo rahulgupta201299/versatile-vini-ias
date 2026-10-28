@@ -12,8 +12,9 @@ type Picker = NonNullable<MentorshipContent["planPicker"]>;
 
 /** "CHOOSE COURSE" — plan tabs; each shows a description, the course name, Enroll and the fee. */
 export default function PlanPicker({ data }: { data: Picker }) {
-  const [id, setId] = useState(data.defaultId ?? data.plans[0]?.id);
-  const plan = data.plans.find((p) => p.id === id) ?? data.plans[0];
+  const [id, setId] = useState(data.defaultId || data.plans[0]?.id);
+  const plan = data.plans.find((p) => p.id === id) || data.plans[0];
+
   if (!plan) return null;
 
   return (
@@ -25,6 +26,7 @@ export default function PlanPicker({ data }: { data: Picker }) {
         <Box role="tablist" sx={{ mt: 3, display: "flex", justifyContent: "center", flexWrap: "wrap", gap: { xs: 1, md: 2 } }}>
           {data.plans.map((p) => {
             const active = p.id === plan.id;
+
             return (
               <Box
                 key={p.id}

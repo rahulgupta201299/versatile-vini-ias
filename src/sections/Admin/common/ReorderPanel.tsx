@@ -82,8 +82,14 @@ export default function ReorderPanel({ items: initialItems, title, description, 
             component="li"
             key={_id}
             data-order-row
-            onDragOver={(e: React.DragEvent) => { if (dragFromRef.current === null) return; e.preventDefault(); setDropAt(index); }}
-            onDrop={(e: React.DragEvent) => { e.preventDefault(); if (dragFromRef.current !== null) move(dragFromRef.current, index); endDrag(); }}
+            onDragOver={(e: React.DragEvent) => { if (dragFromRef.current === null) return;
+
+ e.preventDefault(); setDropAt(index); }}
+            onDrop={(e: React.DragEvent) => { e.preventDefault();
+
+ if (dragFromRef.current !== null) move(dragFromRef.current, index);
+
+ endDrag(); }}
             sx={{
               display: "flex",
               alignItems: "center",
@@ -107,6 +113,7 @@ export default function ReorderPanel({ items: initialItems, title, description, 
                 e.dataTransfer.effectAllowed = "move";
                 e.dataTransfer.setData("text/plain", String(index));
                 const row = (e.currentTarget as HTMLElement).closest<HTMLElement>("[data-order-row]");
+
                 if (row) e.dataTransfer.setDragImage(row, 20, 20);
               }}
               onDragEnd={endDrag}

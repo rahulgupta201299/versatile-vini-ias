@@ -16,7 +16,9 @@ const DOTS = "radial-gradient(rgba(255,255,255,.09) 1.2px, transparent 1.2px)";
 /** Highlights `highlight` inside `text` in brand red. */
 function withHighlight(text: string, highlight: string) {
   const i = text.indexOf(highlight);
+
   if (i < 0) return text;
+
   return (
     <>
       {text.slice(0, i)}
@@ -67,6 +69,7 @@ export function AboutMission({ items }: { items: AboutContent["mission"] }) {
         <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: { xs: 3.5, md: 4 }, pr: { xs: 1.25, md: 1.5 } }}>
           {items.map((m, i) => {
             const Icon = COMPANY_ICONS[m.icon];
+
             return (
               <Box key={m.text} sx={{ position: "relative" }}>
                 <Box aria-hidden sx={{ position: "absolute", inset: 0, transform: "translate(10px, 10px)", borderRadius: "14px", bgcolor: OFFSETS[i % OFFSETS.length] }} />
@@ -112,6 +115,7 @@ export function AboutVision({ vision }: { vision: AboutContent["vision"] }) {
               { top: { xs: 76, sm: 88 }, left: { xs: 150, sm: 180 } },
               { top: { xs: 152, sm: 176 }, left: 0 },
             ][i];
+
             return (
               <Box key={t.label} sx={{ position: "absolute", ...pos, width: { xs: 150, sm: 180 }, height: { xs: 140, sm: 168 }, clipPath: HEX, background: HEX_FILLS[i], color: i === 2 ? COLORS.navy : "#FFFFFF", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", px: 3, filter: "drop-shadow(0 10px 18px rgba(0,0,0,.15))" }}>
                 <Typography sx={{ fontWeight: 800, fontSize: { xs: "1.5rem", sm: "1.8rem" }, lineHeight: 1.1 }}>{t.value}</Typography>
@@ -181,7 +185,9 @@ export function AboutCulture({ culture }: { culture: AboutContent["culture"] }) 
 /** "Our Founders" — navy band with founder cards (photo, quote, expandable bio), pw.live style. */
 export function AboutFounders({ founders }: { founders: AboutContent["founders"] }) {
   if (!founders.length) return null;
+
   const single = founders.length === 1;
+
   return (
     <Box component="section" sx={{ position: "relative", overflow: "hidden", py: { xs: 7, md: 10 }, bgcolor: COLORS.navyDark, "&::before": { content: '""', position: "absolute", inset: 0, backgroundImage: DOTS, backgroundSize: "26px 26px" }, "&::after": { content: '""', position: "absolute", width: 520, height: 520, borderRadius: "50%", right: -220, top: -180, background: "radial-gradient(circle, rgba(254,0,52,.35), transparent 65%)" } }}>
       <Container sx={{ position: "relative", zIndex: 1 }}>
@@ -231,12 +237,14 @@ const PR_GREEN = "#3DAE72";
 /** Press + support contact cards below the careers band (Unacademy-style, theme colours). */
 export function AboutContacts({ contacts }: { contacts: AboutContent["contacts"] }) {
   if (!contacts.length) return null;
+
   return (
     <Box component="section" aria-label="Get in touch" sx={{ py: { xs: 6, md: 8 }, bgcolor: COLORS.surface }}>
       <Container sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" }, gap: { xs: 3, md: 4 } }}>
         {contacts.map((c) => {
           const press = c.kind === "press";
           const bg = press ? PR_GREEN : COLORS.navy;
+
           return (
             <Box key={c.email} sx={{ borderRadius: "18px", overflow: "hidden", bgcolor: "#FFFFFF", boxShadow: "0 12px 30px rgba(15,23,42,.07)", transition: "transform .25s, box-shadow .25s", "&:hover": { transform: "translateY(-3px)", boxShadow: "0 18px 38px rgba(15,23,42,.12)" } }}>
               <Box sx={{ position: "relative", height: { xs: 150, md: 170 }, bgcolor: bg, overflow: "hidden" }}>

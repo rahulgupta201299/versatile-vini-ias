@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -29,7 +30,7 @@ function VideoCard({ video }: { video: CourseVideo }) {
   ) : (
     <>
       {thumb ? (
-        <Box component="img" src={thumb} alt="" loading="lazy" sx={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+        <Image src={thumb} alt="" fill sizes="(min-width: 900px) 400px, 100vw" style={{ objectFit: "cover" }} />
       ) : (
         // Branded placeholder until a YouTube id is set for this video
         <Box sx={{ position: "absolute", inset: 0, background: `linear-gradient(135deg, #8B1A2B 0%, ${COLORS.red} 60%, #FF6B6B 100%)`, p: 2, display: "flex", alignItems: "flex-end" }}>
@@ -156,7 +157,9 @@ export default function FreeClasses({ videos, channelUrl, avatars }: { videos: C
         >
           <Box sx={{ display: "flex", flexShrink: 0 }}>
             {avatars.slice(0, 3).map((a, i) => (
-              <Box key={a.src} component="img" src={a.src} alt="" sx={{ width: { xs: 30, md: 36 }, height: { xs: 30, md: 36 }, borderRadius: "50%", border: "2px solid #FFFFFF", ml: i ? -1.25 : 0 }} />
+              <Box key={a.src} sx={{ position: "relative", flexShrink: 0, overflow: "hidden", width: { xs: 30, md: 36 }, height: { xs: 30, md: 36 }, borderRadius: "50%", border: "2px solid #FFFFFF", ml: i ? -1.25 : 0 }}>
+                <Image src={a.src} alt="" fill sizes="36px" style={{ objectFit: "cover" }} />
+              </Box>
             ))}
           </Box>
           <Typography sx={{ flex: 1, minWidth: 0, fontSize: { xs: "0.82rem", md: "0.95rem" }, color: INK, lineHeight: 1.35 }}>

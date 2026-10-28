@@ -27,7 +27,9 @@ export default function HeroSlider({ banners }: HeroSliderProps) {
 
   useEffect(() => {
     if (isPaused || banners.length <= 1) return;
+
     const interval = setInterval(nextSlide, 5000);
+
     return () => clearInterval(interval);
   }, [nextSlide, isPaused, banners.length]);
 
@@ -173,6 +175,7 @@ export default function HeroSlider({ banners }: HeroSliderProps) {
             >
               {banners.map((_, idx) => {
                 const isActive = currentSlide === idx;
+
                 return (
                   <Box
                     key={idx}

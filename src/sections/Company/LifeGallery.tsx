@@ -44,12 +44,16 @@ export default function LifeGallery({ life }: { life: CareersContent["life"] }) 
   // Paused on hover/focus and for users who prefer reduced motion.
   useEffect(() => {
     if (paused || count < 2) return;
+
     if (typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+
     const t = window.setTimeout(() => setActive((i) => (i + 1) % count), AUTOPLAY_MS);
+
     return () => window.clearTimeout(t);
   }, [active, paused, count]);
 
   if (!count) return null;
+
   const go = (d: number) => setActive((i) => (i + d + count) % count);
   const pauseProps = {
     onMouseEnter: () => setPaused(true),
@@ -71,6 +75,7 @@ export default function LifeGallery({ life }: { life: CareersContent["life"] }) 
           {...pauseProps}
           onKeyDown={(e) => {
             if (e.key === "ArrowRight") go(1);
+
             if (e.key === "ArrowLeft") go(-1);
           }}
           sx={{ position: "relative", aspectRatio: "16 / 9", borderRadius: { xs: "14px", md: "20px" }, overflow: "hidden", bgcolor: COLORS.navyDark, boxShadow: "0 20px 44px rgba(15,23,42,.18)", outline: "none", "&:focus-visible": { boxShadow: `0 0 0 3px ${COLORS.red}` } }}

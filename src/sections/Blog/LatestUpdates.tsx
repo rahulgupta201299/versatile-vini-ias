@@ -9,6 +9,7 @@ import { COLORS } from "@/theme/colors";
 /** "Latest Notification & Updates" — Notifications / Admit Cards / Results boards with a pin. */
 export default function LatestUpdates({ boards }: { boards: ExamUpdates["boards"] }) {
   if (!boards.length) return null;
+
   return (
     <Box component="section" aria-label="Latest notification and updates" sx={{ mt: { xs: 4, md: 6 } }}>
       <Box sx={{ textAlign: "center", mb: { xs: 3, md: 4 } }}>

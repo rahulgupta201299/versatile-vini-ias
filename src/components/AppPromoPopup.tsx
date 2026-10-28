@@ -51,6 +51,7 @@ function RotatingText({ slideHeight }: { slideHeight: number }) {
       setAnimate(true);
       setIdx((i) => i + 1);
     }, ROTATE_MS);
+
     return () => window.clearInterval(t);
   }, []);
 
@@ -62,6 +63,7 @@ function RotatingText({ slideHeight }: { slideHeight: number }) {
   };
 
   const slides = [...MESSAGES, MESSAGES[0]];
+
   return (
     <Box aria-live="polite" sx={{ height: slideHeight, overflow: "hidden" }}>
       <Box
@@ -141,10 +143,12 @@ export default function AppPromoPopup() {
 
   useEffect(() => {
     if (readSeen()) return;
+
     const t = window.setTimeout(() => {
       markSeen();
       setOpen(true);
     }, DELAY_MS);
+
     return () => window.clearTimeout(t);
   }, []);
 

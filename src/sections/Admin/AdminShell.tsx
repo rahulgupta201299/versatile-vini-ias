@@ -160,7 +160,7 @@ function Breadcrumb() {
     <Box sx={{ display: { xs: "none", sm: "flex" }, alignItems: "center", gap: 1, fontSize: "0.88rem", minWidth: 0 }}>
       <Box component="span" sx={{ color: COLORS.muted }}>{workspace ? WORKSPACES[workspace].label : "Team"}</Box>
       <ChevronRight size={15} color={COLORS.disabled} />
-      <Box component="span" sx={{ color: COLORS.ink, fontWeight: 700 }}>{page?.label ?? "Page"}</Box>
+      <Box component="span" sx={{ color: COLORS.ink, fontWeight: 700 }}>{page?.label || "Page"}</Box>
     </Box>
   );
 }

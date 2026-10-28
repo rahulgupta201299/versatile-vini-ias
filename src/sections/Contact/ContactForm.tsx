@@ -9,7 +9,13 @@ import { sanitizeMobile, sanitizeName, useFormValidation, validateMobile, valida
 import { fieldSx, solidPill } from "@/sections/Company/careerStyles";
 
 const EXAMS = ["UPSC", "BPSC", "State PCS", "Judiciary", "CLAT", "Other"];
-const validateEmail = (v: string) => (!v.trim() ? "Email is required" : /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? "" : "Enter a valid email address");
+const validateEmail = (value: string) => {
+  const email = value.trim();
+
+  if (!email) return "Email is required";
+
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) ? "" : "Enter a valid email address";
+};
 const validateMessage = (v: string) => (v.trim().length < 10 ? "Please write at least 10 characters" : "");
 
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
@@ -38,6 +44,7 @@ export default function ContactForm() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (form.validateAll(formRef.current)) setSent(true);
   };
 
@@ -62,8 +69,10 @@ export default function ContactForm() {
   // native inputs: keep only the DOM-safe props from the MUI-oriented helper
   const fp = (k: Key) => {
     const { name, value, onChange, onBlur } = form.fieldProps(k);
+
     return { name, value, onBlur, onChange: onChange as unknown as React.ChangeEventHandler<HTMLInputElement & HTMLSelectElement & HTMLTextAreaElement> };
   };
+
   return (
     <Box component="form" ref={formRef} onSubmit={onSubmit} noValidate sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, gap: 2 }}>
       <Field label="Full Name" error={err("name")}>

@@ -17,6 +17,7 @@ export default function ShortlistFeatures({ data }: { data: ShortlistContent["fe
           {data.items.map((f, i) => {
             const Icon = LANDING_ICONS[f.icon];
             const tone = CHIP_TONES[i % CHIP_TONES.length];
+
             return (
               <Box key={f.title} sx={{ position: "relative", p: { xs: 2.5, md: 3 }, pt: { xs: 3.5, md: 4 }, borderRadius: "20px", backgroundColor: "#FFFFFF", border: `1px solid ${COLORS.border}`, textAlign: "center", boxShadow: "0 12px 28px rgba(15,23,42,.06)", transition: "transform .2s", "&:hover": { transform: "translateY(-4px)" } }}>
                 <Box sx={{ position: "absolute", top: 14, left: 16, width: 32, height: 32, borderRadius: "50%", backgroundColor: tone.color, color: "#FFFFFF", fontWeight: 900, fontSize: "0.85rem", display: "flex", alignItems: "center", justifyContent: "center" }}>

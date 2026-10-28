@@ -34,7 +34,9 @@ const linkSx = { color: COLORS.muted, textDecoration: "none", fontSize: "0.85rem
 /** How a contact-style row looks, from its link: mailto: → email, wa.me → WhatsApp, tel: → Call, else chat. */
 const contactKind = (href: string) => {
   if (href.startsWith("mailto:")) return "email";
+
   if (/wa\.me|whatsapp/i.test(href)) return "whatsapp";
+
   if (href.startsWith("tel:")) return "call";
 
   return "chat";
@@ -153,7 +155,7 @@ function FooterColumn({ column }: { column: FooterLinkColumn }) {
 }
 
 export default function Footer() {
-  const { social: SOCIAL_LINKS, footer } = useSiteData().config;
+  const { social, footer } = useSiteData().config;
   const {
     columns,
     brandsTitle,
@@ -161,6 +163,7 @@ export default function Footer() {
     learningResourcesTitle,
     learningResources: FREE_LEARNING_RESOURCES,
   } = footer;
+
   return (
     <Box
       component="footer"
@@ -197,7 +200,6 @@ export default function Footer() {
               We understand that every student has unique needs and abilities, that&#39;s why our curriculum is designed to adapt to your needs and help you grow!
             </Typography>
 
-
             {/* App store badges (side by side) */}
             <Box sx={{ mb: 3 }}>
               <StoreBadges size="sm" />
@@ -209,12 +211,12 @@ export default function Footer() {
             </Typography>
             <Box sx={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 1 }}>
               {[
-                { icon: <FacebookLogo size={20} />, label: "Facebook", href: SOCIAL_LINKS.facebook },
-                { icon: <InstagramLogo size={20} />, label: "Instagram", href: SOCIAL_LINKS.instagram },
-                { icon: <YouTubeLogo size={20} />, label: "YouTube", href: SOCIAL_LINKS.youtube },
-                { icon: <LinkedInLogo size={20} />, label: "LinkedIn", href: SOCIAL_LINKS.linkedin },
-                { icon: <XLogo size={17} />, label: "X (Twitter)", href: SOCIAL_LINKS.x },
-                { icon: <TelegramLogo size={20} />, label: "Telegram", href: SOCIAL_LINKS.telegram },
+                { icon: <FacebookLogo size={20} />, label: "Facebook", href: social.facebook },
+                { icon: <InstagramLogo size={20} />, label: "Instagram", href: social.instagram },
+                { icon: <YouTubeLogo size={20} />, label: "YouTube", href: social.youtube },
+                { icon: <LinkedInLogo size={20} />, label: "LinkedIn", href: social.linkedin },
+                { icon: <XLogo size={17} />, label: "X (Twitter)", href: social.x },
+                { icon: <TelegramLogo size={20} />, label: "Telegram", href: social.telegram },
               ].map((item) => (
                 <IconButton
                   key={item.label}

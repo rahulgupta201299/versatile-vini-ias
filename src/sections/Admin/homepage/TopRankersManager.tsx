@@ -50,6 +50,7 @@ const validateStat = ({ value, label }: RankerStatInput) => {
   const problems: string[] = [];
 
   if (!value.trim()) problems.push("Add the big value, e.g. “1000+” or “Rank 2”.");
+
   if (!label.trim()) problems.push("Add the label, e.g. “70th BPSC & PCS कुल चयन”.");
 
   return problems;

@@ -27,7 +27,7 @@ const DESCRIPTIONS: Record<string, string> = {
 export const BLOG_CATEGORIES: BlogCategory[] = EXAM_CATEGORIES.slice(0, 12).map((c) => ({
   slug: slugify(c.category),
   name: c.category,
-  description: DESCRIPTIONS[c.category] ?? `${c.category} exams — news, strategy and preparation tips.`,
+  description: DESCRIPTIONS[c.category] || `${c.category} exams — news, strategy and preparation tips.`,
 }));
 
 /* ---------- helpers to keep the sample articles short ---------- */
@@ -40,7 +40,8 @@ type Draft = Omit<BlogPost, "slug" | "content" | "faqs"> & { content?: BlogBlock
 /** Sample FAQs per exam category (replace per post when real content arrives). */
 const NAME_BY_SLUG: Record<string, string> = Object.fromEntries(EXAM_CATEGORIES.map((c) => [slugify(c.category), c.category]));
 const defaultFaqs = (category: string): CourseFaq[] => {
-  const exam = NAME_BY_SLUG[category] ?? "this exam";
+  const exam = NAME_BY_SLUG[category] || "this exam";
+
   return [
     { q: `When is the next ${exam} notification expected?`, a: `The ${exam} notification is released as per the official exam calendar. Keep checking the official website and Vini IAS updates — we publish every change as soon as it is announced.` },
     { q: `What is the best way to start ${exam} preparation?`, a: "Begin with the official syllabus and previous year questions, build basics from standard books, then move to regular practice tests and revision." },
@@ -53,9 +54,9 @@ const defaultFaqs = (category: string): CourseFaq[] => {
 
 const post = (d: Draft): BlogPost => ({
   ...d,
-  faqs: d.faqs ?? defaultFaqs(d.category),
+  faqs: d.faqs || defaultFaqs(d.category),
   slug: slugify(d.title),
-  content: d.content ?? [
+  content: d.content || [
     p(d.excerpt),
     h2("Key highlights"),
     ul("Understand the latest pattern and syllabus before you begin.", "Build a weekly timetable and track it honestly.", "Revise with short notes and practise previous year questions."),

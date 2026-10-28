@@ -15,6 +15,7 @@ const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ b
 /** CURRENT AFFAIRS · THE SHORTLIST COURSE hero — headline, pillars and an illustrated news stack (no faculty photo). */
 export default function ShortlistHero({ hero }: { hero: ShortlistContent["hero"] }) {
   const [first, rest] = hero.title.split(hero.highlight);
+
   return (
     <Box component="section" id="course-top" sx={{ pt: { xs: 1.5, md: 2 }, pb: { xs: 4, md: 7 }, background: `linear-gradient(120deg, #FFF8E1 0%, ${COLORS.redTintSoft} 55%, #FFFFFF 100%)` }}>
       <Container>
@@ -32,6 +33,7 @@ export default function ShortlistHero({ hero }: { hero: ShortlistContent["hero"]
             <Box sx={{ mt: 2.5, display: "flex", flexWrap: "wrap", gap: 1.25 }}>
               {hero.pillars.map((p, i) => {
                 const Icon = PILLAR_ICONS[i % PILLAR_ICONS.length];
+
                 return (
                   <Box key={p} sx={{ display: "inline-flex", alignItems: "center", gap: 0.75, px: 1.75, py: 0.9, borderRadius: "12px", backgroundColor: "#FFFFFF", border: `1px solid ${COLORS.border}`, boxShadow: "0 6px 14px rgba(15,23,42,.06)", fontWeight: 800, color: COLORS.navy, fontSize: "0.92rem" }}>
                     <Icon size={16} color={COLORS.red} /> {p}

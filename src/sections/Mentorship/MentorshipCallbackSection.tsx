@@ -92,7 +92,9 @@ export default function MentorshipCallbackSection() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!form.validateAll(formRef.current)) return;
+
     setSubmitted(true);
   };
 

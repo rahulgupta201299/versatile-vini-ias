@@ -53,6 +53,7 @@ export function StatCard({ label, value, change, icon, tone = "red" }: { label: 
     ink: { bg: COLORS.surface, fg: COLORS.ink },
   }[tone];
   const up = change >= 0;
+
   return (
     <Box sx={{ p: 2.5, borderRadius: "18px", bgcolor: "#FFFFFF", border: `1px solid ${COLORS.border}`, minWidth: 0 }}>
       <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 1.5 }}>
@@ -77,6 +78,7 @@ export function Chip({ children, tone = "neutral" }: { children: React.ReactNode
     yellow: { bg: "#FFF9D1", fg: "#7A6000", bd: "#F5E08A" },
     success: { bg: "#ECFDF3", fg: "#15803D", bd: "#BBF7D0" },
   }[tone];
+
   return (
     <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: 0.5, px: 1, py: 0.3, borderRadius: 999, bgcolor: t.bg, color: t.fg, border: `1px solid ${t.bd}`, fontSize: "0.72rem", fontWeight: 700, whiteSpace: "nowrap" }}>
       {children}

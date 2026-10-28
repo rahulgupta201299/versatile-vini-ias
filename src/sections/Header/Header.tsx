@@ -26,12 +26,16 @@ import {
 import { useSiteData } from "@/context/SiteDataContext";
 import { NavItem } from "@/types";
 import { IconRenderer } from "@/components";
-import SearchDialog from "@/components/SearchDialog";
+import dynamic from "next/dynamic";
 import MobileMenu from "./MobileMenu";
 import { goalPath } from "@/utils/slug";
 import { externalLinkProps } from "@/utils/links";
 
 import { COLORS } from "@/theme/colors";
+import { openAuth } from "@/utils/events";
+
+/** Loaded on first open, so the search code stays out of the first page load. */
+const SearchDialog = dynamic(() => import("@/components/SearchDialog"));
 /* Layout references: pw.live (menu, All Courses panel) and the header screenshots provided. */
 const RED = COLORS.red;
 const RED_DARK = COLORS.redDark;
@@ -40,10 +44,6 @@ const RED_TINT_BORDER = COLORS.redBorder;
 const HEADER_H = { xs: 64, lg: 72 };
 /** Logo height — the All Exams pill and the header buttons match it. */
 const LOGO_H = { xs: 36, sm: 42 };
-
-interface HeaderProps {
-  onOpenAuth: () => void;
-}
 
 /** Desktop shows the first few links inline; the rest go under "More". */
 const INLINE_LINKS = 5;
@@ -57,16 +57,17 @@ const pillBase = {
   minWidth: 0,
 };
 
-export default function Header({ onOpenAuth }: HeaderProps) {
-  const { navItems: NAV_ITEMS, megaMenu: MEGA_MENU_CATEGORIES, storeHref: STORE_HREF } = useSiteData().navigation;
-  const { PRIMARY_LINKS, MORE_LINKS, ALL_COURSES_LABEL } = useMemo(() => {
-    const links = NAV_ITEMS.filter((item) => !item.isMegaMenu);
+export default function Header() {
+  const { navItems, megaMenu, storeHref } = useSiteData().navigation;
+  const { primaryLinks, moreLinks, allCoursesLabel } = useMemo(() => {
+    const links = navItems.filter((item) => !item.isMegaMenu);
+
     return {
-      PRIMARY_LINKS: links.slice(0, INLINE_LINKS),
-      MORE_LINKS: links.slice(INLINE_LINKS),
-      ALL_COURSES_LABEL: NAV_ITEMS.find((item) => item.isMegaMenu)?.label ?? "All Exams",
+      primaryLinks: links.slice(0, INLINE_LINKS),
+      moreLinks: links.slice(INLINE_LINKS),
+      allCoursesLabel: navItems.find((item) => item.isMegaMenu)?.label || "All Exams",
     };
-  }, [NAV_ITEMS]);
+  }, [navItems]);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -81,9 +82,12 @@ export default function Header({ onOpenAuth }: HeaderProps) {
   // so the body lock MUI applies is not enough on its own.
   useEffect(() => {
     if (!drawerOpen) return;
+
     const root = document.documentElement;
     const prev = root.style.overflow;
+
     root.style.overflow = "hidden";
+
     return () => {
       root.style.overflow = prev;
     };
@@ -92,13 +96,17 @@ export default function Header({ onOpenAuth }: HeaderProps) {
   // Close desktop mega menu on outside click / Escape
   useEffect(() => {
     if (!megaMenuOpen) return;
+
     const onDown = (e: MouseEvent) => {
       const t = e.target as Node;
+
       if (!megaMenuRef.current?.contains(t) && !coursesButtonRef.current?.contains(t)) setMegaMenuOpen(false);
     };
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMegaMenuOpen(false);
+
     document.addEventListener("mousedown", onDown);
     document.addEventListener("keydown", onKey);
+
     return () => {
       document.removeEventListener("mousedown", onDown);
       document.removeEventListener("keydown", onKey);
@@ -107,6 +115,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
 
   // Close every menu after navigating (new page, or a #section on the same page)
   const pathname = usePathname();
+
   useEffect(() => {
     const closeAll = () => {
       setMegaMenuOpen(false);
@@ -115,8 +124,10 @@ export default function Header({ onOpenAuth }: HeaderProps) {
       setMoreAnchor(null);
       setSearchOpen(false);
     };
+
     closeAll();
     window.addEventListener("hashchange", closeAll);
+
     return () => window.removeEventListener("hashchange", closeAll);
   }, [pathname]);
 
@@ -129,7 +140,9 @@ export default function Header({ onOpenAuth }: HeaderProps) {
         setSearchOpen(true);
       }
     };
+
     document.addEventListener("keydown", onKey);
+
     return () => document.removeEventListener("keydown", onKey);
   }, []);
 
@@ -152,7 +165,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
     setExpandedCategory(null);
   };
 
-  const selectedCategory = MEGA_MENU_CATEGORIES[activeCategoryIndex] || MEGA_MENU_CATEGORIES[0];
+  const selectedCategory = megaMenu[activeCategoryIndex] || megaMenu[0];
 
   return (
     <>
@@ -206,16 +219,16 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                   "&:hover": { borderColor: RED, color: RED, backgroundColor: COLORS.redTint },
                 }}
               >
-                {ALL_COURSES_LABEL}
+                {allCoursesLabel}
               </Button>
             </Box>
 
             {/* Middle: nav links (desktop) */}
             <Box component="nav" aria-label="Main" sx={{ display: { xs: "none", lg: "flex" }, alignItems: "center", gap: { lg: 2, xl: 2.75 } }}>
-              {PRIMARY_LINKS.map((item) => (
+              {primaryLinks.map((item) => (
                 <NavLinkWithDropdown key={item.id} item={item} />
               ))}
-              {MORE_LINKS.length > 0 && (
+              {moreLinks.length > 0 && (
                 <>
                   <Box
                     component="button"
@@ -249,7 +262,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                     transformOrigin={{ vertical: "top", horizontal: "left" }}
                     slotProps={{ paper: { sx: { mt: 1.5, borderRadius: "12px", minWidth: 240, maxHeight: "70vh", boxShadow: "0 12px 32px rgba(15,23,42,.14)" } } }}
                   >
-                    {MORE_LINKS.map((item) =>
+                    {moreLinks.map((item) =>
                       item.children?.length ? (
                         <Box key={item.id} sx={{ px: 2, pt: 1.25, pb: 0.5, "&:not(:first-of-type)": { borderTop: "1px solid #F1F5F9", mt: 0.5 } }}>
                           <Typography sx={{ fontSize: "0.72rem", fontWeight: 800, letterSpacing: "0.06em", color: "#9CA3AF", textTransform: "uppercase", mb: 0.5 }}>
@@ -298,8 +311,8 @@ export default function Header({ onOpenAuth }: HeaderProps) {
 
               <Button
                 component={Link}
-                href={STORE_HREF}
-                {...externalLinkProps({ href: STORE_HREF })}
+                href={storeHref}
+                {...externalLinkProps({ href: storeHref })}
                 startIcon={<ShoppingCart size={18} />}
                 aria-label="Store"
                 sx={{
@@ -322,7 +335,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
               </Button>
 
               <Button
-                onClick={onOpenAuth}
+                onClick={openAuth}
                 startIcon={<GraduationCap size={19} />}
                 sx={{
                   ...pillBase,
@@ -370,8 +383,9 @@ export default function Header({ onOpenAuth }: HeaderProps) {
             <Container sx={{ p: 0 }}>
               <Box sx={{ display: "grid", gridTemplateColumns: "310px 1fr", minHeight: 440 }}>
                 <Box sx={{ borderRight: "1px solid #F1F5F9", py: 1.5 }}>
-                  {MEGA_MENU_CATEGORIES.map((cat, idx) => {
+                  {megaMenu.map((cat, idx) => {
                     const isSelected = activeCategoryIndex === idx;
+
                     return (
                       <Box
                         key={cat.id}
@@ -478,7 +492,6 @@ export default function Header({ onOpenAuth }: HeaderProps) {
         {drawerView === "menu" ? (
           <MobileMenu
             onClose={closeDrawer}
-            onOpenAuth={onOpenAuth}
             onOpenSearch={() => {
               closeDrawer();
               setSearchOpen(true);
@@ -492,15 +505,16 @@ export default function Header({ onOpenAuth }: HeaderProps) {
               <IconButton onClick={() => setDrawerView("menu")} aria-label="Back to menu">
                 <ChevronLeft size={24} />
               </IconButton>
-              <Typography sx={{ flex: 1, fontWeight: 700, fontSize: "1.2rem", color: "#111827" }}>{ALL_COURSES_LABEL}</Typography>
+              <Typography sx={{ flex: 1, fontWeight: 700, fontSize: "1.2rem", color: "#111827" }}>{allCoursesLabel}</Typography>
               <IconButton onClick={closeDrawer} aria-label="Close menu">
                 <CloseIcon size={24} />
               </IconButton>
             </Box>
 
             <Box sx={{ flex: 1, overflowY: "auto" }}>
-              {MEGA_MENU_CATEGORIES.map((cat) => {
+              {megaMenu.map((cat) => {
                 const open = expandedCategory === cat.id;
+
                 return (
                   <Box key={cat.id} sx={{ borderBottom: "1px solid #EEF0F3" }}>
                     <Box
@@ -566,7 +580,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
         )}
       </Drawer>
 
-      <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
+      {searchOpen && <SearchDialog open onClose={() => setSearchOpen(false)} />}
     </>
   );
 }
@@ -584,12 +598,15 @@ function NavLinkWithDropdown({ item }: { item: NavItem }) {
 
   useEffect(() => {
     if (!open) return;
+
     const onDown = (e: MouseEvent) => {
       if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+
     document.addEventListener("mousedown", onDown);
     document.addEventListener("keydown", onKey);
+
     return () => {
       document.removeEventListener("mousedown", onDown);
       document.removeEventListener("keydown", onKey);

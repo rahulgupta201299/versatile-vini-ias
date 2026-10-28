@@ -21,6 +21,7 @@ export function FacebookLogo({ size = 24, color = "#0866FF" }: LogoProps) {
 /** Instagram — official glyph with the brand gradient. */
 export function InstagramLogo({ size = 24 }: { size?: number }) {
   const id = React.useId();
+
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" role="img" aria-hidden>
       <defs>

@@ -28,6 +28,7 @@ function StoreBadge({
 }) {
   const d = DIMENSIONS[size];
   const external = href.startsWith("http");
+
   return (
     <Box
       component="a"
@@ -72,6 +73,7 @@ function StoreBadge({
 export default function StoreBadges({ size = "md" }: { size?: BadgeSize }) {
   const glyph = DIMENSIONS[size].glyph;
   const APP_STORE_LINKS = useSiteData().config.app;
+
   return (
     <Box sx={{ display: "flex", flexWrap: "nowrap", gap: size === "md" ? { xs: 1, lg: 3 } : 1 }}>
       <StoreBadge

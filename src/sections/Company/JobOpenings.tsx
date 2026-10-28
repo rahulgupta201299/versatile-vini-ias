@@ -20,6 +20,7 @@ const ALL_TYPES = "All employment types";
 
 function JobCard({ job, now }: { job: CareerJob; now: number | null }) {
   const fresh = now !== null && isNewJob(job.postedAt, now);
+
   return (
     <Box component="article" sx={{ position: "relative", display: "flex", flexDirection: "column", height: "100%", p: { xs: 2.25, md: 2.5 }, borderRadius: "16px", border: `1px solid ${COLORS.border}`, bgcolor: "#FFFFFF", transition: "border-color .2s, box-shadow .2s, transform .2s", "&:hover": { borderColor: COLORS.redBorder, boxShadow: "0 14px 30px rgba(254,0,52,.08)", transform: "translateY(-2px)" } }}>
       <Box sx={{ display: "flex", alignItems: "center", gap: 1, pr: 6 }}>
@@ -78,6 +79,7 @@ export default function JobOpenings({ jobs, email }: { jobs: CareerJob[]; email:
   // Old share links (/careers?job=<id>) → the role page.
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get("job");
+
     if (id && jobs.some((j) => j.id === id)) router.replace(jobPath(id));
   }, [jobs, router]);
 

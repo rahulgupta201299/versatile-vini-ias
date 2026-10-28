@@ -41,7 +41,9 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!form.validateAll(formRef.current)) return;
+
     setSubmitted(true);
   };
 

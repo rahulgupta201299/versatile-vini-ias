@@ -22,8 +22,13 @@ import type { Permissions } from "./adminAccess";
  *   Tokens are HMAC-signed with ADMIN_SESSION_SECRET. Never use demo in production.
  */
 /** Production always uses the backend (demo mode would accept the demo password on the live site). */
-export const ADMIN_MODE: "live" | "demo" =
-  process.env.NODE_ENV === "production" ? "live" : process.env.ADMIN_AUTH_MODE === "demo" ? "demo" : "live";
+const getAdminMode = (): "live" | "demo" => {
+  if (process.env.NODE_ENV === "production") return "live";
+
+  return process.env.ADMIN_AUTH_MODE === "demo" ? "demo" : "live";
+};
+
+export const ADMIN_MODE = getAdminMode();
 
 export const ADMIN_COOKIE = "vini_admin_session";
 /** Trusted-device cookie: present and valid → no OTP on the next sign-in (48h). Survives sign-out on purpose. */
@@ -32,6 +37,7 @@ export const SESSION_TTL_MS = 48 * 60 * 60 * 1000;
 export const TRUST_TTL_MS = 48 * 60 * 60 * 1000;
 const CHALLENGE_TTL_MS = 10 * 60 * 1000; // OTP valid for 10 minutes
 const MAX_OTP_ATTEMPTS = 5;
+
 export const DEMO_OTP = "123456";
 
 const API_BASE = API_BASE_URL;
@@ -49,16 +55,22 @@ const b64 = (o: object) => Buffer.from(JSON.stringify(o)).toString("base64url");
 
 function seal(data: object): string {
   const body = b64(data);
+
   return `${body}.${sign(body)}`;
 }
 
 function unseal<T>(token: unknown): T | null {
   if (!SECRET || typeof token !== "string") return null;
+
   const [body, sig] = token.split(".");
+
   if (!body || !sig) return null;
+
   const a = Buffer.from(sign(body));
   const b = Buffer.from(sig);
+
   if (a.length !== b.length || !timingSafeEqual(a, b)) return null;
+
   try {
     return JSON.parse(Buffer.from(body, "base64url").toString()) as T;
   } catch {
@@ -69,6 +81,7 @@ function unseal<T>(token: unknown): T | null {
 const safeEqual = (a: string, b: string) => {
   const x = Buffer.from(a);
   const y = Buffer.from(b);
+
   return x.length === y.length && timingSafeEqual(x, y);
 };
 
@@ -85,7 +98,8 @@ async function setTrustCookie(token: string, expiresAt: number) {
 }
 
 const toTime = (v: unknown, fallbackMs: number) => {
-  const t = Date.parse(String(v ?? ""));
+  const t = Date.parse(String(v || ""));
+
   return Number.isFinite(t) ? t : Date.now() + fallbackMs;
 };
 
@@ -93,11 +107,16 @@ const toTime = (v: unknown, fallbackMs: number) => {
 
 async function backend(path: string, init: { method?: string; body?: object; token?: string } = {}) {
   if (!API_BASE) throw new Error("API_BASE_URL is not configured");
+
   const headers: Record<string, string> = { Accept: "application/json" };
+
   if (init.body) headers["Content-Type"] = "application/json";
+
   if (init.token) headers.Authorization = `Bearer ${init.token}`;
-  const res = await fetch(`${API_BASE}/${path}`, { method: init.method ?? "POST", headers, body: init.body ? JSON.stringify(init.body) : undefined, cache: "no-store", signal: AbortSignal.timeout(15_000) });
+
+  const res = await fetch(`${API_BASE}/${path}`, { method: init.method || "POST", headers, body: init.body ? JSON.stringify(init.body) : undefined, cache: "no-store", signal: AbortSignal.timeout(15_000) });
   const json = await res.json().catch(() => ({}));
+
   return { ok: res.ok, status: res.status, json: json as Record<string, unknown> };
 }
 
@@ -120,42 +139,62 @@ export async function startLogin(email: string, password: string): Promise<StepR
 
   if (ADMIN_MODE === "live") {
     const r = await backend("admin/auth/login", { body: { email, password, ...(trustToken ? { trustToken } : {}) } }).catch(() => null);
+
     if (!r) return { ok: false, status: 502, error: UNREACHABLE };
+
     if (!r.ok) {
       if (r.status === 429) return { ok: false, status: 429, error: backendMessage(r.json, "Too many attempts. Please wait and try again.") };
+
       // 5xx: show the backend's reason (e.g. "Database unavailable") instead of a generic message
       if (r.status >= 500) return { ok: false, status: 502, error: backendMessage(r.json, "The server ran into a problem. Please try again in a minute.") };
+
       return { ok: false, status: 401, error: GENERIC_LOGIN_ERROR };
     }
+
     if (r.json.otpRequired === false && typeof r.json.token === "string") {
       await setSessionCookie(r.json.token, toTime(r.json.expiresAt, SESSION_TTL_MS));
+
       return { ok: true, signedIn: true };
     }
+
     if (typeof r.json.challengeId !== "string") return { ok: false, status: 502, error: UNREACHABLE };
+
     return { ok: true, challengeId: r.json.challengeId };
   }
 
   const demoEmail = process.env.ADMIN_DEMO_EMAIL;
   const demoPassword = process.env.ADMIN_DEMO_PASSWORD;
+
   if (!SECRET || !demoEmail || !demoPassword) return { ok: false, status: 503, error: "Admin login is not configured on this server." };
+
   const valid = safeEqual(email.toLowerCase(), demoEmail.toLowerCase()) && safeEqual(password, demoPassword);
+
   if (!valid) return { ok: false, status: 401, error: GENERIC_LOGIN_ERROR };
+
   const trust = unseal<{ email: string; exp: number; typ: string }>(trustToken);
+
   if (trust?.typ === "trust" && trust.exp > Date.now() && trust.email.toLowerCase() === demoEmail.toLowerCase()) {
     const exp = Date.now() + SESSION_TTL_MS;
+
     await setSessionCookie(seal({ email: demoEmail, exp }), exp);
+
     return { ok: true, signedIn: true, demo: true };
   }
+
   return { ok: true, demo: true, challengeId: seal({ email: demoEmail, exp: Date.now() + CHALLENGE_TTL_MS, n: randomInt(1e9) } satisfies Challenge) };
 }
 
 export async function resendOtp(challengeId: string): Promise<StepResult> {
   if (ADMIN_MODE === "live") {
     const r = await backend("admin/auth/send-otp", { body: { challengeId } }).catch(() => null);
+
     if (!r) return { ok: false, status: 502, error: UNREACHABLE };
+
     return r.ok ? { ok: true } : { ok: false, status: r.status, error: backendMessage(r.json, "Couldn't resend the code. Please sign in again.") };
   }
+
   const c = unseal<Challenge>(challengeId);
+
   return c && c.exp > Date.now() ? { ok: true } : { ok: false, status: 401, error: "Code expired. Please sign in again." };
 }
 
@@ -168,24 +207,38 @@ export async function verifyOtp(challengeId: string, code: string): Promise<Step
 
   if (ADMIN_MODE === "live") {
     const r = await backend("admin/auth/verify-otp", { body: { challengeId, code } }).catch(() => null);
+
     if (!r) return { ok: false, status: 502, error: UNREACHABLE };
+
     if (!r.ok || typeof r.json.token !== "string") return { ok: false, status: r.status === 429 ? 429 : 401, error: backendMessage(r.json, "Incorrect or expired code.") };
+
     await setSessionCookie(r.json.token, toTime(r.json.expiresAt, SESSION_TTL_MS));
+
     if (typeof r.json.trustToken === "string") await setTrustCookie(r.json.trustToken, toTime(r.json.trustExpiresAt, TRUST_TTL_MS));
-    return { ok: true, admin: (r.json.admin as AdminUser) ?? { email: "" } };
+
+    return { ok: true, admin: (r.json.admin as AdminUser) || { email: "" } };
   }
 
   const c = unseal<Challenge>(challengeId);
+
   if (!c || c.exp < Date.now()) return { ok: false, status: 401, error: "Code expired. Please sign in again." };
-  const used = (attempts.get(challengeId) ?? 0) + 1;
+
+  const used = (attempts.get(challengeId) || 0) + 1;
+
   attempts.set(challengeId, used);
+
   if (used > MAX_OTP_ATTEMPTS) return { ok: false, status: 429, error: "Too many attempts. Please sign in again." };
+
   if (!safeEqual(code, DEMO_OTP)) return { ok: false, status: 401, error: "Incorrect code. Please try again." };
+
   attempts.delete(challengeId);
   const exp = Date.now() + SESSION_TTL_MS;
+
   await setSessionCookie(seal({ email: c.email, exp }), exp);
   const trustExp = Date.now() + TRUST_TTL_MS;
+
   await setTrustCookie(seal({ email: c.email, exp: trustExp, typ: "trust" }), trustExp);
+
   return { ok: true, admin: { email: c.email, name: "Admin", role: "superAdmin" } };
 }
 
@@ -195,7 +248,9 @@ export async function verifyOtp(challengeId: string, code: string): Promise<Step
  */
 export const getAdminSession = cache(async (): Promise<AdminUser | null> => {
   const token = (await cookies()).get(ADMIN_COOKIE)?.value;
+
   if (!token) return null;
+
   if (ADMIN_MODE === "live") {
     const r = await backend("admin/auth/me", { method: "GET", token }).catch(() => null);
 
@@ -204,7 +259,9 @@ export const getAdminSession = cache(async (): Promise<AdminUser | null> => {
 
     return r.ok && typeof r.json.email === "string" ? (r.json as AdminUser) : null;
   }
+
   const s = unseal<{ email: string; exp: number; typ?: string }>(token);
+
   // Demo mode (local testing only) signs in as a Super Admin
   return s && !s.typ && s.exp > Date.now() ? { email: s.email, name: "Admin", role: "superAdmin" } : null;
 });
@@ -213,6 +270,8 @@ export const getAdminSession = cache(async (): Promise<AdminUser | null> => {
 export async function endAdminSession() {
   const jar = await cookies();
   const token = jar.get(ADMIN_COOKIE)?.value;
+
   if (token && ADMIN_MODE === "live") await backend("admin/auth/logout", { token }).catch(() => null);
+
   jar.delete(ADMIN_COOKIE);
 }

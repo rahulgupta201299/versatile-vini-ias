@@ -14,7 +14,7 @@ export default function BlogSidebar({ latest, names }: Props) {
       <Box sx={{ p: 2.25, borderRadius: "16px", backgroundColor: "#FFFFFF", border: `1px solid ${COLORS.border}` }}>
         <SectionTitle title="Latest News" as="h3" />
         <Box sx={{ "& > article + article": { borderTop: `1px dashed ${COLORS.border}` } }}>
-          {latest.map((p, i) => <PostRow key={p.slug} post={p} categoryName={names[p.category] ?? p.category} index={i} />)}
+          {latest.map((p, i) => <PostRow key={p.slug} post={p} categoryName={names[p.category] || p.category} index={i} />)}
         </Box>
       </Box>
     </Box>

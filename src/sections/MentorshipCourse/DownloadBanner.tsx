@@ -58,6 +58,7 @@ function PdfArt({ data }: { data: DownloadBannerContent }) {
 export default function DownloadBanner({ data }: { data: DownloadBannerContent }) {
   const pdf = data.art === "pdf";
   const BadgeIcon = pdf ? FileText : ListChecks;
+
   return (
     <Box component="section" sx={{ py: { xs: 2, md: 3 } }}>
       <Container>

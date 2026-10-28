@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import { BookOpen, CheckCircle2, Zap } from "lucide-react";
 import { BatchCourseContent } from "@/types";
 import { COLORS } from "@/theme/colors";
+import HighlightTitle from "@/components/HighlightTitle";
 
 const NODE_COLORS = [COLORS.red, "#2563EB", "#1D4ED8", COLORS.navy];
 const NODE_HALOS = [COLORS.redTint, "#EBF3FF", "#EBF3FF", "#F0F4F8"];
@@ -18,6 +19,7 @@ const NODE_R = 62;
 
 const nodePos = (i: number, count: number) => {
   const rad = ((-90 + (360 / count) * i) * Math.PI) / 180;
+
   return { x: C + ORBIT * Math.cos(rad), y: C + ORBIT * Math.sin(rad), cos: Math.cos(rad), sin: Math.sin(rad) };
 };
 
@@ -28,6 +30,7 @@ const arcPath = (i: number, count: number) => {
   const a2 = ((-90 + (360 / count) * (i + 1) - gap) * Math.PI) / 180;
   const p1 = { x: C + ORBIT * Math.cos(a1), y: C + ORBIT * Math.sin(a1) };
   const p2 = { x: C + ORBIT * Math.cos(a2), y: C + ORBIT * Math.sin(a2) };
+
   return `M ${p1.x.toFixed(1)} ${p1.y.toFixed(1)} A ${ORBIT} ${ORBIT} 0 0 1 ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
 };
 
@@ -39,7 +42,7 @@ const arcPath = (i: number, count: number) => {
 function JourneyCircle({ count, active, onSelect, title, subtitle }: { count: number; active: number; onSelect: (i: number) => void; title: string; subtitle: string }) {
   const [hovered, setHovered] = useState<number | null>(null);
   const [line1, ...rest] = title.split(" ");
-  const subtitleLines = subtitle.match(/.{1,22}(\s|$)/g)?.map((l) => l.trim()) ?? [subtitle];
+  const subtitleLines = subtitle.match(/.{1,22}(\s|$)/g)?.map((l) => l.trim()) || [subtitle];
 
   return (
     <Box
@@ -83,6 +86,7 @@ function JourneyCircle({ count, active, onSelect, title, subtitle }: { count: nu
       {/* arcs: arc i goes from stage i to stage i+1 (the last one closes the loop back to stage 1) */}
       {Array.from({ length: count }, (_, i) => {
         const colorIdx = (i === count - 1 ? 0 : i) % NODE_COLORS.length; // closing arc (4 → 1) uses stage 1 colour
+
         return (
           <path
             key={i}
@@ -118,6 +122,7 @@ function JourneyCircle({ count, active, onSelect, title, subtitle }: { count: nu
         const isActive = i === active;
         const dot = { x: x - cos * NODE_R, y: y - sin * NODE_R }; // connector dot facing the hub
         const select = () => onSelect(i);
+
         return (
           <g
             key={i}
@@ -164,9 +169,7 @@ export default function BatchStages({ data }: { data: Pick<BatchCourseContent, "
     <Box component="section" id="course-details" sx={{ py: { xs: 5, md: 7 }, background: "linear-gradient(180deg, #FFFFFF 0%, #FFF7F2 100%)" }}>
       <Container>
         <Box sx={{ textAlign: "center", mb: { xs: 3, md: 5 } }}>
-          <Typography component="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.7rem", md: "2.4rem" }, color: COLORS.navy }}>
-            {data.stagesTitle.text} <Box component="span" sx={{ color: COLORS.red }}>{data.stagesTitle.highlight}</Box>
-          </Typography>
+          <HighlightTitle before={`${data.stagesTitle.text} `} highlight={data.stagesTitle.highlight} />
           <Box component="svg" viewBox="0 0 300 14" aria-hidden sx={{ display: "block", mx: "auto", mt: 0.5, width: { xs: 170, md: 260 } }}>
             <path d="M4 10 C 80 2, 200 2, 296 8" stroke={COLORS.red} strokeWidth="4" strokeLinecap="round" fill="none" />
           </Box>
@@ -190,7 +193,7 @@ export default function BatchStages({ data }: { data: Pick<BatchCourseContent, "
 
             <Box sx={{ mt: 1.75, display: "grid", gridTemplateColumns: singleList ? "1fr" : { xs: "1fr", sm: `repeat(${Math.min(stage.groups.length, 2)}, minmax(0, 1fr))` }, gap: { xs: 1.75, md: 2.5 } }}>
               {stage.groups.map((g, gi) => (
-                <Box key={g.title ?? gi}>
+                <Box key={g.title || gi}>
                   {g.title && (
                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, mb: 1, fontSize: "0.72rem", fontWeight: 800, color: gi ? "#2563EB" : COLORS.red, letterSpacing: "0.06em" }}>
                       <Box component="span" sx={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "currentColor" }} />

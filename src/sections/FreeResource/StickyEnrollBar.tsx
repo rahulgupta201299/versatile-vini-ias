@@ -120,13 +120,18 @@ export default function StickyEnrollBar({
 
   useEffect(() => {
     if (links) return;
+
     const hero = document.getElementById("course-top");
+
     if (!hero) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => setShow(!entry.isIntersecting),
       { threshold: 0 },
     );
+
     observer.observe(hero);
+
     return () => observer.disconnect();
   }, [links]);
 

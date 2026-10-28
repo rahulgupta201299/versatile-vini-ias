@@ -89,15 +89,20 @@ function buildRouteLabels(navigation: NavigationData, examCategories: ExamGoalCa
   const add = (slug: string, label: string) => {
     if (slug && !labels[slug]) labels[slug] = label;
   };
+
   for (const item of navigation.navItems) {
     add(slugify(item.label), item.label);
-    for (const child of item.children ?? []) {
+
+    for (const child of item.children || []) {
       const last = child.href.split(/[?#]/)[0].split("/").filter(Boolean).pop();
+
       if (last) add(last, child.label);
     }
   }
+
   navigation.megaMenu.forEach((cat) => cat.courses.forEach((c) => add(slugify(c.title), c.title)));
   examCategories.forEach((cat) => cat.subcategories.forEach((s) => add(slugify(s.name), s.name)));
+
   return labels;
 }
 

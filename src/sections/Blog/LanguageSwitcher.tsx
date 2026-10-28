@@ -39,6 +39,7 @@ declare global {
 /** Current target language from Google's `googtrans` cookie ("/en/hi" → "hi"). */
 function readLang() {
   const m = document.cookie.match(/(?:^|;\s*)googtrans=\/[^/]+\/([^;]+)/);
+
   return m ? decodeURIComponent(m[1]) : "en";
 }
 
@@ -46,23 +47,29 @@ function writeCookie(lang: string) {
   const value = lang === "en" ? "" : `/en/${lang}`;
   const expiry = lang === "en" ? "; expires=Thu, 01 Jan 1970 00:00:00 GMT" : "";
   const host = window.location.hostname;
+
   document.cookie = `googtrans=${value}; path=/${expiry}`;
+
   if (host.includes(".")) document.cookie = `googtrans=${value}; path=/; domain=.${host.replace(/^www\./, "")}${expiry}`;
 }
 
 /** Loads the Google Translate widget once (hidden) — our own button drives it. */
 function loadGoogleTranslate() {
   if (document.getElementById(SCRIPT_ID)) return;
+
   if (!document.getElementById(ELEMENT_ID)) {
     const holder = document.createElement("div");
+
     holder.id = ELEMENT_ID;
     holder.style.display = "none";
     document.body.appendChild(holder);
   }
+
   window.googleTranslateElementInit = () => {
     if (window.google?.translate) new window.google.translate.TranslateElement({ pageLanguage: "en", includedLanguages: LANGUAGES.map((l) => l.code).join(","), autoDisplay: false }, ELEMENT_ID);
   };
   const s = document.createElement("script");
+
   s.id = SCRIPT_ID;
   s.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
   s.async = true;
@@ -81,10 +88,13 @@ export default function LanguageSwitcher() {
 
   const choose = (code: string) => {
     setAnchor(null);
+
     if (code === lang) return;
+
     setLang(code);
     writeCookie(code);
     const combo = document.querySelector<HTMLSelectElement>(".goog-te-combo");
+
     if (combo && code !== "en") {
       combo.value = code;
       combo.dispatchEvent(new Event("change"));
@@ -94,7 +104,8 @@ export default function LanguageSwitcher() {
     }
   };
 
-  const current = LANGUAGES.find((l) => l.code === lang) ?? LANGUAGES[0];
+  const current = LANGUAGES.find((l) => l.code === lang) || LANGUAGES[0];
+
   return (
     <>
       <Box

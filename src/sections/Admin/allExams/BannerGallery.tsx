@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -33,6 +34,13 @@ const moveItem = <T,>(list: T[], from: number, to: number) => {
  * All banners as a strip of thumbnails (drag to reorder) + one big editor for the selected banner:
  * web and mobile images side by side, title and link.
  */
+/** A tile's border: red when selected, yellow where a dragged banner will land, grey otherwise. */
+const tileBorderColor = ({ isSelected, isDropTarget }: { isSelected: boolean; isDropTarget: boolean }) => {
+  if (isSelected) return COLORS.red;
+
+  return isDropTarget ? COLORS.yellowDark : COLORS.border;
+};
+
 export default function BannerGallery({ banners, onChange, itemName, webHint, mobileHint }: BannerGalleryProps) {
   const [selected, setSelected] = useState(0);
   // The dragged thumbnail's index is kept in a ref too, so a drop works even before React re-renders
@@ -106,7 +114,11 @@ export default function BannerGallery({ banners, onChange, itemName, webHint, mo
                   e.dataTransfer.setData("text/plain", String(index));
                 }}
                 onDragOver={(e: React.DragEvent) => { e.preventDefault(); setDropAt(index); }}
-                onDrop={(e: React.DragEvent) => { e.preventDefault(); if (dragFromRef.current !== null) move(dragFromRef.current, index); endDrag(); }}
+                onDrop={(e: React.DragEvent) => { e.preventDefault();
+
+ if (dragFromRef.current !== null) move(dragFromRef.current, index);
+
+ endDrag(); }}
                 onDragEnd={endDrag}
                 sx={{
                   position: "relative",
@@ -116,7 +128,7 @@ export default function BannerGallery({ banners, onChange, itemName, webHint, mo
                   overflow: "hidden",
                   cursor: "grab",
                   bgcolor: "#FFFFFF",
-                  border: `2px solid ${isSelected ? COLORS.red : dropAt === index && dragFrom !== index ? COLORS.yellowDark : COLORS.border}`,
+                  border: `2px solid ${tileBorderColor({ isSelected, isDropTarget: dropAt === index && dragFrom !== index })}`,
                   boxShadow: isSelected ? "0 6px 16px rgba(254,0,52,.18)" : "none",
                   opacity: dragFrom === index ? 0.4 : 1,
                   transition: "border-color .15s, box-shadow .15s",
@@ -124,10 +136,9 @@ export default function BannerGallery({ banners, onChange, itemName, webHint, mo
                   "&:focus-visible": { borderColor: COLORS.red },
                 }}
               >
-                <Box sx={{ aspectRatio: "2.9 / 1", bgcolor: COLORS.surface, display: "flex", alignItems: "center", justifyContent: "center", color: COLORS.disabled }}>
+                <Box sx={{ position: "relative", aspectRatio: "2.9 / 1", bgcolor: COLORS.surface, display: "flex", alignItems: "center", justifyContent: "center", color: COLORS.disabled }}>
                   {image ? (
-                    // eslint-disable-next-line @next/next/no-img-element -- thumbnail of a possibly unsaved upload
-                    <img src={image} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    <Image src={image} alt="" fill sizes="240px" draggable={false} style={{ objectFit: "cover" }} />
                   ) : (
                     <ImageOff size={18} />
                   )}

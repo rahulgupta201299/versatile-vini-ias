@@ -26,10 +26,12 @@ function CallbackPanel({ layout }: { layout: "sheet" | "card" }) {
   const card = layout === "card";
   const [step, setStep] = useState<"intro" | "form">("intro");
   const { config, examCategories } = useSiteData();
-  const CONTACT = config.contact;
+  const { contact } = config;
   const examOptions = [...examCategories.map((c) => c.category), "Other"];
   const formRef = useRef<HTMLFormElement>(null);
   const [submitted, setSubmitted] = useState(false);
+  // What the card shows: the thank-you note, the two buttons, or the form
+  const view = submitted ? "done" : step;
   const form = useFormValidation(
     { name: "", mobile: "", exam: "" },
     { name: (v) => validateName(v), mobile: (v) => validateMobile(v), exam: validateRequiredSelect("an exam") },
@@ -38,6 +40,7 @@ function CallbackPanel({ layout }: { layout: "sheet" | "card" }) {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (form.validateAll(formRef.current)) setSubmitted(true);
   };
 
@@ -59,7 +62,7 @@ function CallbackPanel({ layout }: { layout: "sheet" | "card" }) {
         </Box>
       </Box>
 
-      {submitted ? (
+      {view === "done" && (
         <Box sx={{ p: 2.25, borderRadius: "12px", backgroundColor: "#F0FDF4", border: "1px solid #BBF7D0", display: "flex", gap: 1.5, textAlign: "left" }}>
           <CheckCircle2 size={26} color={COLORS.success} style={{ flexShrink: 0 }} />
           <Box>
@@ -69,16 +72,20 @@ function CallbackPanel({ layout }: { layout: "sheet" | "card" }) {
             </Typography>
           </Box>
         </Box>
-      ) : step === "intro" ? (
+      )}
+
+      {view === "intro" && (
         <Box sx={{ display: "grid", gap: 1.1 }}>
           <Box component="button" type="button" onClick={() => setStep("form")} sx={PRIMARY_BTN}>
             Request a call back
           </Box>
-          <Box component="a" href={CONTACT.tel} sx={CALL_BTN}>
-            <PhoneCall size={16} /> or call us @ {CONTACT.phoneDisplay}
+          <Box component="a" href={contact.tel} sx={CALL_BTN}>
+            <PhoneCall size={16} /> or call us @ {contact.phoneDisplay}
           </Box>
         </Box>
-      ) : (
+      )}
+
+      {view === "form" && (
         <Box component="form" ref={formRef} onSubmit={onSubmit} noValidate sx={{ display: "grid", gap: 1.1, textAlign: "left" }}>
           <TextField
             placeholder="Your name"
@@ -128,10 +135,10 @@ function CallbackPanel({ layout }: { layout: "sheet" | "card" }) {
           </Box>
           <Box
             component="a"
-            href={CONTACT.tel}
+            href={contact.tel}
             sx={CALL_BTN}
           >
-            <PhoneCall size={16} /> or call us @ {CONTACT.phoneDisplay}
+            <PhoneCall size={16} /> or call us @ {contact.phoneDisplay}
           </Box>
         </Box>
       )}
@@ -151,13 +158,17 @@ export default function SupportCallback() {
   const close = () => setOpen(false);
   const toggle = () => {
     if (!open) setSession((n) => n + 1);
+
     setOpen((o) => !o);
   };
 
   useEffect(() => {
     if (!open || isPhone) return;
+
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+
     window.addEventListener("keydown", onKey);
+
     return () => window.removeEventListener("keydown", onKey);
   }, [open, isPhone]);
 
