@@ -13,7 +13,7 @@ import { COURSE_SECTIONS, coursePagePath } from "@/utils/slug";
 const MONTHLY_MAGAZINE_PATH = coursePagePath(COURSE_SECTIONS.freeResources, "Monthly Magazine");
 const PRISM_PATH = coursePagePath(COURSE_SECTIONS.freeResources, "PRISM Simplified");
 
-const EMPTY = { guide: { heading: "", text: "" }, whatIs: [], learn: [], whyJoin: [], bestFor: [], syllabusUrl: "/#resources" };
+const EMPTY = { guide: { heading: "", text: "" }, whatIs: [], learn: [], whyJoin: [], bestFor: [] };
 
 export const FREE_RESOURCE_SECTION_PAGES: FreeResourcePage[] = [
   {

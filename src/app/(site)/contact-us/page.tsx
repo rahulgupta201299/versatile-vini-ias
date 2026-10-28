@@ -5,7 +5,7 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { ArrowRight, Briefcase, Building2, GraduationCap, Headset, Mail, MapPin, MessageCircle, Navigation, Phone } from "lucide-react";
 import { COLORS } from "@/theme/colors";
-import { CONTACT } from "@/data/contact";
+import { getSiteConfig } from "@/services";
 import ContactForm from "@/sections/Contact/ContactForm";
 
 export const metadata: Metadata = {
@@ -18,7 +18,6 @@ const ADDRESS = "D-247/4A, Noida Sector 63, Uttar Pradesh (India)";
 const MAP_QUERY = encodeURIComponent("Procapitus Business Park, D-247, 4A, D Block, Sector 63, Noida, Uttar Pradesh 201309");
 /** Official Google Maps pin for the head office. */
 const MAP_LINK = "https://maps.app.goo.gl/odASbVEKABeAeDMi6";
-const SUPPORT_EMAIL = "support@groupvini.in";
 const PR_EMAIL = "pr@groupvini.in";
 const CAREERS_EMAIL = "careers@groupvini.in";
 
@@ -36,7 +35,9 @@ function InfoCard({ icon, tone, title, text, children }: { icon: React.ReactNode
   );
 }
 
-export default function ContactUsPage() {
+export default async function ContactUsPage() {
+  const { contact } = await getSiteConfig();
+
   return (
     <>
       {/* hero */}
@@ -60,14 +61,14 @@ export default function ContactUsPage() {
         <Typography component="h2" sx={{ position: "absolute", top: 0, left: 0, width: "1px", height: "1px", m: "-1px", p: 0, overflow: "hidden", clip: "rect(0 0 0 0)", whiteSpace: "nowrap", border: 0 }}>Get in Touch</Typography>
         <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: { xs: 2, md: 2.5 } }}>
           <InfoCard icon={<Headset size={26} />} tone={{ bg: COLORS.redTint, fg: COLORS.red, bar: COLORS.red }} title="Student Support" text="For course access, app-related issues, study materials, and technical assistance.">
-            <Box component="a" href={`mailto:${SUPPORT_EMAIL}`} sx={linkSx}><Mail size={17} color={COLORS.red} /> {SUPPORT_EMAIL}</Box>
-            <Box component="a" href={CONTACT.tel} sx={linkSx}><Phone size={17} color={COLORS.red} /> {CONTACT.phoneDisplay}</Box>
+            <Box component="a" href={`mailto:${contact.email}`} sx={linkSx}><Mail size={17} color={COLORS.red} /> {contact.email}</Box>
+            <Box component="a" href={contact.tel} sx={linkSx}><Phone size={17} color={COLORS.red} /> {contact.phoneDisplay}</Box>
           </InfoCard>
           <InfoCard icon={<GraduationCap size={26} />} tone={{ bg: "#FFF7CC", fg: "#8A6D00", bar: COLORS.yellowDark }} title="Admissions & Counselling" text="Need help choosing the right course? Connect with our counselling team for course details, fees, and batch information.">
             <Typography sx={{ color: COLORS.body, fontSize: "0.9rem", fontWeight: 600 }}>Contact us for course guidance.</Typography>
             <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-              <Box component="a" href={CONTACT.tel} sx={btn(COLORS.red, "#FFFFFF")}><Phone size={16} /> Call now</Box>
-              <Box component="a" href={CONTACT.whatsappUrl} target="_blank" rel="noopener noreferrer" sx={btn("#FFFFFF", "#128C4B", "#BBF7D0")}><MessageCircle size={16} /> WhatsApp</Box>
+              <Box component="a" href={contact.tel} sx={btn(COLORS.red, "#FFFFFF")}><Phone size={16} /> Call now</Box>
+              <Box component="a" href={contact.whatsappUrl} target="_blank" rel="noopener noreferrer" sx={btn("#FFFFFF", "#128C4B", "#BBF7D0")}><MessageCircle size={16} /> WhatsApp</Box>
             </Box>
           </InfoCard>
           <InfoCard icon={<Building2 size={26} />} tone={{ bg: "#E8EEF8", fg: COLORS.navy, bar: COLORS.navy }} title="General Enquiries" text="For media, partnerships, business enquiries, institutional collaborations, and other official matters.">
@@ -100,7 +101,7 @@ export default function ContactUsPage() {
               <Box sx={{ mt: 1.75, pt: 1.75, borderTop: `1px dashed ${COLORS.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 1.5, flexWrap: "wrap" }}>
                 <Box>
                   <Typography sx={{ color: COLORS.muted, fontSize: "0.8rem", fontWeight: 600 }}>Enquiry</Typography>
-                  <Box component="a" href={`mailto:${SUPPORT_EMAIL}`} sx={linkSx}>{SUPPORT_EMAIL}</Box>
+                  <Box component="a" href={`mailto:${contact.email}`} sx={linkSx}>{contact.email}</Box>
                 </Box>
                 <Box component="a" href={MAP_LINK} target="_blank" rel="noopener noreferrer" sx={btn("#FFFFFF", COLORS.navy, COLORS.border)}><Navigation size={15} /> Directions</Box>
               </Box>

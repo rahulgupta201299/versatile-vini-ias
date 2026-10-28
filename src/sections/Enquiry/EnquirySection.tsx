@@ -37,7 +37,7 @@ const COURSE_OPTIONS = [
 ];
 
 export default function EnquirySection() {
-  const CONTACT = useSiteData().config.contact;
+  const { contact } = useSiteData().config;
   const formRef = useRef<HTMLFormElement>(null);
   const [submitted, setSubmitted] = useState(false);
   const form = useFormValidation(
@@ -122,7 +122,7 @@ export default function EnquirySection() {
               {[
                 {
                   key: "call",
-                  href: CONTACT.tel,
+                  href: contact.tel,
                   title: "Call Us",
                   subtitle: "Talk to a counsellor",
                   ariaLabel: "Call a Vini IAS counsellor",
@@ -134,7 +134,7 @@ export default function EnquirySection() {
                 },
                 {
                   key: "whatsapp",
-                  href: CONTACT.whatsappUrl,
+                  href: contact.whatsappUrl,
                   title: "WhatsApp",
                   subtitle: "Chat with us instantly",
                   ariaLabel: "Chat with Vini IAS on WhatsApp",

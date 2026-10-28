@@ -99,7 +99,7 @@ const SUBJECTS: OptionalSubject[] = [
 ];
 
 const BANNER = { image: "/images/banners/banner-upsc-foundation-2027-28.webp", alt: "Vini IAS Optional Foundation Course" };
-const EMPTY = { guide: { heading: "", text: "" }, whatIs: [], learn: [], whyJoin: [], bestFor: [], syllabusUrl: "/#resources" };
+const EMPTY = { guide: { heading: "", text: "" }, whatIs: [], learn: [], whyJoin: [], bestFor: [] };
 const BOTH = ["foundation", "foundation-plus"];
 
 function buildOptionalPage(s: OptionalSubject): FreeResourcePage {

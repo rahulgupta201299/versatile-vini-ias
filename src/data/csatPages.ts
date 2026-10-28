@@ -9,7 +9,7 @@
 import { FreeResourcePage } from "@/types";
 
 const BANNER = { image: "/images/banners/banner-upsc-foundation-2027-28.webp", alt: "Vini IAS CSAT course" };
-const EMPTY = { guide: { heading: "", text: "" }, whatIs: [], learn: [], whyJoin: [], bestFor: [], syllabusUrl: "/#resources" };
+const EMPTY = { guide: { heading: "", text: "" }, whatIs: [], learn: [], whyJoin: [], bestFor: [] };
 
 export const CSAT_PAGES: FreeResourcePage[] = [
   /* ---------------- CSAT Foundation Batch ---------------- */

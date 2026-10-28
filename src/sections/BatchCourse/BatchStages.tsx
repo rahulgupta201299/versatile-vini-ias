@@ -169,7 +169,7 @@ export default function BatchStages({ data }: { data: Pick<BatchCourseContent, "
     <Box component="section" id="course-details" sx={{ py: { xs: 5, md: 7 }, background: "linear-gradient(180deg, #FFFFFF 0%, #FFF7F2 100%)" }}>
       <Container>
         <Box sx={{ textAlign: "center", mb: { xs: 3, md: 5 } }}>
-          <HighlightTitle before={`${data.stagesTitle.text} `} highlight={data.stagesTitle.highlight} />
+          <HighlightTitle before={data.stagesTitle.text && `${data.stagesTitle.text} `} highlight={data.stagesTitle.highlight} />
           <Box component="svg" viewBox="0 0 300 14" aria-hidden sx={{ display: "block", mx: "auto", mt: 0.5, width: { xs: 170, md: 260 } }}>
             <path d="M4 10 C 80 2, 200 2, 296 8" stroke={COLORS.red} strokeWidth="4" strokeLinecap="round" fill="none" />
           </Box>

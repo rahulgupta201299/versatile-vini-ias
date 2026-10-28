@@ -11,7 +11,7 @@
 import { FreeResourcePage } from "@/types";
 
 const BANNER = { image: "/images/banners/banner-mains360.png", alt: "Vini IAS UPSC Mains programme" };
-const EMPTY = { guide: { heading: "", text: "" }, whatIs: [], learn: [], whyJoin: [], bestFor: [], syllabusUrl: "/#resources" };
+const EMPTY = { guide: { heading: "", text: "" }, whatIs: [], learn: [], whyJoin: [], bestFor: [] };
 const SYLLABUS = { title: "UPSC Mains Topic-Wise Syllabus", url: "/#resources" };
 const ALL = ["foundation", "foundation-plus"];
 

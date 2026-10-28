@@ -2,11 +2,11 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { BarChart3, BookOpen, CheckCircle2, ClipboardCheck, Clock, Compass, Layers, Library, PenLine, RotateCcw, ShieldAlert, Target, Video } from "lucide-react";
-import { FreeResourceLearnItem, FreeResourcePage } from "@/types";
+import { CheckCircle2 } from "lucide-react";
+import IconRenderer from "@/components/IconRenderer";
+import { FreeResourcePage } from "@/types";
 import { COLORS } from "@/theme/colors";
 
-const ICONS: Record<FreeResourceLearnItem["icon"], React.ElementType> = { BarChart3, BookOpen, ClipboardCheck, Clock, Compass, Layers, Library, PenLine, RotateCcw, ShieldAlert, Target, Video };
 const TINTS = [
   { color: COLORS.red, bg: COLORS.redTint },
   { color: "#2563EB", bg: "#EFF6FF" },
@@ -42,15 +42,14 @@ export default function CourseOverview({ page }: { page: FreeResourcePage }) {
         </Box>
 
         <Box sx={{ p: { xs: 2.25, md: 3.5 }, borderRadius: "18px", backgroundColor: COLORS.surface, border: `1px solid ${COLORS.border}` }}>
-          <Typography component="h2" sx={{ ...h2Sx, mb: 2 }}>What is The {page.title}?</Typography>
+          <Typography component="h2" sx={{ ...h2Sx, mb: 2 }}>{page.headings?.whatIs}</Typography>
           <CheckList items={page.whatIs} />
         </Box>
 
         <Box>
-          <Typography component="h2" sx={{ ...h2Sx, mb: { xs: 2, md: 2.5 } }}>What will you learn from The {page.title}?</Typography>
+          <Typography component="h2" sx={{ ...h2Sx, mb: { xs: 2, md: 2.5 } }}>{page.headings?.learn}</Typography>
           <Box sx={{ display: "grid", gridTemplateColumns: { xs: "repeat(2, minmax(0, 1fr))", md: "repeat(3, minmax(0, 1fr))" }, gap: { xs: 1.25, md: 2 } }}>
             {page.learn.map((item, i) => {
-              const Icon = ICONS[item.icon];
               const tint = TINTS[i % TINTS.length];
 
               return (
@@ -70,7 +69,7 @@ export default function CourseOverview({ page }: { page: FreeResourcePage }) {
                   }}
                 >
                   <Box sx={{ width: { xs: 40, md: 48 }, height: { xs: 40, md: 48 }, borderRadius: "12px", backgroundColor: tint.bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, "& svg": { width: { xs: 20, md: 24 }, height: { xs: 20, md: 24 } } }}>
-                    <Icon color={tint.color} />
+                    <IconRenderer name={item.icon} color={tint.color} />
                   </Box>
                   <Typography sx={{ fontWeight: 700, color: COLORS.ink, fontSize: { xs: "0.88rem", md: "1rem" }, lineHeight: 1.35 }}>{item.title}</Typography>
                 </Box>

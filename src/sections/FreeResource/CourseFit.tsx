@@ -9,9 +9,10 @@ import { CheckList, h2Sx } from "./CourseOverview";
 
 /** "Why should you join" and "Who is it best for" side by side. */
 export default function CourseFit({ page }: { page: FreeResourcePage }) {
+  const { whyJoin = "", bestFor = "" } = page.headings || {};
   const cards = [
-    { title: `Why should you join The ${page.title}?`, items: page.whyJoin, icon: Sparkles },
-    { title: `Who is The ${page.title} best for?`, items: page.bestFor, icon: UserCheck },
+    { title: whyJoin, items: page.whyJoin, icon: Sparkles },
+    { title: bestFor, items: page.bestFor, icon: UserCheck },
   ];
 
   return (

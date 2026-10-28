@@ -9,9 +9,9 @@ import InputAdornment from "@mui/material/InputAdornment";
 import { CalendarDays, CheckCircle2, ChevronDown, Download, User, Zap } from "lucide-react";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { FreeResourcePage } from "@/types";
-import { openAuth } from "@/utils/events";
 import { useFormValidation, validateName, validateMobile, sanitizeName, sanitizeMobile } from "@/utils/validation";
 import { COLORS } from "@/theme/colors";
+import CourseCtaButton from "./CourseCtaButton";
 
 const FIELD_SX = { backgroundColor: "#FFFFFF", borderRadius: "10px", height: 46, fontSize: "0.95rem" };
 
@@ -80,9 +80,9 @@ function CallbackCard({ course }: { course: string }) {
   );
 }
 
-export const scrollToDetails = () => document.getElementById("course-details")?.scrollIntoView({ behavior: "smooth" });
-
 export default function FreeResourceHero({ page }: { page: FreeResourcePage }) {
+  const { syllabus } = page;
+
   return (
     <Box component="section" id="course-top" sx={{ pt: { xs: 1.5, md: 2 }, pb: { xs: 3, md: 5 }, background: `linear-gradient(180deg, ${COLORS.redTintSoft} 0%, #FFFFFF 100%)` }}>
       <Container>
@@ -108,23 +108,21 @@ export default function FreeResourceHero({ page }: { page: FreeResourcePage }) {
               <CalendarDays size={18} /> {page.startInfo}
             </Box>
 
-            <Box sx={{ display: "flex", gap: 1.5, mt: { xs: 2.5, md: 3 }, "& > button": { flex: { xs: 1, sm: "0 0 auto" }, justifyContent: "center", px: { xs: 1.5, sm: 3 } } }}>
-              <Box
-                component="button"
-                type="button"
-                onClick={scrollToDetails}
+            <Box sx={{ display: "flex", gap: 1.5, mt: { xs: 2.5, md: 3 }, "& > a, & > button": { flex: { xs: 1, sm: "0 0 auto" }, justifyContent: "center", px: { xs: 1.5, sm: 3 } } }}>
+              <CourseCtaButton
+                cta={page.ctas?.details}
+                action="details"
+                label="Course Details"
+                icon={<ChevronDown size={17} />}
                 sx={{ display: "inline-flex", alignItems: "center", gap: 1, height: 48, px: 3, borderRadius: "12px", border: `1.5px solid ${COLORS.ink}`, backgroundColor: "#FFFFFF", color: COLORS.ink, fontFamily: "inherit", fontWeight: 700, fontSize: "0.98rem", cursor: "pointer", "&:hover": { backgroundColor: COLORS.surface } }}
-              >
-                Course Details <ChevronDown size={17} />
-              </Box>
-              <Box
-                component="button"
-                type="button"
-                onClick={openAuth}
+              />
+              <CourseCtaButton
+                cta={page.ctas?.enroll}
+                action="enroll"
+                label="Enroll Now"
+                icon={<Zap size={16} fill="currentColor" />}
                 sx={{ display: "inline-flex", alignItems: "center", gap: 1, height: 48, px: 3.5, borderRadius: "12px", border: "none", backgroundColor: COLORS.red, color: "#FFFFFF", fontFamily: "inherit", fontWeight: 700, fontSize: "0.98rem", cursor: "pointer", boxShadow: "0 8px 20px rgba(254,0,52,.22)", "&:hover": { backgroundColor: COLORS.redDark } }}
-              >
-                Enroll Now <Zap size={16} fill="currentColor" />
-              </Box>
+              />
             </Box>
           </Box>
 
@@ -132,33 +130,37 @@ export default function FreeResourceHero({ page }: { page: FreeResourcePage }) {
         </Box>
 
         {/* Syllabus download strip */}
-        <Box
-          sx={{
-            mt: { xs: 3.5, md: 5 },
-            mx: "auto",
-            maxWidth: 760,
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 1.5,
-            p: { xs: 2, md: 2.25 },
-            pl: { sm: 3 },
-            borderRadius: "14px",
-            border: `1.5px solid ${COLORS.redBorder}`,
-            backgroundColor: "#FFFFFF",
-            textAlign: { xs: "center", sm: "left" },
-          }}
-        >
-          <Typography sx={{ fontWeight: 800, color: COLORS.ink, fontSize: { xs: "0.98rem", md: "1.05rem" } }}>Complete UPSC Topic-Wise Syllabus</Typography>
+        {syllabus && (
           <Box
-            component="a"
-            href={page.syllabusUrl}
-            sx={{ display: "inline-flex", alignItems: "center", gap: 1, height: 44, px: 3, borderRadius: "10px", backgroundColor: COLORS.yellow, color: COLORS.ink, fontWeight: 800, fontSize: "0.9rem", textDecoration: "none", whiteSpace: "nowrap", "&:hover": { backgroundColor: COLORS.yellowDark } }}
+            sx={{
+              mt: { xs: 3.5, md: 5 },
+              mx: "auto",
+              maxWidth: 760,
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 1.5,
+              p: { xs: 2, md: 2.25 },
+              pl: { sm: 3 },
+              borderRadius: "14px",
+              border: `1.5px solid ${COLORS.redBorder}`,
+              backgroundColor: "#FFFFFF",
+              textAlign: { xs: "center", sm: "left" },
+            }}
           >
-            <Download size={17} /> DOWNLOAD HERE
+            <Typography sx={{ fontWeight: 800, color: COLORS.ink, fontSize: { xs: "0.98rem", md: "1.05rem" } }}>{syllabus.title}</Typography>
+            <Box
+              component="a"
+              href={syllabus.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ display: "inline-flex", alignItems: "center", gap: 1, height: 44, px: 3, borderRadius: "10px", backgroundColor: COLORS.yellow, color: COLORS.ink, fontWeight: 800, fontSize: "0.9rem", textDecoration: "none", whiteSpace: "nowrap", "&:hover": { backgroundColor: COLORS.yellowDark } }}
+            >
+              <Download size={17} /> {syllabus.buttonLabel}
+            </Box>
           </Box>
-        </Box>
+        )}
       </Container>
     </Box>
   );

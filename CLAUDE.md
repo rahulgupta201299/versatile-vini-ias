@@ -50,7 +50,11 @@
 - **Reuse before you write:** look for an existing shared component (`src/components/`) before building UI that looks
   similar. Two look-alike blocks → one component. Current shared pieces: `FaqList` (every FAQ accordion),
   `HighlightTitle` (navy heading with a red phrase), `MobileCallbackForm` (one-field callback form), `ArtDirectedImage`,
-  `ErrorScreen`, `skeletons/*`, `SiteOverlays` (login + app popups, lazy-loaded; open login with `openAuth()`).
+  `ErrorScreen`, `skeletons/*`, `SiteOverlays` (login + app popups, lazy-loaded; open login with `openAuth()`),
+  `CourseCtaButton` (admin-set text + link, else scroll / sign-up popup). Admin editors saved part by part use
+  `Admin/common/PartAccordion` (`usePart`, `PartCard`, `useOpenParts`), plus `FileField` and `IconSelect`.
+- **Contact details** (phone, WhatsApp, email, website) come only from `getSiteConfig().contact` / `useSiteData().config.contact`
+  (admin → Web → Contact Info). Never hard-code them.
 - **Route groups** for layouts (`(site)`, `(vini-ai)`, `(admin)`); one dynamic route instead of copy-pasted folders.
 - **Server first:** pages and sections are Server Components; add `"use client"` only to the small interactive part.
   Read site-wide data with `useSiteData()` (context) instead of passing it down several levels; fetch page data in the

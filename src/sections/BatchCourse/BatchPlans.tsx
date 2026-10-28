@@ -34,7 +34,7 @@ export default function BatchPlans({ data }: { data: Pick<BatchCourseContent, "p
     <Box component="section" id="plans" sx={{ py: { xs: 5, md: 7 }, backgroundColor: COLORS.surface }}>
       <Container>
         <Box sx={{ textAlign: "center", mb: { xs: 3, md: 4 } }}>
-          <HighlightTitle before={`${plansTitle.before} `} highlight={plansTitle.highlight} after={` ${plansTitle.after}`} />
+          <HighlightTitle before={plansTitle.before && `${plansTitle.before} `} highlight={plansTitle.highlight} after={plansTitle.after && ` ${plansTitle.after}`} />
           <Typography sx={{ mt: 1, color: COLORS.textSecondary, fontSize: { xs: "0.92rem", md: "1.02rem" } }}>{plansTitle.subtitle}</Typography>
         </Box>
 
@@ -106,7 +106,7 @@ export default function BatchPlans({ data }: { data: Pick<BatchCourseContent, "p
               <Box key={p.id} role="cell" data-plan-price={p.id} sx={{ textAlign: "center", py: 2, px: 0.5, backgroundColor: p.tint }}>
                 <Typography sx={{ fontWeight: 900, color: COLORS.ink, fontSize: { xs: "1.05rem", md: "1.6rem" }, lineHeight: 1.1 }}>{formatINR(p.price)}</Typography>
                 <Typography sx={{ fontSize: { xs: "0.55rem", md: "0.65rem" }, color: COLORS.muted, fontWeight: 600 }}>{p.priceNote || "(TAXES INCLUDED)"}</Typography>
-                <BuyButton color={p.color} />
+                <BuyButton color={p.color} label={p.buyLabel} link={p.buyLink} />
               </Box>
             ))}
           </Box>

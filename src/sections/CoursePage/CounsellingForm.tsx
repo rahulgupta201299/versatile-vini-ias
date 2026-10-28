@@ -17,7 +17,7 @@ import { COLORS } from "@/theme/colors";
 const FIELD_SX = { backgroundColor: "#FFFFFF", borderRadius: "10px", height: 48, fontSize: "0.95rem" };
 
 export default function CounsellingForm({ name, examOptions }: { name: string; examOptions: string[] }) {
-  const CONTACT = useSiteData().config.contact;
+  const { contact } = useSiteData().config;
   const formRef = useRef<HTMLFormElement>(null);
   const [submitted, setSubmitted] = useState(false);
   const form = useFormValidation(
@@ -136,7 +136,7 @@ export default function CounsellingForm({ name, examOptions }: { name: string; e
               >
                 Submit
               </Box>
-              <Box component="a" href={CONTACT.tel} sx={{ justifySelf: "center", mt: 0.5, display: "inline-flex", alignItems: "center", gap: 0.75, color: MUTED, fontSize: "0.85rem", textDecoration: "none", "&:hover": { color: RED } }}>
+              <Box component="a" href={contact.tel} sx={{ justifySelf: "center", mt: 0.5, display: "inline-flex", alignItems: "center", gap: 0.75, color: MUTED, fontSize: "0.85rem", textDecoration: "none", "&:hover": { color: RED } }}>
                 <PhoneCall size={15} /> or call us directly
               </Box>
             </Box>

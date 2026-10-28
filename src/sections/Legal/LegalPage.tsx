@@ -7,6 +7,7 @@ import { ArrowRight, CalendarDays, ChevronRight, FileText, Info, Mail, RotateCcw
 import { LegalBlock, LegalDoc } from "@/types";
 import { COLORS } from "@/theme/colors";
 import LegalToc from "./LegalToc";
+import { getSiteConfig } from "@/services";
 
 const DOC_ICON = { "terms-and-conditions": Scale, "privacy-policy": ShieldCheck, "refund-policy": RotateCcw } as const;
 /** Compact tab labels on phones so all three fit in one row. */
@@ -115,7 +116,9 @@ function Block({ b }: { b: LegalBlock }) {
 }
 
 /** Shared layout for Terms, Privacy and Refund pages. */
-export default function LegalPage({ doc, docs }: { doc: LegalDoc; docs: LegalDoc[] }) {
+export default async function LegalPage({ doc, docs }: { doc: LegalDoc; docs: LegalDoc[] }) {
+  const { contact } = await getSiteConfig();
+
   const Icon = DOC_ICON[doc.slug];
   const others = docs.filter((d) => d.slug !== doc.slug);
 
@@ -200,8 +203,8 @@ export default function LegalPage({ doc, docs }: { doc: LegalDoc; docs: LegalDoc
               <Typography sx={{ fontWeight: 800, fontSize: { xs: "1.15rem", md: "1.3rem" }, color: COLORS.yellow }}>Questions about this policy?</Typography>
               <Typography sx={{ mt: 0.5, color: "rgba(255,255,255,.88)", fontSize: "0.95rem" }}>Write to us with your registered mobile number and we&apos;ll get back to you.</Typography>
             </Box>
-            <Box component="a" href="mailto:support@groupvini.in" sx={{ flexShrink: 0, display: "inline-flex", alignItems: "center", gap: 1, px: 2.5, py: 1.25, borderRadius: 999, bgcolor: COLORS.yellow, color: COLORS.navy, fontWeight: 800, textDecoration: "none", "&:hover": { transform: "translateY(-1px)" }, transition: "transform .2s" }}>
-              <Mail size={18} /> support@groupvini.in
+            <Box component="a" href={`mailto:${contact.email}`} sx={{ flexShrink: 0, display: "inline-flex", alignItems: "center", gap: 1, px: 2.5, py: 1.25, borderRadius: 999, bgcolor: COLORS.yellow, color: COLORS.navy, fontWeight: 800, textDecoration: "none", "&:hover": { transform: "translateY(-1px)" }, transition: "transform .2s" }}>
+              <Mail size={18} /> {contact.email}
             </Box>
           </Box>
 

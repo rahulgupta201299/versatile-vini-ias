@@ -39,10 +39,22 @@ export const getCourseSectionSlugs = cache(async (section: string) => {
   return [...new Set(slugs)];
 });
 
-/** One course page: GET /courses/<section>/<slug> (falls back to local content, else null → 404). */
+/** One course page: GET /courses/<section>/<slug> (pages not in the admin yet come from local content; else null → 404). */
 export const getCourseSectionPage = cache((section: string, slug: string) =>
   fetchApi<FreeResourcePage | null>(`courses/${section}/${encodeURIComponent(slug)}`, {
     fallback: LOCAL_PAGES[section]?.find((p) => p.slug === slug) || null,
     tags: [CACHE_TAGS.freeResources],
   })
 );
+
+type SyllabusFile = { file: string; fileName: string };
+
+const isSyllabusFile = (data: unknown): data is SyllabusFile => typeof data === "object" && data !== null && typeof (data as SyllabusFile).file === "string";
+
+/** An uploaded syllabus (image / PDF data URL until S3): GET /courses/<section>/<slug>/syllabus, or null. */
+export const getCourseSyllabus = (section: string, slug: string) =>
+  fetchApi<SyllabusFile | null>(`courses/${section}/${encodeURIComponent(slug)}/syllabus`, {
+    fallback: null,
+    tags: [CACHE_TAGS.freeResources],
+    isValid: isSyllabusFile,
+  });

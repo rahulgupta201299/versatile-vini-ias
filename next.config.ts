@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
     // YouTube video thumbnails on the goal pages
     remotePatterns: [{ protocol: "https", hostname: "i.ytimg.com", pathname: "/vi/**" }],
   },
+  // Old menu link to the Foundation Batch page (the page was always /foundation-batch-2027-29)
+  async redirects() {
+    return [{ source: "/courses/gs-foundation/foundation-batch-2028", destination: "/courses/gs-foundation/foundation-batch-2027-29", permanent: true }];
+  },
   // react-pdf runs on the server only (article PDF downloads)
   serverExternalPackages: ["@react-pdf/renderer"],
   // files the PDF route reads at runtime

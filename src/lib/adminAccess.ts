@@ -21,6 +21,8 @@ export const SECTIONS = {
   allExams: { label: "All Exams", workspace: "Web", deletable: true },
   header: { label: "Header & Menu", workspace: "Web", deletable: false },
   footer: { label: "Footer", workspace: "Web", deletable: true },
+  gsFoundation: { label: "GS Foundation", workspace: "Web", deletable: false },
+  contact: { label: "Contact Info", workspace: "Web", deletable: false },
   seo: { label: "SEO", workspace: "Web", deletable: true },
   sales: { label: "Sales", workspace: "Web", deletable: true },
   hr: { label: "HR & Careers", workspace: "Web", deletable: true },

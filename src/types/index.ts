@@ -273,24 +273,11 @@ export interface ImpactData {
   logoPosition: { x: number; y: number };
 }
 
-/* ---------- GS Foundation resource pages (GET /courses/gs-foundation/:slug) ---------- */
-export type FreeResourceIcon =
-  | "Compass"
-  | "Clock"
-  | "Library"
-  | "Layers"
-  | "RotateCcw"
-  | "ShieldAlert"
-  | "BookOpen"
-  | "PenLine"
-  | "ClipboardCheck"
-  | "BarChart3"
-  | "Video"
-  | "Target";
-
+/* ---------- Course pages (GET /courses/<section>/<slug>) ---------- */
 export interface FreeResourceLearnItem {
   title: string;
-  icon: FreeResourceIcon;
+  /** An icon name from components/IconRenderer, e.g. "Compass" */
+  icon: string;
 }
 
 /* ---------- Designed landing layout (e.g. NCERT Foundation Batch) ---------- */
@@ -385,6 +372,9 @@ export interface CoursePlan {
   tint: string;
   /** Shown under the price, default "(TAXES INCLUDED)". */
   priceNote?: string;
+  /** "Buy Now" button text and link (no link → opens the sign-up popup). */
+  buyLabel?: string;
+  buyLink?: string;
 }
 
 export interface CourseStage {
@@ -597,6 +587,24 @@ export interface ShortlistContent {
   callback: CallbackContent;
 }
 
+export interface CourseCta {
+  label: string;
+  /** Page, #anchor or https:// URL; empty → the button's default action. */
+  link: string;
+}
+
+export interface CourseHeadings {
+  whatIs: string;
+  learn: string;
+  whyJoin: string;
+  bestFor: string;
+}
+
+export interface CourseCtas {
+  details: CourseCta;
+  enroll: CourseCta;
+}
+
 export interface FreeResourcePage {
   /** When present the page uses the mentorship layout. */
   mentorship?: MentorshipContent;
@@ -621,8 +629,13 @@ export interface FreeResourcePage {
   isFree: boolean;
   /** e.g. "Starting from 1st Nov 2026" */
   startInfo: string;
-  syllabusUrl: string;
+  /** "Course Details" and "Enroll" buttons (no link → scroll to the details / open the sign-up popup). */
+  ctas?: CourseCtas;
+  /** Syllabus download strip (hidden when not set). */
+  syllabus?: { title: string; buttonLabel: string; href: string };
   guide: { heading: string; text: string };
+  /** Card headings (guide layout), e.g. "What is The Beginners' Kit…?" */
+  headings?: CourseHeadings;
   whatIs: string[];
   learn: FreeResourceLearnItem[];
   whyJoin: string[];
@@ -1172,4 +1185,68 @@ export interface AdminFooterSection {
   links: FooterLinkData[];
   columns: FooterColumnData[];
   updatedAt?: string;
+}
+
+/* ---------------- Admin: course pages (GS Foundation) ---------------- */
+
+export type CourseLayout = "guide" | "batch";
+
+/** GET /admin/courses — one row per page. */
+export interface AdminCoursePageSummary {
+  _id: string;
+  section: string;
+  slug: string;
+  label: string;
+  layout: CourseLayout;
+  title: string;
+  updatedAt?: string;
+}
+
+export interface AdminCoursePlan {
+  key: string;
+  name: string;
+  price: number;
+  buyLabel: string;
+  buyLink: string;
+}
+
+export interface AdminCourseStage {
+  title: string;
+  /** "YYYY-MM" */
+  from: string;
+  to: string;
+}
+
+/** GET /admin/courses/:id — the fields the admin edits (guide layout: syllabus…; batch layout: batch). */
+export interface AdminCoursePage extends AdminCoursePageSummary {
+  summary: string;
+  priceLabel: string;
+  /** "YYYY-MM-DD" */
+  startDate: string;
+  ctas: CourseCtas;
+  faqs: CourseFaq[];
+  syllabus?: { title: string; buttonLabel: string; file: string; fileName: string };
+  guide?: { heading: string; text: string };
+  headings?: CourseHeadings;
+  whatIs?: string[];
+  learn?: { title: string; icon: string }[];
+  whyJoin?: string[];
+  bestFor?: string[];
+  batch?: {
+    highlight: string;
+    banner: { image: string; alt: string };
+    plans: AdminCoursePlan[];
+    stages: AdminCourseStage[];
+    stagesTitle: { text: string; highlight: string };
+    plansTitle: { before: string; highlight: string; after: string; subtitle: string };
+  };
+}
+
+/** GET /admin/contact */
+export interface AdminContact {
+  /** 10-digit mobile number */
+  phone: string;
+  whatsappMessage: string;
+  email: string;
+  website: string;
 }

@@ -47,7 +47,7 @@ export async function CoursePageView({ page }: { page: FreeResourcePage }) {
     return (
       <>
         <FaqJsonLd page={page} />
-        <BatchHero hero={batch.hero} plans={batch.plans} />
+        <BatchHero hero={batch.hero} plans={batch.plans} ctas={page.ctas} />
         <BatchStats stats={batch.stats} />
         <TopRankersSection tabs={resultTabs} stats={rankerStats} />
         <BatchStages data={batch} />
@@ -170,21 +170,21 @@ export async function CoursePageView({ page }: { page: FreeResourcePage }) {
     );
   }
 
-  // Standard course layout (e.g. Beginner's Kit) — same order as the reference, educators left out
+  // Guide layout (e.g. Beginner's Kit) — same order as the reference, educators left out
   const [resultTabs, rankerStats] = await Promise.all([getResultBanners(), getRankerStats()]);
 
   return (
     <>
       <FaqJsonLd page={page} />
       <FreeResourceHero page={page} />
-      <EnrollBand priceLabel={page.priceLabel} isFree={page.isFree} />
+      <EnrollBand priceLabel={page.priceLabel} isFree={page.isFree} ctas={page.ctas} />
       <EnquirySection />
       <CourseFaqs faqs={page.faqs} />
       <CourseOverview page={page} />
       <TopRankersSection tabs={resultTabs} stats={rankerStats} />
       <CourseFit page={page} />
       <ContactInfo />
-      <StickyEnrollBar title={page.title} priceLabel={page.priceLabel} isFree={page.isFree} />
+      <StickyEnrollBar title={page.title} priceLabel={page.priceLabel} isFree={page.isFree} ctas={page.ctas} />
     </>
   );
 }

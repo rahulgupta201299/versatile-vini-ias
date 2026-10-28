@@ -1,4 +1,4 @@
-import { BarChart3, Globe, Home, LayoutDashboard, PanelBottom, PanelTop, Search, ShoppingBag, Smartphone, UserCog, Users, type LucideIcon } from "lucide-react";
+import { BarChart3, Contact, GraduationCap, Globe, Home, LayoutDashboard, PanelBottom, PanelTop, Search, ShoppingBag, Smartphone, UserCog, Users, type LucideIcon } from "lucide-react";
 import { can, canManageUsers, type AccessViewer, type SectionKey } from "@/lib/adminAccess";
 
 /**
@@ -22,6 +22,8 @@ export const WORKSPACES: Record<AdminWorkspace, Workspace> = {
       { label: "Homepage", href: "/admin/web/homepage", icon: Home, sections: ["homepage", "allExams"] },
       { label: "Header & Menu", href: "/admin/web/header", icon: PanelTop, sections: ["header"] },
       { label: "Footer", href: "/admin/web/footer", icon: PanelBottom, sections: ["footer"] },
+      { label: "GS Foundation", href: "/admin/web/gs-foundation", icon: GraduationCap, sections: ["gsFoundation"] },
+      { label: "Contact Info", href: "/admin/web/contact", icon: Contact, sections: ["contact"] },
       { label: "SEO", href: "/admin/web/seo", icon: Search, sections: ["seo"] },
       { label: "Sales", href: "/admin/web/sales", icon: BarChart3, sections: ["sales"] },
       { label: "HR & Careers", href: "/admin/web/hr", icon: Users, sections: ["hr"] },

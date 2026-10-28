@@ -42,15 +42,29 @@ import {
   TrendingUp,
   Trophy,
   Users,
+  BarChart3,
+  Clock,
+  Layers,
+  RotateCcw,
+  ShieldAlert,
+  Target,
+  Video,
   type LucideIcon,
 } from "lucide-react";
 
 /**
- * Only the icons referenced by name in /src/data are imported here.
+ * Only the icons referenced by name (data files and admin-managed content) are imported here.
  * (Importing `* as Icons` pulled the entire lucide library into the bundle.)
  * Add an icon to this map when a new name is used in the data files.
  */
 const ICONS: Record<string, LucideIcon> = {
+  Video,
+  Target,
+  ShieldAlert,
+  RotateCcw,
+  Layers,
+  Clock,
+  BarChart3,
   Atom,
   Award,
   BookMarked,

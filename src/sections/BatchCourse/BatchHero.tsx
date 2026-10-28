@@ -7,8 +7,8 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { ArrowUpRight, CalendarDays } from "lucide-react";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { BatchCourseContent, CoursePlan } from "@/types";
-import { openAuth } from "@/utils/events";
+import { BatchCourseContent, CourseCtas, CoursePlan } from "@/types";
+import CourseCtaButton from "@/sections/FreeResource/CourseCtaButton";
 import { selectPlan } from "./planEvents";
 import { COLORS } from "@/theme/colors";
 import { LANDING_ICONS } from "@/sections/CourseLanding/icons";
@@ -24,7 +24,13 @@ const TILE_TONES = [
 
 const formatINR = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 
-export default function BatchHero({ hero, plans }: { hero: BatchCourseContent["hero"]; plans: CoursePlan[] }) {
+type BatchHeroProps = {
+  hero: BatchCourseContent["hero"];
+  plans: CoursePlan[];
+  ctas?: CourseCtas;
+};
+
+export default function BatchHero({ hero, plans, ctas }: BatchHeroProps) {
   const [planId, setPlanId] = useState(plans[0]?.id);
   const plan = plans.find((p) => p.id === planId) || plans[0];
   const [before, after] = hero.title.split(hero.highlight);
@@ -103,21 +109,19 @@ export default function BatchHero({ hero, plans }: { hero: BatchCourseContent["h
                   <Typography sx={{ fontWeight: 900, fontSize: { xs: "1.4rem", md: "1.6rem" }, color: COLORS.ink, lineHeight: 1 }}>{formatINR(plan.price)}</Typography>
                   <Typography sx={{ fontSize: "0.68rem", color: COLORS.muted, fontWeight: 600 }}>(TAXES INCLUDED)</Typography>
                 </Box>
-                <Box
-                  component="button"
-                  type="button"
-                  onClick={openAuth}
-                  sx={{ height: 46, px: 3, border: "none", borderRadius: "10px", backgroundColor: COLORS.red, color: "#FFFFFF", fontFamily: "inherit", fontWeight: 700, fontSize: "0.95rem", cursor: "pointer", boxShadow: "0 8px 20px rgba(254,0,52,.22)", "&:hover": { backgroundColor: COLORS.redDark } }}
-                >
-                  Enroll Now
-                </Box>
-                <Box
-                  component="a"
-                  href="#course-details"
-                  sx={{ display: "inline-flex", alignItems: "center", gap: 0.75, height: 46, px: 2.5, borderRadius: "10px", border: `1.5px solid ${COLORS.ink}`, backgroundColor: "#FFFFFF", color: COLORS.ink, fontWeight: 700, fontSize: "0.95rem", textDecoration: "none", "&:hover": { backgroundColor: COLORS.surface } }}
-                >
-                  Course Details <ArrowUpRight size={17} />
-                </Box>
+                <CourseCtaButton
+                  cta={ctas?.enroll}
+                  action="enroll"
+                  label="Enroll Now"
+                  sx={{ display: "inline-flex", alignItems: "center", height: 46, px: 3, border: "none", borderRadius: "10px", backgroundColor: COLORS.red, color: "#FFFFFF", fontFamily: "inherit", fontWeight: 700, fontSize: "0.95rem", cursor: "pointer", boxShadow: "0 8px 20px rgba(254,0,52,.22)", "&:hover": { backgroundColor: COLORS.redDark } }}
+                />
+                <CourseCtaButton
+                  cta={ctas?.details}
+                  action="details"
+                  label="Course Details"
+                  icon={<ArrowUpRight size={17} />}
+                  sx={{ display: "inline-flex", alignItems: "center", gap: 0.75, height: 46, px: 2.5, borderRadius: "10px", border: `1.5px solid ${COLORS.ink}`, backgroundColor: "#FFFFFF", color: COLORS.ink, fontFamily: "inherit", fontWeight: 700, fontSize: "0.95rem", cursor: "pointer", "&:hover": { backgroundColor: COLORS.surface } }}
+                />
               </Box>
             )}
           </Box>

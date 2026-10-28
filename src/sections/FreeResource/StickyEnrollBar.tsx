@@ -5,13 +5,12 @@ import Link from "next/link";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { openAuth } from "@/utils/events";
 import { keyframes } from "@mui/material/styles";
 import { ArrowRight, BookOpen } from "lucide-react";
 import { LANDING_ICONS } from "@/sections/CourseLanding/icons";
-import { LandingIcon } from "@/types";
+import { CourseCtas, LandingIcon } from "@/types";
 import { COLORS } from "@/theme/colors";
-import { scrollToDetails } from "./FreeResourceHero";
+import CourseCtaButton from "./CourseCtaButton";
 import { externalLinkProps } from "@/utils/links";
 
 type Props = {
@@ -21,6 +20,8 @@ type Props = {
   isFree?: boolean;
   /** Replace "Course Details · Enroll" with these yellow link buttons (e.g. Monthly Magazine, PRISM Simplified). */
   links?: { label: string; href: string; icon?: LandingIcon; badge?: string }[];
+  /** "Course Details" / "Enroll" text and links from the admin. */
+  ctas?: CourseCtas;
 };
 
 /** Bottom bar (price · Course Details · Enroll, or custom link buttons) that appears once the hero scrolls out of view. */
@@ -114,6 +115,7 @@ export default function StickyEnrollBar({
   priceLabel,
   isFree,
   links,
+  ctas,
 }: Props) {
   // A links bar (e.g. Monthly Magazine · PRISM) is shown from the start; the enroll bar waits until the hero scrolls away.
   const [show, setShow] = useState(Boolean(links));
@@ -213,47 +215,18 @@ export default function StickyEnrollBar({
             ))
           ) : (
             <>
-              <Box
-                component="button"
-                type="button"
-                onClick={scrollToDetails}
-                sx={{
-                  height: 42,
-                  px: { xs: 1.75, md: 2.75 },
-                  borderRadius: "10px",
-                  border: `1.5px solid ${COLORS.ink}`,
-                  backgroundColor: "#FFFFFF",
-                  color: COLORS.ink,
-                  fontFamily: "inherit",
-                  fontWeight: 700,
-                  fontSize: { xs: "0.85rem", md: "0.92rem" },
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Course Details
-              </Box>
-              <Box
-                component="button"
-                type="button"
-                onClick={openAuth}
-                sx={{
-                  height: 42,
-                  px: { xs: 2.25, md: 3.5 },
-                  borderRadius: "10px",
-                  border: "none",
-                  backgroundColor: COLORS.red,
-                  color: "#FFFFFF",
-                  fontFamily: "inherit",
-                  fontWeight: 700,
-                  fontSize: { xs: "0.85rem", md: "0.92rem" },
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                  "&:hover": { backgroundColor: COLORS.redDark },
-                }}
-              >
-                Enroll
-              </Box>
+              <CourseCtaButton
+                cta={ctas?.details}
+                action="details"
+                label="Course Details"
+                sx={{ display: "inline-flex", alignItems: "center", height: 42, px: { xs: 1.75, md: 2.75 }, borderRadius: "10px", border: `1.5px solid ${COLORS.ink}`, backgroundColor: "#FFFFFF", color: COLORS.ink, fontFamily: "inherit", fontWeight: 700, fontSize: { xs: "0.85rem", md: "0.92rem" }, cursor: "pointer", whiteSpace: "nowrap" }}
+              />
+              <CourseCtaButton
+                cta={ctas?.enroll}
+                action="enroll"
+                label="Enroll"
+                sx={{ display: "inline-flex", alignItems: "center", height: 42, px: { xs: 2.25, md: 3.5 }, borderRadius: "10px", border: "none", backgroundColor: COLORS.red, color: "#FFFFFF", fontFamily: "inherit", fontWeight: 700, fontSize: { xs: "0.85rem", md: "0.92rem" }, cursor: "pointer", whiteSpace: "nowrap", "&:hover": { backgroundColor: COLORS.redDark } }}
+              />
             </>
           )}
         </Container>

@@ -38,9 +38,20 @@ const getExamCategories = cache(() =>
   fetchApi<ExamGoalCategory[]>("select-your-goal", { fallback: [], revalidate: REVALIDATE.slow, tags: [CACHE_TAGS.exams], isValid: Array.isArray })
 );
 
-export const getSiteConfig = cache(() =>
-  fetchApi<SiteConfig>("site-config", { fallback: SITE_CONFIG, revalidate: REVALIDATE.slow, tags: [CACHE_TAGS.siteConfig] })
-);
+const isContactConfig = (data: unknown): data is Pick<SiteConfig, "contact"> =>
+  typeof data === "object" && data !== null && typeof (data as SiteConfig).contact?.tel === "string";
+
+/** Contact details (admin → Web → Contact Info) with the social and app links. */
+export const getSiteConfig = cache(async (): Promise<SiteConfig> => {
+  const { contact } = await fetchApi<Pick<SiteConfig, "contact">>("site-config", {
+    fallback: SITE_CONFIG,
+    revalidate: REVALIDATE.slow,
+    tags: [CACHE_TAGS.siteConfig],
+    isValid: isContactConfig,
+  });
+
+  return { ...SITE_CONFIG, contact };
+});
 
 const NO_FOOTER_SECTIONS: FooterSectionsData = { company: null, freeLearningResources: null, ecosystemBrands: null };
 

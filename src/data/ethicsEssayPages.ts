@@ -10,7 +10,7 @@
 import { FreeResourcePage } from "@/types";
 
 const BANNER = { image: "/images/banners/banner-mains360.png", alt: "Vini IAS Ethics & Essay programme" };
-const EMPTY = { guide: { heading: "", text: "" }, whatIs: [], learn: [], whyJoin: [], bestFor: [], syllabusUrl: "/#resources" };
+const EMPTY = { guide: { heading: "", text: "" }, whatIs: [], learn: [], whyJoin: [], bestFor: [] };
 
 export const ETHICS_ESSAY_PAGES: FreeResourcePage[] = [
   /* ---------------- Ethics Foundation Batch ---------------- */

@@ -11,7 +11,7 @@
 import { CallbackContent, FreeResourcePage, SyllabusOverlap } from "@/types";
 
 const BANNER = { image: "/images/banners/banner-aarambh.jpg", alt: "Vini IAS UPSC Plan B courses" };
-const EMPTY = { guide: { heading: "", text: "" }, whatIs: [], learn: [], whyJoin: [], bestFor: [], syllabusUrl: "/#resources" };
+const EMPTY = { guide: { heading: "", text: "" }, whatIs: [], learn: [], whyJoin: [], bestFor: [] };
 
 const callback = (exam: string, ctaLabel = "Get Free Mentorship"): CallbackContent => ({
   eyebrow: "PERSONALIZED GUIDANCE, BETTER RESULTS",
