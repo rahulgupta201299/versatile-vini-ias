@@ -199,7 +199,7 @@ export interface CoursePageData {
  * (See src/lib/api.ts for the endpoint list.)
  * ==================================================================== */
 
-interface LinkItem {
+export interface LinkItem {
   name: string;
   href: string;
   /** Optional small animated tag next to the link (footer), e.g. "We are hiring" */
@@ -246,6 +246,9 @@ export interface FooterData {
   brands: LinkItem[];
   learningResourcesTitle: string;
   learningResources: FooterResourceColumn[];
+  /** "Important Exams" links above the footer: a heading and columns of links. */
+  importantExamsTitle: string;
+  importantExams: LinkItem[][];
 }
 
 /** GET /site-config */
@@ -685,7 +688,6 @@ export interface BlogPost {
 /** "Latest Notification & Updates" boards + "Important Exams" link grid on /exams. */
 export interface ExamUpdates {
   boards: { id: string; title: string; items: { title: string; href: string }[] }[];
-  importantExams: { title: string; href: string }[][];
 }
 
 /* ---------- Company pages (/about-us, /careers) ---------- */
@@ -1167,10 +1169,11 @@ export interface AdminHeaderSection {
 }
 
 /** company = the columns next to the logo ("Company footer" in the admin). */
-export type FooterSectionKey = "company" | "freeLearningResources" | "ecosystemBrands";
+export type FooterSectionKey = "importantExams" | "company" | "freeLearningResources" | "ecosystemBrands";
 
 /** GET /footer — a switched-off or deleted section is null. */
 export interface FooterSectionsData {
+  importantExams: { title: string; columns: FooterColumnData[] } | null;
   company: { title: string; columns: FooterColumnData[] } | null;
   freeLearningResources: { title: string; columns: FooterColumnData[] } | null;
   ecosystemBrands: { title: string; links: FooterLinkData[] } | null;

@@ -18,9 +18,9 @@ import DeleteButton from "../common/DeleteButton";
 const API_PATH = "footer";
 
 /** The footer's sections, in footer order, with the heading a deleted one starts with when created again. */
-const FOOTER_KEYS: FooterSectionKey[] = ["company", "freeLearningResources", "ecosystemBrands"];
+const FOOTER_KEYS: FooterSectionKey[] = ["importantExams", "company", "freeLearningResources", "ecosystemBrands"];
 
-const DEFAULT_TITLES: Record<FooterSectionKey, string> = { company: "Company footer", freeLearningResources: "Free Learning Resources", ecosystemBrands: "Our Ecosystem Brands" };
+const DEFAULT_TITLES: Record<FooterSectionKey, string> = { importantExams: "IMPORTANT EXAMS", company: "Company footer", freeLearningResources: "Free Learning Resources", ecosystemBrands: "Our Ecosystem Brands" };
 
 /** A deleted section, ready to be created again (no `_id` until it's saved). */
 const blankSection = (key: FooterSectionKey): AdminFooterSection => ({ _id: "", key, title: DEFAULT_TITLES[key], isActive: true, links: [], columns: [] });
@@ -42,6 +42,11 @@ const linkHintFor = (style: FooterColumnStyle = "links") => COLUMN_STYLES.find((
 
 /** What each section is, for its card. */
 const SECTION_INFO: Record<FooterSectionKey, { description: string; itemsLabel: string; headingHint: string }> = {
+  importantExams: {
+    description: "The “Important Exams” links just above the footer, on every page. Five columns on computers, two on phones.",
+    itemsLabel: "Columns",
+    headingHint: "Shown above the links on the website. Column titles are for the admin only.",
+  },
   company: {
     description: "The columns next to the logo — Company, Upcoming Centres, Connect with us, Quick Links, Our Products, Prep Resources… Three per row on computers, two on phones.",
     itemsLabel: "Columns",

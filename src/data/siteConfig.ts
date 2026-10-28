@@ -18,5 +18,7 @@ export const SITE_CONFIG: SiteConfig = {
     brands: [],
     learningResourcesTitle: "",
     learningResources: [],
+    importantExamsTitle: "",
+    importantExams: [],
   },
 };

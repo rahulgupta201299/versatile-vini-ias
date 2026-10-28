@@ -53,14 +53,14 @@ export const getSiteConfig = cache(async (): Promise<SiteConfig> => {
   return { ...SITE_CONFIG, contact };
 });
 
-const NO_FOOTER_SECTIONS: FooterSectionsData = { company: null, freeLearningResources: null, ecosystemBrands: null };
+const NO_FOOTER_SECTIONS: FooterSectionsData = { importantExams: null, company: null, freeLearningResources: null, ecosystemBrands: null };
 
 /** Footer sections (admin → Footer). A switched-off or deleted section is null. */
 /**
  * Bump when the shape of GET /footer changes: the version is part of the cached request, so a deploy never
  * shows a cached response in the old shape (the cache can outlive a deploy for up to an hour otherwise).
  */
-const FOOTER_DATA_VERSION = 3;
+const FOOTER_DATA_VERSION = 4;
 
 /** GET /footer in the current shape (company as titled columns); an old-shape response counts as invalid → fallback. */
 const isFooterData = (data: unknown): data is FooterSectionsData => {
@@ -83,8 +83,10 @@ const getFooterSections = cache(() =>
 const toLinkItems = (links: FooterLinkData[]) => links.map(({ text, link, badge }) => ({ name: text, href: link, ...(badge && { badge }) }));
 
 /** The footer from the sections managed in the admin; empty columns are left out. */
-const withFooterSections = (footer: FooterData, { company, freeLearningResources, ecosystemBrands }: FooterSectionsData): FooterData => ({
+const withFooterSections = (footer: FooterData, { importantExams, company, freeLearningResources, ecosystemBrands }: FooterSectionsData): FooterData => ({
   ...footer,
+  importantExamsTitle: importantExams?.title || "",
+  importantExams: (importantExams?.columns || []).map(({ links }) => toLinkItems(links)).filter((links) => links.length),
   columns: (company?.columns || [])
     .filter(({ links }) => links.length)
     .map(({ title, style = "links", links }) => ({ title, style, links: toLinkItems(links) })),

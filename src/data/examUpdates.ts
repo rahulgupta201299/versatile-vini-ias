@@ -1,5 +1,5 @@
 /**
- * /exams — "Latest Notification & Updates" and "Important Exams".
+ * /exams — "Latest Notification & Updates" ("Important Exams" are in admin → Footer).
  * SAMPLE content (placeholders) until GET /blogs/updates is configured. Links point to the exam's blog category.
  */
 import { ExamUpdates } from "@/types";
@@ -41,57 +41,5 @@ export const EXAM_UPDATES: ExamUpdates = {
         { title: "NDA 2 2026 Written Result Declared, SSB Interview Schedule", href: cat("defence") },
       ],
     },
-  ],
-  importantExams: [
-    [
-      { title: "UPSC CSE 2027", href: cat("upsc") },
-      { title: "UPSC NDA 2027", href: cat("defence") },
-      { title: "UPSC CDS 2027", href: cat("defence") },
-      { title: "UPSC EPFO 2027", href: cat("upsc") },
-      { title: "UPSC CAPF 2027", href: cat("upsc") },
-      { title: "UPSC IFoS 2027", href: cat("upsc") },
-      { title: "UPSC ESE 2027", href: cat("upsc") },
-      { title: "UPSC CMS 2027", href: cat("upsc") },
-    ],
-    [
-      { title: "BPSC 72nd CCE", href: cat("state-psc") },
-      { title: "UPPSC PCS 2027", href: cat("state-psc") },
-      { title: "MPPSC 2027", href: cat("state-psc") },
-      { title: "RPSC RAS 2027", href: cat("state-psc") },
-      { title: "JPSC 2027", href: cat("state-psc") },
-      { title: "UKPSC 2027", href: cat("state-psc") },
-      { title: "HPSC HCS 2027", href: cat("state-psc") },
-      { title: "BPSC TRE 4.0", href: cat("teaching") },
-    ],
-    [
-      { title: "SSC CGL 2027", href: cat("ssc") },
-      { title: "SSC CHSL 2027", href: cat("ssc") },
-      { title: "SSC MTS 2027", href: cat("ssc") },
-      { title: "SSC GD Constable 2027", href: cat("ssc") },
-      { title: "SSC CPO 2027", href: cat("ssc") },
-      { title: "SSC Stenographer 2027", href: cat("ssc") },
-      { title: "SSC JE 2027", href: cat("ssc") },
-      { title: "Delhi Police Constable 2027", href: cat("ssc") },
-    ],
-    [
-      { title: "RRB NTPC 2026", href: cat("railways") },
-      { title: "RRB Group D 2026", href: cat("railways") },
-      { title: "RRB ALP 2026", href: cat("railways") },
-      { title: "RRB JE 2026", href: cat("railways") },
-      { title: "CTET 2026", href: cat("teaching") },
-      { title: "UPTET 2026", href: cat("teaching") },
-      { title: "KVS Recruitment 2026", href: cat("teaching") },
-      { title: "AIIMS NORCET 2026", href: cat("nursing") },
-    ],
-    [
-      { title: "SBI PO 2026", href: cat("banking") },
-      { title: "IBPS PO 2026", href: cat("banking") },
-      { title: "IBPS Clerk 2026", href: cat("banking") },
-      { title: "RBI Grade B 2026", href: cat("banking") },
-      { title: "NABARD Grade A 2026", href: cat("banking") },
-      { title: "AFCAT 2026", href: cat("defence") },
-      { title: "GATE 2027", href: cat("engineering") },
-      { title: "NEET UG 2027", href: cat("medical") },
-    ],
   ],
 };
