@@ -1,6 +1,7 @@
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
-
 import { COLORS } from "@/theme/colors";
+import { FONT_STACK } from "@/theme/fonts";
+
 let theme = createTheme({
   palette: {
     mode: "light",
@@ -48,15 +49,8 @@ let theme = createTheme({
     divider: COLORS.border,
   },
   typography: {
-    fontFamily: [
-      "-apple-system",
-      "BlinkMacSystemFont",
-      '"Segoe UI"',
-      "Roboto",
-      '"Helvetica Neue"',
-      "Arial",
-      "sans-serif",
-    ].join(","),
+    // Reddit Sans for Latin, Noto Sans Devanagari for Hindi (variables set on <html> by theme/fonts.ts)
+    fontFamily: FONT_STACK,
     h1: {
       fontWeight: 800,
       letterSpacing: "-0.025em",

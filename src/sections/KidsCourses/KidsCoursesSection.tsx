@@ -1,4 +1,3 @@
-import { Poppins } from "next/font/google";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -6,9 +5,6 @@ import { BookOpen, Code2, Rocket, Sigma } from "lucide-react";
 import { KIDS_CLASS_RANGE } from "@/data/kidsCourses";
 import { COLORS } from "@/theme/colors";
 import KidsCoursesList from "./KidsCoursesList";
-
-/** Rounded, friendly type for this section (the kids-course look). */
-const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "600", "700"], display: "swap" });
 
 /** Floating subject badges around the illustration. */
 const BADGES = [
@@ -41,7 +37,7 @@ function KidsIllustration() {
 /** Homepage "Courses for kids": a compact slider on phones; four detailed cards with an illustration on computers. */
 export default function KidsCoursesSection() {
   return (
-    <Box component="section" id="kids-courses" aria-labelledby="kids-courses-title" className={poppins.className} sx={{ py: { xs: 3, md: 6 }, bgcolor: "#FFFFFF", "& .MuiTypography-root": { fontFamily: "inherit" } }}>
+    <Box component="section" id="kids-courses" aria-labelledby="kids-courses-title" sx={{ py: { xs: 3, md: 6 }, bgcolor: "#FFFFFF" }}>
       <Container>
         <Typography id="kids-courses-title" component="h2" sx={{ display: "flex", alignItems: "baseline", flexWrap: "wrap", columnGap: 1, fontWeight: { xs: 600, md: 700 }, fontSize: { xs: "1.3rem", sm: "1.6rem", md: "2rem" }, color: COLORS.ink, letterSpacing: "-0.01em", mb: { xs: 2, md: 4 } }}>
           <span>

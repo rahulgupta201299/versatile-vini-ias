@@ -20,8 +20,14 @@ const whatsappShareHref = ({ title, detailsHref }: Pick<PopularProgram, "title" 
   return `https://wa.me/?text=${encodeURIComponent(`${title} — ${url}`)}`;
 };
 
-/** Card narrower than price + both buttons on one line (laptop widths with 3 cards a row). */
+/** A card too narrow for the full-size price and buttons (laptop widths with 3 cards a row): smaller sizes, same single line. */
 const NARROW_CARD = "@container (max-width: 350px)";
+
+/** The narrowest cards (about 270px: small tablets, 900px laptops). */
+const TINY_CARD = "@container (max-width: 290px)";
+
+/** Early-bird discount line ("38% OFF") — same orange as the category. */
+const DISCOUNT_ORANGE = "#E8590C";
 
 const ellipsis = { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" } as const;
 
@@ -38,9 +44,9 @@ export default function ProgramCard({ program }: { program: PopularProgram }) {
         </Box>
       </Box>
 
-      <Box sx={{ flex: 1, display: "flex", flexDirection: "column", px: { xs: 2, md: 2.25 }, pt: 1.75, pb: { xs: 2, md: 2.25 } }}>
+      <Box sx={{ flex: 1, display: "flex", flexDirection: "column", px: { xs: 2, md: 2.25 }, [TINY_CARD]: { px: 1.75 }, pt: 1.75, pb: { xs: 2, md: 2.25 } }}>
         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 1 }}>
-          <Typography sx={{ color: "#E8590C", fontWeight: 500, fontSize: { xs: "1rem", md: "1.05rem" } }}>{category}</Typography>
+          <Typography sx={{ color: DISCOUNT_ORANGE, fontWeight: 500, fontSize: { xs: "1rem", md: "1.05rem" } }}>{category}</Typography>
           <Box component="span" sx={{ px: 1, py: 0.25, borderRadius: "4px", border: `1px solid ${COLORS.disabled}`, color: COLORS.ink, fontWeight: 500, fontSize: "0.8rem", letterSpacing: ".02em" }}>{language}</Box>
         </Box>
         <Typography component="h3" sx={{ mt: 0.75, fontWeight: 600, color: COLORS.ink, fontSize: { xs: "1.15rem", md: "1.3rem" }, lineHeight: 1.35, ...ellipsis }}>{title}</Typography>
@@ -55,19 +61,42 @@ export default function ProgramCard({ program }: { program: PopularProgram }) {
           </Box>
         </Box>
 
-        {/* Price and buttons share a line; on a narrow card the price takes its own line and the buttons fill the next */}
-        <Box sx={{ mt: "auto", pt: 2.5, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 1, rowGap: 1.5, [NARROW_CARD]: { "& .price": { flexBasis: "100%" }, "& .buy": { flex: 1, justifyContent: "center" } } }}>
-          <Box className="price" sx={{ mr: "auto", minWidth: 0 }}>
-            <Typography sx={{ fontWeight: 700, color: COLORS.ink, fontSize: { xs: "1.2rem", md: "1.3rem" }, lineHeight: 1.2, whiteSpace: "nowrap" }}>
+        {/* Price on the left, Buy Now and › on the right — always one line; a narrow card just uses smaller sizes */}
+        <Box
+          sx={{
+            mt: "auto",
+            pt: 2.5,
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            [NARROW_CARD]: {
+              gap: 0.75,
+              "& .amount": { fontSize: "1.05rem" },
+              "& .was": { fontSize: "0.75rem" },
+              "& .off": { fontSize: "0.85rem" },
+              "& .buy": { height: 38, px: 1.5, fontSize: "0.92rem" },
+              "& .more": { width: 38, height: 38 },
+            },
+            [TINY_CARD]: {
+              gap: 0.5,
+              "& .amount": { fontSize: "0.98rem" },
+              "& .was": { fontSize: "0.7rem" },
+              "& .buy": { height: 36, px: 1.25, fontSize: "0.85rem" },
+              "& .more": { width: 34, height: 36 },
+            },
+          }}
+        >
+          <Box sx={{ mr: "auto", minWidth: 0 }}>
+            <Typography className="amount" sx={{ fontWeight: 700, color: COLORS.ink, fontSize: { xs: "1.2rem", md: "1.3rem" }, lineHeight: 1.2, whiteSpace: "nowrap" }}>
               {formatINR(price)}{" "}
-              <Box component="s" sx={{ color: COLORS.muted, fontWeight: 400, fontSize: "0.9rem" }}>{formatINR(originalPrice)}</Box>
+              <Box component="s" className="was" sx={{ color: COLORS.muted, fontWeight: 400, fontSize: "0.9rem" }}>{formatINR(originalPrice)}</Box>
             </Typography>
-            <Typography sx={{ mt: 0.25, color: COLORS.success, fontWeight: 500, fontSize: "1rem", whiteSpace: "nowrap" }}>{percentOff(program)}% OFF</Typography>
+            <Typography className="off" sx={{ mt: 0.25, color: DISCOUNT_ORANGE, fontWeight: 600, fontSize: "1rem", whiteSpace: "nowrap" }}>{percentOff(program)}% OFF</Typography>
           </Box>
-          <Box component={Link} href={buyHref} className="buy" sx={{ display: "inline-flex", alignItems: "center", height: 44, px: { xs: 2.5, md: 3 }, borderRadius: "8px", bgcolor: "#1B2124", color: "#FFFFFF", fontWeight: 500, fontSize: "1.05rem", textDecoration: "none", whiteSpace: "nowrap", "&:hover": { bgcolor: COLORS.ink } }}>
+          <Box component={Link} href={buyHref} className="buy" sx={{ display: "inline-flex", alignItems: "center", flexShrink: 0, height: 44, px: { xs: 2.5, md: 3 }, borderRadius: "8px", bgcolor: "#1B2124", color: "#FFFFFF", fontWeight: 500, fontSize: "1.05rem", textDecoration: "none", whiteSpace: "nowrap", "&:hover": { bgcolor: COLORS.ink } }}>
             Buy Now
           </Box>
-          <Box component={Link} href={detailsHref} aria-label={`View ${title}`} sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 44, height: 44, flexShrink: 0, borderRadius: "8px", border: `1px solid ${COLORS.border}`, color: COLORS.ink, "&:hover": { borderColor: COLORS.ink } }}>
+          <Box component={Link} href={detailsHref} className="more" aria-label={`View ${title}`} sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 44, height: 44, flexShrink: 0, borderRadius: "8px", border: `1px solid ${COLORS.border}`, color: COLORS.ink, "&:hover": { borderColor: COLORS.ink } }}>
             <ChevronRight size={22} />
           </Box>
         </Box>

@@ -4,6 +4,7 @@ import ThemeRegistry from "@/theme/ThemeRegistry";
 import { SiteDataProvider } from "@/context/SiteDataContext";
 import { getSiteData } from "@/services/site";
 import { COLORS } from "@/theme/colors";
+import { fontVariables } from "@/theme/fonts";
 
 export const viewport: Viewport = {
   themeColor: COLORS.red,
@@ -100,7 +101,7 @@ export default async function RootLayout({
   };
 
   return (
-    <html lang="en">
+    <html lang="en" className={fontVariables}>
       <head>
         <script
           type="application/ld+json"

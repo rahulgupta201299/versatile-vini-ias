@@ -128,7 +128,8 @@ export default function FreeResourcesSection({ resources }: { resources: Resourc
                   fontWeight: 700,
                   fontSize: { xs: "0.68rem", sm: "0.76rem", md: "0.82rem" },
                   color: COLORS.heading,
-                  lineHeight: 1.2,
+                  // Room for Hindi vowel marks above the letters (the 2-line clamp hides anything outside the line boxes)
+                  lineHeight: 1.4,
                   display: "-webkit-box",
                   WebkitLineClamp: 2,
                   WebkitBoxOrient: "vertical",

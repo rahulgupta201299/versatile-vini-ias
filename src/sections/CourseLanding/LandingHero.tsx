@@ -6,7 +6,6 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import { CourseLandingContent } from "@/types";
 import { COLORS } from "@/theme/colors";
 import LandingCta from "./LandingCta";
-import { HANDWRITTEN } from "./icons";
 
 const SPINES = ["#F08A24", "#3E9B47", "#2B63B0", "#1597A8", "#6A3EA1", "#2E3F66"];
 
@@ -107,7 +106,7 @@ export default function LandingHero({ hero }: { hero: CourseLandingContent["hero
             <BuildingSilhouette />
             <Box
               aria-hidden
-              sx={{ position: "absolute", top: 0, right: { xs: 6, md: 12 }, transform: "rotate(-8deg)", fontFamily: HANDWRITTEN, color: COLORS.navy, fontSize: { xs: "1.05rem", md: "1.35rem" }, lineHeight: 1.15, textAlign: "left", zIndex: 1 }}
+              sx={{ position: "absolute", top: 0, right: { xs: 6, md: 12 }, transform: "rotate(-8deg)", color: COLORS.navy, fontSize: { xs: "1.05rem", md: "1.35rem" }, lineHeight: 1.15, textAlign: "left", zIndex: 1 }}
             >
               {hero.note.map((line, i) => (
                 <Box key={line} sx={{ pl: i ? 1.5 : 0 }}>

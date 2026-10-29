@@ -19,7 +19,7 @@ const COURSE_OPTIONS = [
   "All India Prelims Test Series 2026",
 ];
 
-/** "VINI IAS Learner Support" (hours, Indian Nationals → call, Foreign Nationals → WhatsApp) beside the "Get Free Counselling Today" form. */
+/** "VINI IAS Learner Support" (hours, Call Us / Chat Now on WhatsApp) beside the "Get Free Counselling Today" form. */
 export default function EnquirySection() {
   const { contact } = useSiteData().config;
 
@@ -40,25 +40,23 @@ export default function EnquirySection() {
               Talk to our experts. We are available Monday to Saturday, 9 AM to 8 PM.
             </Typography>
 
-            {/* Indian Nationals → call, Foreign Nationals → WhatsApp chat; the number sits in a plain outlined box */}
+            {/* Call Us and Chat Now (WhatsApp); the number sits in a plain outlined box */}
             <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: { xs: 1.5, sm: 2.5 }, maxWidth: 560, mx: { xs: "auto", lg: 0 } }}>
               {[
-                { key: "call", label: "Indian Nationals", action: "Call Us", href: contact.tel, icon: <PhoneCall size={18} color={COLORS.red} strokeWidth={2.2} />, tint: COLORS.redTint, isExternal: false },
-                { key: "whatsapp", label: "Foreign Nationals", action: "Chat Now", href: contact.whatsappUrl, icon: <WhatsAppLogo size={20} color="#25D366" />, tint: "#EAFBF1", isExternal: true },
-              ].map(({ key, label, action, href, icon, tint, isExternal }) => (
+                { key: "call", action: "Call Us", href: contact.tel, icon: <PhoneCall size={18} color={COLORS.red} strokeWidth={2.2} />, tint: COLORS.redTint, isExternal: false },
+                { key: "whatsapp", action: "Chat Now", href: contact.whatsappUrl, icon: <WhatsAppLogo size={20} color="#25D366" />, tint: "#EAFBF1", isExternal: true },
+              ].map(({ key, action, href, icon, tint, isExternal }) => (
                 <Box key={key} sx={{ minWidth: 0 }}>
                   <Box sx={{ display: "flex", alignItems: "center", justifyContent: { xs: "center", lg: "flex-start" }, gap: 1, mb: 1.25 }}>
                     <Box sx={{ width: 34, height: 34, flexShrink: 0, borderRadius: "50%", bgcolor: tint, display: "flex", alignItems: "center", justifyContent: "center" }}>{icon}</Box>
-                    <Typography sx={{ fontSize: { xs: "0.85rem", sm: "1rem" }, color: COLORS.ink, lineHeight: 1.3, textAlign: "left" }}>
-                      {label}: <Box component="span" sx={{ fontWeight: 700 }}>{action}</Box>
-                    </Typography>
+                    <Typography sx={{ fontSize: { xs: "0.95rem", sm: "1.05rem" }, fontWeight: 700, color: COLORS.ink, lineHeight: 1.3 }}>{action}</Typography>
                   </Box>
                   <Box
                     component="a"
                     href={href}
                     {...(isExternal && { target: "_blank", rel: "noopener noreferrer" })}
                     aria-label={`${action}: ${contact.phoneDisplay}`}
-                    sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: { xs: 48, sm: 54 }, px: 1, borderRadius: "10px", border: `1.5px solid ${COLORS.red}`, color: COLORS.ink, fontWeight: 600, fontSize: { xs: "0.98rem", sm: "1.2rem" }, textDecoration: "none", whiteSpace: "nowrap", transition: "background-color .15s", "&:hover": { bgcolor: COLORS.redTintSoft } }}
+                    sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: { xs: 40, sm: 44 }, px: 1, borderRadius: "8px", border: `1.5px solid ${COLORS.ink}`, color: COLORS.ink, fontWeight: 600, fontSize: { xs: "0.98rem", sm: "1.2rem" }, textDecoration: "none", whiteSpace: "nowrap", transition: "background-color .15s", "&:hover": { bgcolor: COLORS.surface } }}
                   >
                     {contact.phoneDisplay}
                   </Box>

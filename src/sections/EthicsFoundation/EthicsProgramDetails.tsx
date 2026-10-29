@@ -26,7 +26,7 @@ export default function EthicsProgramDetails({ details, hero, priceLabel }: Prop
           <Box sx={{ p: { xs: 2.5, md: 4 }, borderRadius: "18px", background: `linear-gradient(160deg, ${COLORS.redTint} 0%, #FFE3E9 100%)`, display: "flex", flexDirection: "column", justifyContent: "center" }}>
             <Typography sx={{ fontWeight: 900, fontSize: { xs: "2.6rem", md: "3.4rem" }, color: COLORS.ink, lineHeight: 1 }}>{hero.title}</Typography>
             <Box component="span" sx={{ alignSelf: "flex-start", mt: 1, px: 1.5, py: 0.6, borderRadius: "8px", backgroundColor: COLORS.red, color: "#FFFFFF", fontWeight: 800, fontSize: { xs: "0.85rem", md: "0.95rem" } }}>{hero.subtitle}</Box>
-            <Typography sx={{ mt: 1.5, fontFamily: "Georgia, serif", fontStyle: "italic", fontWeight: 700, fontSize: "1.3rem", color: COLORS.red }}>{hero.forLabel}</Typography>
+            <Typography sx={{ mt: 1.5, fontStyle: "italic", fontWeight: 700, fontSize: "1.3rem", color: COLORS.red }}>{hero.forLabel}</Typography>
             <Typography sx={{ fontWeight: 900, fontSize: { xs: "1.5rem", md: "1.8rem" }, color: COLORS.ink }}>{hero.exam}</Typography>
             <Box component="span" sx={{ alignSelf: "flex-start", mt: 2, px: 1.5, py: 0.5, borderRadius: "8px", border: `1.5px solid ${COLORS.ink}`, fontWeight: 700, fontSize: "0.85rem", color: COLORS.ink }}>{details.startLabel}</Box>
             <Typography sx={{ mt: 1, fontWeight: 900, fontSize: { xs: "1.8rem", md: "2.2rem" }, color: COLORS.red, lineHeight: 1.1 }}>{details.startDate}</Typography>

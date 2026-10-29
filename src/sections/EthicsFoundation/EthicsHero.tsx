@@ -30,7 +30,7 @@ export default function EthicsHero({ hero }: { hero: EthicsLandingContent["hero"
             </Typography>
             <Box sx={{ mt: 1, display: "flex", alignItems: "center", justifyContent: { xs: "center", md: "flex-start" }, gap: 1.5 }}>
               <Box sx={{ width: 60, height: 2, backgroundColor: COLORS.red }} />
-              <Typography sx={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontWeight: 700, fontSize: { xs: "1.3rem", md: "1.6rem" }, color: COLORS.red }}>{hero.forLabel}</Typography>
+              <Typography sx={{ fontStyle: "italic", fontWeight: 700, fontSize: { xs: "1.3rem", md: "1.6rem" }, color: COLORS.red }}>{hero.forLabel}</Typography>
               <Box sx={{ width: 60, height: 2, backgroundColor: COLORS.red }} />
             </Box>
             <Typography sx={{ mt: 0.5, fontWeight: 900, fontSize: { xs: "1.4rem", md: "1.9rem" }, color: COLORS.ink }}>{hero.exam}</Typography>

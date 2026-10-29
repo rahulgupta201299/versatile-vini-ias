@@ -103,8 +103,6 @@ export const CHIP_TONES = [
   { color: "#0891B2", bg: "#CFFAFE" },
 ];
 
-export const HANDWRITTEN = '"Segoe Print", "Bradley Hand", "Marker Felt", "Comic Sans MS", cursive';
-
 /** Small rounded label above section titles. */
 export const badgeSx = (color: string, bg: string, border: string) => ({
   display: "inline-block",

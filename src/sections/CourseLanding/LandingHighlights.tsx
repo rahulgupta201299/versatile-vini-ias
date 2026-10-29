@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import { BookMarked, Lightbulb, Shield } from "lucide-react";
 import { CourseLandingContent } from "@/types";
 import { COLORS } from "@/theme/colors";
-import { CHIP_TONES, HANDWRITTEN, LANDING_ICONS, badgeSx } from "./icons";
+import { CHIP_TONES, LANDING_ICONS, badgeSx } from "./icons";
 
 const LEVEL_STYLES = [
   { bg: "linear-gradient(135deg, #FFB547 0%, #FF9F1C 100%)", text: "#3B2300", icon: Shield },
@@ -18,7 +18,7 @@ function LevelLadder({ levels, progression }: { levels: { title: string; text: s
   return (
     <Box sx={{ position: "relative", pt: { xs: 9.5, md: 9 }, pl: { xs: 4, md: 6 } }}>
       {/* Concepts → Clarity → Confidence */}
-      <Box aria-hidden sx={{ position: "absolute", top: 0, right: { xs: 0, md: 8 }, fontFamily: HANDWRITTEN, color: COLORS.navy, fontSize: { xs: "0.95rem", md: "1.1rem" }, lineHeight: 1.2, transform: "rotate(-6deg)" }}>
+      <Box aria-hidden sx={{ position: "absolute", top: 0, right: { xs: 0, md: 8 }, color: COLORS.navy, fontSize: { xs: "0.95rem", md: "1.1rem" }, lineHeight: 1.2, transform: "rotate(-6deg)" }}>
         {progression.map((p, i) => (
           <Box key={p} sx={{ pl: i * 1.5 }}>
             {i ? "→ " : ""}

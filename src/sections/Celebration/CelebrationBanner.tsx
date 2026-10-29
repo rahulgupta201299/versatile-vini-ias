@@ -11,8 +11,6 @@ import { CelebrationBanner as CelebrationBannerData, CelebrationOffer } from "@/
 import FestiveLamps from "./FestiveLamps";
 import { festiveBackground } from "./festiveBackground";
 
-const SERIF = 'Georgia, "Times New Roman", serif';
-
 /** The offer row never grows past this, so the three square cards stay small on every screen (about 150px each). */
 const OFFER_ROW_MAX_WIDTH = 480;
 
@@ -111,7 +109,7 @@ export default function CelebrationBanner({ banner, isPreview = false }: Celebra
 
   const content = (
     <>
-      <Typography component="h2" sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: size(1, 1.5), color: titleColor, fontFamily: SERIF, fontWeight: 700, fontSize: size("1.6rem", "2.2rem"), lineHeight: 1.15, textAlign: "center" }}>
+      <Typography component="h2" sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: size(1, 1.5), color: titleColor, fontWeight: 700, fontSize: size("1.6rem", "2.2rem"), lineHeight: 1.15, textAlign: "center" }}>
         <Box component="span" aria-hidden sx={{ color: accentColor, fontSize: "0.7em" }}>✦</Box>
         {title}
         <Box component="span" aria-hidden sx={{ color: accentColor, fontSize: "0.7em" }}>✦</Box>

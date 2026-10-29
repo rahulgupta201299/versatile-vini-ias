@@ -57,8 +57,8 @@ export default async function StudyResourcesSection() {
                     flex: 1,
                     display: "flex",
                     flexDirection: "column",
-                    aspectRatio: { md: "1 / 1.03" },
-                    minHeight: { xs: 380, md: "auto" },
+                    minWidth: 0,
+                    minHeight: { xs: 380, md: 420, lg: 450 },
                     p: { xs: 2.5, md: 2.25, lg: 3 },
                     pb: { xs: 2, lg: 2.5 },
                     borderRadius: "10px",
@@ -71,8 +71,9 @@ export default async function StudyResourcesSection() {
                 >
                   <Typography component="h3" sx={{ fontWeight: 600, fontSize: { xs: "1.35rem", md: "1.45rem", lg: "1.65rem" }, color: COLORS.ink, letterSpacing: "-0.01em" }}>{title}</Typography>
                   <Typography sx={{ mt: 1, color: COLORS.textSecondary, fontSize: { xs: "0.92rem", lg: "1rem" }, lineHeight: 1.6 }}>{text}</Typography>
-                  <Box sx={{ flex: 1, minHeight: 0, mt: 1.5, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end" }}>
-                    <Box sx={{ position: "relative", width: "100%", maxWidth: 300, flex: 1, minHeight: 150, display: "flex", alignItems: "center", "& svg": { width: "100%", height: "100%", maxHeight: 220, display: "block" } }}>
+                  {/* The art sits in a fixed-height box in the card's flow: long text makes the card taller instead of overlapping it */}
+                  <Box sx={{ flex: 1, mt: 1.5, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end" }}>
+                    <Box sx={{ position: "relative", width: "100%", maxWidth: 300, height: { xs: 190, md: 200, lg: 220 }, flexShrink: 0, "& svg": { width: "100%", height: "100%", display: "block" } }}>
                       {image && <Image src={image.src} alt={image.alt} fill sizes="(max-width: 900px) 86vw, 300px" style={{ objectFit: "contain" }} />}
                       {!image && <ResourceArt name={art} />}
                     </Box>

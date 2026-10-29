@@ -3,10 +3,11 @@
 import { useEffect } from "react";
 import { ERROR_COPY } from "@/components/ErrorScreen";
 import { COLORS } from "@/theme/colors";
+import { FONT_STACK, fontVariables } from "@/theme/fonts";
 
 /**
  * Last-resort error screen, used only when the root layout itself fails. It renders its own <html>
- * and inline styles because the theme and fonts aren't available here.
+ * and inline styles because the theme isn't available here; the site fonts are loaded directly.
  */
 export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   const { badge, title, message } = ERROR_COPY.error;
@@ -16,8 +17,8 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
   }, [error]);
 
   return (
-    <html lang="en">
-      <body style={{ margin: 0, minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, background: COLORS.surface, fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif", color: COLORS.ink }}>
+    <html lang="en" className={fontVariables}>
+      <body style={{ margin: 0, minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, background: COLORS.surface, fontFamily: FONT_STACK, color: COLORS.ink }}>
         <main style={{ maxWidth: 520, width: "100%", textAlign: "center" }}>
           <p aria-hidden style={{ display: "inline-block", margin: 0, padding: "0 8px", fontSize: 72, fontWeight: 900, lineHeight: 1, color: COLORS.red, backgroundImage: `linear-gradient(transparent 62%, ${COLORS.yellow} 62%, ${COLORS.yellow} 88%, transparent 88%)` }}>
             {badge}
