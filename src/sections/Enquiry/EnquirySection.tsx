@@ -3,7 +3,7 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { PhoneCall, ChevronRight } from "lucide-react";
+import { PhoneCall } from "lucide-react";
 import { WhatsAppLogo } from "@/components/icons/BrandLogos";
 import { useSiteData } from "@/context/SiteDataContext";
 import { CounsellingCard } from "@/sections/CoursePage/CounsellingForm";
@@ -19,7 +19,7 @@ const COURSE_OPTIONS = [
   "All India Prelims Test Series 2026",
 ];
 
-/** "VINI IAS Learner Support" (hours + Call / WhatsApp) beside the "Get Free Counselling Today" form. */
+/** "VINI IAS Learner Support" (hours, Indian Nationals → call, Foreign Nationals → WhatsApp) beside the "Get Free Counselling Today" form. */
 export default function EnquirySection() {
   const { contact } = useSiteData().config;
 
@@ -28,7 +28,7 @@ export default function EnquirySection() {
       component="section"
       id="enquiry"
       aria-labelledby="learner-support-title"
-      sx={{ pt: { xs: 4, md: 6, lg: 10 }, pb: { xs: 4, md: 6 }, backgroundColor: COLORS.surface, borderTop: `1px solid ${COLORS.border}` }}
+      sx={{ pt: { xs: 4, md: 6, lg: 10 }, pb: { xs: 4, md: 6 }, backgroundColor: "#FFFFFF", borderTop: `1px solid ${COLORS.border}` }}
     >
       <Container>
         <Box sx={{ display: "grid", gridTemplateColumns: { xs: "minmax(0, 1fr)", lg: "1fr 1fr" }, gap: { xs: 9, lg: 7 }, alignItems: "center" }}>
@@ -40,105 +40,31 @@ export default function EnquirySection() {
               Talk to our experts. We are available Monday to Saturday, 9 AM to 8 PM.
             </Typography>
 
-            {/* Call + WhatsApp actions (number is used by the links, not displayed) */}
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                gap: { xs: 1.25, sm: 2 },
-                maxWidth: 560,
-                mx: { xs: "auto", lg: 0 },
-                textAlign: "left",
-              }}
-            >
+            {/* Indian Nationals → call, Foreign Nationals → WhatsApp chat; the number sits in a plain outlined box */}
+            <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: { xs: 1.5, sm: 2.5 }, maxWidth: 560, mx: { xs: "auto", lg: 0 } }}>
               {[
-                {
-                  key: "call",
-                  href: contact.tel,
-                  title: "Call Us",
-                  subtitle: "Talk to a counsellor",
-                  ariaLabel: "Call a Vini IAS counsellor",
-                  accent: COLORS.red,
-                  tint: COLORS.redTint,
-                  border: "#FFD1DA",
-                  icon: <PhoneCall size={22} color={COLORS.red} strokeWidth={2.2} />,
-                  external: false,
-                },
-                {
-                  key: "whatsapp",
-                  href: contact.whatsappUrl,
-                  title: "WhatsApp",
-                  subtitle: "Chat with us instantly",
-                  ariaLabel: "Chat with Vini IAS on WhatsApp",
-                  accent: "#128C4A",
-                  tint: "#EAFBF1",
-                  border: "#BDEFD2",
-                  icon: <WhatsAppLogo size={24} color="#25D366" />,
-                  external: true,
-                },
-              ].map((c) => (
-                <Box
-                  key={c.key}
-                  component="a"
-                  href={c.href}
-                  {...(c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  aria-label={c.ariaLabel}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: { xs: 1.25, sm: 1.5 },
-                    p: { xs: 1.5, sm: 1.75 },
-                    borderRadius: "14px",
-                    backgroundColor: "#FFFFFF",
-                    border: `1px solid ${c.border}`,
-                    boxShadow: "0 2px 10px rgba(15, 23, 42, 0.05)",
-                    textDecoration: "none",
-                    color: "inherit",
-                    minWidth: 0,
-                    transition: "transform .2s ease, box-shadow .2s ease, background-color .2s ease",
-                    "& .arrow": { transition: "transform .2s ease" },
-                    "&:hover": {
-                      transform: "translateY(-2px)",
-                      backgroundColor: c.tint,
-                      boxShadow: "0 10px 24px rgba(15, 23, 42, 0.08)",
-                      "& .arrow": { transform: "translateX(3px)" },
-                    },
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: { xs: 40, sm: 46 },
-                      height: { xs: 40, sm: 46 },
-                      flexShrink: 0,
-                      borderRadius: "12px",
-                      backgroundColor: c.tint,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {c.icon}
-                  </Box>
-                  <Box sx={{ minWidth: 0, flex: 1 }}>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                      <Typography component="span" sx={{ fontSize: { xs: "0.92rem", sm: "1rem" }, fontWeight: 700, color: COLORS.ink }}>
-                        {c.title}
-                      </Typography>
-                    </Box>
-                    <Typography
-                      component="span"
-                      sx={{ display: "block", fontSize: { xs: "0.74rem", sm: "0.8rem" }, color: COLORS.muted, lineHeight: 1.35, whiteSpace: { xs: "normal", sm: "nowrap" }, overflow: "hidden", textOverflow: "ellipsis" }}
-                    >
-                      {c.subtitle}
+                { key: "call", label: "Indian Nationals", action: "Call Us", href: contact.tel, icon: <PhoneCall size={18} color={COLORS.red} strokeWidth={2.2} />, tint: COLORS.redTint, isExternal: false },
+                { key: "whatsapp", label: "Foreign Nationals", action: "Chat Now", href: contact.whatsappUrl, icon: <WhatsAppLogo size={20} color="#25D366" />, tint: "#EAFBF1", isExternal: true },
+              ].map(({ key, label, action, href, icon, tint, isExternal }) => (
+                <Box key={key} sx={{ minWidth: 0 }}>
+                  <Box sx={{ display: "flex", alignItems: "center", justifyContent: { xs: "center", lg: "flex-start" }, gap: 1, mb: 1.25 }}>
+                    <Box sx={{ width: 34, height: 34, flexShrink: 0, borderRadius: "50%", bgcolor: tint, display: "flex", alignItems: "center", justifyContent: "center" }}>{icon}</Box>
+                    <Typography sx={{ fontSize: { xs: "0.85rem", sm: "1rem" }, color: COLORS.ink, lineHeight: 1.3, textAlign: "left" }}>
+                      {label}: <Box component="span" sx={{ fontWeight: 700 }}>{action}</Box>
                     </Typography>
                   </Box>
-                  <Box className="arrow" sx={{ display: { xs: "none", sm: "flex" }, color: c.accent, flexShrink: 0 }}>
-                    <ChevronRight size={20} />
+                  <Box
+                    component="a"
+                    href={href}
+                    {...(isExternal && { target: "_blank", rel: "noopener noreferrer" })}
+                    aria-label={`${action}: ${contact.phoneDisplay}`}
+                    sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: { xs: 48, sm: 54 }, px: 1, borderRadius: "10px", border: `1.5px solid ${COLORS.red}`, color: COLORS.ink, fontWeight: 600, fontSize: { xs: "0.98rem", sm: "1.2rem" }, textDecoration: "none", whiteSpace: "nowrap", transition: "background-color .15s", "&:hover": { bgcolor: COLORS.redTintSoft } }}
+                  >
+                    {contact.phoneDisplay}
                   </Box>
                 </Box>
               ))}
             </Box>
-
           </Box>
 
           <Box sx={{ display: "flex", justifyContent: "center" }}>

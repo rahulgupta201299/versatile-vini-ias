@@ -7,7 +7,7 @@ import { OFFLINE_CENTRE } from "@/data/popularPrograms";
 import { COLORS } from "@/theme/colors";
 
 /** Two equal pill buttons: half the width each on phones, a fixed width side by side on bigger screens. */
-const buttonSx = { flex: { xs: 1, sm: "0 0 210px" }, minWidth: 0, display: "inline-flex", alignItems: "center", justifyContent: "center", height: { xs: 46, md: 50 }, px: 1.5, borderRadius: 999, fontWeight: 600, fontSize: { xs: "0.92rem", md: "1rem" }, textDecoration: "none", whiteSpace: "nowrap" } as const;
+const buttonSx = { flex: { xs: 1, sm: "0 0 210px" }, minWidth: 0, display: "inline-flex", alignItems: "center", justifyContent: "center", height: { xs: 40, md: 44 }, px: 1.5, borderRadius: 999, fontWeight: 600, fontSize: { xs: "0.92rem", md: "1rem" }, textDecoration: "none", whiteSpace: "nowrap" } as const;
 
 /** Homepage "Find us in your neighborhood": offline centre photo, three points, Explore Centres + Request a callback. */
 export default function OfflineCentreSection() {
@@ -22,7 +22,7 @@ export default function OfflineCentreSection() {
             {title} <Box component="span" sx={{ color: COLORS.red }}>{highlight}</Box>
           </Typography>
         </Box>
-        <Box sx={{ order: { xs: 2, md: 3 }, gridColumn: { md: 2 }, gridRow: { md: "1 / span 2" }, position: "relative", aspectRatio: "3 / 2", borderRadius: "20px", overflow: "hidden", boxShadow: "0 18px 40px rgba(15,23,42,.12)" }}>
+        <Box sx={{ order: { xs: 2, md: 3 }, gridColumn: { md: 2 }, gridRow: { md: "1 / span 2" }, position: "relative", aspectRatio: "1280 / 758", borderRadius: "20px", overflow: "hidden", boxShadow: "0 18px 40px rgba(15,23,42,.12)" }}>
           <Image src={image.src} alt={image.alt} fill sizes="(min-width: 900px) 600px, 100vw" style={{ objectFit: "cover" }} />
         </Box>
         <Box sx={{ order: { xs: 3, md: 2 }, alignSelf: { md: "start" } }}>
@@ -32,7 +32,7 @@ export default function OfflineCentreSection() {
             ))}
           </Box>
           <Box sx={{ mt: { xs: 2.5, md: 3.5 }, display: "flex", gap: { xs: 1.25, md: 1.5 } }}>
-            <Box component={Link} href={exploreHref} sx={{ ...buttonSx, border: `1.5px solid ${COLORS.border}`, color: COLORS.ink, "&:hover": { borderColor: COLORS.ink } }}>Explore Centres</Box>
+            <Box component={Link} href={exploreHref} sx={{ ...buttonSx, border: `1px solid ${COLORS.disabled}`, bgcolor: COLORS.surface, color: COLORS.ink, "&:hover": { borderColor: COLORS.ink } }}>Explore Centres</Box>
             <Box component={Link} href={callbackHref} sx={{ ...buttonSx, bgcolor: COLORS.red, color: "#FFFFFF", "&:hover": { bgcolor: COLORS.redDark } }}>Request a callback</Box>
           </Box>
         </Box>

@@ -1,16 +1,15 @@
-/** Homepage → "Study Resources" cards (replaces the old "Crack UPSC with our Expert Guidance" callback). */
-export type StudyResourceLink = "store" | string;
+/** Homepage → "Study Resources" cards (layout after pw.live; artwork is our own). */
+export type StudyResourceArt = "papers" | "notes";
 
 export interface StudyResource {
   title: string;
   text: string;
   /** A page / URL, or "store" for the Store link from admin → Header & Menu. */
-  href: StudyResourceLink;
-  /** Card background and the book colours in its artwork. */
+  href: string;
   tint: string;
-  books: [string, string, string];
-  /** Short word printed on the books, e.g. "NCERT". */
-  label: string;
+  /** A photo for the card; when set it is shown instead of the drawn art. */
+  image?: { src: string; alt: string };
+  art?: StudyResourceArt;
 }
 
 export const STUDY_RESOURCES: StudyResource[] = [
@@ -18,32 +17,21 @@ export const STUDY_RESOURCES: StudyResource[] = [
     title: "Reference Books",
     text: "Our experts have created thorough study materials that break down complicated concepts into easily understandable content",
     href: "store",
-    tint: "#EEF4FB",
-    books: ["#E23B3B", "#F4A21D", "#1F2937"],
-    label: "UPSC",
+    tint: "#F1F8FD",
+    image: { src: "/images/study-resources/vini-reference-books.webp", alt: "VINI Publication books on display" },
   },
   {
     title: "Current Affairs",
-    text: "Daily news analysis, editorials and MCQs linked to the UPSC syllabus so you never miss what matters",
+    text: "Daily news analysis, editorials and MCQs linked to the UPSC syllabus, so you never miss what matters for the exam",
     href: "/courses/free-resources/current-affairs",
-    tint: "#FDF6E7",
-    books: ["#2563EB", "#FE0034", "#0F766E"],
-    label: "DAILY",
+    tint: "#FDF9EF",
+    art: "papers",
   },
   {
     title: "Monthly Magazine",
-    text: "A month of current affairs in one place — summaries, maps and practice questions for quick revision",
+    text: "A month of current affairs in one place, with summaries, maps and practice questions in easy-to-revise language",
     href: "/courses/free-resources/monthly-magazine",
-    tint: "#FDEFF2",
-    books: ["#7C3AED", "#FE0034", "#F59E0B"],
-    label: "MONTHLY",
-  },
-  {
-    title: "PRISM Simplified",
-    text: "Government schemes, reports and indices explained simply, with the facts you need for Prelims and Mains",
-    href: "/courses/free-resources/prism-simplified",
-    tint: "#ECF8F1",
-    books: ["#16A34A", "#13294B", "#E23B3B"],
-    label: "PRISM",
+    tint: "#EDFCF5",
+    art: "notes",
   },
 ];

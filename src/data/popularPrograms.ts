@@ -1,21 +1,23 @@
 /**
- * Homepage → "Explore our most popular programs" (below Free Resources).
- * SAMPLE content (titles, dates, prices, links) — replace with the real batches before going live;
+ * Homepage → "Popular Courses" (below Free Resources).
+ * SAMPLE content (titles, descriptions, dates, prices, links) — replace with the real batches before going live;
  * it moves to the backend / admin later.
  */
 export interface PopularProgram {
   title: string;
-  /** e.g. "Foundation Course" — the coloured line above the title */
+  /** e.g. "Foundation" — the orange line above the title */
   category: string;
-  /** e.g. "HINGLISH" */
+  /** e.g. "HINGLISH", "हिन्दी" */
   language: string;
-  exam: string;
-  startDate: string;
+  /** One line about who it's for (cut to one line on the card) */
+  description: string;
+  /** e.g. "Starts on 25 Sep, 2026 Ends on 30 Sep, 2029" (cut to one line on the card) */
+  schedule: string;
   price: number;
   /** Price before the discount (struck through); the % off is worked out from it */
   originalPrice: number;
-  offer: { tag: string; text: string };
-  banner: { src: string; alt: string };
+  /** "contain" for wide artwork that must not be cropped */
+  banner: { src: string; alt: string; fit?: "cover" | "contain" };
   buyHref: string;
   detailsHref: string;
 }
@@ -30,41 +32,62 @@ export const OTHER_COURSE_LINKS = [
 
 export const POPULAR_PROGRAMS: PopularProgram[] = [
   {
-    title: "AARAMBH 71st BPSC INTEGRATED TOP RANKERS BATCH",
-    category: "Integrated Batch",
+    title: "AARAMBH 71st BPSC 2026",
+    category: "Integrated",
     language: "HINGLISH",
-    exam: "71st BPSC",
-    startDate: "Starts on 16th Nov'26",
+    description: "Prelims + Mains preparation with Top Rankers for 71st BPSC aspirants",
+    schedule: "Starts on 16 Nov, 2026 Ends on 30 Jun, 2027",
     price: 24999,
     originalPrice: 39999,
-    offer: { tag: "EarlyBirdOffer", text: "Limited time offer" },
     banner: { src: "/images/banners/banner-aarambh.jpg", alt: "Aarambh 71st BPSC Integrated Top Rankers Batch" },
     buyHref: ENQUIRY,
     detailsHref: ENQUIRY,
   },
   {
-    title: "SANKALP UPSC CSE GS FOUNDATION - HINDI",
-    category: "Foundation Course",
-    language: "HINDI",
-    exam: "UPSC 2027",
-    startDate: "Starts on 18th Nov'26",
-    price: 4000,
-    originalPrice: 7900,
-    offer: { tag: "EarlyBirdOffer", text: "Limited time offer" },
+    title: "Sankalp GS Foundation - हिन्दी",
+    category: "Foundation",
+    language: "हिन्दी",
+    description: "Complete GS Foundation for UPSC CSE with expert faculty and updated syllabus",
+    schedule: "Starts on 18 Nov, 2026 Ends on 30 Sep, 2028",
+    price: 33000,
+    originalPrice: 49000,
     banner: { src: "/images/banners/banner-sankalp.jpg", alt: "Sankalp UPSC CSE GS Foundation" },
     buyHref: ENQUIRY,
     detailsHref: ENQUIRY,
   },
   {
-    title: "ALL INDIA UPSC PRELIMS TEST SERIES 2026 - ENGLISH",
+    title: "All India UPSC Prelims Test Series",
     category: "Test Series",
     language: "ENGLISH",
-    exam: "UPSC 2026",
-    startDate: "Starts on 1st Dec'26",
+    description: "Sectional and full-length tests with detailed performance analysis",
+    schedule: "Starts on 1 Dec, 2026 Ends on 31 May, 2027",
     price: 2999,
     originalPrice: 4999,
-    offer: { tag: "FestiveOffer", text: "Valid till 30th Nov" },
-    banner: { src: "/images/banners/promo-prelims-testseries.jpg", alt: "All India UPSC Prelims Test Series 2026" },
+    banner: { src: "/images/banners/promo-prelims-testseries.jpg", alt: "All India UPSC Prelims Test Series" },
+    buyHref: ENQUIRY,
+    detailsHref: ENQUIRY,
+  },
+  {
+    title: "UPSC Foundation Batch 2027/28",
+    category: "Foundation",
+    language: "HINGLISH",
+    description: "Complete GS Foundation, PYQs and practice with Prelims + Mains focus",
+    schedule: "Starts on 16 Nov, 2026 Ends on 30 Jun, 2028",
+    price: 24999,
+    originalPrice: 34999,
+    banner: { src: "/images/banners/banner-upsc-foundation-2027-28.webp", alt: "UPSC Foundation Batch 2027/28", fit: "contain" },
+    buyHref: ENQUIRY,
+    detailsHref: ENQUIRY,
+  },
+  {
+    title: "Mains 360 - Answer Writing Program",
+    category: "Mains",
+    language: "ENGLISH",
+    description: "Daily answer writing with evaluation and model answers for GS Mains",
+    schedule: "Starts on 5 Jan, 2027 Ends on 31 Aug, 2027",
+    price: 9999,
+    originalPrice: 14999,
+    banner: { src: "/images/banners/banner-mains360.png", alt: "Mains 360 answer writing program", fit: "contain" },
     buyHref: ENQUIRY,
     detailsHref: ENQUIRY,
   },
@@ -73,8 +96,8 @@ export const POPULAR_PROGRAMS: PopularProgram[] = [
 /** Homepage → "Find us in your neighborhood" (below Impact). */
 export const OFFLINE_CENTRE = {
   eyebrow: "Find us in your neighborhood",
-  title: "Build Job Ready Skills at a",
-  highlight: "VINI Offline Centre",
+  title: "Build Foundation at",
+  highlight: "VINI IAS Offline Center",
   image: { src: "/images/centres/vini-offline-experience-centre.webp", alt: "VINI IAS Offline Experience Centre storefront" },
   points: ["100% classroom-based learning experience", "Spoken English, Computer & Digital skills with UPSC preparation", "Career guidance and hands-on projects"],
   exploreHref: "/contact-us",

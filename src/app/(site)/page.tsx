@@ -2,6 +2,7 @@ import {
   HeroSlider,
   CelebrationArea,
   FreeResourcesSection,
+  WhatIsViniSection,
   PopularProgramsSection,
   OfflineCentreSection,
   MarketAdBanner,
@@ -38,6 +39,7 @@ export default async function HomePage() {
         <HeroSlider banners={heroBanners} />
       )}
       <FreeResourcesSection resources={resources} />
+      <WhatIsViniSection />
       <PopularProgramsSection />
       <MarketAdBanner banners={marketingBanners.first} />
       <ExamGoalSection />
