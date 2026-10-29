@@ -1,5 +1,6 @@
-import { CoursePageSkeleton } from "@/components/skeletons";
+import { GOAL_SKELETON, PageSectionsSkeleton } from "@/components/skeletons";
 
+/** Goal pages: every section as a shimmer at its real height. */
 export default function Loading() {
-  return <CoursePageSkeleton />;
+  return <PageSectionsSkeleton sections={GOAL_SKELETON} />;
 }
