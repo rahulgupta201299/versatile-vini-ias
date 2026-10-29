@@ -21,7 +21,7 @@ export default function OfflineCentreSection() {
             {title} <Box component="span" sx={{ color: COLORS.red }}>{highlight}</Box>
           </Typography>
         </Box>
-        <Box sx={{ order: { xs: 2, md: 3 }, gridColumn: { md: 2 }, gridRow: { md: "1 / span 2" }, position: "relative", aspectRatio: "16 / 10", borderRadius: "20px", overflow: "hidden", boxShadow: "0 18px 40px rgba(15,23,42,.12)" }}>
+        <Box sx={{ order: { xs: 2, md: 3 }, gridColumn: { md: 2 }, gridRow: { md: "1 / span 2" }, position: "relative", aspectRatio: "3 / 2", borderRadius: "20px", overflow: "hidden", boxShadow: "0 18px 40px rgba(15,23,42,.12)" }}>
           <Image src={image.src} alt={image.alt} fill sizes="(min-width: 900px) 600px, 100vw" style={{ objectFit: "cover" }} />
         </Box>
         <Box sx={{ order: { xs: 3, md: 2 }, alignSelf: { md: "start" } }}>

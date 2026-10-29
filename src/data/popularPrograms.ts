@@ -51,7 +51,7 @@ export const OFFLINE_CENTRE = {
   eyebrow: "Find us in your neighborhood",
   title: "Build Job Ready Skills at a",
   highlight: "VINI Offline Centre",
-  image: { src: "/images/about/life-reception.webp", alt: "Reception at a VINI IAS centre" },
+  image: { src: "/images/centres/vini-offline-experience-centre.webp", alt: "VINI IAS Offline Experience Centre storefront" },
   points: ["100% classroom-based learning experience", "Spoken English, Computer & Digital skills with UPSC preparation", "Career guidance and hands-on projects"],
   exploreHref: "/contact-us",
   callbackHref: ENQUIRY,

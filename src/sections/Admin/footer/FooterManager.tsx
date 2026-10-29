@@ -43,7 +43,7 @@ const linkHintFor = (style: FooterColumnStyle = "links") => COLUMN_STYLES.find((
 /** What each section is, for its card. */
 const SECTION_INFO: Record<FooterSectionKey, { description: string; itemsLabel: string; headingHint: string }> = {
   importantExams: {
-    description: "The “Important Exams” links just above the footer, on every page. Five columns on computers, two on phones.",
+    description: "The “Important Exams” links just above the footer on blog and article pages (/exams). Five columns on computers, two on phones.",
     itemsLabel: "Columns",
     headingHint: "Shown above the links on the website. Column titles are for the admin only.",
   },
