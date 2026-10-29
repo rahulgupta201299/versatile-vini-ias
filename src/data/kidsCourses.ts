@@ -12,6 +12,9 @@ export interface KidsCourse {
   art: KidsCourseArt;
 }
 
+/** Shown next to the heading. */
+export const KIDS_CLASS_RANGE = "LKG - Class 8";
+
 export const KIDS_COURSES: KidsCourse[] = [
   { classes: "Class LKG - 8", title: "Spoken English Program", text: "Master fluency in English speaking", href: "/#enquiry", art: "spokenEnglish" },
   { classes: "Class LKG - 8", title: "Learn English", text: "Level based holistic English Program", href: "/#enquiry", art: "english" },

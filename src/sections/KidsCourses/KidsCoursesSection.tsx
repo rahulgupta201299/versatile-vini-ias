@@ -1,19 +1,14 @@
-import Link from "next/link";
+import { Poppins } from "next/font/google";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { BookOpen, Code2, Rocket, Sigma } from "lucide-react";
-import { KIDS_COURSES } from "@/data/kidsCourses";
+import { KIDS_CLASS_RANGE } from "@/data/kidsCourses";
 import { COLORS } from "@/theme/colors";
-import KidsCourseArt from "./KidsCourseArt";
+import KidsCoursesList from "./KidsCoursesList";
 
-/** Card tints and the colour of the "Class …" line, in card order. */
-const TONES = [
-  { bg: "#FCEFEA", accent: "#5B5BD6" },
-  { bg: "#FCF1D2", accent: "#2E7D9A" },
-  { bg: "#EEF2FC", accent: "#E8613C" },
-  { bg: "#F2F3F8", accent: "#6366F1" },
-];
+/** Rounded, friendly type for this section (the kids-course look). */
+const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "600", "700"], display: "swap" });
 
 /** Floating subject badges around the illustration. */
 const BADGES = [
@@ -43,40 +38,23 @@ function KidsIllustration() {
   );
 }
 
-/** Homepage "Courses for kids": four course cards with an illustration on the right (computers). */
+/** Homepage "Courses for kids": a compact slider on phones; four detailed cards with an illustration on computers. */
 export default function KidsCoursesSection() {
   return (
-    <Box component="section" id="kids-courses" aria-labelledby="kids-courses-title" sx={{ py: { xs: 4, md: 6 }, bgcolor: "#FFFFFF" }}>
+    <Box component="section" id="kids-courses" aria-labelledby="kids-courses-title" className={poppins.className} sx={{ py: { xs: 3, md: 6 }, bgcolor: { xs: "#F7F6FC", md: "#FFFFFF" }, "& .MuiTypography-root": { fontFamily: "inherit" } }}>
       <Container>
-        <Typography id="kids-courses-title" component="h2" sx={{ fontWeight: 800, fontSize: { xs: "1.45rem", sm: "1.75rem", md: "2rem" }, color: COLORS.ink, letterSpacing: "-0.02em", mb: { xs: 2.5, md: 4 } }}>
-          Courses for{" "}
-          <Box component="span" sx={{ position: "relative", color: COLORS.red, "&::after": { content: '""', position: "absolute", left: "-4%", right: "-4%", bottom: -6, height: 6, borderRadius: 3, bgcolor: COLORS.yellow, transform: "rotate(-3deg)" } }}>
-            kids
-          </Box>
+        <Typography id="kids-courses-title" component="h2" sx={{ display: "flex", alignItems: "baseline", flexWrap: "wrap", columnGap: 1, fontWeight: { xs: 600, md: 700 }, fontSize: { xs: "1.3rem", sm: "1.6rem", md: "2rem" }, color: COLORS.ink, letterSpacing: "-0.01em", mb: { xs: 2, md: 4 } }}>
+          <span>
+            Courses for{" "}
+            <Box component="span" sx={{ position: "relative", color: COLORS.red, "&::after": { content: '""', position: "absolute", left: "-4%", right: "-4%", bottom: -6, height: 6, borderRadius: 3, bgcolor: COLORS.yellow, transform: "rotate(-3deg)" } }}>
+              kids
+            </Box>
+          </span>
+          <Box component="span" sx={{ fontWeight: 400, fontSize: { xs: "0.95rem", md: "1.1rem" }, color: COLORS.muted, letterSpacing: 0 }}>({KIDS_CLASS_RANGE})</Box>
         </Typography>
 
-        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "minmax(0, 2fr) minmax(0, 1fr)" }, gap: { xs: 3, md: 4 }, alignItems: "center" }}>
-          <Box component="ul" sx={{ listStyle: "none", m: 0, p: 0, display: "grid", gridTemplateColumns: { xs: "1fr", sm: "repeat(2, minmax(0, 1fr))" }, gap: { xs: 1.5, md: 2.5 } }}>
-            {KIDS_COURSES.map(({ classes, title, text, href, art }, index) => {
-              const { bg, accent } = TONES[index % TONES.length];
-
-              return (
-                <Box component="li" key={title} sx={{ display: "flex", gap: { xs: 1.75, md: 2.25 }, p: { xs: 2, md: 3 }, borderRadius: "20px", bgcolor: bg }}>
-                  <Box sx={{ width: { xs: 56, md: 72 }, height: { xs: 56, md: 72 }, flexShrink: 0, "& svg": { width: "100%", height: "100%" } }}>
-                    <KidsCourseArt name={art} />
-                  </Box>
-                  <Box sx={{ minWidth: 0, display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                    <Typography sx={{ fontWeight: 700, fontSize: { xs: "0.85rem", md: "0.95rem" }, color: accent }}>{classes}</Typography>
-                    <Typography component="h3" sx={{ mt: 0.5, fontWeight: 800, fontSize: { xs: "1.05rem", md: "1.2rem" }, color: COLORS.ink, lineHeight: 1.3 }}>{title}</Typography>
-                    <Typography sx={{ mt: 0.75, color: COLORS.textSecondary, fontSize: { xs: "0.88rem", md: "0.95rem" }, lineHeight: 1.55 }}>{text}</Typography>
-                    <Box component={Link} href={href} aria-label={`Explore ${title}`} sx={{ mt: { xs: 1.5, md: 2 }, display: "inline-flex", alignItems: "center", height: { xs: 40, md: 46 }, px: { xs: 2.5, md: 3.5 }, borderRadius: "10px", bgcolor: COLORS.navyDark, color: "#FFFFFF", fontWeight: 700, fontSize: { xs: "0.88rem", md: "0.95rem" }, textDecoration: "none", transition: "transform .15s, background-color .15s", "&:hover": { bgcolor: COLORS.navy, transform: "translateY(-1px)" } }}>
-                      Explore
-                    </Box>
-                  </Box>
-                </Box>
-              );
-            })}
-          </Box>
+        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "minmax(0, 1fr)", md: "minmax(0, 2fr) minmax(0, 1fr)" }, gap: { xs: 3, md: 4 }, alignItems: "center" }}>
+          <KidsCoursesList />
 
           <Box sx={{ display: { xs: "none", md: "block" } }}>
             <KidsIllustration />

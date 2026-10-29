@@ -1,48 +1,72 @@
 /**
- * Homepage → "Explore our most popular programs" (below Free Resources), one tab per track.
- * SAMPLE content until these programs are added to the backend / admin.
+ * Homepage → "Explore our most popular programs" (below Free Resources).
+ * SAMPLE content (titles, dates, prices, links) — replace with the real batches before going live;
+ * it moves to the backend / admin later.
  */
-export type ProgramIcon = "MessageCircle" | "Mic" | "Briefcase" | "BarChart3" | "Megaphone" | "Monitor";
-
 export interface PopularProgram {
-  provider: string;
   title: string;
-  location: string;
-  mode: string;
-  dates: string;
-  icon: ProgramIcon;
-  /** Cover gradient: from → to */
-  colors: [string, string];
-  viewHref: string;
-  applyHref: string;
-}
-
-export interface ProgramTrack {
-  id: string;
-  label: string;
-  programs: PopularProgram[];
+  /** e.g. "Foundation Course" — the coloured line above the title */
+  category: string;
+  /** e.g. "HINGLISH" */
+  language: string;
+  exam: string;
+  startDate: string;
+  price: number;
+  /** Price before the discount (struck through); the % off is worked out from it */
+  originalPrice: number;
+  offer: { tag: string; text: string };
+  banner: { src: string; alt: string };
+  buyHref: string;
+  detailsHref: string;
 }
 
 const ENQUIRY = "/#enquiry";
 
-export const PROGRAM_TRACKS: ProgramTrack[] = [
+/** "View other courses" links next to the heading. */
+export const OTHER_COURSE_LINKS = [
+  { label: "Spoken English", href: ENQUIRY },
+  { label: "Skills", href: ENQUIRY },
+];
+
+export const POPULAR_PROGRAMS: PopularProgram[] = [
   {
-    id: "spoken-english",
-    label: "Spoken English",
-    programs: [
-      { provider: "VINI Spoken English", title: "Spoken English Foundation for Beginners", location: "Live Online", mode: "Live Online Classes", dates: "Starts 16th Nov 2026", icon: "MessageCircle", colors: ["#FE0034", "#FF7A59"], viewHref: ENQUIRY, applyHref: ENQUIRY },
-      { provider: "VINI Spoken English", title: "Interview & Personality Communication", location: "Patna Centre", mode: "In person Workshop", dates: "5th - 7th Dec 2026", icon: "Mic", colors: ["#13294B", "#3B5B8F"], viewHref: ENQUIRY, applyHref: ENQUIRY },
-      { provider: "VINI Spoken English", title: "Business English & Workplace Communication", location: "Noida Centre", mode: "Weekend Batch", dates: "Starts 22nd Nov 2026", icon: "Briefcase", colors: ["#7C3AED", "#C084FC"], viewHref: ENQUIRY, applyHref: ENQUIRY },
-    ],
+    title: "AARAMBH 71st BPSC INTEGRATED TOP RANKERS BATCH",
+    category: "Integrated Batch",
+    language: "HINGLISH",
+    exam: "71st BPSC",
+    startDate: "Starts on 16th Nov'26",
+    price: 24999,
+    originalPrice: 39999,
+    offer: { tag: "EarlyBirdOffer", text: "Limited time offer" },
+    banner: { src: "/images/banners/banner-aarambh.jpg", alt: "Aarambh 71st BPSC Integrated Top Rankers Batch" },
+    buyHref: ENQUIRY,
+    detailsHref: ENQUIRY,
   },
   {
-    id: "skills",
-    label: "Skills",
-    programs: [
-      { provider: "VINI Skills", title: "Data Analytics with Excel & Power BI", location: "Live Online", mode: "Live Online Classes", dates: "Starts 1st Dec 2026", icon: "BarChart3", colors: ["#0F766E", "#2DD4BF"], viewHref: ENQUIRY, applyHref: ENQUIRY },
-      { provider: "VINI Skills", title: "Digital Marketing Certification Program", location: "Patna Centre", mode: "In person Classes", dates: "Starts 8th Dec 2026", icon: "Megaphone", colors: ["#EA580C", "#FBBF24"], viewHref: ENQUIRY, applyHref: ENQUIRY },
-      { provider: "VINI Skills", title: "Computer Course for Government Exams (CCC)", location: "Darbhanga Centre", mode: "In person Classes", dates: "Starts 15th Dec 2026", icon: "Monitor", colors: ["#2563EB", "#60A5FA"], viewHref: ENQUIRY, applyHref: ENQUIRY },
-    ],
+    title: "SANKALP UPSC CSE GS FOUNDATION - HINDI",
+    category: "Foundation Course",
+    language: "HINDI",
+    exam: "UPSC 2027",
+    startDate: "Starts on 18th Nov'26",
+    price: 4000,
+    originalPrice: 7900,
+    offer: { tag: "EarlyBirdOffer", text: "Limited time offer" },
+    banner: { src: "/images/banners/banner-sankalp.jpg", alt: "Sankalp UPSC CSE GS Foundation" },
+    buyHref: ENQUIRY,
+    detailsHref: ENQUIRY,
+  },
+  {
+    title: "ALL INDIA UPSC PRELIMS TEST SERIES 2026 - ENGLISH",
+    category: "Test Series",
+    language: "ENGLISH",
+    exam: "UPSC 2026",
+    startDate: "Starts on 1st Dec'26",
+    price: 2999,
+    originalPrice: 4999,
+    offer: { tag: "FestiveOffer", text: "Valid till 30th Nov" },
+    banner: { src: "/images/banners/promo-prelims-testseries.jpg", alt: "All India UPSC Prelims Test Series 2026" },
+    buyHref: ENQUIRY,
+    detailsHref: ENQUIRY,
   },
 ];
 

@@ -8,21 +8,22 @@ import { getSiteConfig } from "@/services/site";
 import StoreBadges from "@/components/StoreBadges";
 
 import { COLORS } from "@/theme/colors";
+
 /*
  * Layout reference: pw.live "Join 15 Million students on the app today!" banner
- *  - card 1120 × 320, soft vertical gradient, content padding 40 / 48
- *  - title 32px bold, 16px points with 20px icons, store buttons 162 × 48 (gap 24)
- *  - artwork anchored bottom-right (ours pops slightly out of the top of the card)
+ *  - card 1120 × 320, soft vertical gradient, content padding 48
+ *  - title 32px bold, 17px points (34px apart) with 24px icons, store buttons 162 × 48 (gap 24) 48px below the points
+ *  - artwork inside the card, anchored bottom-right
  */
 const TEXT = "#1B2124";
 const ACCENT = COLORS.red;
 
 /** Server component — reads the app points from the site config (cached). */
 export default async function AppDownloadSection({ title = "Study smarter with the Vini IAS app today!" }: { title?: string }) {
-  const APP_POINTS = (await getSiteConfig()).app.points;
+  const { points } = (await getSiteConfig()).app;
 
   return (
-    <Box component="section" id="download" sx={{ pt: { xs: 4, md: 9 }, pb: { xs: 4, md: 5 }, backgroundColor: "#FFFFFF" }}>
+    <Box component="section" id="download" sx={{ py: { xs: 4, md: 5 }, backgroundColor: "#FFFFFF" }}>
       <Container>
         <Box
           sx={{
@@ -30,6 +31,7 @@ export default async function AppDownloadSection({ title = "Study smarter with t
             maxWidth: 1120,
             mx: "auto",
             minHeight: { md: 320 },
+            overflow: "hidden",
             borderRadius: { xs: "12px", md: "8px" },
             background: "linear-gradient(180deg, #FFF3F5 0%, #FFDDE3 100%)",
             display: "flex",
@@ -38,34 +40,33 @@ export default async function AppDownloadSection({ title = "Study smarter with t
           }}
         >
           {/* Left content */}
-          <Box sx={{ position: "relative", zIndex: 1, px: { xs: 3, md: 6 }, pt: { xs: 3.5, md: 5 }, pb: { xs: 2, md: 5 }, maxWidth: { md: "62%" } }}>
-            <Typography sx={{ fontSize: "0.85rem", fontWeight: 700, color: ACCENT, textTransform: "uppercase", letterSpacing: "0.08em", mb: 1 }}>
-              Learn From Anywhere
-            </Typography>
-            <Typography component="h2" sx={{ fontSize: { xs: "1.5rem", md: "2rem" }, fontWeight: 700, lineHeight: 1.3, color: TEXT, mb: 2.5 }}>
+          <Box sx={{ position: "relative", zIndex: 1, px: { xs: 3, md: 6 }, pt: { xs: 3.5, md: 6 }, pb: { xs: 2, md: 6 }, maxWidth: { md: "calc(100% - 330px)" }, textAlign: { xs: "center", md: "left" } }}>
+            <Typography component="h2" sx={{ fontSize: { xs: "1.45rem", md: "2rem" }, fontWeight: 700, lineHeight: 1.25, letterSpacing: "-0.01em", color: TEXT, mb: { xs: 2, md: 2.5 } }}>
               {title}
             </Typography>
 
-            <Box component="ul" sx={{ listStyle: "none", p: 0, m: 0, mb: { xs: 3, md: 4 }, display: "grid", gap: 1.25 }}>
-              {APP_POINTS.map((point) => (
-                <Box component="li" key={point} sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <CheckCircle2 size={20} color="#FFFFFF" fill={ACCENT} style={{ flexShrink: 0 }} />
-                  <Typography sx={{ fontSize: { xs: "0.92rem", md: "1rem" }, color: TEXT }}>{point}</Typography>
+            <Box component="ul" sx={{ listStyle: "none", p: 0, m: 0, mb: { xs: 3, md: 6 }, display: { xs: "inline-grid", md: "grid" }, gap: { xs: 1, md: 1.25 }, textAlign: "left" }}>
+              {points.map((point) => (
+                <Box component="li" key={point} sx={{ display: "flex", alignItems: "center", gap: 1.25 }}>
+                  <CheckCircle2 size={24} color="#FFFFFF" fill={ACCENT} style={{ flexShrink: 0 }} />
+                  <Typography sx={{ fontSize: { xs: "0.92rem", md: "1.06rem" }, lineHeight: 1.45, color: TEXT }}>{point}</Typography>
                 </Box>
               ))}
             </Box>
 
-            <StoreBadges size="md" />
+            <Box sx={{ display: "flex", justifyContent: { xs: "center", md: "flex-start" } }}>
+              <StoreBadges size="md" />
+            </Box>
           </Box>
 
-          {/* Right artwork — bottom-anchored, pops out of the card on desktop */}
+          {/* Right artwork — bottom-anchored inside the card */}
           <Box
             sx={{
               position: { xs: "relative", md: "absolute" },
-              right: { md: 40 },
+              right: { md: 64 },
               bottom: 0,
               alignSelf: { xs: "center", md: "auto" },
-              width: { xs: 260, sm: 300, md: 340 },
+              width: { xs: 260, sm: 300, md: 262 },
               aspectRatio: "1204 / 1306",
             }}
           >
@@ -73,7 +74,7 @@ export default async function AppDownloadSection({ title = "Study smarter with t
               src="/images/app/vini-ias-app-mockup-student-v2.png"
               alt="Vini IAS learning app home screen on a phone, next to a student"
               fill
-              sizes="(max-width: 600px) 260px, (max-width: 900px) 300px, 340px"
+              sizes="(max-width: 600px) 260px, 300px"
               style={{ objectFit: "contain", objectPosition: "bottom" }}
             />
           </Box>

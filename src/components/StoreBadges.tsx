@@ -72,20 +72,20 @@ function StoreBadge({
 /** Google Play + App Store badges, side by side. */
 export default function StoreBadges({ size = "md" }: { size?: BadgeSize }) {
   const glyph = DIMENSIONS[size].glyph;
-  const APP_STORE_LINKS = useSiteData().config.app;
+  const appLinks = useSiteData().config.app;
 
   return (
     <Box sx={{ display: "flex", flexWrap: "nowrap", gap: size === "md" ? { xs: 1, lg: 3 } : 1 }}>
       <StoreBadge
         size={size}
-        href={APP_STORE_LINKS.googlePlay}
+        href={appLinks.googlePlay}
         top="GET IT ON"
         bottom="Google Play"
         glyph={<GooglePlayLogo size={glyph} />}
       />
       <StoreBadge
         size={size}
-        href={APP_STORE_LINKS.appStore}
+        href={appLinks.appStore}
         top="Download on the"
         bottom="App Store"
         glyph={<AppleLogo size={glyph} />}

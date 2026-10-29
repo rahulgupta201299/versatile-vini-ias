@@ -6,7 +6,7 @@ export { default as SmallPromoBanner } from "./PromotionalBanner/SmallPromoBanne
 export { default as ExamGoalSection } from "./ExamCategories/ExamGoalSection";
 export { default as KidsCoursesSection } from "./KidsCourses/KidsCoursesSection";
 export { default as TopRankersSection } from "./Rankers/TopRankersSection";
-export { default as MentorshipCallbackSection } from "./Mentorship/MentorshipCallbackSection";
+export { default as StudyResourcesSection } from "./StudyResources/StudyResourcesSection";
 export { default as ImpactStatsSection } from "./Impact/ImpactStatsSection";
 export { default as EnquirySection } from "./Enquiry/EnquirySection";
 export { default as AppDownloadSection } from "./AppDownload/AppDownloadSection";

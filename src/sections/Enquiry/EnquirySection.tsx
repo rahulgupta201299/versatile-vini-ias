@@ -1,31 +1,14 @@
 "use client";
 
-import React, { useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormHelperText from "@mui/material/FormHelperText";
-import Checkbox from "@mui/material/Checkbox";
-import Card from "@mui/material/Card";
-import { PhoneCall, CheckCircle2, Clock, ChevronRight } from "lucide-react";
-import CounsellorIllustration from "@/components/illustrations/CounsellorIllustration";
+import { PhoneCall, ChevronRight } from "lucide-react";
 import { WhatsAppLogo } from "@/components/icons/BrandLogos";
 import { useSiteData } from "@/context/SiteDataContext";
-import {
-  useFormValidation,
-  validateName,
-  validateMobile,
-  validateRequiredSelect,
-  validateConsent,
-  sanitizeName,
-  sanitizeMobile,
-} from "@/utils/validation";
-
+import { CounsellingCard } from "@/sections/CoursePage/CounsellingForm";
 import { COLORS } from "@/theme/colors";
+
 const COURSE_OPTIONS = [
   "Sankalp UPSC CSE 2026/27 GS Foundation",
   "Aarambh 71st BPSC Prelims + Mains",
@@ -36,77 +19,25 @@ const COURSE_OPTIONS = [
   "All India Prelims Test Series 2026",
 ];
 
+/** "VINI IAS Learner Support" (hours + Call / WhatsApp) beside the "Get Free Counselling Today" form. */
 export default function EnquirySection() {
   const { contact } = useSiteData().config;
-  const formRef = useRef<HTMLFormElement>(null);
-  const [submitted, setSubmitted] = useState(false);
-  const form = useFormValidation(
-    { name: "", mobile: "", course: "", agree: true },
-    {
-      name: (v) => validateName(v),
-      mobile: (v) => validateMobile(v),
-      course: validateRequiredSelect("your target exam / course"),
-      agree: (v) => validateConsent(v),
-    },
-    { name: sanitizeName, mobile: sanitizeMobile }
-  );
-  const { values } = form;
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!form.validateAll(formRef.current)) return;
-
-    setSubmitted(true);
-  };
 
   return (
     <Box
+      component="section"
       id="enquiry"
-      sx={{
-        py: { xs: 3.5, md: 5 },
-        backgroundColor: COLORS.surface,
-        borderTop: `1px solid ${COLORS.border}`,
-      }}
+      aria-labelledby="learner-support-title"
+      sx={{ pt: { xs: 4, md: 6, lg: 10 }, pb: { xs: 4, md: 6 }, backgroundColor: COLORS.surface, borderTop: `1px solid ${COLORS.border}` }}
     >
       <Container>
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: { xs: "1fr", lg: "1.1fr 1fr" },
-            gap: { xs: 4, lg: 7 },
-            alignItems: "center",
-          }}
-        >
-          {/* Left Description (From PDF Page 3) */}
-          <Box>
-            <CounsellorIllustration width={{ xs: 150, md: 200 }} />
-            <Box sx={{ mb: 2 }} />
-            <Typography
-              variant="h3"
-              sx={{
-                fontWeight: 900,
-                fontSize: { xs: "2rem", sm: "2.6rem", md: "3.2rem" },
-                color: COLORS.heading,
-                letterSpacing: "-0.02em",
-                lineHeight: 1.15,
-                mb: 1.5,
-              }}
-            >
-              Still In Doubt?
+        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "minmax(0, 1fr)", lg: "1fr 1fr" }, gap: { xs: 9, lg: 7 }, alignItems: "center" }}>
+          <Box sx={{ textAlign: { xs: "center", lg: "left" } }}>
+            <Typography id="learner-support-title" component="h2" sx={{ fontWeight: 800, fontSize: { xs: "1.6rem", sm: "2rem", md: "2.4rem" }, color: COLORS.ink, letterSpacing: "-0.02em", lineHeight: 1.2 }}>
+              VINI IAS <Box component="span" sx={{ color: COLORS.red }}>Learner Support</Box>
             </Typography>
-
-            <Typography
-              variant="h5"
-              sx={{
-                fontWeight: 600,
-                color: COLORS.muted,
-                fontSize: { xs: "1.05rem", sm: "1.25rem" },
-                lineHeight: 1.5,
-                mb: 3,
-              }}
-            >
-              Let us know any query regarding your UPSC or State PCS preparation and we&#39;ll guide you in the right direction.
+            <Typography sx={{ mt: 1.25, mb: { xs: 2.5, md: 3.5 }, color: COLORS.muted, fontSize: { xs: "1rem", md: "1.15rem" }, lineHeight: 1.55 }}>
+              Talk to our experts. We are available Monday to Saturday, 9 AM to 8 PM.
             </Typography>
 
             {/* Call + WhatsApp actions (number is used by the links, not displayed) */}
@@ -115,8 +46,9 @@ export default function EnquirySection() {
                 display: "grid",
                 gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
                 gap: { xs: 1.25, sm: 2 },
-                mb: 4,
                 maxWidth: 560,
+                mx: { xs: "auto", lg: 0 },
+                textAlign: "left",
               }}
             >
               {[
@@ -207,178 +139,11 @@ export default function EnquirySection() {
               ))}
             </Box>
 
-            {/* Trust points */}
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, color: COLORS.body }}>
-                <CheckCircle2 size={18} color={COLORS.success} />
-                <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                  Personal counselling by faculty members who have cleared UPSC/PCS Mains
-                </Typography>
-              </Box>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, color: COLORS.body }}>
-                <Clock size={18} color="#2563EB" />
-                <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                  Immediate response guaranteed between 9:00 AM – 8:00 PM (Mon-Sat)
-                </Typography>
-              </Box>
-            </Box>
           </Box>
 
-          {/* Right Form Card (From PDF Page 3) */}
-          <Card
-            sx={{
-              p: { xs: 3, sm: 4 },
-              borderRadius: "24px",
-              border: `1px solid ${COLORS.border}`,
-              boxShadow: "0 12px 32px rgba(0,0,0,0.06)",
-              backgroundColor: "#FFFFFF",
-            }}
-          >
-            <Typography variant="h5" sx={{ fontWeight: 800, color: COLORS.heading, mb: 0.5 }}>
-              Request a Guided Call
-            </Typography>
-            <Typography variant="body2" sx={{ color: COLORS.muted, mb: 3 }}>
-              Fill in your details below and our academic mentor will call you back.
-            </Typography>
-
-            {submitted ? (
-              <Box sx={{ textAlign: "center", py: 3 }}>
-                <CheckCircle2 size={50} color={COLORS.success} style={{ margin: "0 auto 12px auto" }} />
-                <Typography variant="h6" sx={{ fontWeight: 800, color: "#166534", mb: 1 }}>
-                  Enquiry Submitted Successfully!
-                </Typography>
-                <Typography variant="body2" sx={{ color: COLORS.textSecondary, mb: 3 }}>
-                  We have registered your query for <strong>{values.course}</strong>. Our counsellor will call you shortly on <strong>+91 {values.mobile}</strong>.
-                </Typography>
-                <Button
-                  variant="outlined"
-                  onClick={() => {
-                    setSubmitted(false);
-                    form.reset();
-                  }}
-                  sx={{ borderColor: COLORS.red, color: COLORS.red, fontWeight: 700 }}
-                >
-                  Send Another Enquiry
-                </Button>
-              </Box>
-            ) : (
-              <Box component="form" ref={formRef} onSubmit={handleSubmit} noValidate>
-
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                  <Box>
-                    <Typography variant="caption" sx={{ fontWeight: 700, color: COLORS.body, mb: 0.5, display: "block" }}>
-                      Full Name *
-                    </Typography>
-                    <TextField
-                      placeholder="e.g. Rahul Kumar"
-                      {...form.fieldProps("name")}
-                      required
-                      autoComplete="name"
-                      inputProps={{ maxLength: 50, "aria-label": "Full name" }}
-                      fullWidth
-                      variant="outlined"
-                      size="medium"
-                      InputProps={{ sx: { borderRadius: "10px" } }}
-                    />
-                  </Box>
-
-                  <Box>
-                    <Typography variant="caption" sx={{ fontWeight: 700, color: COLORS.body, mb: 0.5, display: "block" }}>
-                      Mobile Number (+91) *
-                    </Typography>
-                    <TextField
-                      placeholder="10-digit mobile number"
-                      {...form.fieldProps("mobile")}
-                      required
-                      type="tel"
-                      autoComplete="tel-national"
-                      inputProps={{ inputMode: "numeric", "aria-label": "Mobile number" }}
-                      fullWidth
-                      variant="outlined"
-                      size="medium"
-                      InputProps={{ sx: { borderRadius: "10px" } }}
-                    />
-                  </Box>
-
-                  <Box>
-                    <Typography variant="caption" sx={{ fontWeight: 700, color: COLORS.body, mb: 0.5, display: "block" }}>
-                      Target Exam / Course *
-                    </Typography>
-                    <TextField
-                      select
-                      {...form.fieldProps("course")}
-                      required
-                      SelectProps={{
-                        displayEmpty: true,
-                        onClose: () => form.markTouched("course"),
-                        renderValue: (v) =>
-                          (v as string) || <span style={{ color: COLORS.disabled }}>Select your exam / course</span>,
-                      }}
-                      inputProps={{ "aria-label": "Target exam or course" }}
-                      fullWidth
-                      variant="outlined"
-                      size="medium"
-                      InputProps={{ sx: { borderRadius: "10px" } }}
-                    >
-                      {COURSE_OPTIONS.map((opt) => (
-                        <MenuItem key={opt} value={opt}>
-                          {opt}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  </Box>
-
-                  <Box>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={values.agree}
-                        onChange={(e) => {
-                          form.setValue("agree", e.target.checked);
-                          form.markTouched("agree");
-                        }}
-                        inputProps={{ "aria-invalid": Boolean(form.visibleError("agree")) }}
-                        sx={{ color: COLORS.red, "&.Mui-checked": { color: COLORS.red } }}
-                      />
-                    }
-                    label={
-                      <Typography variant="caption" sx={{ color: COLORS.muted, fontSize: "0.8rem" }}>
-                        By continuing, you agree to the Terms &amp; Conditions and Privacy Policy.
-                      </Typography>
-                    }
-                  />
-                  {form.visibleError("agree") && (
-                    <FormHelperText error sx={{ mt: -0.5, ml: 0 }}>
-                      {form.visibleError("agree")}
-                    </FormHelperText>
-                  )}
-                  </Box>
-
-                  {/* "Call Me Back" Button from PDF Page 3 */}
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    size="large"
-                    fullWidth
-                    sx={{
-                      background: `linear-gradient(135deg, ${COLORS.red} 0%, ${COLORS.redLight} 100%)`,
-                      color: "#FFFFFF",
-                      fontWeight: 800,
-                      fontSize: "1rem",
-                      py: 1.4,
-                      borderRadius: "12px",
-                      boxShadow: "0 6px 18px rgba(254, 0, 52, 0.25)",
-                      "&:hover": {
-                        background: `linear-gradient(135deg, ${COLORS.redDark} 0%, ${COLORS.red} 100%)`,
-                      },
-                    }}
-                  >
-                    Call Me Back
-                  </Button>
-                </Box>
-              </Box>
-            )}
-          </Card>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <CounsellingCard examOptions={COURSE_OPTIONS} />
+          </Box>
         </Box>
       </Container>
     </Box>

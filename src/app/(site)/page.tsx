@@ -8,7 +8,7 @@ import {
   ExamGoalSection,
   KidsCoursesSection,
   SmallPromoBanner,
-  MentorshipCallbackSection,
+  StudyResourcesSection,
   TopRankersSection,
   ImpactStatsSection,
   EnquirySection,
@@ -43,7 +43,7 @@ export default async function HomePage() {
       <ExamGoalSection />
       <KidsCoursesSection />
       <SmallPromoBanner banners={marketingBanners.second} />
-      <MentorshipCallbackSection />
+      <StudyResourcesSection />
       <TopRankersSection tabs={resultTabs} stats={rankerStats} />
       <ImpactStatsSection data={impact} />
       <OfflineCentreSection />
