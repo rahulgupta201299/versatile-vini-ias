@@ -7,13 +7,13 @@ import { usePathname } from "next/navigation";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import Typography from "@mui/material/Typography";
-import { ChevronRight, Menu, X } from "lucide-react";
+import { ChevronDown, ChevronRight, Menu, X } from "lucide-react";
 import { COLORS } from "@/theme/colors";
 import type { AdminUser } from "@/lib/adminAuth";
 import AdminSignOut from "./AdminSignOut";
 import { roleLabel, roleOf } from "@/lib/adminAccess";
 import { AdminAccessProvider } from "./AdminAccessContext";
-import { TEAM_NAV, WORKSPACES, isActive, visibleNav, visibleTeamNav, visibleWorkspaces, workspaceFromPath, type AdminNavItem } from "./adminNav";
+import { TEAM_NAV, WORKSPACES, entryHref, flattenNav, isActive, visibleNav, visibleTeamNav, visibleWorkspaces, workspaceFromPath, type AdminNavItem } from "./adminNav";
 
 const SIDEBAR_W = 264;
 
@@ -25,34 +25,59 @@ const initials = (admin: AdminUser) =>
     .map((p) => p[0]!.toUpperCase())
     .join("");
 
-type NavLinkProps = { item: Omit<AdminNavItem, "sections">; active: boolean; onNavigate?: () => void };
+type NavLinkProps = { item: Omit<AdminNavItem, "sections">; active: boolean; isChild?: boolean; onNavigate?: () => void };
 
-function NavLink({ item, active, onNavigate }: NavLinkProps) {
+const navRowSx = (active: boolean) => ({
+  display: "flex",
+  alignItems: "center",
+  gap: 1.5,
+  width: "100%",
+  height: 46,
+  px: 1.5,
+  mb: 0.5,
+  border: 0,
+  borderRadius: "12px",
+  fontFamily: "inherit",
+  fontSize: "0.93rem",
+  fontWeight: active ? 700 : 600,
+  color: active ? COLORS.red : COLORS.body,
+  bgcolor: active ? COLORS.redTint : "transparent",
+  cursor: "pointer",
+  transition: "all .15s",
+  "&:hover": { bgcolor: active ? COLORS.redTint : COLORS.surface, color: active ? COLORS.red : COLORS.ink },
+});
+
+function NavLink({ item, active, isChild = false, onNavigate }: NavLinkProps) {
   const Icon = item.icon;
 
   return (
-    <Box
-      component={Link}
-      href={item.href}
-      onClick={onNavigate}
-      aria-current={active ? "page" : undefined}
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        gap: 1.5,
-        height: 46,
-        px: 1.5,
-        mb: 0.5,
-        borderRadius: "12px",
-        fontSize: "0.93rem",
-        fontWeight: active ? 700 : 600,
-        color: active ? COLORS.red : COLORS.body,
-        bgcolor: active ? COLORS.redTint : "transparent",
-        transition: "all .15s",
-        "&:hover": { bgcolor: active ? COLORS.redTint : COLORS.surface, color: active ? COLORS.red : COLORS.ink },
-      }}
-    >
-      <Icon size={19} strokeWidth={active ? 2.3 : 2} /> {item.label}
+    <Box component={Link} href={item.href} onClick={onNavigate} aria-current={active ? "page" : undefined} sx={{ ...navRowSx(active), ...(isChild && { height: 40, fontSize: "0.9rem" }) }}>
+      <Icon size={isChild ? 17 : 19} strokeWidth={active ? 2.3 : 2} /> {item.label}
+    </Box>
+  );
+}
+
+/** A menu group (e.g. Courses): opens to show its pages; starts open while one of them is the current page. */
+function NavGroup({ item, pathname, onNavigate }: { item: AdminNavItem; pathname: string; onNavigate?: () => void }) {
+  const { label, icon: Icon, children = [] } = item;
+  const inGroup = isActive(pathname, item);
+  const [open, setOpen] = useState(inGroup);
+  const listId = `admin-nav-${label.toLowerCase().replace(/\W+/g, "-")}`;
+
+  return (
+    <Box>
+      <Box component="button" type="button" onClick={() => setOpen(!open)} aria-expanded={open} aria-controls={listId} sx={{ ...navRowSx(false), ...(inGroup && { color: COLORS.ink, fontWeight: 700 }) }}>
+        <Icon size={19} strokeWidth={inGroup ? 2.3 : 2} />
+        <Box component="span" sx={{ flex: 1, textAlign: "left" }}>{label}</Box>
+        <ChevronDown size={17} style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform .2s" }} />
+      </Box>
+      {open && (
+        <Box id={listId} sx={{ ml: 2.25, pl: 1.25, mb: 0.5, borderLeft: `1px solid ${COLORS.border}` }}>
+          {children.map((child) => (
+            <NavLink key={child.href} item={child} active={isActive(pathname, child)} isChild onNavigate={onNavigate} />
+          ))}
+        </Box>
+      )}
     </Box>
   );
 }
@@ -91,7 +116,7 @@ function Sidebar({ admin, onNavigate }: { admin: AdminUser; onNavigate?: () => v
                 <Box
                   key={key}
                   component={Link}
-                  href={visibleNav(admin, key)[0].href}
+                  href={entryHref(visibleNav(admin, key)[0])}
                   onClick={onNavigate}
                   role="tab"
                   aria-selected={active}
@@ -124,9 +149,11 @@ function Sidebar({ admin, onNavigate }: { admin: AdminUser; onNavigate?: () => v
         {ws && current && (
           <>
             <Typography sx={sectionLabelSx}>{ws.label.toUpperCase()} MENU</Typography>
-            {visibleNav(admin, current).map((item) => (
-              <NavLink key={item.href} item={item} active={isActive(pathname, item)} onNavigate={onNavigate} />
-            ))}
+            {visibleNav(admin, current).map((item) => {
+              if (item.children) return <NavGroup key={item.href} item={item} pathname={pathname} onNavigate={onNavigate} />;
+
+              return <NavLink key={item.href} item={item} active={isActive(pathname, item)} onNavigate={onNavigate} />;
+            })}
           </>
         )}
 
@@ -153,13 +180,19 @@ function Sidebar({ admin, onNavigate }: { admin: AdminUser; onNavigate?: () => v
 function Breadcrumb() {
   const pathname = usePathname();
   const workspace = workspaceFromPath(pathname);
-  const items = workspace ? WORKSPACES[workspace].nav : TEAM_NAV;
+  const items = flattenNav(workspace ? WORKSPACES[workspace].nav : TEAM_NAV);
   const page = [...items].sort((a, b) => b.href.length - a.href.length).find((item) => isActive(pathname, item));
 
   return (
     <Box sx={{ display: { xs: "none", sm: "flex" }, alignItems: "center", gap: 1, fontSize: "0.88rem", minWidth: 0 }}>
       <Box component="span" sx={{ color: COLORS.muted }}>{workspace ? WORKSPACES[workspace].label : "Team"}</Box>
       <ChevronRight size={15} color={COLORS.disabled} />
+      {page?.group && (
+        <>
+          <Box component="span" sx={{ color: COLORS.muted }}>{page.group}</Box>
+          <ChevronRight size={15} color={COLORS.disabled} />
+        </>
+      )}
       <Box component="span" sx={{ color: COLORS.ink, fontWeight: 700 }}>{page?.label || "Page"}</Box>
     </Box>
   );

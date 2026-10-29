@@ -441,9 +441,10 @@ export interface MentorshipContent {
   batchLabel?: string;
   /** "(Inclusive of all taxes)" under a paid price. */
   priceNote?: string;
+  /** Poster; a YouTube `videoUrl` plays right here (other links open in a new tab). */
   media: { image: string; alt: string; videoUrl?: string; caption?: string };
-  /** "Fill the form to get Special Offer" bar under the media. */
-  offer?: { text: string; ctaLabel: string };
+  /** "Fill the form to get Special Offer" bar under the media; `link` = the form (else scrolls to the callback form). */
+  offer?: { text: string; ctaLabel: string; link?: string };
   timeline?: { title: string; subtitle: string; phases: { phase: string; period: string; title: string }[] };
   howItWorks?: { title: string; steps: string[] };
   features: { title: string; eyebrow?: string; subtitle?: string; items: { title: string; tagline?: string; text?: string; points?: string[] }[] };
@@ -1196,7 +1197,7 @@ export interface AdminFooterSection {
 
 /* ---------------- Admin: course pages (GS Foundation) ---------------- */
 
-export type CourseLayout = "guide" | "batch";
+export type CourseLayout = "guide" | "batch" | "mentorship";
 
 /** GET /admin/courses — one row per page. */
 export interface AdminCoursePageSummary {
@@ -1217,6 +1218,15 @@ export interface AdminCoursePlan {
   buyLink: string;
 }
 
+/** A mentorship timeline phase; `to` empty → "<from> Onward". */
+export interface AdminMentorshipPhase {
+  phase: string;
+  title: string;
+  /** "YYYY-MM" */
+  from: string;
+  to: string;
+}
+
 export interface AdminCourseStage {
   title: string;
   /** "YYYY-MM" */
@@ -1230,6 +1240,7 @@ export interface AdminCoursePage extends AdminCoursePageSummary {
   priceLabel: string;
   /** "YYYY-MM-DD" */
   startDate: string;
+  isFree: boolean;
   ctas: CourseCtas;
   faqs: CourseFaq[];
   syllabus?: { title: string; buttonLabel: string; file: string; fileName: string };
@@ -1246,6 +1257,13 @@ export interface AdminCoursePage extends AdminCoursePageSummary {
     stages: AdminCourseStage[];
     stagesTitle: { text: string; highlight: string };
     plansTitle: { before: string; highlight: string; after: string; subtitle: string };
+  };
+  /** Mentorship layout: price (paid pages), video, and — on pages that have them — the form offer and the timeline. */
+  mentorship?: {
+    price?: number;
+    video: { url: string };
+    offer?: { text: string; ctaLabel: string; link: string };
+    timeline?: { title: string; subtitle: string; phases: AdminMentorshipPhase[] };
   };
 }
 

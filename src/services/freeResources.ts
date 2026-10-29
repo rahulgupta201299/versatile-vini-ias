@@ -2,7 +2,6 @@ import { cache } from "react";
 import { fetchApi, CACHE_TAGS } from "@/lib/api";
 import { FreeResourcePage } from "@/types";
 import { FREE_RESOURCES } from "@/data/freeResources";
-import { MENTORSHIP_PAGES } from "@/data/mentorshipPages";
 import { GS_MAINS_PAGES } from "@/data/gsMainsPages";
 import { CSAT_PAGES } from "@/data/csatPages";
 import { OPTIONAL_PAGES } from "@/data/optionalPages";
@@ -12,10 +11,9 @@ import { FREE_RESOURCE_SECTION_PAGES } from "@/data/currentAffairsPages";
 import { COURSE_SECTIONS } from "@/utils/slug";
 import { getSiteData } from "./site";
 
-/** Local fallback content per course section (/courses/<section>/<page>). */
+/** Local fallback content per course section (/courses/<section>/<page>). Mentorship comes only from the admin. */
 const LOCAL_PAGES: Record<string, FreeResourcePage[]> = {
   [COURSE_SECTIONS.gsFoundation]: FREE_RESOURCES,
-  [COURSE_SECTIONS.mentorship]: MENTORSHIP_PAGES,
   [COURSE_SECTIONS.gsMains]: GS_MAINS_PAGES,
   [COURSE_SECTIONS.csat]: CSAT_PAGES,
   [COURSE_SECTIONS.optional]: OPTIONAL_PAGES,

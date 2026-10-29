@@ -2,7 +2,8 @@
 
 import Box from "@mui/material/Box";
 import { adminRequest } from "@/lib/adminClient";
-import { AdminCoursePage, AdminCoursePlan, AdminCourseStage, CourseHeadings } from "@/types";
+import { AdminCoursePage, AdminCoursePlan, AdminCourseStage, AdminMentorshipPhase, CourseHeadings } from "@/types";
+import { youtubeVideoId } from "@/utils/links";
 import { Field, FieldGrid, ListEditor, NumberInput, TextArea, TextInput } from "../allExams/formKit";
 import ImageField from "../allExams/ImageField";
 import FileField from "../common/FileField";
@@ -11,6 +12,7 @@ import { ExpandAllButton, PartCard, useOpenParts, usePart } from "../common/Part
 import ViewOnlyNotice from "../common/ViewOnlyNotice";
 import { useSectionAccess } from "../AdminAccessContext";
 import { CtaFields, ctaProblems, FaqsEditor, faqProblems, LINK_HINT, linkProblem, SubHeading, TextListEditor, textProblem } from "./courseFields";
+import { courseAdminSection } from "./courseSections";
 
 /** Saves one part of a page and returns the saved page. */
 const savePart = (id: string, part: string, body: unknown) => adminRequest<AdminCoursePage>(`courses/${id}/${part}`, { method: "PUT", body });
@@ -19,7 +21,7 @@ const NO_HEADINGS: CourseHeadings = { whatIs: "", learn: "", whyJoin: "", bestFo
 
 const START_DATE_HINT = "Shown as “Starting from 29th May 2026”.";
 
-/* ---------- parts used by both layouts ---------- */
+/* ---------- parts used by every layout ---------- */
 
 function useSharedParts(page: AdminCoursePage) {
   const { _id: id } = page;
@@ -377,10 +379,133 @@ function BatchPageEditor({ page, canEdit }: EditorProps) {
   );
 }
 
-/** Web → GS Foundation → one page: only the parts listed for its layout can be edited. */
+/* ---------- mentorship layout (1:1 Mentorship 2028/29, Free Mentorship Program) ---------- */
+
+/** Steps follow the page: a = hero, b = timeline, c = FAQs. Form offer and timeline only on pages that have them. */
+const MENTORSHIP_PARTS = ["intro", "video", "offer", "ctas", "timeline", "faqs"] as const;
+
+const NO_MENTORSHIP: NonNullable<AdminCoursePage["mentorship"]> = { video: { url: "" } };
+const toPhaseDates = (phases: AdminMentorshipPhase[] = []) => phases.map(({ phase, title, from, to }) => ({ phase, title, from, to }));
+
+function MentorshipPageEditor({ page, canEdit }: EditorProps) {
+  const { _id: id, isFree, mentorship = NO_MENTORSHIP } = page;
+  const { offer, timeline } = mentorship;
+  const { isOpen, toggle, toggleAll, isAllOpen } = useOpenParts([...MENTORSHIP_PARTS]);
+  const { ctas, faqs } = useSharedParts(page);
+
+  const intro = usePart(
+    { title: page.title, summary: page.summary, startDate: page.startDate, price: mentorship.price || 0 },
+    {
+      validate: ({ title, summary, startDate }) => [
+        ...textProblem(title, "Add the title."),
+        ...textProblem(summary, "Add the description."),
+        ...textProblem(startDate, "Choose the start date."),
+      ],
+      // Free pages have no price
+      submit: ({ price, ...fields }) => savePart(id, "intro", isFree ? fields : { ...fields, price }),
+      fromSaved: (saved) => ({ title: saved.title, summary: saved.summary, startDate: saved.startDate, price: saved.mentorship?.price || 0 }),
+    },
+  );
+
+  const video = usePart(mentorship.video.url, {
+    validate: (url) => (youtubeVideoId(url) ? [] : ["Add a YouTube video link, e.g. https://www.youtube.com/watch?v=…"]),
+    submit: (url) => savePart(id, "video", { url }),
+    fromSaved: (saved) => saved.mentorship?.video.url || "",
+  });
+
+  const offerLink = usePart(offer?.link || "", {
+    validate: (link) => [...textProblem(link, "Add the form link."), ...linkProblem(link, "Form")],
+    submit: (link) => savePart(id, "offer", { link }),
+    fromSaved: (saved) => saved.mentorship?.offer?.link || "",
+  });
+
+  const phases = usePart(toPhaseDates(timeline?.phases), {
+    validate: (input) =>
+      input.flatMap(({ phase, from, to }) => {
+        if (!from) return [`${phase}: choose the start month.`];
+
+        return to && from > to ? [`${phase}: the dates must end after they start.`] : [];
+      }),
+    submit: (input) => savePart(id, "timeline", { phases: input.map(({ from, to }) => ({ from, to })) }),
+    fromSaved: (saved) => toPhaseDates(saved.mentorship?.timeline?.phases),
+  });
+
+  const updatePhase = (index: number, change: Partial<AdminMentorshipPhase>) => phases.update(phases.input.map((item, itemIndex) => (itemIndex === index ? { ...item, ...change } : item)));
+
+  const cardProps = (key: (typeof MENTORSHIP_PARTS)[number]) => ({ id: key, isOpen: isOpen(key), onToggle: () => toggle(key), canEdit });
+
+  return (
+    <Box sx={{ display: "grid", gap: 1.5 }}>
+      <ExpandAllButton isAllOpen={isAllOpen} onClick={toggleAll} />
+
+      <PartCard {...cardProps("intro")} step="a" title={isFree ? "Title, description & date" : "Title, description, price & date"} description={isFree ? "The heading, the text under it and the start date. The price line always reads “FREE Course”." : "The heading, the text under it, the price and the start date."} part={intro}>
+        <Field label="Title" required>
+          <TextInput value={intro.input.title} onChange={(title) => intro.update({ ...intro.input, title })} />
+        </Field>
+        <Field label="Description" required>
+          <TextArea value={intro.input.summary} onChange={(summary) => intro.update({ ...intro.input, summary })} rows={4} />
+        </Field>
+        <FieldGrid>
+          {!isFree && (
+            <Field label="Price (₹, taxes included)" required hint="Shown as “₹34,999”.">
+              <NumberInput value={intro.input.price} onChange={(price) => intro.update({ ...intro.input, price })} />
+            </Field>
+          )}
+          <Field label="Start date" required hint={START_DATE_HINT}>
+            <TextInput type="date" value={intro.input.startDate} onChange={(startDate) => intro.update({ ...intro.input, startDate })} />
+          </Field>
+        </FieldGrid>
+      </PartCard>
+
+      <PartCard {...cardProps("video")} step="a" title="YouTube video" description="Plays right on the page when the play button on the banner is pressed (it doesn't open YouTube)." summary={youtubeVideoId(video.input) ? "Video added" : "No video"} part={video}>
+        <Field label="YouTube video link" required hint="The video's page or share link, e.g. https://youtu.be/… or https://www.youtube.com/watch?v=…">
+          <TextInput value={video.input} onChange={video.update} placeholder="https://www.youtube.com/watch?v=…" />
+        </Field>
+      </PartCard>
+
+      {offer && (
+        <PartCard {...cardProps("offer")} step="a" title="Special offer form" description={`The “${offer.text}” bar under the video: its “${offer.ctaLabel}” button opens this form.`} part={offerLink}>
+          <Field label="Form link" required hint="The form's address, e.g. a Google Form. External links open in a new tab.">
+            <TextInput value={offerLink.input} onChange={offerLink.update} placeholder="https://forms.gle/…" />
+          </Field>
+        </PartCard>
+      )}
+
+      <PartCard {...cardProps("ctas")} step="a" title="Course Details & Enroll buttons" description="Used in the intro, the Enroll band and the bar at the bottom of the page." part={ctas}>
+        <CtaFields value={ctas.input} onChange={ctas.update} />
+      </PartCard>
+
+      {timeline && (
+        <PartCard {...cardProps("timeline")} step="b" title="Timeline of the Program" description="The month range on each phase card. Leave “To” empty for “… Onward”." part={phases}>
+          {phases.input.map((phase, index) => (
+            <Box key={phase.phase} sx={{ display: "grid", gap: 1 }}>
+              <SubHeading>{`${phase.phase} · ${phase.title}`}</SubHeading>
+              <FieldGrid>
+                <Field label="From" required hint="Month and year">
+                  <TextInput type="month" value={phase.from} onChange={(from) => updatePhase(index, { from })} />
+                </Field>
+                <Field label="To" hint="Empty → “Onward”">
+                  <TextInput type="month" value={phase.to} onChange={(to) => updatePhase(index, { to })} />
+                </Field>
+              </FieldGrid>
+            </Box>
+          ))}
+        </PartCard>
+      )}
+
+      <PartCard {...cardProps("faqs")} step={timeline ? "c" : "b"} title="FAQs" description="Also added to the page for Google (FAQ rich results)." summary={`${faqs.input.length} FAQs`} part={faqs}>
+        <FaqsEditor faqs={faqs.input} onChange={faqs.update} />
+      </PartCard>
+    </Box>
+  );
+}
+
+const EDITORS = { guide: GuidePageEditor, batch: BatchPageEditor, mentorship: MentorshipPageEditor };
+
+/** Web → Courses → a section → one page: only the parts listed for its layout can be edited (access per course section). */
 export default function CoursePageEditor({ page }: { page: AdminCoursePage }) {
-  const { canEdit } = useSectionAccess("gsFoundation");
-  const Editor = page.layout === "batch" ? BatchPageEditor : GuidePageEditor;
+  const { canEdit } = useSectionAccess(courseAdminSection(page.section).access);
+  const Editor = EDITORS[page.layout];
 
   return (
     <Box sx={{ display: "grid", gap: 1.5 }}>
