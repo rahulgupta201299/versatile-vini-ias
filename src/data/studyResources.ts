@@ -14,7 +14,7 @@ export const STUDY_RESOURCES: StudyResource[] = [
     text: "Our experts have created thorough study materials that break down complicated concepts into easily understandable content",
     href: "store",
     tint: "#F1F8FD",
-    image: { src: "/images/study-resources/vini-foundation-books.webp", alt: "VINI IAS UPSC and BPSC Foundation books" },
+    image: { src: "/images/study-resources/vini-foundation-books-set.webp", alt: "VINI IAS UPSC and BPSC Foundation books" },
   },
   {
     title: "Current Affairs",
