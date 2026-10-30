@@ -22,7 +22,7 @@ export const HOME_SKELETON: SectionSkeletonSpec[] = [
   { height: { xs: 114, sm: 212, md: 284, lg: 338 }, shape: { kind: "banner" } },
   { height: { xs: 483, sm: 570, md: 411 }, shape: { kind: "cards", heading: "left", columns: { xs: 2, sm: 3, md: 4 }, rows: { xs: 2 } } },
   { height: { xs: 286, sm: 398, md: 660, lg: 634 }, shape: { kind: "split" } },
-  { height: { xs: 608, sm: 560, md: 651, lg: 669 }, shape: { kind: "cards", heading: "center", columns: { xs: 1, sm: 2, md: 3 } } },
+  { height: { xs: 608, sm: 560, md: 686, lg: 667 }, shape: { kind: "cards", heading: "center", columns: { xs: 1, sm: 2, md: 3 } } },
   RANKERS,
   { height: { xs: 756, sm: 951, md: 679, lg: 656 }, shape: { kind: "tiles", heading: "center", columns: { xs: 2, md: 4 }, count: 8 } },
   { height: { xs: 587, sm: 757, md: 444, lg: 451 }, shape: { kind: "split" } },
